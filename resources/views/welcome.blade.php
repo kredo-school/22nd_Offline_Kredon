@@ -258,183 +258,189 @@
 
 <body>
 
-    <div class="container">
-        <div class="content-section">
+    <body>
 
-            <div class="title-area" style="margin-bottom: 25px;">
-                <h2 class="app-title">セブ島の学習スポットを探す</h2>
-            </div>
+        <div class="container">
+            <div class="content-section">
 
-            <div class="filter-options">
-                <div class="filter-title">設備で絞り込む（最優先）</div>
-                <div class="switch-container">
-                    <input type="checkbox" id="wifiToggle" class="toggle-input">
-                    <label for="wifiToggle" class="toggle-label">
-                        <i class="fa-solid fa-wifi" style="margin-right: 6px;"></i>WIFI
-                    </label>
-
-                    <input type="checkbox" id="powerToggle" class="toggle-input">
-                    <label for="powerToggle" class="toggle-label">
-                        <i class="fa-solid fa-plug-circle-bolt" style="margin-right: 6px;"></i>コンセント
-                    </label>
+                <div class="title-area" style="margin-bottom: 25px;">
+                    <h2 class="app-title">セブ島の学習スポットを探す</h2>
                 </div>
-            </div>
 
-            <div class="filter-options">
-                <div class="filter-title">エリアで絞り込む</div>
+                <form action="{{ url('/') }}" method="GET">
 
-                <div class="search-row">
-                    <select name="area" class="area-select">
-                        <option value="">-- エリアを選択 --</option>
-                        <option value="it-east">ITパーク・東</option>
-                        <option value="it-west">ITパーク・西</option>
-                        <option value="it-south">ITパーク・南</option>
-                        <option value="it-north">ITパーク・北</option>
-                        <option value="ayala">アヤラ周辺</option>
-                        <option value="lahug">ラホグ</option>
-                        <option value="mabolo">マボロ</option>
-                        <option value="others">その他</option>
-                    </select>
+                    <div class="filter-options">
+                        <div class="filter-title">設備で絞り込む（最優先）</div>
+                        <div class="switch-container">
+                            <input type="checkbox" id="wifiToggle" class="toggle-input" name="wifi" value="1" {{ request('wifi') == '1' ? 'checked' : '' }}>
+                            <label for="wifiToggle" class="toggle-label">
+                                <i class="fa-solid fa-wifi" style="margin-right: 6px;"></i>WIFI
+                            </label>
 
-                    <button type="submit" class="search-btn">
-                        <i class="fa-solid fa-magnifying-glass"></i> 検索する
-                    </button>
+                            <input type="checkbox" id="powerToggle" class="toggle-input" name="power" value="1" {{ request('power') == '1' ? 'checked' : '' }}>
+                            <label for="powerToggle" class="toggle-label">
+                                <i class="fa-solid fa-plug-circle-bolt" style="margin-right: 6px;"></i>コンセント
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-options">
+                        <div class="filter-title">エリアで絞り込む</div>
+
+                        <div class="search-row">
+                            <select name="area" class="area-select">
+                                <option value="">-- エリアを選択 --</option>
+                                <option value="it-park" {{ request('area') == 'it-park' ? 'selected' : '' }}>ITパーク周辺
+                                </option>
+                                <option value="ayala" {{ request('area') == 'ayala' ? 'selected' : '' }}>アヤラ周辺</option>
+                                <option value="lahug" {{ request('area') == 'lahug' ? 'selected' : '' }}>ラホグ</option>
+                                <option value="mabolo" {{ request('area') == 'mabolo' ? 'selected' : '' }}>マボロ</option>
+                                <option value="others" {{ request('area') == 'others' ? 'selected' : '' }}>その他</option>
+                            </select>
+
+                            <button type="submit" class="search-btn">
+                                <i class="fa-solid fa-magnifying-glass"></i> 検索する
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+                <div class="filter-options">
                 </div>
-            </div>
-
-            <div class="filter-options">
-
-            </div>
 
 
-            <div class="spot-card">
-                @foreach($spots as $spot)
-                    <div class="spot-card-header">
-                        <span class="spot-name">店名：{{ $spot->name }}</span>
-                        <div class="spot-hours">営業時間：{{ $spot->hours }}</div>
-                    </div>
-
-                    <div class="spot-photo-section-title">写真</div>
-                    <div class="spot-photos-grid">
-                        <div class="photo-item">
-                            <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy" alt="外観">
-                            <span class="photo-label">外観</span>
+                <div class="spot-card">
+                    @foreach($spots as $spot)
+                        <div class="spot-card-header">
+                            <span class="spot-name">店名：{{ $spot->name }}</span>
+                            <div class="spot-hours">営業時間：{{ $spot->hours }}</div>
                         </div>
-                        <div class="photo-item">
-                            <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy" alt="内観">
-                            <span class="photo-label">内観</span>
+
+                        <div class="spot-photo-section-title">写真</div>
+                        <div class="spot-photos-grid">
+                            <div class="photo-item">
+                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy"
+                                    alt="外観">
+                                <span class="photo-label">外観</span>
+                            </div>
+                            <div class="photo-item">
+                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy"
+                                    alt="内観">
+                                <span class="photo-label">内観</span>
+                            </div>
+                            <div class="photo-item">
+                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy"
+                                    alt="メニュー表">
+                                <span class="photo-label">メニュー表</span>
+                            </div>
+                            <div class="photo-item">
+                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy"
+                                    alt="食べたもの">
+                                <span class="photo-label">食べたもの</span>
+                            </div>
                         </div>
-                        <div class="photo-item">
-                            <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy" alt="メニュー表">
-                            <span class="photo-label">メニュー表</span>
+
+                        <div class="spot-area" style="padding: 10px; color: #666;">
+                            エリア：{{ $spot->area }}
                         </div>
-                        <div class="photo-item">
-                            <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy" alt="食べたもの">
-                            <span class="photo-label">食べたもの</span>
+
+                        <div class="spot-card-footer"
+                            style="margin-bottom: 30px; border-bottom: 1px dashed #ccc; padding-bottom: 20px;">
+                            <div class="spot-facilities" style="padding: 10px; font-size: 14px;">
+                                設備：
+                                @if($spot->has_wifi)
+                                    <span class="amenity-item" style="margin-right: 10px;">
+                                        <i class="fa-solid fa-wifi"></i> WiFiあり
+                                    </span>
+                                @endif
+
+                                @if($spot->has_power)
+                                    <span class="amenity-item">
+                                        <i class="fa-solid fa-plug-circle-bolt"></i> コンセントあり
+                                    </span>
+                                @endif
+                            </div>
+                            <a href="#" class="spot-map-link open-map-btn" data-url="{{ $spot->map_url }}">地図で見る</a>
                         </div>
-                    </div>
+                    @endforeach
+                </div>
 
-                    <div class="spot-area" style="padding: 10px; color: #666;">
-                        エリア：{{ $spot->area }}
-                    </div>
+                <div class="map-modal" id="mapModal" style="display: none;">
+                    <div class="modal-content">
+                        <button class="close-btn" id="closeMapBtn">×</button>
+                        <h3>店舗の位置マップ</h3>
 
-                    <div class="spot-card-footer"
-                        style="margin-bottom: 30px; border-bottom: 1px dashed #ccc; padding-bottom: 20px;">
-                        <div class="spot-facilities" style="padding: 10px; font-size: 14px;">
-                            設備：
-                            @if($spot->has_wifi)
-                                <span class="amenity-item" style="margin-right: 10px;">
-                                    <i class="fa-solid fa-wifi"></i> WiFiあり
-                                </span>
-                            @endif
-
-                            @if($spot->has_power)
-                                <span class="amenity-item">
-                                    <i class="fa-solid fa-plug-circle-bolt"></i> コンセントあり
-                                </span>
-                            @endif
+                        <div class="map-container">
+                            <iframe id="modalMapIframe" src="" width="100%" height="350" style="border:0;"
+                                allowfullscreen="" loading="lazy"></iframe>
                         </div>
-                        <a href="#" class="spot-map-link open-map-btn" data-url="{{ $spot->map_url }}">地図で見る</a>
-                    </div>
-                @endforeach
-            </div>
-
-            <div class="map-modal" id="mapModal style=display: none;">
-                <div class="modal-content">
-                    <button class="close-btn" id="closeMapBtn">×</button>
-                    <h3>店舗の位置マップ</h3>
-
-                    <div class="map-container">
-                        <iframe id="modalMapIframe" src="" width="100%" height="350" style="border:0;"
-                            allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
-            </div>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const mapModal = document.getElementById('mapModal');
-                    const closeMapBtn = document.getElementById('closeMapBtn');
-                    const modalMapIframe = document.getElementById('modalMapIframe');
-                    const openMapBtns = document.querySelectorAll('.open-map-btn');
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const mapModal = document.getElementById('mapModal');
+                        const closeMapBtn = document.getElementById('closeMapBtn');
+                        const modalMapIframe = document.getElementById('modalMapIframe');
+                        const openMapBtns = document.querySelectorAll('.open-map-btn');
 
-                    // 安全装置：もしモーダルや必要な部品が画面内に存在しない場合は、処理をスキップする
-                    if (!mapModal || !modalMapIframe) {
-                        console.warn('警告: mapModal または modalMapIframe が見つかりません。HTMLのid属性を確認してください。');
-                        return;
-                    }
+                        // 安全装置：もしモーダルや必要な部品が画面内に存在しない場合は、処理をスキップする
+                        if (!mapModal || !modalMapIframe) {
+                            console.warn('警告: mapModal または modalMapIframe が見つかりません。HTMLのid属性を確認してください。');
+                            return;
+                        }
 
-                    // 1. 各カードの「地図で見る」ボタンが押されたときの処理
-                    openMapBtns.forEach(btn => {
-                        btn.addEventListener('click', function (e) {
-                            e.preventDefault(); // 画面が一番上に跳ね上がるのを防ぐ
+                        // 1. 各カードの「地図で見る」ボタンが押されたときの処理
+                        openMapBtns.forEach(btn => {
+                            btn.addEventListener('click', function (e) {
+                                e.preventDefault(); // 画面が一番上に跳ね上がるのを防ぐ
 
-                            // ボタンに仕込んだそのお店のマップURLを取得
-                            const mapUrl = this.getAttribute('data-url');
+                                // ボタンに仕込んだそのお店のマップURLを取得
+                                const mapUrl = this.getAttribute('data-url');
 
-                            if (mapUrl) {
-                                // モーダルの中のiframeにURLをセットして地図を表示
-                                modalMapIframe.src = mapUrl;
+                                if (mapUrl) {
+                                    // モーダルの中のiframeにURLをセットして地図を表示
+                                    modalMapIframe.src = mapUrl;
 
-                                // モーダルを画面に表示
-                                mapModal.style.display = 'flex';
-                            } else {
-                                console.error('エラー: ボタンに data-url が設定されていません。');
+                                    // モーダルを画面に表示
+                                    mapModal.style.display = 'flex';
+                                } else {
+                                    console.error('エラー: ボタンに data-url が設定されていません。');
+                                }
+                            });
+                        });
+
+                        // 2. 「×」ボタンが押されたらモーダルを閉じる処理
+                        if (closeMapBtn) {
+                            closeMapBtn.addEventListener('click', function () {
+                                mapModal.style.display = 'none';
+                                modalMapIframe.src = ''; // 閉じたときは地図の読み込みをクリアして軽くする
+                            });
+                        }
+
+                        // 3. モーダルの外側をクリックしても閉じるようにする
+                        window.addEventListener('click', function (e) {
+                            if (e.target === mapModal) {
+                                mapModal.style.display = 'none';
+                                modalMapIframe.src = '';
                             }
                         });
                     });
+                </script>
+                <div class="map-modal" id="mapModal"
+                    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+                    <div class="modal-content"
+                        style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px; position: relative;">
+                        <button class="close-btn" id="closeMapBtn"
+                            style="position: absolute; top: 10px; right: 15px; font-size: 24px; border: none; background: none; cursor: pointer;">×</button>
+                        <h3 style="margin-top: 0;">店舗の位置マップ</h3>
 
-                    // 2. 「×」ボタンが押されたらモーダルを閉じる処理
-                    if (closeMapBtn) {
-                        closeMapBtn.addEventListener('click', function () {
-                            mapModal.style.display = 'none';
-                            modalMapIframe.src = ''; // 閉じたときは地図の読み込みをクリアして軽くする
-                        });
-                    }
-
-                    // 3. モーダルの外側をクリックしても閉じるようにする
-                    window.addEventListener('click', function (e) {
-                        if (e.target === mapModal) {
-                            mapModal.style.display = 'none';
-                            modalMapIframe.src = '';
-                        }
-                    });
-                });
-            </script>
-            <div class="map-modal" id="mapModal"
-                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
-                <div class="modal-content"
-                    style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px; position: relative;">
-                    <button class="close-btn" id="closeMapBtn"
-                        style="position: absolute; top: 10px; right: 15px; font-size: 24px; border: none; background: none; cursor: pointer;">×</button>
-                    <h3 style="margin-top: 0;">店舗の位置マップ</h3>
-
-                    <div class="map-container" style="width: 100%; height: 350px; background: #eee;">
-                        <iframe id="modalMapIframe" src="" width="100%" height="100%" style="border:0;"
-                            allowfullscreen="" loading="lazy"></iframe>
+                        <div class="map-container" style="width: 100%; height: 350px; background: #eee;">
+                            <iframe id="modalMapIframe" src="" width="100%" height="100%" style="border:0;"
+                                allowfullscreen="" loading="lazy"></iframe>
+                        </div>
                     </div>
                 </div>
-            </div>
-</body>
+    </body>
 
 </html>
