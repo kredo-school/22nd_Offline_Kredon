@@ -360,6 +360,32 @@
                                     </span>
                                 @endif
                             </div>
+                            <div class="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                <p class="text-xs font-bold text-gray-500 mb-2">🔥 現役生のリアルな口コミ評価</p>
+
+                                @if($spot->reviews->isNotEmpty())
+                                    @foreach($spot->reviews as $review)
+                                        <div class="grid grid-cols-3 gap-2 text-sm text-gray-700">
+                                            <div>🥷 死角度: <span
+                                                    class="text-amber-500 font-bold">{{ str_repeat('★', $review->dead_spot_rating) }}</span>
+                                            </div>
+                                            <div>❄️ 爆冷度: <span
+                                                    class="text-blue-500 font-bold">{{ str_repeat('★', $review->aircon_level) }}</span>
+                                            </div>
+                                            <div>⏱️ 滞在目安: <span
+                                                    class="text-green-500 font-bold">{{ str_repeat('★', $review->stay_time_level) }}</span>
+                                            </div>
+                                        </div>
+                                        @if($review->comment)
+                                            <p class="text-xs text-gray-600 italic mt-1 bg-white p-2 rounded border border-dashed">
+                                                「{{ $review->comment }}」
+                                            </p>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <p class="text-xs text-gray-400 italic">まだリアルな口コミがありません。潜入調査求む！</p>
+                                @endif
+                            </div>
                             <a href="#" class="spot-map-link open-map-btn" data-url="{{ $spot->map_url }}">地図で見る</a>
                         </div>
                     @endforeach
