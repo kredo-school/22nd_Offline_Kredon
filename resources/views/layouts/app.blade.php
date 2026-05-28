@@ -20,13 +20,11 @@
 
     <style>
         /* レイアウト固定用 */
-        body {
-            background-color: #f8f9fa;
-        }
-
+        /* スマホ対応 */
+        html,
+        body,
         #app {
-            display: flex;
-            flex-direction: column;
+            background-color: #f8f9fa;
             min-height: 100vh;
         }
 
@@ -35,20 +33,18 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1020;
+            z-index: 1060;
             height: 70px;
-            margin-left: 200px;
-            /* サイドバーの幅分右に寄せる */
-
+            margin-left: 0px;
         }
-
-        /* .nav-link{
-            width: 100%
-        } */
 
         .main-wrapper {
             display: flex;
-            min-height: 100vh
+            flex-direction: column;
+            /* スマホ対応 */
+            /* margin-top: 70px; */
+            padding-top: 0;
+            min-height: calc(100vh - 70px);
         }
 
         .sidebar-left {
@@ -62,15 +58,44 @@
             overflow-x: hidden;
             background-color: #f7f5f0;
             border-right: 1px solid #e9ecef;
-            font-size: 0.85rem;
+
         }
 
         .content-body {
             flex: 1;
-            margin-left: 200px;
-            /* サイドバーの幅分右に寄せる */
-            padding: 24px;
-            margin-top: 80px;
+            margin-left: 0;
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+
+            html,
+            body,
+            #app {
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            .navbar-top {
+                margin-left: 200px;
+            }
+
+            /* ★重要：中身が個別にスクロールするように高さをNavbarを除いた分に固定 */
+            .main-wrapper {
+                flex-direction: row;
+                height: calc(100vh - 70px);
+                /* ナビゲーションバーの高さを引いた全高 */
+                padding-top: 0;
+                /* margin-top: 70px; */
+            }
+
+            .content-body {
+                margin-left: 200px;
+                /* height: calc(100vh - 70px); */
+                overflow: hidden;
+                background-color: #f8f9fa;
+            }
+
         }
 
         /* サイドバー内のメニュー装飾 */
@@ -84,8 +109,7 @@
         }
 
         /* spotのアコーディオン */
-        .sidebar-left .accordion-item,
-        .sidebar-left .accordion-button {
+        .sidebar-left .accordion-item {
             background-color: #f7f5f0 !important;
             font-size: 0.85rem;
             padding: 10px 16px;
@@ -96,6 +120,11 @@
         .sidebar-left .accordion-button:not(.collapsed) {
             background-color: #edeae4 !important;
             color: #000;
+        }
+
+        #spotSubmenu a:hover {
+            background-color: #edeae4;
+            color: #000 !important;
         }
 
         /* icon */
@@ -115,13 +144,12 @@
         .command a {
             font-size: 0.8rem;
         }
-
     </style>
 </head>
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom navbar-top">
+        <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom navbar-top sticky-top shadow-sm">
             <div class="container-fluid px-4">
 
                 {{-- 検索 --}}
@@ -158,14 +186,14 @@
                                 <i class="fa-regular fa-envelope fa-lg  "></i>
                             </a>
                         </li>
+
                         {{-- 投稿ボタン --}}
-                        <li class="nav-item me-3">
+                        {{-- <li class="nav-item me-3">
                             <a href="#" class="btn btn-primary btn-sm px-3 py-1"><i
                                     class="fa-solid fa-plus"></i>Post</a>
-                        </li>
+                        </li> --}}
 
                         <div class="vr mx-3"></div>
-
 
 
                         @guest
@@ -181,19 +209,34 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+                                    href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false" v-pre>
+
+                                    {{-- アバターアイコン --}}
+                                    @if (Auth::user()->avatar)
+                                        <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="avatar"
+                                            style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                    @else
+                                        <span style="
+                                                        display: inline-flex;
+                                                        align-items: center;
+                                                        justify-content: center;
+                                                        width: 32px;
+                                                        height: 32px;
+                                                        border-radius: 50%;
+                                                        background-color: #212529;
+                                                        color: #fff;
+                                                        font-size: 0.8rem;
+                                                        font-weight: bold;
+                                                        flex-shrink: 0;
+                                                    ">
+                                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                        </span>
+                                    @endif
+
                                     {{ Auth::user()->name }}
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
                             </li>
                         @endguest
                     </ul>
@@ -206,37 +249,42 @@
 
             <aside class="sidebar-left d-none d-md-block">
                 <div class="py-2">
-                    
-                    <a class="navbar-brand fw-bold text-primary m-0 p-0 d-block text-center"
-                    href="{{ url('/') }}" style="margin: -30px !important;">
-                    <img src="{{ asset('images/kredon.png') }}" alt="Logo"
-                    style="height: 140px; width: auto; object-fit: contain;">
-                </a>
-                
-                {{-- <a href="#" class="sidebar-link mt-0"><i class="fa-regular fa-house"></i> HOME </a> --}}
-                
-                <div class="command">
-                        <div class="accordion accordion-flush" id="sidebarAccordion">
-                            <div class="accordion-item border-0">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed sidebar-link bg-transparent shadow-none"
-                                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpot">
-                                        <i class="fa-solid fa-map-location-dot"></i> SPOT
-                                    </button>
-                                </h2>
-                                <div id="collapseSpot" class="accordion-collapse collapse"
-                                    data-bs-parent="#sidebarAccordion">
-                                    <div class="accordion-body py-1 ps-5 text-muted">
-                                        <a href="#"
-                                            class="d-block text-decoration-none text-muted py-2">Working</a>
-                                        <a href="#"
-                                            class="d-block text-decoration-none text-muted py-2">Hospital</a>
-                                        <a href="#"
-                                            class="d-block text-decoration-none text-muted py-2">Tourism</a>
-                                    </div>
-                                </div>
-                            </div>
+
+                    <a class="navbar-brand fw-bold text-primary m-0 p-0 d-block text-center" href="{{ url('/') }}"
+                        style="margin: -30px !important;">
+                        <img src="{{ asset('images/kredon.png') }}" alt="Logo"
+                            style="height: 140px; width: auto; object-fit: contain;">
+                    </a>
+
+                    {{-- <a href="#" class="sidebar-link mt-0"><i class="fa-regular fa-house"></i> HOME </a> --}}
+
+                    <div class="command">
+                        {{-- SPOT pull-downメニュー --}}
+                        <a href="#" class="sidebar-link" id="spotToggle" onclick="toggleSpot(event)">
+                            <i class="fa-solid fa-map-location-dot"></i> SPOT
+                            <i class="fa-solid fa-chevron-down ms-auto small" id="spotChevron"
+                                style="transition: transform 0.2s;"></i>
+                        </a>
+                        <div id="spotSubmenu" style="display:none;" class="accordion-item">
+
+                            <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5"
+                                style="font-size:0.82rem; color: #6c757d; transition: background 0.2s;">Working</a>
+                            <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5"
+                                style="font-size:0.82rem; color: #6c757d; transition: background 0.2s;">Hospital</a>
+                            <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5"
+                                style="font-size:0.82rem; color: #6c757d; transition: background 0.2s;">Tourism</a>
                         </div>
+
+                        <script>
+                            function toggleSpot(e) {
+                                e.preventDefault();
+                                const menu = document.getElementById('spotSubmenu');
+                                const chevron = document.getElementById('spotChevron');
+                                const isOpen = menu.style.display === 'block';
+                                menu.style.display = isOpen ? 'none' : 'block';
+                                chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+                            }
+                        </script>
 
                         <a href="#" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i>EVENT</a>
                         <a href="#" class="sidebar-link"><i class="fa-solid fa-store"></i> MARKET</a>
@@ -277,14 +325,12 @@
                         </div>
                     </div>
 
-
                 </div>
             </aside>
 
             <main class="content-body">
                 @yield('content')
             </main>
-
         </div>
     </div>
 </body>
