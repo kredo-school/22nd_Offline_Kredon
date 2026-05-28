@@ -15,4 +15,14 @@ class Spot extends Model
     {
         return $this->hasMany(Review::class);
     }
+    // app/Models/Spot.php の中に追加
+
+public function scopeExtremeFocus($query)
+{
+    // レビューの平均値が「死角が多い」「人通りが少ない」お店だけを裏側で絞り込む
+    return $query->whereHas('reviews', function ($q) {
+        $q->havingRaw('AVG(dead_spot_rating) >= 4')
+          ->havingRaw('AVG(traffic_avoidance_rating) >= 4');
+    });
+}
 }

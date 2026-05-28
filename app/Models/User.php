@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    // ユーザーが書いたレビューを引っ張るための電線
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }
