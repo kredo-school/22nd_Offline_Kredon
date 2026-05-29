@@ -5,18 +5,29 @@
     <style>
         /* --- 基本レイアウト --- */
         .spot-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            /* 縦に並べる */
+            gap: 30px;
+            /* カード同士の隙間 */
+            width: 100%;
+            max-width: 600px;
+            /* 横幅が広がりすぎないように固定 */
+            margin: 0 auto;
+            /* 画面のド真ん中に配置 */
         }
 
         .spot-card {
             background-color: white;
             border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e0e0e0;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eee;
+            width: 100%;
+            /* グリッドの中で綺麗に収まるようにする */
+            box-sizing: border-box;
         }
 
         .spot-card-header {
@@ -45,8 +56,8 @@
 
         .spot-photos-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
             margin-bottom: 15px;
         }
 
@@ -54,6 +65,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            /* 写真が潰れずに綺麗にトリミングされる魔法 */
+            border-radius: 6px;
         }
 
         .photo-dummy {
@@ -324,7 +343,7 @@
                 <div class="filter-options">
                     <div class="filter-title">エリアで絞り込む</div>
                     <div class="search-row">
-                        <select name="area" class="area-select">
+                        <select name="area" class="area-select" required>
                             <option value="">-- エリアを選択 --</option>
                             <option value="it-park" {{ request('area') == 'it-park' ? 'selected' : '' }}>ITパーク周辺</option>
                             <option value="ayala" {{ request('area') == 'ayala' ? 'selected' : '' }}>アヤラ周辺</option>
@@ -338,10 +357,10 @@
                     </div>
                 </div>
             </form>
-
             <div class="spot-list">
                 @foreach($spots as $spot)
                     <div class="spot-card">
+
                         <div class="spot-card-header">
                             <span class="spot-name">{{ $spot->name }}</span>
                             <div class="spot-hours">営業時間：{{ $spot->hours }}</div>
@@ -349,24 +368,32 @@
 
                         <div class="spot-photo-section-title">写真</div>
                         <div class="spot-photos-grid">
-                            <div class="photo-item">
-                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy" alt="外観">
-                                <span class="photo-label">外観</span>
+                            <div class="photo-item" style="overflow: hidden;">
+                                @if($spot->photo_path)
+                                    <img src="{{ asset('storage/' . $spot->photo_path) }}" alt="外観"
+                                        style="width: 100%; height: 100px; object-fit: cover; border-radius: 4px;">
+                                @else
+                                    <img src="https://placehold.co/150x100/d8c3b4/white?text=No+Photo" class="photo-dummy"
+                                        alt="写真なし">
+                                @endif
+                                <span class="photo-label">メイン</span>
                             </div>
+
                             <div class="photo-item">
-                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy" alt="内観">
+                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Review" class="photo-dummy" alt="内観">
                                 <span class="photo-label">内観</span>
                             </div>
                             <div class="photo-item">
-                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy" alt="メニュー表">
-                                <span class="photo-label">メニュー表</span>
+                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Review" class="photo-dummy"
+                                    alt="メニュー表">
+                                <span class="photo-label">メニュー</span>
                             </div>
                             <div class="photo-item">
-                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Photo" class="photo-dummy" alt="食べたもの">
-                                <span class="photo-label">食べたもの</span>
+                                <img src="https://placehold.co/150x100/d8c3b4/white?text=Review" class="photo-dummy"
+                                    alt="食べたもの">
+                                <span class="photo-label">フード</span>
                             </div>
                         </div>
-
                         <div class="spot-area" style="padding: 10px 0; color: #666; font-size: 13px;">
                             📍 エリア：{{ $spot->area }}
                         </div>
@@ -393,9 +420,9 @@
                                 ✍️ レビューを書く
                             </button>
                         </div>
-                    </div>
-                @endforeach
-            </div>
+
+                </div> @endforeach
+            </div> ```
         </div>
     </div>
 
@@ -419,7 +446,8 @@
                     style="position: static;">×</button>
             </div>
 
-            <form action="{{ route('spots.store') }}" method="POST" enctype="multipart/form-data" style="padding: 20px;">
+            <form action="{{ route('spots.store') }}" method="POST" enctype="multipart/form-data" style="padding: 20px;"
+                onsubmit="return confirm('この内容で新しいスポットを登録しますか？');">
                 @csrf
 
                 <div style="border: 1px solid #c9d8e4; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
@@ -430,7 +458,7 @@
                     <div
                         style="background-color: #f4f8fb; padding: 12px; display: flex; flex-direction: column; gap: 10px;">
                         <input type="text" name="name" placeholder="スポット名（例：Cebu CoWork Hub）"
-                            style="width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; outline: none;">
+                            style="width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; outline: none;required">
 
                         <div style="display: flex; align-items: center; gap: 8px; color: #666;">
                             📍

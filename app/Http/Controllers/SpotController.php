@@ -12,6 +12,10 @@ class SpotController extends Controller
     // 新規スポットと初期レビューを同時に保存する処理
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'area' => 'required',
+        ]);
         // 開発用：とりあえず最初のテストユーザーを投稿者とする
         $user = User::first();
 
@@ -23,7 +27,7 @@ class SpotController extends Controller
         $spot->area = $request->area;
         $spot->has_wifi = $request->has('has_wifi') ? true : false;
         $spot->has_power = $request->has('has_power') ? true : false;
-        
+
         // 写真があれば保存
         if ($request->hasFile('photo')) {
             $spot->photo_path = $request->file('photo')->store('photos', 'public');
