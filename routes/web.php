@@ -22,3 +22,10 @@ Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('
 
 // 新規スポット登録用のURL
 Route::post('/spots', [SpotController::class, 'store'])->name('spots.store');
+
+
+// 🌟 新しいトップページ（Figmaデザイン）への道
+Route::get('/', [StudyController::class, 'top'])->name('top');
+
+// 🌟 検索ページ（今日ずっと作っていた画面）への道
+Route::get('/search', [StudyController::class, 'index'])->name('search');

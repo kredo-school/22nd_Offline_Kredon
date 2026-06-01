@@ -127,13 +127,16 @@
         .container {
             display: flex;
             width: 100%;
-            height: 100vh;
+            height: calc(100vh - 70px);
+            margin-top: 70px;
         }
 
         .content-section {
             width: 100%;
-            padding: 20px;
-            overflow-y: scroll;
+            /* ⭕ 修正：下側に80pxの「息継ぎ空間」を追加 */
+            padding: 20px 20px 80px 20px;
+            overflow-y: auto;
+            /* scrollよりautoの方がMac等でスクロールバーが綺麗に出ます */
         }
 
         .app-title {
@@ -624,6 +627,66 @@
                         </label>
                     </div>
 
+                    <div
+                        style="background-color: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
+                        <p style="font-size: 12px; font-weight: bold; color: #4a82b3; margin-top: 0; margin-bottom: 15px;">🔍
+                            ニッチな評価をシェア</p>
+
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👥 客層</label>
+                            <div class="rating-group">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <input type="radio" name="customer_vibe" id="vibe_{{ $spot->id }}_{{ $i }}" value="{{ $i }}"
+                                        class="rating-radio">
+                                    <label for="vibe_{{ $spot->id }}_{{ $i }}" class="rating-label"
+                                        style="padding: 6px 0; font-size: 14px;">{{ $i }}</label>
+                                @endfor
+                            </div>
+                            <div style="text-align: center; font-size: 10px; color: #777; margin-top: 4px;">1:ガヤガヤ 〜 5:集中ソロ
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👁️
+                                目の疲れ度（照明）</label>
+                            <div class="rating-group">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <input type="radio" name="eye_fatigue_level" id="eye_{{ $spot->id }}_{{ $i }}" value="{{ $i }}"
+                                        class="rating-radio">
+                                    <label for="eye_{{ $spot->id }}_{{ $i }}" class="rating-label"
+                                        style="padding: 6px 0; font-size: 14px;">{{ $i }}</label>
+                                @endfor
+                            </div>
+                            <div style="text-align: center; font-size: 10px; color: #777; margin-top: 4px;">1:眩しい/暗い 〜 5:快適
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🪑 イスの座りやすさ</label>
+                            <div class="rating-group">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <input type="radio" name="chair_comfort" id="chair_{{ $spot->id }}_{{ $i }}" value="{{ $i }}"
+                                        class="rating-radio">
+                                    <label for="chair_{{ $spot->id }}_{{ $i }}" class="rating-label"
+                                        style="padding: 6px 0; font-size: 14px;">{{ $i }}</label>
+                                @endfor
+                            </div>
+                            <div style="text-align: center; font-size: 10px; color: #777; margin-top: 4px;">1:痛い 〜 5:極上</div>
+                        </div>
+
+                        <div style="margin-bottom: 0;">
+                            <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🏢 机の安定度</label>
+                            <div class="rating-group">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <input type="radio" name="desk_stability" id="desk_{{ $spot->id }}_{{ $i }}" value="{{ $i }}"
+                                        class="rating-radio">
+                                    <label for="desk_{{ $spot->id }}_{{ $i }}" class="rating-label"
+                                        style="padding: 6px 0; font-size: 14px;">{{ $i }}</label>
+                                @endfor
+                            </div>
+                            <div style="text-align: center; font-size: 10px; color: #777; margin-top: 4px;">1:ガタガタ 〜 5:頑丈</div>
+                        </div>
+                    </div>
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                         <div style="flex: 1;">
                             <label
