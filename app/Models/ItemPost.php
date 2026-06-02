@@ -3,16 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class ItemPost extends Model
 {
-    // データベースに保存できるようにする許可設定
-    protected $fillable = ['user_id', 'title', 'description', 'status', 'location_name'];
+    protected $fillable = ['user_id', 'title', 'description', 'status', 'location_name', 'category'];
 
-    // 1つの投稿に複数枚の画像が持てるようにする設定
-    public function images(): MorphMany
+    // 1つの投稿が複数の画像を持つ
+    public function images()
     {
-        return $this->morphMany(Image::class, 'imageable');
+        return $this->hasMany(Image::class);
     }
 }
