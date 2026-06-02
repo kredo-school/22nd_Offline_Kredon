@@ -269,56 +269,7 @@
         </div>
 
     </div>
-<div class="custom-modal" id="newSpotModal">
-        <div class="modal-content" style="padding: 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
-                <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">新規スポットを登録する</h2>
-                <button onclick="document.getElementById('newSpotModal').classList.remove('is-show')" class="close-btn" style="position: static;">×</button>
-            </div>
 
-            <form action="{{ route('spots.store') }}" method="POST" enctype="multipart/form-data" style="padding: 20px;" onsubmit="return confirm('この内容で新しいスポットを登録しますか？');">
-                @csrf
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 13px; font-weight: bold;">スポット名</label>
-                    <input type="text" name="name" placeholder="例：Cebu CoWork Hub" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;" required>
-                </div>
-                
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 13px; font-weight: bold;">エリア</label>
-                    <select name="area" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;" required>
-                        <option value="">-- エリアを選択 --</option>
-                        <option value="it-park">ITパーク周辺</option>
-                        <option value="ayala">アヤラ周辺</option>
-                        <option value="lahug">ラホグ</option>
-                        <option value="mabolo">マボロ</option>
-                        <option value="others">その他</option>
-                    </select>
-                </div>
+    @include('new_spot_modal')
 
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <label><input type="checkbox" name="has_wifi" value="1"> 📶 Wi-Fiあり</label>
-                    <label><input type="checkbox" name="has_power" value="1"> 🔌 電源あり</label>
-                </div>
-
-                <button type="submit" style="background-color: #1e8b9b; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer;">
-                    スポットを登録する
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const newSpotModal = document.getElementById('newSpotModal');
-            
-            // 画面のどこかをクリックしたときの処理
-            window.addEventListener('click', function (e) {
-                // もしクリックした場所が、ポップアップの黒い背景部分だったら
-                if (e.target === newSpotModal) {
-                    newSpotModal.classList.remove('is-show'); // ポップアップを隠す
-                }
-            });
-        });
-    </script>
-    @endsection
-   
+@endsection

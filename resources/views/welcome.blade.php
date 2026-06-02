@@ -7,14 +7,10 @@
         .spot-list {
             display: flex;
             flex-direction: column;
-            /* 縦に並べる */
             gap: 30px;
-            /* カード同士の隙間 */
             width: 100%;
             max-width: 600px;
-            /* 横幅が広がりすぎないように固定 */
             margin: 0 auto;
-            /* 画面のド真ん中に配置 */
         }
 
         .spot-card {
@@ -26,7 +22,6 @@
             flex-direction: column;
             border: 1px solid #eee;
             width: 100%;
-            /* グリッドの中で綺麗に収まるようにする */
             box-sizing: border-box;
         }
 
@@ -71,7 +66,6 @@
             width: 100%;
             height: 120px;
             object-fit: cover;
-            /* 写真が潰れずに綺麗にトリミングされる魔法 */
             border-radius: 6px;
         }
 
@@ -133,10 +127,8 @@
 
         .content-section {
             width: 100%;
-            /* ⭕ 修正：下側に80pxの「息継ぎ空間」を追加 */
             padding: 20px 20px 80px 20px;
             overflow-y: auto;
-            /* scrollよりautoの方がMac等でスクロールバーが綺麗に出ます */
         }
 
         .app-title {
@@ -258,7 +250,7 @@
             color: #333;
         }
 
-        /* 🌟 今回追加：タップしやすい評価ボタンのスタイル */
+        /* 🌟 評価ボタンのスタイル */
         .rating-group {
             display: flex;
             justify-content: space-between;
@@ -300,7 +292,6 @@
         }
     </style>
 
-    <!-- ✨ 成功メッセージ表示エリア -->
     @if (session('success'))
         <div id="flash-message"
             style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #1e8b9b; color: white; padding: 12px 24px; border-radius: 30px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 10000; transition: opacity 0.5s ease;">
@@ -360,6 +351,7 @@
                     </div>
                 </div>
             </form>
+
             <div class="spot-list">
                 @foreach($spots as $spot)
                     <div class="spot-card">
@@ -424,8 +416,9 @@
                             </button>
                         </div>
 
-                </div> @endforeach
-            </div> ```
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 
@@ -440,153 +433,7 @@
         </div>
     </div>
 
-    <div class="custom-modal" id="newSpotModal">
-        <div class="modal-content" style="padding: 0;">
-            <div
-                style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
-                <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">新規スポットを登録する</h2>
-                <button onclick="document.getElementById('newSpotModal').classList.remove('is-show')" class="close-btn"
-                    style="position: static;">×</button>
-            </div>
-
-            <form action="{{ route('spots.store') }}" method="POST" enctype="multipart/form-data" style="padding: 20px;"
-                onsubmit="return confirm('この内容で新しいスポットを登録しますか？');">
-                @csrf
-
-                <div style="border: 1px solid #c9d8e4; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
-                    <div
-                        style="background-color: #4a82b3; color: white; font-size: 12px; font-weight: bold; padding: 6px 12px;">
-                        Spot Information (基本情報)
-                    </div>
-                    <div
-                        style="background-color: #f4f8fb; padding: 12px; display: flex; flex-direction: column; gap: 10px;">
-                        <input type="text" name="name" placeholder="スポット名（例：Cebu CoWork Hub）"
-                            style="width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; outline: none;required">
-
-                        <div style="display: flex; align-items: center; gap: 8px; color: #666;">
-                            📍
-                            <select name="area"
-                                style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; color: #555; outline: none;">
-                                <option value="">-- エリアを選択 --</option>
-                                <option value="it-park">ITパーク周辺</option>
-                                <option value="ayala">アヤラ周辺</option>
-                                <option value="lahug">ラホグ</option>
-                                <option value="mabolo">マボロ</option>
-                                <option value="others">その他</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label
-                        style="display: block; font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px;">Photo
-                        (外観や内観)</label>
-                    <label
-                        style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100px; height: 70px; background-color: #f4f8fb; border: 1px dashed #4a82b3; border-radius: 6px; cursor: pointer; font-size: 11px; color: #4a82b3; font-weight: bold;">
-                        <i class="fa-solid fa-camera" style="font-size: 20px; margin-bottom: 4px;"></i>
-                        add photo
-                        <input type="file" name="photo" style="display: none;" accept="image/*">
-                    </label>
-                </div>
-
-                <div style="margin-bottom: 25px;">
-                    <label
-                        style="display: block; font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px;">Amenities
-                        & Services (設備)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <label style="cursor: pointer;">
-                            <input type="checkbox" name="has_wifi" value="1" style="display: none;"
-                                onchange="this.nextElementSibling.style.backgroundColor = this.checked ? '#e6f0f9' : 'white'; this.nextElementSibling.style.borderColor = this.checked ? '#1e8b9b' : '#c9d8e4'; this.nextElementSibling.style.color = this.checked ? '#1e8b9b' : '#4a82b3';">
-                            <div
-                                style="display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #c9d8e4; border-radius: 8px; width: 75px; height: 60px; color: #4a82b3; font-size: 11px; font-weight: bold; background-color: white; transition: all 0.2s;">
-                                <i class="fa-solid fa-wifi" style="font-size: 18px; margin-bottom: 4px;"></i> Wi-Fi
-                            </div>
-                        </label>
-
-                        <label style="cursor: pointer;">
-                            <input type="checkbox" name="has_power" value="1" style="display: none;"
-                                onchange="this.nextElementSibling.style.backgroundColor = this.checked ? '#e6f0f9' : 'white'; this.nextElementSibling.style.borderColor = this.checked ? '#1e8b9b' : '#c9d8e4'; this.nextElementSibling.style.color = this.checked ? '#1e8b9b' : '#4a82b3';">
-                            <div
-                                style="display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #c9d8e4; border-radius: 8px; width: 75px; height: 60px; color: #4a82b3; font-size: 11px; font-weight: bold; background-color: white; transition: all 0.2s;">
-                                <i class="fa-solid fa-plug-circle-bolt" style="font-size: 18px; margin-bottom: 4px;"></i>
-                                Power
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <div
-                    style="background-color: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #eee;">
-                    <p style="font-size: 12px; font-weight: bold; color: #4a82b3; margin-top: 0; margin-bottom: 15px;">🔍
-                        集中環境の初期データをセット</p>
-
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🥷 空間快適度
-                            (視線の気にならなさ)</label>
-                        <div class="rating-group">
-                            @for($i = 1; $i <= 5; $i++)
-                                <input type="radio" name="dead_spot_rating" id="new_ds_{{ $i }}" value="{{ $i }}"
-                                    class="rating-radio" {{ $i == 3 ? 'checked' : '' }}>
-                                <label for="new_ds_{{ $i }}" class="rating-label"
-                                    style="padding: 6px 0; font-size: 14px;">{{ $i }}</label>
-                            @endfor
-                        </div>
-                        <div style="text-align: center; font-size: 10px; color: #777; margin-top: 4px;">1:丸見え 〜 5:完全に自分の世界
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">❄️ 冷房の強さ</label>
-                        <div class="rating-group">
-                            @for($i = 1; $i <= 5; $i++)
-                                <input type="radio" name="aircon_level" id="new_ac_{{ $i }}" value="{{ $i }}"
-                                    class="rating-radio" {{ $i == 3 ? 'checked' : '' }}>
-                                <label for="new_ac_{{ $i }}" class="rating-label"
-                                    style="padding: 6px 0; font-size: 14px;">{{ $i }}</label>
-                            @endfor
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🧱
-                            壁際・角席の確保しやすさ</label>
-                        <div class="rating-group">
-                            @for($i = 1; $i <= 5; $i++)
-                                <input type="radio" name="wall_seat_rating" id="new_wall_{{ $i }}" value="{{ $i }}"
-                                    class="rating-radio" {{ $i == 3 ? 'checked' : '' }}>
-                                <label for="new_wall_{{ $i }}" class="rating-label"
-                                    style="padding: 6px 0; font-size: 14px;">{{ $i }}</label>
-                            @endfor
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 0;">
-                        <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🎵 BGMのボリューム</label>
-                        <div class="rating-group">
-                            @for($i = 1; $i <= 5; $i++)
-                                <input type="radio" name="bgm_volume_level" id="new_bgm_{{ $i }}" value="{{ $i }}"
-                                    class="rating-radio" {{ $i == 3 ? 'checked' : '' }}>
-                                <label for="new_bgm_{{ $i }}" class="rating-label"
-                                    style="padding: 6px 0; font-size: 14px;">{{ $i }}</label>
-                            @endfor
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 10px;">
-                    <button type="button" onclick="document.getElementById('newSpotModal').classList.remove('is-show')"
-                        style="flex: 1; background-color: white; color: #1e8b9b; border: 1px solid #1e8b9b; padding: 14px; border-radius: 25px; font-weight: bold; font-size: 14px; cursor: pointer;">
-                        キャンセル
-                    </button>
-                    <button type="submit"
-                        style="flex: 1; background-color: #1e8b9b; color: white; border: none; padding: 14px; border-radius: 25px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        スポットを登録する
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+    @include('new_spot_modal')
 
     @foreach($spots as $spot)
         <div class="custom-modal" id="reviewModal-{{ $spot->id }}">
@@ -725,7 +572,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const mapModal = document.getElementById('mapModal');
-            const newSpotModal = document.getElementById('newSpotModal');
             const closeMapBtn = document.getElementById('closeMapBtn');
             const modalMapIframe = document.getElementById('modalMapIframe');
             const openMapBtns = document.querySelectorAll('.open-map-btn');
@@ -750,14 +596,13 @@
                 }
             }
 
+            // モーダルの外側をクリックしたら閉じる共通処理
             window.addEventListener('click', function (e) {
                 if (e.target === mapModal) {
                     mapModal.classList.remove('is-show');
                     if (modalMapIframe) modalMapIframe.src = '';
                 }
-                if (e.target === newSpotModal) {
-                    newSpotModal.classList.remove('is-show');
-                }
+                // .custom-modalクラスを持つすべてのポップアップ（new_spot_modal含む）を閉じる魔法
                 if (e.target.classList.contains('custom-modal')) {
                     e.target.classList.remove('is-show');
                 }
