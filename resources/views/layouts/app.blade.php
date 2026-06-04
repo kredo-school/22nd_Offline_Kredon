@@ -33,9 +33,9 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1060;
+            z-index: 1040;
             height: 70px;
-            margin-left: 0px;
+            /* margin-left: 0px; */
         }
 
         .main-wrapper {
@@ -43,9 +43,15 @@
             flex-direction: column;
             /* スマホ対応 */
             /* margin-top: 70px; */
-            padding-top: 0;
-            min-height: calc(100vh - 70px);
+            /* min-height: calc(100vh - 70px);  */
         }
+
+        /* .main-wrapper {
+    flex-direction: row !important;
+    height: calc(100vh - 70px) !important;
+    margin-top: 70px !important;
+    overflow: hidden !important;
+} */
 
         .sidebar-left {
             width: 200px;
@@ -72,8 +78,8 @@
             html,
             body,
             #app {
-                height: 100vh;
-                overflow: hidden;
+                height: 100vh !important;
+                overflow: hidden !important;
             }
 
             .navbar-top {
@@ -82,18 +88,25 @@
 
             /* ★重要：中身が個別にスクロールするように高さをNavbarを除いた分に固定 */
             .main-wrapper {
-                flex-direction: row;
-                height: calc(100vh - 70px);
+                flex-direction: row !important;
+                height: calc(100vh - 70px) !important;
                 /* ナビゲーションバーの高さを引いた全高 */
-                padding-top: 0;
-                /* margin-top: 70px; */
+
+                overflow: hidden !important;
             }
 
             .content-body {
-                margin-left: 200px;
-                /* height: calc(100vh - 70px); */
-                overflow: hidden;
+                margin-left: 200px !important;
+
+                display: flex !important;
+                flex-direction: column !important;
+
+                height: calc(100vh - 70px) !important;
+                width: calc(100% - 200px) !important;
+
+                overflow: hidden !important;
                 background-color: #f8f9fa;
+
             }
 
         }
@@ -149,7 +162,7 @@
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom navbar-top sticky-top shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom navbar-top stick-top shadow-sm">
             <div class="container-fluid px-4">
 
                 {{-- 検索 --}}
@@ -218,7 +231,8 @@
                                         <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="avatar"
                                             style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
                                     @else
-                                        <span style="
+                                        <span
+                                            style="
                                                         display: inline-flex;
                                                         align-items: center;
                                                         justify-content: center;
@@ -299,6 +313,10 @@
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i> LOGOUT
                         </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                     </div>
 
                     <hr class="mx-3 my-2 text-muted">
@@ -330,6 +348,7 @@
 
             <main class="content-body">
                 @yield('content')
+                @stack('scripts')
             </main>
         </div>
     </div>
