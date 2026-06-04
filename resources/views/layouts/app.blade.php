@@ -88,7 +88,7 @@
                 flex-direction: row !important;
                 height: calc(100vh - 70px) !important;
                 overflow: hidden !important;
-                margin-top: 70px;
+                /* margin-top: 70px; */
             }
             .content-body {
                 margin-left: 200px !important;
