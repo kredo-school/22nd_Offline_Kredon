@@ -144,6 +144,27 @@
         .command a {
             font-size: 0.8rem;
         }
+
+        /* =========================================
+           🌟 追加：全ページ共通デザイン＆滑らかスクロール
+           ========================================= */
+        html { scroll-behavior: smooth; }
+
+        .spot-card-horizontal { background-color: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); display: flex; border: 1px solid #eee; overflow: hidden; transition: all 0.2s ease; text-decoration: none; color: inherit; cursor: pointer; }
+        .spot-card-horizontal:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(30, 139, 155, 0.15); border-color: #c9d8e4; }
+        .spot-card-img-area { width: 200px; min-height: 150px; background-color: #f4f8fb; flex-shrink: 0; border-right: 1px solid #eee; }
+        .spot-card-img-area img { width: 100%; height: 100%; object-fit: cover; }
+        .spot-card-info { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+        .spot-card-horizontal:hover .spot-title { color: #1e8b9b; }
+        .spot-title { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 8px; transition: color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .spot-desc { font-size: 13px; color: #666; margin-bottom: 15px; line-height: 1.5; }
+        .spot-tags { display: flex; gap: 10px; font-size: 12px; color: #555; font-weight: bold; flex-wrap: wrap; }
+        .tag-item i { color: #1e8b9b; margin-right: 4px; }
+
+        @media (max-width: 768px) {
+            .spot-card-horizontal { flex-direction: column; }
+            .spot-card-img-area { width: 100%; height: 200px; border-right: none; border-bottom: 1px solid #eee; }
+        }
     </style>
 </head>
 
@@ -187,14 +208,7 @@
                             </a>
                         </li>
 
-                        {{-- 投稿ボタン --}}
-                        {{-- <li class="nav-item me-3">
-                            <a href="#" class="btn btn-primary btn-sm px-3 py-1"><i
-                                    class="fa-solid fa-plus"></i>Post</a>
-                        </li> --}}
-
                         <div class="vr mx-3"></div>
-
 
                         @guest
                             @if (Route::has('login'))
@@ -256,8 +270,6 @@
                             style="height: 140px; width: auto; object-fit: contain;">
                     </a>
 
-                    {{-- <a href="#" class="sidebar-link mt-0"><i class="fa-regular fa-house"></i> HOME </a> --}}
-
                     <div class="command">
                         {{-- SPOT pull-downメニュー --}}
                         <a href="#" class="sidebar-link" id="spotToggle" onclick="toggleSpot(event)">
@@ -288,12 +300,12 @@
 
                         <a href="#" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i>EVENT</a>
                         <a href="#" class="sidebar-link"><i class="fa-solid fa-store"></i> MARKET</a>
-                        <a href="#" class="sidebar-link"><i class="fa-regular fa-bookmark"></i> BOOKMARK</a>
-                        <a href="#" class="sidebar-link"><i class="fa-regular fa-star"></i> REVIEW</a>
+                        <a href="{{ route('mypage') }}" class="sidebar-link"><i class="fa-regular fa-bookmark"></i> BOOKMARK</a>
+                        <a href="{{ route('mypage') }}" class="sidebar-link"><i class="fa-regular fa-star"></i> REVIEW</a>
 
                         <hr class="mx-3 my-2 text-muted">
 
-                        <a href="#" class="sidebar-link"><i class="fa-regular fa-user"></i> MY PAGE</a>
+                        <a href="{{ route('mypage') }}" class="sidebar-link"><i class="fa-regular fa-user"></i> MY PAGE</a>
                         <a href="#" class="sidebar-link"><i class="fa-solid fa-gear"></i> SETTING</a>
                         <a href="#" class="sidebar-link"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

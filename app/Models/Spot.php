@@ -25,4 +25,16 @@ public function scopeExtremeFocus($query)
           ->havingRaw('AVG(traffic_avoidance_rating) >= 4');
     });
 }
+// 🌟 このスポットをブックマークしているユーザーを取得する魔法
+    public function bookmarkedUsers()
+    {
+        return $this->belongsToMany(User::class, 'bookmarks')->withTimestamps();
+    }
+
+    // 🌟 特定のユーザーがこのスポットをブックマークしているか判定する便利機能
+    public function isBookmarkedBy($user)
+    {
+        if (!$user) return false;
+        return $this->bookmarkedUsers()->where('user_id', $user->id)->exists();
+    }
 }

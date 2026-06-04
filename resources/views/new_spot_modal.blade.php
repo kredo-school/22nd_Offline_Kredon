@@ -48,7 +48,6 @@
     }
 </style>
 
-<!-- モーダルのHTML -->
 <div class="custom-modal" id="newSpotModal">
     <div class="modal-content" style="padding: 0; max-height: 85vh; overflow-y: auto;">
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: white; z-index: 10;">
@@ -59,19 +58,32 @@
         <form action="{{ route('spots.store') }}" method="POST" enctype="multipart/form-data" style="padding: 20px 20px 40px 20px;" onsubmit="return confirm('この内容で新しいスポットと最初のレビューを登録しますか？');">
             @csrf
             
-            <!-- 基本情報セクション -->
             <div style="border: 1px solid #c9d8e4; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
                 <div style="background-color: #4a82b3; color: white; font-size: 12px; font-weight: bold; padding: 6px 12px;">Spot Information (基本情報)</div>
                 <div style="background-color: #f4f8fb; padding: 12px; display: flex; flex-direction: column; gap: 10px;">
                     <input type="text" name="name" placeholder="スポット名（例：Cebu CoWork Hub）" style="width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;" required>
+                    
                     <select name="area" style="width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;" required>
                         <option value="">-- エリアを選択 --</option>
-                        <option value="it-park">ITパーク周辺</option>
-                        <option value="ayala">アヤラ周辺</option>
+                        <option value="it-park">ITパーク内</option>
+                        <option value="ayala">アヤラモール内</option>
                         <option value="lahug">ラホグ</option>
                         <option value="mabolo">マボロ</option>
                         <option value="others">その他</option>
                     </select>
+
+                    <div style="display: flex; align-items: center; gap: 10px; background-color: white; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <label style="font-size: 13px; font-weight: bold; color: #555; white-space: nowrap; margin: 0;">🕒 営業時間</label>
+                        <input type="time" name="open_time" style="flex: 1; border: 1px solid #ccc; border-radius: 4px; padding: 6px; font-size: 14px; outline: none;">
+                        <span style="color: #666; font-weight: bold;">〜</span>
+                        <input type="time" name="close_time" style="flex: 1; border: 1px solid #ccc; border-radius: 4px; padding: 6px; font-size: 14px; outline: none;">
+                    </div>
+                    
+                    <div style="background-color: white; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <label style="font-size: 12px; font-weight: bold; color: #555; display: block; margin-bottom: 5px;">📷 スポットの外観・内観写真</label>
+                        <input type="file" name="photo" accept="image/*" style="font-size: 13px; width: 100%;">
+                    </div>
+
                     <div style="display: flex; gap: 15px; margin-top: 5px;">
                         <label style="font-size: 14px; font-weight: bold; color: #555; cursor: pointer;"><input type="checkbox" name="has_wifi" value="1"> 📶 Wi-Fi</label>
                         <label style="font-size: 14px; font-weight: bold; color: #555; cursor: pointer;"><input type="checkbox" name="has_power" value="1"> 🔌 コンセント</label>
@@ -79,7 +91,6 @@
                 </div>
             </div>
 
-            <!-- 初回レビューセクション -->
             <div style="background-color: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #eee;">
                 <p style="font-size: 12px; font-weight: bold; color: #4a82b3; margin-top: 0; margin-bottom: 15px;">✍️ 最初の発見者としてニッチ評価を入力（任意）</p>
                 
@@ -118,7 +129,6 @@
     </div>
 </div>
 
-<!-- モーダル開閉用のJS -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const newSpotModal = document.getElementById('newSpotModal');

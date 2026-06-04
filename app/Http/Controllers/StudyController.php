@@ -45,9 +45,57 @@ class StudyController extends Controller
         }
 
         // ⑥ ここまでに組み立てた条件を全部合体させて、データベースから最新順で取得！
-        $spots = $query->latest()->get();
+        $spots = $query->with('reviews')->latest()->paginate(10);
 
         // ⑦ 絞り込んだ結果（$spots）を持って、検索ページ（welcome.blade.php）を表示する
         return view('welcome', compact('spots'));
     }
+    // 🌟 これを追加：1つのお店の詳細と、そのレビューを全部持ってくる係
+    public function show($id)
+    {
+        $spot = \App\Models\Spot::with('reviews')->findOrFail($id);
+        return view('spot_detail', compact('spot'));
+    }
+    public function search(Request $request)
+    {
+        // ユーザーが入力した検索条件を受け取る
+        $keyword = $request->input('keyword');
+        $area = $request->input('area');
+        $wifi = $request->input('wifi');
+        $power = $request->input('power');
+
+        // ベースとなるクエリ（データベースへの質問状）を作成
+        // `with('reviews')` は平均点を計算するためにレビュー情報も一緒に持ってくる魔法
+        $query = Spot::with('reviews');
+
+        // ① キーワードがあれば、名前かエリアから探す
+        if (!empty($keyword)) {
+            $query->where(function($q) use ($keyword) {
+                $q->where('name', 'LIKE', "%{$keyword}%")
+                  ->orWhere('area', 'LIKE', "%{$keyword}%");
+            });
+        }
+
+        // ② エリアが選択されていれば、そのエリアで絞り込む
+        if (!empty($area)) {
+            $query->where('area', $area);
+        }
+
+        // ③ WiFiありにチェックが入っていれば絞り込む
+        if ($wifi == '1') {
+            $query->where('has_wifi', true);
+        }
+
+        // ④ 電源ありにチェックが入っていれば絞り込む
+        if ($power == '1') {
+            $query->where('has_power', true);
+        }
+
+        // 条件に合ったものを最新順に取得する
+        $spots = $query->latest()->paginate(10);
+
+        // 検索結果をトップページと同じデザインの 'top' に渡して表示する
+        return view('top', compact('spots'));
+    }
 }
+
