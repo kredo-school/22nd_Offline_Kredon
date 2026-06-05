@@ -225,6 +225,10 @@
 
                 <div class="main-column">
                     <div class="hero-banner">
+                        <div
+                            style="position: absolute; top: -5px; right: 20px; font-size: 40px; transform: rotate(15deg); filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3)); z-index: 10;">
+                            🇵🇭</div>
+
                         <div class="hero-title">セブ島が繋ぐ、思いとご縁 🌴</div>
                         <div class="hero-subtitle">あなただけの最高の集中スポット・学習環境を見つけよう！</div>
                         <button onclick="document.getElementById('newSpotModal').classList.add('is-show')"
@@ -289,21 +293,46 @@
                 <div class="side-column">
                     <div class="side-box">
                         <div class="side-box-title">🔍 スポットを検索</div>
-                        <form action="{{ route('search') }}" method="GET">
+                        <form action="/" method="GET">
+                            <div
+                                style="margin-bottom: 15px; font-size: 14px; color: #555; display: flex; gap: 15px; padding-left: 5px;">
+                                <label
+                                    style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+                                    <input type="checkbox" name="has_power" value="1" {{ request('has_power') ? 'checked' : '' }}> 🔌 コンセント
+                                </label>
+                                <label
+                                    style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+                                    <input type="checkbox" name="has_wifi" value="1" {{ request('has_wifi') ? 'checked' : '' }}> 📶 Wi-Fi
+                                </label>
+                            </div>
                             <input type="text" name="keyword" class="search-input" placeholder="キーワード（例：カフェ、静か）"
                                 value="{{ request('keyword') }}">
-
-                            <select name="area" class="area-select">
+                            <select name="sort"
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px; border-color: #f0932b; color: #f0932b; font-weight: bold; cursor: pointer;">
+                                <option value="new" @selected(request('sort') == 'new' || !request()->has('sort'))>✨
+                                    新着順（デフォルト）</option>
+                                <option value="old" @selected(request('sort') == 'old')>⏳ 古い順</option>
+                                <option value="reviews" @selected(request('sort') == 'reviews')>💬 クチコミの多い順</option>
+                            </select>
+                            <select name="area"
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
                                 <option value="">-- エリアで絞り込む --</option>
-                                <option value="it-park" {{ request('area') == 'it-park' ? 'selected' : '' }}>ITパーク内</option>
-                                <option value="ayala" {{ request('area') == 'ayala' ? 'selected' : '' }}>アヤラモール内</option>
-                                <option value="lahug" {{ request('area') == 'lahug' ? 'selected' : '' }}>ラホグ</option>
-                                <option value="mabolo" {{ request('area') == 'mabolo' ? 'selected' : '' }}>マボロ</option>
+                                <option value="ITパーク" {{ request('area') == 'ITパーク' ? 'selected' : '' }}>ITパーク</option>
+                                <option value="アヤラ" {{ request('area') == 'アヤラ' ? 'selected' : '' }}>アヤラ</option>
+                                <option value="その他（タクシー圏内）" {{ request('area') == 'その他（タクシー圏内）' ? 'selected' : '' }}>
+                                    その他（タクシー圏内）</option>
                             </select>
 
-                            <div style="margin-bottom: 15px; font-size: 13px; color: #555;">
-                                <label style="margin-right: 10px;"><input type="checkbox" name="wifi" value="1" {{ request('wifi') == '1' ? 'checked' : '' }}> WiFiあり</label>
-                                <label><input type="checkbox" name="power" value="1" {{ request('power') == '1' ? 'checked' : '' }}> 電源あり</label>
+                            <div
+                                style="margin-bottom: 15px; font-size: 14px; color: #555; display: flex; gap: 15px; padding-left: 5px;">
+                                <label
+                                    style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+                                    <input type="checkbox" name="has_power" value="1" {{ request('has_power') ? 'checked' : '' }}> 🔌 コンセント
+                                </label>
+                                <label
+                                    style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+                                    <input type="checkbox" name="has_wifi" value="1" {{ request('has_wifi') ? 'checked' : '' }}> 📶 Wi-Fi
+                                </label>
                             </div>
 
                             <button type="submit" class="search-btn">検索する</button>

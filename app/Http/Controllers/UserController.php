@@ -3,23 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+
 class UserController extends Controller
 {
+    // 🌟 マイページを表示する係
     public function mypage()
     {
-    // 🌟 追加：VS Codeに「この $user は App\Models\User だよ」と教えるプロの技
-        /** @var \App\Models\User $user */    
-    // 開発用：ログインの壁を飛ばして、一番最初（テストデータ）のユーザーを仮で呼び出す
-      $user = Auth::user();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
 
-        // そのユーザーが書いたレビューと、レビュー先のお店（spot）の情報も一緒に取得
-        $reviews = $user->reviews()->with('spot')->get();
+        // ① 自分が過去に投稿したクチコミを最新順で取得（お店の情報も一緒に持ってくる）
+        $myReviews = $user->reviews()->with('spot')->latest()->get();
 
-        $bookmarkedSpots = $user->bookmarks()->latest()->get();
+        // ② 自分がお気に入り登録したスポットを最新順で取得
+        $myBookmarks = $user->bookmarks()->latest()->get();
 
-        // 'mypage' という名前のBlade画面にデータを渡す
-        return view('mypage', compact('user', 'reviews','bookmarkedSpots'));
+        // ③ 2つのデータをマイページの画面（mypage.blade.php）に渡す
+        return view('mypage', compact('myReviews', 'myBookmarks'));
     }
 }

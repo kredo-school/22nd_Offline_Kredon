@@ -16,9 +16,9 @@ class SpotController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'area' => 'required|string',
-            'open_time' => 'nullable|date_format:H:i', // 🌟 追加：時間形式かチェック
-            'close_time' => 'nullable|date_format:H:i', // 🌟 追加
-            'photo' => 'nullable|image|max:2048',
+            'open_time' => 'nullable|string', // 🌟 H:i縛りをやめて文字列として受け入れる
+            'close_time' => 'nullable|string', // 🌟 同上
+            'photo' => 'nullable|image|max:10240', // 🌟 写真の上限を2MBから一気に「10MB」へ引き上げ！
             'customer_vibe' => 'nullable|integer|between:1,5',
             'eye_fatigue_level' => 'nullable|integer|between:1,5',
             'chair_comfort' => 'nullable|integer|between:1,5',
@@ -26,13 +26,14 @@ class SpotController extends Controller
             'comment' => 'nullable|string',
         ]);
 
+
         DB::beginTransaction();
 
         try {
             $spot = new Spot();
             $spot->name = $request->name;
             $spot->area = $request->area;
-            
+
             // 🌟 追加：バラバラに送られてきた時間を「08:00 - 22:00」の形に合体させる
             $hours = null;
             if ($request->filled('open_time') && $request->filled('close_time')) {
@@ -72,8 +73,7 @@ class SpotController extends Controller
             DB::commit();
 
             return redirect()->route('spots.show', $spot->id)
-                             ->with('success', '✨ 新しいスポットと最初のレビューを登録しました！');
-
+                ->with('success', '✨ 新しいスポットと最初のレビューを登録しました！');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', '登録中にエラーが発生しました。');

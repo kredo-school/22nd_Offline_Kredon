@@ -43,16 +43,48 @@ class ReviewController extends Controller
         return back()->with('success', '✨ レビューを投稿しました！平均点が更新されました！');
     }
     
-// 🌟 追加：レビューを削除する担当
+// 🌟 レビュー編集（更新）処理
+    public function update(Request $request, $id)
+    {
+        $review = \App\Models\Review::findOrFail($id);
+
+        // セキュリティ対策：絶対に本人しか編集できないようにする
+        if ($review->user_id !== \Illuminate\Support\Facades\Auth::id()) {
+            abort(403, '権限がありません');
+        }
+
+        // 写真が新しくアップロードされたら保存（それ以外はそのまま）
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('reviews', 'public');
+            $review->photo_path = $path;
+        }
+
+        // データを上書き保存
+        $review->update([
+            'customer_vibe' => $request->customer_vibe,
+            'eye_fatigue_level' => $request->eye_fatigue_level,
+            'chair_comfort' => $request->chair_comfort,
+            'desk_stability' => $request->desk_stability,
+            'good_point' => $request->good_point,
+            'bad_point' => $request->bad_point,
+            'comment' => $request->comment,
+        ]);
+
+        return back()->with('success', 'レビューを更新しました！');
+    }
+
+    // 🌟 レビュー削除処理
     public function destroy($id)
     {
-        // 該当のレビューを探す
         $review = \App\Models\Review::findOrFail($id);
-        
-        // レビューをデータベースから削除
+
+        // セキュリティ対策：絶対に本人しか削除できないようにする
+        if ($review->user_id !== \Illuminate\Support\Facades\Auth::id()) {
+            abort(403, '権限がありません');
+        }
+
         $review->delete();
 
-        // マイページに戻り、成功メッセージを表示
-        return back()->with('success', 'レビューを削除しました。');
+        return back()->with('success', 'レビューを削除しました！');
     }
 }

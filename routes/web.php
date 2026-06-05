@@ -9,31 +9,45 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SpotController;
 use App\Http\Controllers\BookmarkController;
 
+/*
+|--------------------------------------------------------------------------
+| 🔓 誰でもアクセスできるページ（ログイン不要）
+|--------------------------------------------------------------------------
+*/
 
-
-// 🌟 トップページ（スポット一覧）
+// 🌟 トップページ（スポット一覧 兼 検索結果）※昨日一本化済み！
 Route::get('/', [StudyController::class, 'index'])->name('top');
-
-// 🌟 検索機能
-Route::get('/search', [StudyController::class, 'search'])->name('search');
 
 // 🌟 スポット詳細ページ
 Route::get('/spots/{id}', [StudyController::class, 'show'])->name('spots.show');
 
-// 🌟 新規スポット登録
-Route::post('/spots', [SpotController::class, 'store'])->name('spots.store');
-
-// 🌟 レビュー投稿
-Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-
-// 🌟 ブックマーク（お気に入り）の追加・解除
-Route::post('/spots/{id}/bookmark', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
-
-// 🌟 マイページ
-Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
-
-// --- ログイン関連（Laravel標準） ---
+/*
+|--------------------------------------------------------------------------
+| 🔐 ログイン関連（Laravel標準）
+|--------------------------------------------------------------------------
+*/
 Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-// 🌟 追加：レビュー削除ルート
-Route::delete('/reviews/{id}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| 🛡️ ログインしている人だけが使える機能（authミドルウェアの関所）
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+
+    // 🌟 マイページ
+    Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
+
+    // 🌟 新規スポット登録（保存処理）
+    Route::post('/spots', [SpotController::class, 'store'])->name('spots.store');
+
+    // 🌟 レビュー関連（投稿・更新・削除）
+    Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+
+    // 🌟 ブックマーク（お気に入り）の追加・解除
+    Route::post('/spots/{id}/bookmark', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
+
+});
