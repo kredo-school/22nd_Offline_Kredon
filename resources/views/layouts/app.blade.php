@@ -1,3 +1,5 @@
+app.blade.php
+
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -39,12 +41,17 @@
         }
 
         .main-wrapper {
-            display: flex;
-            flex-direction: column;
+            flex-direction: row !important;
+             height: calc(100vh - 70px) !important;
+            /* overflow: hidden !important; ★ここも削除推奨 */
+            
+            /* 変更 */
+            /* display: flex;
+            flex-direction: column; */
             /* スマホ対応 */
             /* margin-top: 70px; */
-            padding-top: 0;
-            min-height: calc(100vh - 70px);
+            /* padding-top: 0;
+            min-height: calc(100vh - 70px); */
         }
 
         .sidebar-left {
@@ -62,8 +69,27 @@
         }
 
         .content-body {
-            flex: 1;
+            /* 変更 */
+
+            /* flex: 1;
             margin-left: 0;
+            !important;
+            margin-top: 0 !important;
+            padding: 20px;  
+            height: calc(100vh - 70px) !important;
+            overflow-y: auto;  
+            background-color: #f8f9fa; */
+            margin-left: 200px !important;
+                margin-top: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: calc(100vh - 70px) !important;
+                width: calc(100% - 200px) !important;
+                
+                /* ★ここが重要：ここを scroll に変更します */
+                overflow-y: auto !important; 
+                
+                background-color: #f8f9fa;
         }
 
         /* Desktop */
@@ -73,7 +99,7 @@
             body,
             #app {
                 height: 100vh;
-                overflow: hidden;
+                overflow: hidden; 
             }
 
             .navbar-top {
@@ -81,21 +107,28 @@
             }
 
             /* ★重要：中身が個別にスクロールするように高さをNavbarを除いた分に固定 */
-            .main-wrapper {
+            /* .main-wrapper {
                 flex-direction: row;
                 height: calc(100vh - 70px);
-                /* ナビゲーションバーの高さを引いた全高 */
+                ナビゲーションバーの高さを引いた全高
                 padding-top: 0;
+                margin-top: 70px;
+            } */
+            
+             .main-wrapper {
+                flex-direction: row !important;
+                height: calc(100vh - 70px) !important;
+                overflow: hidden !important;
                 /* margin-top: 70px; */
             }
 
+            変更前
             .content-body {
                 margin-left: 200px;
-                /* height: calc(100vh - 70px); */
+                height: calc(100vh - 70px);
                 overflow: hidden;
                 background-color: #f8f9fa;
             }
-
         }
 
         /* サイドバー内のメニュー装飾 */
@@ -104,6 +137,7 @@
             align-items: center;
             padding: 10px 16px;
             color: #495057;
+            margin-bottom: 4px;
             text-decoration: none;
             transition: background 0.2s;
         }
@@ -336,3 +370,4 @@
 </body>
 
 </html>
+

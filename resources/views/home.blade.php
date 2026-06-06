@@ -1,23 +1,29 @@
-@extends('layouts.app')
+@extends('layouts.app') 
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+@section('title', 'Home') 
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
+@section('content') 
+<div class="container-fluid py-4"> 
+    <div class="row g-3 align-items-stretch mt-5"> 
+        {{-- メインエリア (col-lg-8) --}} 
+        <div class="col-lg-8 d-flex flex-column"> 
+            <div class="mb-4"> 
+                @include('home.partials._hero') 
+            </div> 
+            <div class="mb-4"> 
+                @include('home.partials._action') 
             </div>
-        </div>
-    </div>
-</div>
+            <div class="mb-4">
+                @include('home.partials._feed')
+            </div>
+           
+        </div> 
+
+        {{-- 右カラム (col-lg-4) --}} 
+        <div class="col-lg-4"> 
+            @include('home.partials._right_card') 
+        </div> 
+    </div> 
+</div> 
 @endsection
+

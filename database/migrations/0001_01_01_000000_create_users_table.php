@@ -13,14 +13,19 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name'); // Laravel標準に合わせて name を追加
+            $table->string('username')->nullable(); // 元の設計にあったもの
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('email_verified_at')->nullable(); // メール認証用
             $table->string('password');
-            $table->rememberToken();
+            $table->string('status')->default('active'); // 設計のstatus
+            $table->integer('role')->default(1); // 0:admin, 1:user
+            $table->boolean('is_premium')->default(0); // 0:general, 1:member
+            $table->string('plan_type')->nullable(); // 設計のplan_type
+            $table->timestamp('premium_expired_at')->nullable(); // 設計のexpired_at
+            $table->rememberToken(); // ログイン保持用
             $table->timestamps();
         });
-
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
