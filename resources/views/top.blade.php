@@ -7,14 +7,12 @@
         .container {
             display: flex;
             width: 100%;
-            height: calc(100vh - 70px);
-            margin-top: 70px;
+            margin-top: 20px;
         }
 
         .content-section {
             width: 100%;
-            padding: 20px 20px 80px 20px;
-            overflow-y: auto;
+            padding: 20px 20px 50px 20px;
         }
 
         /* --- ページ内部の2カラムレイアウト --- */
@@ -34,16 +32,22 @@
             gap: 25px;
             min-width: 0;
         }
-
         .side-column {
-            flex: 1;
+            flex: 1; /* 🌟 右側を狭く（割合を1にする） */
+            max-width: 320px; /* 🌟 右側が太りすぎないようにストッパーをかける */
             display: flex;
             flex-direction: column;
             gap: 20px;
-            position: sticky;
-            top: 0;
-            min-width: 280px;
+            position: sticky; /* 🌟 画面にピタッと張り付く魔法 */
+            top: 20px; /* 上から20pxの隙間を空けて張り付く */
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;
         }
+
+ .side-column::-webkit-scrollbar {
+           display:none;
+        }
+        
 
         /* --- ヒーローバナー --- */
         .hero-banner {
@@ -102,8 +106,11 @@
 
         .spot-card-img-area img {
             width: 100%;
-            height: 100%;
+            height: 150px;
+            /* 固定高で揃える */
             object-fit: cover;
+            /* これが魔法：余白を出さずに美しく中央で切り抜く */
+            display: block;
         }
 
         .spot-card-info {
@@ -197,6 +204,16 @@
             background-color: #166b78;
         }
 
+        nav svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ちなみに、矢印の下に出る「Showing 1 to 10 of...」のテキストを消したい場合はこれも追加 */
+        p.text-sm.text-gray-700.leading-5 {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .top-page-wrapper {
                 flex-direction: column;
@@ -225,9 +242,16 @@
 
                 <div class="main-column">
                     <div class="hero-banner">
-                        <div
-                            style="position: absolute; top: -5px; right: 20px; font-size: 40px; transform: rotate(15deg); filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3)); z-index: 10;">
-                            🇵🇭</div>
+                        <!-- 🌟 背景透明＆高画質！CSSでクロス感を演出する最強のバッジ -->
+                        <div style="position: absolute; top: 15px; right: 25px; width: 60px; height: 40px;">
+                            <!-- 日本国旗（右上に傾けて奥に配置） -->
+                            <img src="https://flagcdn.com/w40/jp.png" alt="Japan"
+                                style="position: absolute; top: 0; right: 0; width: 36px; height: 26px; object-fit: cover; border-radius: 3px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); transform: rotate(12deg); z-index: 1;">
+
+                            <!-- フィリピン国旗（左下に傾けて手前に配置） -->
+                            <img src="https://flagcdn.com/w40/ph.png" alt="Philippines"
+                                style="position: absolute; bottom: 0; left: 0; width: 36px; height: 26px; object-fit: cover; border-radius: 3px; box-shadow: -2px 3px 6px rgba(0,0,0,0.4); transform: rotate(-12deg); z-index: 2;">
+                        </div>
 
                         <div class="hero-title">セブ島が繋ぐ、思いとご縁 🌴</div>
                         <div class="hero-subtitle">あなただけの最高の集中スポット・学習環境を見つけよう！</div>
@@ -322,18 +346,6 @@
                                 <option value="その他（タクシー圏内）" {{ request('area') == 'その他（タクシー圏内）' ? 'selected' : '' }}>
                                     その他（タクシー圏内）</option>
                             </select>
-
-                            <div
-                                style="margin-bottom: 15px; font-size: 14px; color: #555; display: flex; gap: 15px; padding-left: 5px;">
-                                <label
-                                    style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
-                                    <input type="checkbox" name="has_power" value="1" {{ request('has_power') ? 'checked' : '' }}> 🔌 コンセント
-                                </label>
-                                <label
-                                    style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
-                                    <input type="checkbox" name="has_wifi" value="1" {{ request('has_wifi') ? 'checked' : '' }}> 📶 Wi-Fi
-                                </label>
-                            </div>
 
                             <button type="submit" class="search-btn">検索する</button>
                         </form>

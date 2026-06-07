@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Review;
 use App\Models\Bookmark;
+use App\Models\User;
+use App\Models\SpotPhoto;
 
 class Spot extends Model
 {
@@ -13,7 +15,7 @@ class Spot extends Model
 
     protected $fillable = [
         'name', 'area', 'photo_path', 'hours', 'description',
-        'has_wifi', 'has_power', 'has_food'
+        'has_wifi', 'has_power', 'has_food', 'user_id'
     ];
 
     /*
@@ -21,6 +23,12 @@ class Spot extends Model
     | 🔗 繋ぎ込み（リレーション設定）
     |--------------------------------------------------------------------------
     */
+    // 🌟 このスポットを登録したユーザー（作成者）
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function reviews()
     {
         return $this->hasMany(Review::class);
@@ -108,5 +116,10 @@ class Spot extends Model
             return false;
         }
         return $this->bookmarks()->where('user_id', $user->id)->exists();
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(SpotPhoto::class);
     }
 }

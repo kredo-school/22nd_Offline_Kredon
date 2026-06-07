@@ -9,11 +9,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SpotController;
 use App\Http\Controllers\BookmarkController;
 
-/*
-|--------------------------------------------------------------------------
-| 🔓 誰でもアクセスできるページ（ログイン不要）
-|--------------------------------------------------------------------------
-*/
+
 
 // 🌟 トップページ（スポット一覧 兼 検索結果）※昨日一本化済み！
 Route::get('/', [StudyController::class, 'index'])->name('top');
@@ -49,5 +45,7 @@ Route::middleware('auth')->group(function () {
 
     // 🌟 ブックマーク（お気に入り）の追加・解除
     Route::post('/spots/{id}/bookmark', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
+    Route::put('/spots/{id}', [SpotController::class, 'update'])->name('spots.update');
 
+    Route::get('/spots/{id}', [SpotController::class, 'show'])->name('spots.show');
 });
