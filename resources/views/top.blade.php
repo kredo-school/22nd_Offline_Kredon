@@ -1,5 +1,6 @@
 @extends('layouts.app')
-
+{{-- Takaさん専用の共通CSSを読み込む --}}
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 @section('content')
     <style>
         .top-page-wrapper { display: flex; gap: 30px; width: 100%; max-width: 1100px; margin: 0 auto; align-items: flex-start; }

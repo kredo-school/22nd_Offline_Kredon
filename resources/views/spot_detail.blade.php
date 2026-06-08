@@ -1,5 +1,6 @@
 @extends('layouts.app')
-
+{{-- Takaさん専用の共通CSSを読み込む --}}
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 @section('content')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
