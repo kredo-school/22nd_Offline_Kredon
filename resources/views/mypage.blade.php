@@ -295,9 +295,9 @@
             <div class="todo-box">
                 <h3>📝 今日の目標（クリックして編集）</h3>
                 <ul class="todo-list">
-                    <li><input type="text" value="Laravel動画3本視聴" placeholder="目標を入力..."></li>
-                    <li><input type="text" value="Portfolioの修正" placeholder="目標を入力..."></li>
-                    <li><input type="text" value="Gitの学習を進める" placeholder="目標を入力..."></li>
+                    <li><input type="text" value="get my homework done" placeholder="目標を入力..."></li>
+                    <li><input type="text" value="make portfolio" placeholder="目標を入力..."></li>
+                    <li><input type="text" value="review today's lesson" placeholder="目標を入力..."></li>
                 </ul>
             </div>
         </div>
@@ -351,7 +351,7 @@
                 @endforeach
             </div>
             <div style="margin-top: 25px; margin-bottom: 50px;">
-                {{ $myBookmarks->appends(request()->query())->links() }}
+             {{ $myBookmarks->appends(request()->query())->links('pagination::bootstrap-5') }}
             </div>
         @endif
 
@@ -515,7 +515,7 @@
                 @endforeach
             </div>
             <div style="margin-top: 25px; margin-bottom: 50px;">
-                {{ $myReviews->appends(request()->query())->links() }}
+              {{ $myReviews->appends(request()->query())->links('pagination::bootstrap-5') }}
             </div>
         @endif
 

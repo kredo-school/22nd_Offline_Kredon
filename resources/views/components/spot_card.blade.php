@@ -19,6 +19,7 @@
                 @if($spot->has_wifi)<span class="tag-item"><i class="fa-solid fa-wifi"></i> WiFi完備</span>@endif
                 @if($spot->has_power)<span class="tag-item"><i class="fa-solid fa-plug-circle-bolt"></i> 電源あり</span>@endif
             </div>
+            
             <div style="color: #ccc; font-size: 14px;"><i class="fa-solid fa-chevron-right"></i></div>
         </div>
     </div>

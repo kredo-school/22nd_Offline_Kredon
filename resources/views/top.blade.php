@@ -1,239 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* --- 全体の枠組み（大元のレイアウトに素直に従う） --- */
-        .container {
-            display: flex;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .content-section {
-            width: 100%;
-            padding: 20px 20px 50px 20px;
-        }
-
-        /* --- ページ内部の2カラムレイアウト --- */
-        .top-page-wrapper {
-            display: flex;
-            gap: 30px;
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            align-items: flex-start;
-        }
-
-        .main-column {
-            flex: 2;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            min-width: 0;
-        }
-        .side-column {
-            flex: 1; /* 🌟 右側を狭く（割合を1にする） */
-            max-width: 320px; /* 🌟 右側が太りすぎないようにストッパーをかける */
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            position: sticky; /* 🌟 画面にピタッと張り付く魔法 */
-            top: 20px; /* 上から20pxの隙間を空けて張り付く */
-            max-height: calc(100vh - 110px);
-            overflow-y: auto;
-        }
-
- .side-column::-webkit-scrollbar {
-           display:none;
-        }
-        
-
-        /* --- ヒーローバナー --- */
-        .hero-banner {
-            background: linear-gradient(135deg, #1e8b9b, #4a82b3);
-            border-radius: 16px;
-            padding: 40px 30px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(30, 139, 155, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* --- 横型スポットカード --- */
-        .spot-card-horizontal {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            display: flex;
-            border: 1px solid #eee;
-            overflow: hidden;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-        }
-
-        .spot-card-horizontal:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(30, 139, 155, 0.15);
-            border-color: #c9d8e4;
-        }
-
-        .spot-card-img-area {
-            width: 200px;
-            min-height: 150px;
-            background-color: #f4f8fb;
-            flex-shrink: 0;
-            border-right: 1px solid #eee;
-        }
-
-        .spot-card-img-area img {
-            width: 100%;
-            height: 150px;
-            /* 固定高で揃える */
-            object-fit: cover;
-            /* これが魔法：余白を出さずに美しく中央で切り抜く */
-            display: block;
-        }
-
-        .spot-card-info {
-            padding: 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-width: 0;
-        }
-
-        .spot-card-horizontal:hover .spot-title {
-            color: #1e8b9b;
-        }
-
-        .spot-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 8px;
-            transition: color 0.2s;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .spot-desc {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .spot-tags {
-            display: flex;
-            gap: 10px;
-            font-size: 12px;
-            color: #555;
-            font-weight: bold;
-            flex-wrap: wrap;
-        }
-
-        .tag-item i {
-            color: #1e8b9b;
-            margin-right: 4px;
-        }
-
-        /* --- 右側のボックス --- */
-        .side-box {
-            background-color: white;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .side-box-title {
-            font-size: 15px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #f4f8fb;
-            padding-bottom: 10px;
-        }
-
-        .search-input,
-        .area-select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        .search-btn {
-            width: 100%;
-            background-color: #1e8b9b;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .search-btn:hover {
-            background-color: #166b78;
-        }
-
-        nav svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* ちなみに、矢印の下に出る「Showing 1 to 10 of...」のテキストを消したい場合はこれも追加 */
-        p.text-sm.text-gray-700.leading-5 {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .top-page-wrapper {
-                flex-direction: column;
-            }
-
-            .spot-card-horizontal {
-                flex-direction: column;
-            }
-
-            .spot-card-img-area {
-                width: 100%;
-                height: 200px;
-                border-right: none;
-                border-bottom: 1px solid #eee;
-            }
-
-            .side-column {
-                min-width: 100%;
-            }
-        }
+        .top-page-wrapper { display: flex; gap: 30px; width: 100%; max-width: 1100px; margin: 0 auto; align-items: flex-start; }
+        .main-column { flex: 2; display: flex; flex-direction: column; gap: 25px; min-width: 0; }
+        .side-column { flex: 1; max-width: 320px; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 20px; max-height: calc(100vh - 110px); overflow-y: auto; }
+        .side-column::-webkit-scrollbar { display: none; }
+        .hero-banner { background-color: #1e8b9b; color: white; border-radius: 12px; padding: 40px 20px; text-align: center; position: relative; overflow: hidden; }
+        .hero-title { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
+        .hero-subtitle { font-size: 14px; margin-bottom: 20px; opacity: 0.9; }
+        .spot-card-horizontal { display: flex; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; text-decoration: none; color: inherit; transition: 0.2s; }
+        .spot-card-horizontal:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+        .spot-card-img-area { width: 180px; flex-shrink: 0; }
+        .spot-card-img-area img { width: 100%; height: 100%; object-fit: cover; }
+        .spot-card-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .spot-title { font-size: 18px; font-weight: bold; margin-bottom: 8px; color: #333; }
+        .spot-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 10px; }
+        .spot-tags { display: flex; gap: 8px; }
+        .tag-item { font-size: 11px; font-weight: bold; color: #1e8b9b; background: #e6f0f9; padding: 4px 8px; border-radius: 4px; }
+        .side-box { background: white; border-radius: 12px; border: 1px solid #eee; padding: 20px; }
+        .side-box-title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 15px; border-bottom: 2px solid #1e8b9b; padding-bottom: 8px; }
+        .search-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; margin-bottom: 15px; }
+        .search-btn { width: 100%; padding: 12px; background-color: #1e8b9b; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
     </style>
 
     <div class="container">
@@ -242,27 +30,23 @@
 
                 <div class="main-column">
                     <div class="hero-banner">
-                        <!-- 🌟 背景透明＆高画質！CSSでクロス感を演出する最強のバッジ -->
                         <div style="position: absolute; top: 15px; right: 25px; width: 60px; height: 40px;">
-                            <!-- 日本国旗（右上に傾けて奥に配置） -->
                             <img src="https://flagcdn.com/w40/jp.png" alt="Japan"
                                 style="position: absolute; top: 0; right: 0; width: 36px; height: 26px; object-fit: cover; border-radius: 3px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); transform: rotate(12deg); z-index: 1;">
 
-                            <!-- フィリピン国旗（左下に傾けて手前に配置） -->
                             <img src="https://flagcdn.com/w40/ph.png" alt="Philippines"
                                 style="position: absolute; bottom: 0; left: 0; width: 36px; height: 26px; object-fit: cover; border-radius: 3px; box-shadow: -2px 3px 6px rgba(0,0,0,0.4); transform: rotate(-12deg); z-index: 2;">
                         </div>
 
-                        <div class="hero-title">セブ島が繋ぐ、思いとご縁 🌴</div>
-                        <div class="hero-subtitle">あなただけの最高の集中スポット・学習環境を見つけよう！</div>
+                        <div class="hero-title">CEBU SPOT 🌴</div>
+                        <div class="hero-subtitle">あなただけの最高の集中スポット・学習環境を見つけよう</div>
                         <button onclick="document.getElementById('newSpotModal').classList.add('is-show')"
                             style="background-color: white; color: #1e8b9b; border: none; padding: 10px 24px; border-radius: 20px; font-weight: bold; font-size: 14px; cursor: pointer;">
                             ＋ 新規スポットを登録
                         </button>
                     </div>
 
-                    <h3
-                        style="font-size: 18px; color: #333; border-left: 4px solid #1e8b9b; padding-left: 10px; margin: 10px 0 0 0;">
+                    <h3 style="font-size: 18px; color: #333; border-left: 4px solid #1e8b9b; padding-left: 10px; margin: 10px 0 0 0;">
                         @if(request()->has('keyword') || request()->has('area') || request()->has('wifi') || request()->has('power'))
                             🔍 検索結果：{{ $spots->count() }}件
                         @else
@@ -271,8 +55,7 @@
                     </h3>
 
                     @if($spots->isEmpty())
-                        <div
-                            style="text-align: center; padding: 40px 20px; background: white; border-radius: 12px; border: 1px dashed #ccc; color: #666;">
+                        <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 12px; border: 1px dashed #ccc; color: #666;">
                             条件に一致するスポットが見つかりませんでした。<br>条件を変えて再度検索してみてください。
                         </div>
                     @else
@@ -293,6 +76,7 @@
                                             営業時間：{{ $spot->hours ?? '情報なし' }}
                                         </div>
                                     </div>
+                                    
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <div class="spot-tags">
                                             @if($spot->has_wifi)
@@ -306,45 +90,40 @@
                                             <i class="fa-solid fa-chevron-right"></i>
                                         </div>
                                     </div>
+
                                 </div>
                             </a>
                         @endforeach
                     @endif
+                    
                     <div style="margin-top: 30px; margin-bottom: 20px;">
                         {{ $spots->withQueryString()->links() }}
                     </div>
                 </div>
+                
                 <div class="side-column">
                     <div class="side-box">
                         <div class="side-box-title">🔍 スポットを検索</div>
                         <form action="/" method="GET">
-                            <div
-                                style="margin-bottom: 15px; font-size: 14px; color: #555; display: flex; gap: 15px; padding-left: 5px;">
-                                <label
-                                    style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+                            <div style="margin-bottom: 15px; font-size: 14px; color: #555; display: flex; gap: 15px; padding-left: 5px;">
+                                <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
                                     <input type="checkbox" name="has_power" value="1" {{ request('has_power') ? 'checked' : '' }}> 🔌 コンセント
                                 </label>
-                                <label
-                                    style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+                                <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
                                     <input type="checkbox" name="has_wifi" value="1" {{ request('has_wifi') ? 'checked' : '' }}> 📶 Wi-Fi
                                 </label>
                             </div>
-                            <input type="text" name="keyword" class="search-input" placeholder="キーワード（例：カフェ、静か）"
-                                value="{{ request('keyword') }}">
-                            <select name="sort"
-                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px; border-color: #f0932b; color: #f0932b; font-weight: bold; cursor: pointer;">
-                                <option value="new" @selected(request('sort') == 'new' || !request()->has('sort'))>✨
-                                    新着順（デフォルト）</option>
+                            <input type="text" name="keyword" class="search-input" placeholder="キーワード（例：カフェ、静か）" value="{{ request('keyword') }}">
+                            <select name="sort" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px; border-color: #f0932b; color: #f0932b; font-weight: bold; cursor: pointer;">
+                                <option value="new" @selected(request('sort') == 'new' || !request()->has('sort'))>✨ 新着順（デフォルト）</option>
                                 <option value="old" @selected(request('sort') == 'old')>⏳ 古い順</option>
                                 <option value="reviews" @selected(request('sort') == 'reviews')>💬 クチコミの多い順</option>
                             </select>
-                            <select name="area"
-                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
+                            <select name="area" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
                                 <option value="">-- エリアで絞り込む --</option>
                                 <option value="ITパーク" {{ request('area') == 'ITパーク' ? 'selected' : '' }}>ITパーク</option>
                                 <option value="アヤラ" {{ request('area') == 'アヤラ' ? 'selected' : '' }}>アヤラ</option>
-                                <option value="その他（タクシー圏内）" {{ request('area') == 'その他（タクシー圏内）' ? 'selected' : '' }}>
-                                    その他（タクシー圏内）</option>
+                                <option value="その他（タクシー圏内）" {{ request('area') == 'その他（タクシー圏内）' ? 'selected' : '' }}>その他（タクシー圏内）</option>
                             </select>
 
                             <button type="submit" class="search-btn">検索する</button>
@@ -354,8 +133,7 @@
                     <div class="side-box">
                         <div class="side-box-title">🔥 注目のスポット</div>
                         <div style="text-align: center; color: #666; font-size: 13px; padding: 20px 0;">
-                            <img src="https://placehold.co/300x150/d8c3b4/white?text=Featured+Spot"
-                                style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
+                            <img src="https://placehold.co/300x150/d8c3b4/white?text=Featured+Spot" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
                             <div style="font-weight: bold; color: #333;">Cebu CoWork Hub</div>
                             <div>⭐ 4.8 (ITパーク)</div>
                         </div>
