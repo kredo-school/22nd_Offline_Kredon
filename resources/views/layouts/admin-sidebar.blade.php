@@ -5,13 +5,13 @@
 </div>
 
 {{-- ナビゲーションメニュー --}}
-<div class="admin-nav">
+<div class="admin-nav ms-2">
     {{-- <div class="admin-nav-section">
         <span class="admin-nav-section-label">Main Menu</span>
     </div> --}}
 
     {{-- ダッシュボード --}}
-    <a href="{{ route('admin.dashboard') }}" class="admin-nav-link mt-3">
+    <a href="{{ route('admin.dashboard') }}" class="admin-nav-link mt-2">
         <i class="fa-solid fa-chart-pie"></i> Dashboard
     </a>
 
@@ -21,23 +21,27 @@
     </a>
 
     <a href="#" class="admin-nav-link">
-        <i class="fa-solid fa-location-dot"></i> Locations
+        <i class="fa-solid fa-location-dot"></i> Spots
     </a>
 
-    <a href="#" class="admin-nav-link">
+    <a href="{{ route('admin.events.index') }}" class="admin-nav-link">
         <i class="fa-solid fa-calendar-days"></i> Events
     </a>
 
-    <a href="#" class="admin-nav-link">
+    <a href="{{ route('admin.markets.index') }}" class="admin-nav-link">
         <i class="fa-solid fa-shop"></i> Markets
     </a>
 
-    <a href="#" class="admin-nav-link">
-        <i class="fa-solid fa-comments"></i> Comments & Reviews
+    <a href="{{ route('admin.reviews.index') }}" class="admin-nav-link">
+        <i class="fa-solid fa-star"></i>Reviews
     </a>
 
     <a href="#" class="admin-nav-link">
         <i class="fa-solid fa-chart-line"></i> Analysis
+    </a>
+
+    <a href="#" class="admin-nav-link">
+        <i class="fa-solid fa-bell"></i> Notification
     </a>
 </div>
 

@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 #Admin Controller
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\EventsController;
+use App\Http\Controllers\Admin\ReviewsController;
+use App\Http\Controllers\Admin\MarketsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,6 +31,18 @@ Route::group(['middleware' => 'auth'], function(){
 
         #Users
         Route::get('users', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('users.index');
+        
+        #Events
+        Route::get('events', [App\Http\Controllers\Admin\EventsController::class, 'index'])->name('events.index');
+        
+        #Reviews
+        Route::get('reviews', [App\Http\Controllers\Admin\ReviewsController::class, 'index'])->name('reviews.index');
+        
+        #Markets
+        Route::get('markets', [App\Http\Controllers\Admin\MarketsController::class, 'index'])->name('markets.index');
+        Route::get('markets/show/{id}', [App\Http\Controllers\Admin\MarketsController::class, 'show'])->name('markets.show');
+
+        
 
     });
 });

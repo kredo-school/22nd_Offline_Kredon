@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ReviewsController extends Controller
+class EventsController extends Controller
 {
-    public function index() {
-       return view('admin.reviews.index');
+    public function index(){
+        return view('admin.events.index');
     }
 }
