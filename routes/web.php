@@ -1,5 +1,5 @@
 <?php
-
+use App\Models\TouristBookmark;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\StudyController;
@@ -71,10 +71,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/tourist_spots', [TouristSpotController::class, 'store'])->name('tourist_spots.store');
     // 🌟 観光スポット情報の更新
     Route::put('/tourist_spots/{id}', [TouristSpotController::class, 'update'])->name('tourist_spots.update');
-    
+    // 🌟 観光スポット情報の削除
+    Route::delete('/tourist_spots/{id}', [TouristSpotController::class, 'destroy'])->name('tourist_spots.destroy');
+    Route::post('/tourist_spots/{id}/bookmark', [App\Http\Controllers\TouristSpotController::class, 'toggleBookmark'])->name('tourist_bookmarks.toggle');
     // 🌟 コントローラーを丸ごと複製したため、観光用のブックマークやクチコミの保存処理も動くようにルートを開通させておきます
     Route::post('/tourist_spots/{id}/bookmark', [TouristSpotController::class, 'toggleBookmark'])->name('tourist_bookmarks.toggle');
     Route::post('/tourist_spots/{tourist_spot}/reviews', [TouristSpotController::class, 'storeReview'])->name('tourist_reviews.store');
     Route::put('/tourist_reviews/{review}', [TouristSpotController::class, 'updateReview'])->name('tourist_reviews.update');
     Route::delete('/tourist_reviews/{review}', [TouristSpotController::class, 'destroyReview'])->name('tourist_reviews.destroy');
+    // 🌟 観光スポット：クチコミ投稿＆削除
+    Route::post('/tourist_spots/{tourist_spot}/reviews', [App\Http\Controllers\TouristReviewController::class, 'store'])->name('tourist_reviews.store');
+    Route::delete('/tourist_reviews/{id}', [App\Http\Controllers\TouristReviewController::class, 'destroy'])->name('tourist_reviews.destroy');
 });

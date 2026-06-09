@@ -219,6 +219,20 @@
                     @endif
                     <div class="hero-banner">
                         <div class="hero-title">CEBU TOURIST 🏖️</div>
+                        {{-- 🌟 右上の国旗アイコン（画像化してWindowsでも絶対表示させる！） --}}
+                        {{-- 🌟 右上の国旗アイコン（立体感・重なり・段差を完全再現） --}}
+                        <div
+                            style="position: absolute; top: 15px; right: 25px; display: flex; align-items: center; user-select: none;">
+
+                            {{-- 日本国旗（左側：手前・少し下・左傾き） --}}
+                            <img src="https://flagcdn.com/w80/jp.png" alt="Japan"
+                                style="width: 34px; transform: rotate(-15deg); margin-right: -12px; z-index: 2; position: relative; top: 8px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.4)); border-radius: 3px;">
+
+                            {{-- フィリピン国旗（右側：奥・少し上・右傾き） --}}
+                            <img src="https://flagcdn.com/w80/ph.png" alt="Philippines"
+                                style="width: 34px; transform: rotate(12deg); z-index: 1; position: relative; top: -6px; filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3)); border-radius: 3px;">
+
+                        </div>
                         <div class="hero-subtitle">あなただけの最高の観光スポット・体験を見つけよう</div>
                         <button onclick="document.getElementById('newTouristSpotModal').classList.add('is-show')"
                             style="background-color: white; color: #f0932b; border: none; padding: 10px 24px; border-radius: 20px; font-weight: bold; font-size: 14px; cursor: pointer;">

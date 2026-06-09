@@ -7,7 +7,8 @@
         .main-column { flex: 2; display: flex; flex-direction: column; gap: 25px; min-width: 0; }
         .side-column { flex: 1; max-width: 320px; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 20px; max-height: calc(100vh - 110px); overflow-y: auto; }
         .side-column::-webkit-scrollbar { display: none; }
-        .hero-banner { background-color: #1e8b9b; color: white; border-radius: 12px; padding: 40px 20px; text-align: center; position: relative; overflow: hidden; }
+        .hero-banner { background-color: #1e8b9b; color: white; border-radius: 12px; padding: 40px 20px; /* 🌟 親の余白を無視して、上に引っ張り上げる魔法 */
+    margin-top: -24px;text-align: center; position: relative; overflow: hidden; }
         .hero-title { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
         .hero-subtitle { font-size: 14px; margin-bottom: 20px; opacity: 0.9; }
         .spot-card-horizontal { display: flex; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; text-decoration: none; color: inherit; transition: 0.2s; }
@@ -25,12 +26,11 @@
         .search-btn { width: 100%; padding: 12px; background-color: #1e8b9b; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
     </style>
 
-    <div class="container">
-        <div class="content-section">
-            <div class="top-page-wrapper">
-
-                <div class="main-column">
-                    <div class="hero-banner">
+    <div class="container" style="padding-top: 0; margin-top: 0;">
+    <div class="content-section" style="padding-top: 0; margin-top: 0;">
+        <div class="top-page-wrapper" style="padding-top: 0; margin-top: 0;">
+            <div class="main-column" style="padding-top: 0; margin-top: 0;">
+                <div class="hero-banner" style="margin-top: 0;">
                         <div style="position: absolute; top: 15px; right: 25px; width: 60px; height: 40px;">
                             <img src="https://flagcdn.com/w40/jp.png" alt="Japan"
                                 style="position: absolute; top: 0; right: 0; width: 36px; height: 26px; object-fit: cover; border-radius: 3px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); transform: rotate(12deg); z-index: 1;">
@@ -39,7 +39,7 @@
                                 style="position: absolute; bottom: 0; left: 0; width: 36px; height: 26px; object-fit: cover; border-radius: 3px; box-shadow: -2px 3px 6px rgba(0,0,0,0.4); transform: rotate(-12deg); z-index: 2;">
                         </div>
 
-                        <div class="hero-title">CEBU SPOT 🌴</div>
+                        <div class="hero-title">CEBU STUDY 🌴</div>
                         <div class="hero-subtitle">あなただけの最高の集中スポット・学習環境を見つけよう</div>
                         <button onclick="document.getElementById('newSpotModal').classList.add('is-show')"
                             style="background-color: white; color: #1e8b9b; border: none; padding: 10px 24px; border-radius: 20px; font-weight: bold; font-size: 14px; cursor: pointer;">

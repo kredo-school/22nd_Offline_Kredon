@@ -5,21 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TouristSpot;
 use App\Models\Review;
+use App\Models\TouristBookmark; // 🌟 欠落していたインポートを追加
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class TouristSpotController extends Controller
 {
-   public function store(Request $request)
+    public function store(Request $request)
     {
-        // ① データの警備（観光スポット用にスッキリ最適化）
+        // ① データの警備（予約URLのバリデーションを追加）
         $request->validate([
             'name' => 'required|string|max:255',
             'area' => 'required|string',
-            'budget' => 'nullable|string', // 🌟 予算を追加
+            'budget' => 'nullable|string', 
+            'booking_url' => 'nullable|url', // 🌟 追加：URL形式チェック
             'open_time' => 'nullable|string', 
             'close_time' => 'nullable|string', 
-            'photo' => 'nullable|image|max:10240', // 🌟 フォームに合わせて単一画像に変更
+            'photo' => 'nullable|image|max:10240', 
         ]);
 
         DB::beginTransaction();
@@ -28,7 +30,8 @@ class TouristSpotController extends Controller
             $tourist_spot = new TouristSpot();
             $tourist_spot->name = $request->name;
             $tourist_spot->area = $request->area;
-            $tourist_spot->budget = $request->budget; // 🌟 予算を保存
+            $tourist_spot->budget = $request->budget; 
+            $tourist_spot->booking_url = $request->booking_url; // 🌟 追加：予約URLを保存
 
             // 時間の合体処理
             $hours = null;
@@ -41,18 +44,15 @@ class TouristSpotController extends Controller
             }
             $tourist_spot->hours = $hours;
 
-            // 🌟 観光スポット専用の「体験フラグ」に変更！（has_wifiなどは削除）
             $tourist_spot->has_activity = $request->has('has_activity');
             $tourist_spot->has_view     = $request->has('has_view');
             $tourist_spot->has_shopping = $request->has('has_shopping');
             $tourist_spot->has_food     = $request->has('has_food');
             
             $tourist_spot->user_id = Auth::id();
-
-            // まずスポット自体を保存してIDを確定させる
             $tourist_spot->save();
 
-            // 🌟 写真の保存ロジック（フォームに合わせて1枚だけシンプルに保存）
+            // 写真の保存ロジック
             if ($request->hasFile('photo')) {
                 $photo = $request->file('photo');
                 $filename = uniqid() . '_' . time() . '.' . $photo->getClientOriginalExtension();
@@ -62,72 +62,59 @@ class TouristSpotController extends Controller
                 $tourist_spot->save();
             }
 
-            // ※学習スポット専用のレビュー初期投稿ロジック（イスの座り心地など）は、
-            // 観光スポットの新規登録には不要なので削除しました！
-
             DB::commit();
 
-            // 🌟 登録成功後、作ったばかりの詳細ページではなく、安全に一覧ページ（トップ）に戻す
             return redirect()->route('tourist_spots.index')
                 ->with('success', '✨ 新しい観光スポットを登録しました！');
                 
         } catch (\Exception $e) {
             DB::rollback();
-            // 🌟 万が一またエラーが起きた時に、原因を画面にドーンと出して教えてくれる魔法に変更！
             dd($e->getMessage());
         }
     }
 
     public function update(Request $request, $id)
     {
-        $tourist_spot = TouristSpot::findOrFail($id);
-
-        if ($tourist_spot->user_id !== Auth::id()) {
-            abort(403, 'このスポットを編集する権限がありません。');
-        }
-
+        // ① 入力チェック（予約URLを追加）
         $request->validate([
             'name' => 'required|string|max:255',
             'area' => 'required|string',
-            'open_time' => 'nullable|string',
-            'close_time' => 'nullable|string',
-            'photos' => 'nullable|array|max:5',
-            'photos.*' => 'image|max:10240',
+            'budget' => 'nullable|string',
+            'booking_url' => 'nullable|url', // 🌟 追加：URL形式チェック
+            'hours' => 'nullable|string', 
+            'photo' => 'nullable|image|max:10240',
         ]);
 
-        $hours = $tourist_spot->hours; 
-        if ($request->filled('open_time') || $request->filled('close_time')) {
-            $open = $request->filled('open_time') ? $request->open_time : '未定';
-            $close = $request->filled('close_time') ? $request->close_time : '未定';
-            $hours = $open . ' - ' . $close;
+        $tourist_spot = TouristSpot::findOrFail($id);
+
+        // ② セキュリティ
+        if ($tourist_spot->user_id !== Auth::id()) {
+            return redirect()->route('tourist_spots.index')->with('error', '編集権限がありません。');
         }
 
-        $tourist_spot->update([
-            'name' => $request->name,
-            'area' => $request->area,
-            'hours' => $hours,
-            'has_wifi' => $request->has('has_wifi') ? true : false,
-            'has_power' => $request->has('has_power') ? true : false,
-        ]);
+        // ③ データの更新
+        $tourist_spot->name = $request->name;
+        $tourist_spot->area = $request->area;
+        $tourist_spot->budget = $request->budget;
+        $tourist_spot->booking_url = $request->booking_url; // 🌟 追加：予約URLを更新
+        $tourist_spot->hours = $request->hours;
 
-        // 🌟 編集時も専用フォルダに整理して保存
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $index => $photo) {
-                $filename = uniqid() . '_' . time() . '.' . $photo->getClientOriginalExtension();
-                $path = $photo->storeAs('tourist_spots/' . $tourist_spot->id, $filename, 'public');
+        $tourist_spot->has_activity = $request->has('has_activity');
+        $tourist_spot->has_view     = $request->has('has_view');
+        $tourist_spot->has_shopping = $request->has('has_shopping');
+        $tourist_spot->has_food     = $request->has('has_food');
 
-                if (empty($tourist_spot->photo_path) && $index === 0) {
-                    $tourist_spot->update(['photo_path' => $path]);
-                }
-
-                $tourist_spot->photos()->create([
-                    'photo_path' => $path
-                ]);
-            }
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $filename = uniqid() . '_' . time() . '.' . $photo->getClientOriginalExtension();
+            $path = $photo->storeAs('tourist_spots/' . $tourist_spot->id, $filename, 'public');
+            $tourist_spot->photo_path = $path;
         }
+
+        $tourist_spot->save();
 
         return redirect()->route('tourist_spots.show', $tourist_spot->id)
-            ->with('success', '✨ スポット情報を最新に更新しました！');
+            ->with('success', '✨ 観光スポットの情報を更新しました！');
     }
 
     public function index(Request $request)
@@ -146,18 +133,10 @@ class TouristSpotController extends Controller
             $query->where('area', $request->area);
         }
 
-        if ($request->has('wifi')) {
-            $query->where('has_wifi', true);
-        }
-
-        if ($request->has('power')) {
-            $query->where('has_power', true);
-        }
+        // 🌟 旧学習スポット用の不要なWi-Fi・電源検索ロジックはエラーの種になるため削除しました
 
         $sort = $request->input('sort', 'newest'); 
-        if ($sort === 'rating_high') {
-            $query->latest(); 
-        } elseif ($sort === 'bookmark_count') {
+        if ($sort === 'bookmark_count') {
             $query->withCount('bookmarks')->orderBy('bookmarks_count', 'desc');
         } else {
             $query->latest();
@@ -170,8 +149,41 @@ class TouristSpotController extends Controller
 
     public function show($id)
     {
-        // 🌟 クチコミに加えて、紐づく複数写真（photos）も一緒に持ってくる！
-        $tourist_spot = TouristSpot::with(['reviews.user', 'photos'])->findOrFail($id);
+        $tourist_spot = TouristSpot::findOrFail($id);
         return view('tourist_spot_detail', compact('tourist_spot'));
+    }
+
+    public function destroy($id)
+    {
+        $tourist_spot = TouristSpot::findOrFail($id);
+
+        if ($tourist_spot->user_id !== Auth::id()) {
+            return redirect()->route('tourist_spots.index')->with('error', '削除権限がありません。');
+        }
+
+        $tourist_spot->delete();
+
+        return redirect()->route('tourist_spots.index')
+            ->with('success', '🗑️ 観光スポットを削除しました。');
+    }
+
+    public function toggleBookmark($id)
+    {
+        $userId = Auth::id();
+        
+        $bookmark = TouristBookmark::where('user_id', $userId)
+            ->where('tourist_spot_id', $id)
+            ->first();
+
+        if ($bookmark) {
+            $bookmark->delete();
+            return back()->with('success', '🤍 お気に入りから外しました。');
+        } else {
+            TouristBookmark::create([
+                'user_id' => $userId,
+                'tourist_spot_id' => $id
+            ]);
+            return back()->with('success', '❤️ お気に入りに登録しました！');
+        }
     }
 }
