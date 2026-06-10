@@ -54,4 +54,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Spot::class, 'bookmarks')->withTimestamps();
     }
+    // 🌟 ユーザーが保存した観光スポット一覧を取得
+    public function bookmarkedTouristSpots()
+    {
+        // tourist_bookmarks テーブルを中間テーブルとして、TouristSpot モデルを結びつける
+        return $this->belongsToMany(TouristSpot::class, 'tourist_bookmarks', 'user_id', 'tourist_spot_id')->withTimestamps();
+    }
 }

@@ -13,14 +13,12 @@ class UserController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // ① 自分が過去に投稿したクチコミを最新順で取得
-        // 🌟変更点: get() ではなく paginate(10) に。さらに、お気に入り側の矢印と混同しないように 'reviews_page' という名前をつけます
+        // ========================================================
+        // 📚 学習スポット＆クチコミのデータ
+        // ========================================================
         $myReviews = $user->reviews()->with('spot')->latest()->paginate(10, ['*'], 'reviews_page');
 
-        // ② お気に入りスポットのクエリ（検索・並び替えの準備）
         $query = $user->bookmarks()->withCount('bookmarks');
-
-        // 🌟 フィルター機能（リクエストに応じて絞り込み・並び替え）
         $filter = $request->query('filter');
         
         if ($filter === 'wifi') {
@@ -29,9 +27,41 @@ class UserController extends Controller
             $query->where('has_power', true);
         }
 
-        // 🌟変更点: 最新順で取得。こちらも 'bookmarks_page' という専用の名前をつけてページネーション！
         $myBookmarks = $query->latest()->paginate(10, ['*'], 'bookmarks_page');
 
-        return view('mypage', compact('myReviews', 'myBookmarks'));
+
+        // ========================================================
+        // 🌴 観光スポットのお気に入りデータ
+        // ========================================================
+        $bookmarkedTouristSpots = $user->bookmarkedTouristSpots()->latest('tourist_bookmarks.created_at')->get();
+
+
+        // ========================================================
+        // 🌟 Taka-san考案！週替わりピックアップ・アルゴリズム
+        // ========================================================
+        $weekNumber = now()->weekOfYear; // 現在が今年の第何週目か
+        $pickupSpot = null;
+        $pickupType = ''; // 'study' か 'tourist' か
+
+        if ($weekNumber % 2 == 0) {
+            // 💡 偶数週：観光スポットの1位
+            $pickupSpot = \App\Models\TouristSpot::withCount('bookmarks')
+                            ->orderByDesc('bookmarks_count')
+                            ->first();
+            $pickupType = 'tourist';
+        } else {
+            // 💡 奇数週：学習スポットの1位
+            $pickupSpot = \App\Models\Spot::withCount('bookmarks')
+                            ->orderByDesc('bookmarks_count')
+                            ->first();
+            $pickupType = 'study';
+        }
+
+
+        // ========================================================
+        // 🌟 5つのデータをすべてまとめて画面（Blade）に渡す！
+        // ※この行が一番重要です！
+        // ========================================================
+        return view('mypage', compact('myReviews', 'myBookmarks', 'bookmarkedTouristSpots', 'pickupSpot', 'pickupType'));
     }
 }

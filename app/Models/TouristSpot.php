@@ -19,4 +19,9 @@ class TouristSpot extends Model
     {
         return $this->hasMany(TouristReview::class);
     }
+    // 🌟 これを追記！：お気に入り（保存）数を数えるための設定
+    public function bookmarks()
+    {
+        return $this->belongsToMany(User::class, 'tourist_bookmarks', 'tourist_spot_id', 'user_id');
+    }
 }

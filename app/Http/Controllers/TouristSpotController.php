@@ -117,10 +117,12 @@ class TouristSpotController extends Controller
             ->with('success', '✨ 観光スポットの情報を更新しました！');
     }
 
-    public function index(Request $request)
+   public function index(Request $request)
     {
-        $query = TouristSpot::query();
+        // 星の平均点も一緒に取得
+        $query = TouristSpot::withAvg('reviews', 'rating');
 
+        // キーワード検索
         if ($request->filled('keyword')) {
             $keyword = $request->keyword;
             $query->where(function($q) use ($keyword) {
@@ -129,12 +131,29 @@ class TouristSpotController extends Controller
             });
         }
 
+        // エリア検索
         if ($request->filled('area')) {
             $query->where('area', $request->area);
         }
 
-        // 🌟 旧学習スポット用の不要なWi-Fi・電源検索ロジックはエラーの種になるため削除しました
+        // ========================================================
+        // 🌟 ここから追加：体験タグでの絞り込み
+        // ========================================================
+        if ($request->has('activity')) {
+            $query->where('has_activity', true);
+        }
+        if ($request->has('view')) {
+            $query->where('has_view', true);
+        }
+        if ($request->has('shopping')) {
+            $query->where('has_shopping', true);
+        }
+        if ($request->has('food')) {
+            $query->where('has_food', true);
+        }
+        // ========================================================
 
+        // 並び替え（人気順 or 新着順）
         $sort = $request->input('sort', 'newest'); 
         if ($sort === 'bookmark_count') {
             $query->withCount('bookmarks')->orderBy('bookmarks_count', 'desc');
@@ -147,10 +166,18 @@ class TouristSpotController extends Controller
         return view('tourist_top', compact('tourist_spots'));
     }
 
-    public function show($id)
+   public function show($id)
     {
-        $tourist_spot = TouristSpot::findOrFail($id);
-        return view('tourist_spot_detail', compact('tourist_spot'));
+        // 🌟 進化ポイント1：スポット情報と一緒に「星の平均点(avg)」と「クチコミ件数(count)」も取得！
+        $tourist_spot = TouristSpot::withAvg('reviews', 'rating')
+                                   ->withCount('reviews')
+                                   ->findOrFail($id);
+
+        // 🌟 進化ポイント2：このスポットに投稿されたクチコミ一覧を最新順で取得！
+        $reviews = $tourist_spot->reviews()->latest()->get();
+
+        // 🌟 取得したデータを画面に渡す（$reviews を追加）
+        return view('tourist_spot_detail', compact('tourist_spot', 'reviews'));
     }
 
     public function destroy($id)
@@ -165,7 +192,7 @@ class TouristSpotController extends Controller
 
         return redirect()->route('tourist_spots.index')
             ->with('success', '🗑️ 観光スポットを削除しました。');
-    }
+    } 
 
     public function toggleBookmark($id)
     {

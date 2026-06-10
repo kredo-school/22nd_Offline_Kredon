@@ -219,19 +219,15 @@
                     @endif
                     <div class="hero-banner">
                         <div class="hero-title">CEBU TOURIST 🏖️</div>
-                        {{-- 🌟 右上の国旗アイコン（画像化してWindowsでも絶対表示させる！） --}}
                         {{-- 🌟 右上の国旗アイコン（立体感・重なり・段差を完全再現） --}}
                         <div
                             style="position: absolute; top: 15px; right: 25px; display: flex; align-items: center; user-select: none;">
-
                             {{-- 日本国旗（左側：手前・少し下・左傾き） --}}
                             <img src="https://flagcdn.com/w80/jp.png" alt="Japan"
                                 style="width: 34px; transform: rotate(-15deg); margin-right: -12px; z-index: 2; position: relative; top: 8px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.4)); border-radius: 3px;">
-
                             {{-- フィリピン国旗（右側：奥・少し上・右傾き） --}}
                             <img src="https://flagcdn.com/w80/ph.png" alt="Philippines"
                                 style="width: 34px; transform: rotate(12deg); z-index: 1; position: relative; top: -6px; filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3)); border-radius: 3px;">
-
                         </div>
                         <div class="hero-subtitle">あなただけの最高の観光スポット・体験を見つけよう</div>
                         <button onclick="document.getElementById('newTouristSpotModal').classList.add('is-show')"
@@ -271,6 +267,25 @@
                                             📍 エリア：{{ $tourist_spot->area }}<br>
                                             💰 予算目安：{{ $tourist_spot->budget ?? '情報なし' }}
                                         </div>
+
+                                        {{-- 🌟 修正版：星の平均点表示（変数を $tourist_spot に統一！） --}}
+                                        <div style="margin: 5px 0; display: flex; align-items: center; gap: 5px;">
+                                            @if($tourist_spot->reviews_avg_rating)
+                                                @php
+                                                    $ratingRound = round($tourist_spot->reviews_avg_rating);
+                                                @endphp
+                                                <span style="color: #f0932b; font-weight: bold; font-size: 14px;">
+                                                    {{ str_repeat('⭐', $ratingRound) }}
+                                                </span>
+                                                <span style="font-size: 12px; color: #666; font-weight: bold; margin-left: 2px;">
+                                                    {{ number_format($tourist_spot->reviews_avg_rating, 1) }}
+                                                </span>
+                                            @else
+                                                <span style="font-size: 11px; color: #aaa;">⭐ クチコミなし</span>
+                                            @endif
+                                        </div>
+                                        {{-- 🌟 追加ここまで --}}
+
                                     </div>
 
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -302,8 +317,12 @@
                     <div class="side-box">
                         <div class="side-box-title">🔍 観光スポットを検索</div>
                         <form action="{{ route('tourist_spots.index') }}" method="GET">
+
+                            {{-- キーワード入力 --}}
                             <input type="text" name="keyword" class="search-input" placeholder="キーワード（例：ビーチ、教会）"
                                 value="{{ request('keyword') }}">
+
+                            {{-- エリア選択 --}}
                             <select name="area"
                                 style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
                                 <option value="">-- エリアで絞り込む --</option>
@@ -311,6 +330,41 @@
                                 <option value="セブ市街" {{ request('area') == 'セブ市街' ? 'selected' : '' }}>セブ市街</option>
                                 <option value="オスロブ・モアルボアル" {{ request('area') == 'オスロブ・モアルボアル' ? 'selected' : '' }}>
                                     オスロブ・モアルボアル</option>
+                            </select>
+
+                            {{-- 🌟 追加：体験タグのチェックボックス --}}
+                            <div
+                                style="margin-bottom: 15px; background: #fafafa; padding: 12px; border-radius: 6px; border: 1px solid #eee;">
+                                <div style="font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px;">✨ 体験で絞り込む
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                    <label
+                                        style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                        <input type="checkbox" name="activity" value="1" {{ request('activity') ? 'checked' : '' }}> 🏊 遊ぶ
+                                    </label>
+                                    <label
+                                        style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                        <input type="checkbox" name="view" value="1" {{ request('view') ? 'checked' : '' }}>
+                                        📷 見る
+                                    </label>
+                                    <label
+                                        style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                        <input type="checkbox" name="shopping" value="1" {{ request('shopping') ? 'checked' : '' }}> 🛍️ 買う
+                                    </label>
+                                    <label
+                                        style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                        <input type="checkbox" name="food" value="1" {{ request('food') ? 'checked' : '' }}>
+                                        🍽️ 食べる
+                                    </label>
+                                </div>
+                            </div>
+
+                            {{-- 🌟 追加：並び替え（人気順 / 新着順） --}}
+                            <select name="sort"
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
+                                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>🕒 新着順</option>
+                                <option value="bookmark_count" {{ request('sort') == 'bookmark_count' ? 'selected' : '' }}>🔥
+                                    人気順（保存数）</option>
                             </select>
 
                             <button type="submit" class="search-btn">検索する</button>
@@ -333,4 +387,5 @@
             });
         });
     </script>
+
 @endsection
