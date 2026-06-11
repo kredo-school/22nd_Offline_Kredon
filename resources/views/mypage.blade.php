@@ -1,6 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
+    {{-- 🌟 追加：スマホ対応（レスポンシブ）のためのCSS --}}
+    <style>
+        /* 共通のレイアウト設定 */
+        .mypage-wrapper { padding: 0 15px 80px 15px; max-width: 1200px; margin: 0 auto; }
+        .top-dashboard { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 50px; }
+        .user-profile-box { flex: 1; min-width: 300px; background: linear-gradient(135deg, #1e8b9b, #3b9db0); color: white; padding: 30px; border-radius: 12px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); box-sizing: border-box; }
+        .pickup-box { flex: 1; min-width: 300px; background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
+        .section-header-custom { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; }
+        .grid-layout-custom { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        
+        /* 📱 スマホ用（画面幅768px以下）の設定 */
+        @media (max-width: 768px) {
+            .top-dashboard { flex-direction: column; gap: 15px; margin-bottom: 30px; }
+            .user-profile-box, .pickup-box { min-width: 100%; padding: 20px; }
+            .section-header-custom { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .section-header-custom form { width: 100%; }
+            .filter-select { width: 100%; box-sizing: border-box; }
+            .grid-layout-custom { grid-template-columns: 1fr; } /* スポットカードを縦1列に表示 */
+        }
+    </style>
+
     @if (session('success'))
         <div id="flash-message" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #1e8b9b; color: white; padding: 12px 24px; border-radius: 30px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 10000; transition: opacity 0.5s ease;">
             {{ session('success') }}
@@ -8,24 +29,23 @@
         <script>setTimeout(() => { const msg = document.getElementById('flash-message'); if (msg) { msg.style.opacity = '0'; setTimeout(() => msg.remove(), 500); } }, 3000);</script>
     @endif
 
-    <div class="mypage-container" style="padding-bottom: 80px;">
+    <div class="mypage-wrapper">
 
         {{-- ==========================================================================
              👤 トップダッシュボード（プロフィール ＆ 今週のピックアップ）
              ========================================================================== --}}
-        <div class="top-dashboard" style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 50px;">
+        <div class="top-dashboard">
             {{-- 左側：プロフィール --}}
-            <div class="user-profile-box" style="flex: 1; min-width: 300px; background: linear-gradient(135deg, #1e8b9b, #3b9db0); color: white; padding: 30px; border-radius: 12px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                <div class="user-avatar" style="font-size: 40px; background: rgba(255,255,255,0.2); width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">👤</div>
+            <div class="user-profile-box">
+                <div class="user-avatar" style="font-size: 40px; background: rgba(255,255,255,0.2); width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; border-radius: 50%; flex-shrink: 0;">👤</div>
                 <div>
                     <h1 class="user-name" style="margin: 0 0 5px 0; font-size: 24px; font-weight: bold;">{{ Auth::user()->name }} さん</h1>
                     <div class="user-date" style="font-size: 14px; opacity: 0.9;">登録日: {{ Auth::user()->created_at->format('Y/m/d') }}</div>
                 </div>
             </div>
 
-            {{-- 右側：偶然の出会い（ピックアップスポット） ※現在はモックアップ（仮表示）です --}}
-           {{-- 右側：週替わりピックアップスポット（本番稼働） --}}
-            <div style="flex: 1; min-width: 300px; background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center;">
+            {{-- 右側：週替わりピックアップスポット --}}
+            <div class="pickup-box">
                 <h3 style="font-size: 14px; font-weight: bold; color: #f0932b; margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px;">
                     💡 今週のおすすめスポット
                 </h3>
@@ -62,9 +82,9 @@
         </div>
 
         {{-- ==========================================================================
-             📚 セクション1：保存した学習スポット（観光スポットと完全統一デザイン）
+             📚 セクション1：保存した学習スポット
              ========================================================================== --}}
-        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">
+        <div class="section-header-custom">
             <h2 class="section-title" style="font-size: 20px; font-weight: bold; color: #007b8f; margin: 0;">📚 保存した学習スポット</h2>
 
             <form action="{{ route('mypage') }}" method="GET" style="margin: 0;">
@@ -82,7 +102,7 @@
                 保存された学習スポットはまだありません。
             </p>
         @else
-            <div class="grid-layout" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+            <div class="grid-layout-custom">
                 @foreach($myBookmarks as $spot)
                     <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;">
                         
@@ -94,7 +114,7 @@
                                 @else
                                     <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #aaa; font-size: 13px;">No Photo</div>
                                 @endif
-                                {{-- 📍 エリアバッジ（観光スポットと同じ位置） --}}
+                                {{-- 📍 エリアバッジ --}}
                                 <span style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold;">
                                     📍 {{ $spot->area }}
                                 </span>
@@ -114,7 +134,7 @@
                             </div>
                         </div>
 
-                        {{-- 詳細を見るボタン（観光スポットと完全統一） --}}
+                        {{-- 詳細を見るボタン --}}
                         <div style="padding: 0 15px 15px 15px;">
                             <a href="{{ route('spots.show', $spot->id) }}" style="display: block; text-align: center; background-color: #007b8f; color: white; text-decoration: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 13px; transition: 0.3s;">
                                 詳細を見る
@@ -129,9 +149,9 @@
         @endif
 
         {{-- ==========================================================================
-             🌴 セクション2：保存した観光スポット（学習スポットと完全統一デザイン）
+             🌴 セクション2：保存した観光スポット
              ========================================================================== --}}
-        <div class="section-header" style="margin-top: 60px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px;">
+        <div class="section-header-custom" style="margin-top: 60px;">
             <h2 class="section-title" style="font-size: 20px; font-weight: bold; color: #007b8f; margin: 0;">
                 🌴 保存した観光スポット
             </h2>
@@ -145,7 +165,7 @@
                 </a>
             </div>
         @else
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-bottom: 50px;">
+            <div class="grid-layout-custom" style="margin-bottom: 50px;">
                 @foreach($bookmarkedTouristSpots as $spot)
                     <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;">
                         

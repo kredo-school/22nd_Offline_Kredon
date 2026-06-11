@@ -14,6 +14,31 @@
     .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
     .file-upload-btn { background-color: #f4f8fb; border: 2px dashed #4a82b3; color: #4a82b3; padding: 20px; border-radius: 8px; font-weight: bold; text-align: center; display: block; cursor: pointer; transition: 0.2s; }
     .file-upload-input { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; }
+
+    /* 📱 スマホ対応（レスポンシブ） */
+    @media (max-width: 768px) {
+        .modal-content {
+            width: 95%; /* スマホでは画面幅ギリギリまで広げて入力しやすくする */
+            padding: 15px; /* 内側の余白を少し削る */
+        }
+        .rating-label {
+            padding: 8px 0; /* スマホではボタンの高さを少し縮める */
+            font-size: 14px; /* 数字のフォントサイズも少し小さくして収まり良くする */
+        }
+        /* 営業時間の入力欄をスマホでは縦並びにする */
+        .time-input-group {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 5px !important;
+        }
+        .time-input-group input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .time-input-group span {
+            display: none; /* スマホでは「〜」の文字を消すか、レイアウトを変える */
+        }
+    }
 </style>
 
 <div class="custom-modal" id="newSpotModal">
@@ -48,11 +73,14 @@
                 </select>
             </div>
 
-            <div style="margin-bottom: 20px; border: 1px solid #ddd; padding: 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; background-color: #fafafa;">
-                <span style="font-size: 12px; font-weight: bold; color: #555;">🕒 営業時間</span>
-                <input type="time" name="open_time" step="1800" style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
-                <span style="color: #999;">〜</span>
-                <input type="time" name="close_time" step="1800" style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+            {{-- 🌟 修正ポイント：クラス「time-input-group」を追加してスマホで縦並びにする --}}
+            <div class="time-input-group" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; background-color: #fafafa;">
+                <span style="font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px; display: block;">🕒 営業時間</span>
+                <div style="display: flex; width: 100%; gap: 10px; align-items: center;">
+                    <input type="time" name="open_time" step="1800" style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                    <span style="color: #999;">〜</span>
+                    <input type="time" name="close_time" step="1800" style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
             </div>
 
             <div style="margin-bottom: 25px;">

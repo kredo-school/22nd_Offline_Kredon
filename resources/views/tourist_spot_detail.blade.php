@@ -1,6 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
+    {{-- 📱 ここから追加：スマホ対応（レスポンシブ）マジック！ --}}
+    <style>
+        @media (max-width: 768px) {
+            /* ヒーローエリア（上部画像）をスマホサイズに縮小 */
+            .hero-section { height: 250px !important; }
+            .hero-title-box { bottom: 10px !important; left: 10px !important; padding: 15px !important; width: 95% !important; max-width: 100% !important; box-sizing: border-box; }
+            .hero-title-box h1 { font-size: 22px !important; margin-bottom: 5px !important; }
+            .hero-title-box .rating-text { font-size: 14px !important; }
+            
+            /* 2カラムレイアウトを縦積みに変更 */
+            .content-container { flex-direction: column !important; gap: 20px !important; margin-top: 15px !important; }
+            .main-info, .side-info { width: 100% !important; min-width: 100% !important; }
+            
+            /* 体験タグ（遊ぶ、見るなど）をスマホでは2列×2行で綺麗に並べる */
+            .experience-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; margin-bottom: 20px !important; }
+            .experience-grid div { padding: 15px 5px !important; }
+
+            /* モーダル（編集画面）のスマホ最適化 */
+            .modal-content { width: 95% !important; padding: 15px !important; }
+            .checkbox-group { gap: 10px !important; }
+            .checkbox-group label { font-size: 13px !important; }
+        }
+    </style>
+
     <div style="background-color: #f8f9fa; min-height: 100vh; padding-bottom: 50px;">
 
         {{-- 🌟 エラーがあったら赤枠で教えてくれる！ --}}
@@ -16,7 +40,7 @@
         @endif
 
         {{-- 🌟 1. ヒーローエリア（画像全幅＆文字の重ね合わせ） --}}
-        <div style="position: relative; width: 100%; height: 400px; background-color: #333;">
+        <div class="hero-section" style="position: relative; width: 100%; height: 400px; background-color: #333;">
             @if($tourist_spot->photo_path)
                 <img src="{{ asset('storage/' . $tourist_spot->photo_path) }}" alt="スポット写真"
                     style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85;">
@@ -41,7 +65,7 @@
             </div>
 
             {{-- 左下のタイトル＆エリア --}}
-            <div style="position: absolute; bottom: 20px; left: 20px; background: rgba(0, 0, 0, 0.6); padding: 20px 25px; border-radius: 12px; color: white; max-width: 80%;">
+            <div class="hero-title-box" style="position: absolute; bottom: 20px; left: 20px; background: rgba(0, 0, 0, 0.6); padding: 20px 25px; border-radius: 12px; color: white; max-width: 80%;">
                 <h1 style="margin: 0 0 10px 0; font-size: 28px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">
                     {{ $tourist_spot->name }}
                 </h1>
@@ -55,10 +79,10 @@
                         <span style="color: #f0932b; font-weight: bold; font-size: 18px; letter-spacing: 2px;">
                             {{ str_repeat('⭐', $ratingRound) }}
                         </span>
-                        <span style="font-weight: bold; font-size: 17px; margin-left: 4px;">
+                        <span class="rating-text" style="font-weight: bold; font-size: 17px; margin-left: 4px;">
                             {{ number_format($tourist_spot->reviews_avg_rating, 1) }}
                         </span>
-                        <span style="color: #ddd; font-size: 13px; margin-left: 4px;">
+                        <span class="rating-text" style="color: #ddd; font-size: 13px; margin-left: 4px;">
                             ({{ $tourist_spot->reviews_count }}件のクチコミ)
                         </span>
                     @else
@@ -70,14 +94,14 @@
         </div>
 
         {{-- 🌟 2. コンテンツエリア（左：体験 / 右：基本情報の2カラムレイアウト） --}}
-        <div class="container" style="max-width: 1000px; margin: 30px auto; display: flex; flex-wrap: wrap; gap: 30px; padding: 0 20px;">
+        <div class="container content-container" style="max-width: 1000px; margin: 30px auto; display: flex; flex-wrap: wrap; gap: 30px; padding: 0 20px;">
 
             {{-- ■ 左側（メイン情報） --}}
-            <div style="flex: 2; min-width: 300px;">
+            <div class="main-info" style="flex: 2; min-width: 300px;">
                 <h3 style="font-size: 20px; font-weight: bold; color: #007b8f; margin-bottom: 15px; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px;">
                     ここで体験できること</h3>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; margin-bottom: 30px; text-align: center;">
+                <div class="experience-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; margin-bottom: 30px; text-align: center;">
                     {{-- 遊ぶ --}}
                     <div style="padding: 20px 10px; border-radius: 12px; border: 1px solid {{ $tourist_spot->has_activity ? '#007b8f' : '#eee' }}; color: {{ $tourist_spot->has_activity ? '#007b8f' : '#ccc' }}; font-weight: bold; display: flex; flex-direction: column; gap: 10px;">
                         <i class="fa-solid fa-person-swimming" style="font-size: 28px;"></i><span>遊ぶ</span>
@@ -104,7 +128,7 @@
             </div>
 
             {{-- ■ 右側（サイドバー：基本情報） --}}
-            <div style="flex: 1; min-width: 250px;">
+            <div class="side-info" style="flex: 1; min-width: 250px;">
                 <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                     <h3 style="font-size: 18px; font-weight: bold; color: #007b8f; margin-bottom: 20px;">基本情報</h3>
 
@@ -194,7 +218,7 @@
                     <button type="submit" style="background-color: #f0932b; color: white; border: none; padding: 10px 24px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 13px;">投稿する</button>
                 </form>
 
-                {{-- 📋 クチコミ一覧表示（コントローラーから渡された $reviews を使ってリッチ化） --}}
+                {{-- 📋 クチコミ一覧表示 --}}
                 <div style="display: flex; flex-direction: column; gap: 20px;">
                     @if($reviews->isEmpty())
                         <p style="color: #888; text-align: center; padding: 30px; border: 1px dashed #ccc; border-radius: 8px; background: #fafafa;">
@@ -235,7 +259,7 @@
 
 
     {{-- ==========================================================================
-         ⚙️ 4. 編集用モーダルエリア（壊れていたHTML構造を完全修復）
+         ⚙️ 4. 編集用モーダルエリア（スマホ対応）
          ========================================================================== --}}
     @if(Auth::id() === $tourist_spot->user_id)
         <style>
@@ -294,7 +318,7 @@
                             style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 6px;">
                     </div>
 
-                    <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 15px; background-color: #fff4e6; padding: 15px; border-radius: 8px; border: 1px solid #fbdcb6; justify-content: center;">
+                    <div class="checkbox-group" style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 15px; background-color: #fff4e6; padding: 15px; border-radius: 8px; border: 1px solid #fbdcb6; justify-content: center;">
                         <label style="cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; color: #333; font-size: 14px;">
                             <input type="checkbox" name="has_activity" value="1" {{ old('has_activity', $tourist_spot->has_activity) ? 'checked' : '' }}> 🏊 遊ぶ
                         </label>
@@ -331,7 +355,7 @@
                             style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 6px;">
                     </div>
 
-                    {{-- 💡 写真アップロードとプレビューエリア（復元完了） --}}
+                    {{-- 💡 写真アップロードとプレビューエリア --}}
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px;">📸 写真を変更（任意）</label>
                         <input type="file" name="photo" onchange="previewImage(this)" style="width: 100%; font-size: 13px;">

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 @section('content')
     <style>
         .top-page-wrapper {
@@ -35,7 +35,7 @@
             display: none;
         }
 
-        /* 🌟 観光スポットは気分を変えて、少し明るいオレンジ系のバナーにしてみます */
+        /* 🌟 観光スポットバナー */
         .hero-banner {
             background-color: #f0932b;
             color: white;
@@ -44,6 +44,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            margin-top: -24px;
         }
 
         .hero-title {
@@ -199,16 +200,70 @@
             border: none;
             color: #888;
         }
+
+        /* 📱 ここから追加：スマホ対応（レスポンシブ）マジック！ */
+        @media (max-width: 768px) {
+            .top-page-wrapper {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .main-column {
+                display: contents; /* main-column の枠を解除し、中身を並べ替え可能にする */
+            }
+            
+            /* 1. エラーがあれば一番上 */
+            .error-box { order: 1; width: 100%; }
+            
+            /* 2. オレンジのバナーを上に配置し、少し縦を縮める */
+            .hero-banner {
+                order: 2;
+                margin-top: 0;
+                padding: 25px 15px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .hero-title { font-size: 22px; margin-bottom: 5px; }
+            .hero-subtitle { font-size: 12px; margin-bottom: 15px; }
+
+            /* 3. 検索ボックス（右カラムだったもの）をバナーの下に配置 */
+            .side-column {
+                order: 3;
+                position: static;
+                max-height: none;
+                overflow-y: visible;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            /* 4. スポット一覧エリアを一番下に配置 */
+            .spot-list-container {
+                order: 4;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            /* カードを縦長に */
+            .spot-card-horizontal {
+                flex-direction: column;
+            }
+            .spot-card-img-area {
+                width: 100%;
+                height: 200px;
+            }
+        }
     </style>
 
-    <div class="container">
-        <div class="content-section">
-            <div class="top-page-wrapper">
+    <div class="container" style="padding-top: 0; margin-top: 0;">
+        <div class="content-section" style="padding-top: 0; margin-top: 0;">
+            <div class="top-page-wrapper" style="padding-top: 0; margin-top: 0;">
 
-                <div class="main-column">
+                <div class="main-column" style="padding-top: 0; margin-top: 0;">
+                    
+                    {{-- エラー表示エリア --}}
                     @if ($errors->any())
-                        <div
-                            style="background-color: #fee2e2; color: #b91c1c; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
+                        <div class="error-box" style="background-color: #fee2e2; color: #b91c1c; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
                             ⚠️ 登録に失敗しました。以下の原因を確認してください：<br>
                             <ul style="margin-top: 10px; margin-bottom: 0;">
                                 @foreach ($errors->all() as $error)
@@ -217,100 +272,81 @@
                             </ul>
                         </div>
                     @endif
+                    
+                    {{-- ヒーローバナーエリア --}}
                     <div class="hero-banner">
                         <div class="hero-title">CEBU TOURIST 🏖️</div>
-                        {{-- 🌟 右上の国旗アイコン（立体感・重なり・段差を完全再現） --}}
-                        <div
-                            style="position: absolute; top: 15px; right: 25px; display: flex; align-items: center; user-select: none;">
-                            {{-- 日本国旗（左側：手前・少し下・左傾き） --}}
-                            <img src="https://flagcdn.com/w80/jp.png" alt="Japan"
-                                style="width: 34px; transform: rotate(-15deg); margin-right: -12px; z-index: 2; position: relative; top: 8px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.4)); border-radius: 3px;">
-                            {{-- フィリピン国旗（右側：奥・少し上・右傾き） --}}
-                            <img src="https://flagcdn.com/w80/ph.png" alt="Philippines"
-                                style="width: 34px; transform: rotate(12deg); z-index: 1; position: relative; top: -6px; filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3)); border-radius: 3px;">
+                        <div style="position: absolute; top: 15px; right: 25px; display: flex; align-items: center; user-select: none;">
+                            <img src="https://flagcdn.com/w80/jp.png" alt="Japan" style="width: 34px; transform: rotate(-15deg); margin-right: -12px; z-index: 2; position: relative; top: 8px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.4)); border-radius: 3px;">
+                            <img src="https://flagcdn.com/w80/ph.png" alt="Philippines" style="width: 34px; transform: rotate(12deg); z-index: 1; position: relative; top: -6px; filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3)); border-radius: 3px;">
                         </div>
                         <div class="hero-subtitle">あなただけの最高の観光スポット・体験を見つけよう</div>
-                        <button onclick="document.getElementById('newTouristSpotModal').classList.add('is-show')"
-                            style="background-color: white; color: #f0932b; border: none; padding: 10px 24px; border-radius: 20px; font-weight: bold; font-size: 14px; cursor: pointer;">
+                        <button onclick="document.getElementById('newTouristSpotModal').classList.add('is-show')" style="background-color: white; color: #f0932b; border: none; padding: 10px 24px; border-radius: 20px; font-weight: bold; font-size: 14px; cursor: pointer;">
                             ＋ 新規観光スポットを登録
                         </button>
                     </div>
 
-                    <h3
-                        style="font-size: 18px; color: #333; border-left: 4px solid #f0932b; padding-left: 10px; margin: 10px 0 0 0;">
-                        @if(request()->has('keyword') || request()->has('area'))
-                            🔍 検索結果：{{ $tourist_spots->count() }}件
+                    {{-- 🌟 魔法の箱：スポット一覧をスマホで丸ごと下に移動させるためのコンテナ --}}
+                    <div class="spot-list-container">
+                        <h3 style="font-size: 18px; color: #333; border-left: 4px solid #f0932b; padding-left: 10px; margin: 10px 0 0 0;">
+                            @if(request()->has('keyword') || request()->has('area'))
+                                🔍 検索結果：{{ $tourist_spots->count() }}件
+                            @else
+                                ✨ 最近登録された観光スポット
+                            @endif
+                        </h3>
+
+                        @if($tourist_spots->isEmpty())
+                            <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 12px; border: 1px dashed #ccc; color: #666;">
+                                条件に一致するスポットが見つかりませんでした。<br>条件を変えて再度検索してみてください。
+                            </div>
                         @else
-                            ✨ 最近登録された観光スポット
+                            @foreach($tourist_spots as $tourist_spot)
+                                <a href="{{ route('tourist_spots.show', $tourist_spot->id) }}" class="spot-card-horizontal">
+                                    <div class="spot-card-img-area">
+                                        @if($tourist_spot->photo_path)
+                                            <img src="{{ asset('storage/' . $tourist_spot->photo_path) }}" alt="スポット写真">
+                                        @else
+                                            <img src="https://placehold.co/400x300/fff4e6/f0932b?text=No+Photo" alt="写真なし">
+                                        @endif
+                                    </div>
+                                    <div class="spot-card-info">
+                                        <div>
+                                            <div class="spot-title">{{ $tourist_spot->name }}</div>
+                                            <div class="spot-desc">
+                                                📍 エリア：{{ $tourist_spot->area }}<br>
+                                                💰 予算目安：{{ $tourist_spot->budget ?? '情報なし' }}
+                                            </div>
+
+                                            <div style="margin: 5px 0; display: flex; align-items: center; gap: 5px;">
+                                                @if($tourist_spot->reviews_avg_rating)
+                                                    @php $ratingRound = round($tourist_spot->reviews_avg_rating); @endphp
+                                                    <span style="color: #f0932b; font-weight: bold; font-size: 14px;">{{ str_repeat('⭐', $ratingRound) }}</span>
+                                                    <span style="font-size: 12px; color: #666; font-weight: bold; margin-left: 2px;">{{ number_format($tourist_spot->reviews_avg_rating, 1) }}</span>
+                                                @else
+                                                    <span style="font-size: 11px; color: #aaa;">⭐ クチコミなし</span>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div class="spot-tags">
+                                                @if($tourist_spot->has_activity) <span class="tag-item"><i class="fa-solid fa-person-swimming"></i> 遊ぶ</span> @endif
+                                                @if($tourist_spot->has_view) <span class="tag-item"><i class="fa-solid fa-camera"></i> 見る</span> @endif
+                                                @if($tourist_spot->has_shopping) <span class="tag-item"><i class="fa-solid fa-bag-shopping"></i> 買う</span> @endif
+                                                @if($tourist_spot->has_food) <span class="tag-item"><i class="fa-solid fa-utensils"></i> 食べる</span> @endif
+                                            </div>
+                                            <div style="color: #ccc; font-size: 14px;"><i class="fa-solid fa-chevron-right"></i></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
                         @endif
-                    </h3>
 
-                    @if($tourist_spots->isEmpty())
-                        <div
-                            style="text-align: center; padding: 40px 20px; background: white; border-radius: 12px; border: 1px dashed #ccc; color: #666;">
-                            条件に一致するスポットが見つかりませんでした。<br>条件を変えて再度検索してみてください。
+                        <div style="margin-top: 10px; margin-bottom: 20px;">
+                            {{ $tourist_spots->withQueryString()->links('pagination::bootstrap-5') }}
                         </div>
-                    @else
-                        @foreach($tourist_spots as $tourist_spot)
-                            <a href="{{ route('tourist_spots.show', $tourist_spot->id) }}" class="spot-card-horizontal">
-                                <div class="spot-card-img-area">
-                                    @if($tourist_spot->photo_path)
-                                        <img src="{{ asset('storage/' . $tourist_spot->photo_path) }}" alt="スポット写真">
-                                    @else
-                                        <img src="https://placehold.co/400x300/fff4e6/f0932b?text=No+Photo" alt="写真なし">
-                                    @endif
-                                </div>
-                                <div class="spot-card-info">
-                                    <div>
-                                        <div class="spot-title">{{ $tourist_spot->name }}</div>
-                                        <div class="spot-desc">
-                                            📍 エリア：{{ $tourist_spot->area }}<br>
-                                            💰 予算目安：{{ $tourist_spot->budget ?? '情報なし' }}
-                                        </div>
-
-                                        {{-- 🌟 修正版：星の平均点表示（変数を $tourist_spot に統一！） --}}
-                                        <div style="margin: 5px 0; display: flex; align-items: center; gap: 5px;">
-                                            @if($tourist_spot->reviews_avg_rating)
-                                                @php
-                                                    $ratingRound = round($tourist_spot->reviews_avg_rating);
-                                                @endphp
-                                                <span style="color: #f0932b; font-weight: bold; font-size: 14px;">
-                                                    {{ str_repeat('⭐', $ratingRound) }}
-                                                </span>
-                                                <span style="font-size: 12px; color: #666; font-weight: bold; margin-left: 2px;">
-                                                    {{ number_format($tourist_spot->reviews_avg_rating, 1) }}
-                                                </span>
-                                            @else
-                                                <span style="font-size: 11px; color: #aaa;">⭐ クチコミなし</span>
-                                            @endif
-                                        </div>
-                                        {{-- 🌟 追加ここまで --}}
-
-                                    </div>
-
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div class="spot-tags">
-                                            @if($tourist_spot->has_activity) <span class="tag-item"><i
-                                            class="fa-solid fa-person-swimming"></i> 遊ぶ</span> @endif
-                                            @if($tourist_spot->has_view) <span class="tag-item"><i class="fa-solid fa-camera"></i>
-                                            見る</span> @endif
-                                            @if($tourist_spot->has_shopping) <span class="tag-item"><i
-                                            class="fa-solid fa-bag-shopping"></i> 買う</span> @endif
-                                            @if($tourist_spot->has_food) <span class="tag-item"><i class="fa-solid fa-utensils"></i>
-                                            食べる</span> @endif
-                                        </div>
-                                        <div style="color: #ccc; font-size: 14px;">
-                                            <i class="fa-solid fa-chevron-right"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        @endforeach
-                    @endif
-
-                    <div style="margin-top: 30px; margin-bottom: 20px;">
-                        {{ $tourist_spots->withQueryString()->links('pagination::bootstrap-5') }}
-                    </div>
+                    </div> {{-- /.spot-list-container --}}
                 </div>
 
                 <div class="side-column">
@@ -318,53 +354,36 @@
                         <div class="side-box-title">🔍 観光スポットを検索</div>
                         <form action="{{ route('tourist_spots.index') }}" method="GET">
 
-                            {{-- キーワード入力 --}}
-                            <input type="text" name="keyword" class="search-input" placeholder="キーワード（例：ビーチ、教会）"
-                                value="{{ request('keyword') }}">
+                            <input type="text" name="keyword" class="search-input" placeholder="キーワード（例：ビーチ、教会）" value="{{ request('keyword') }}">
 
-                            {{-- エリア選択 --}}
-                            <select name="area"
-                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
+                            <select name="area" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
                                 <option value="">-- エリアで絞り込む --</option>
                                 <option value="マクタン島" {{ request('area') == 'マクタン島' ? 'selected' : '' }}>マクタン島</option>
                                 <option value="セブ市街" {{ request('area') == 'セブ市街' ? 'selected' : '' }}>セブ市街</option>
-                                <option value="オスロブ・モアルボアル" {{ request('area') == 'オスロブ・モアルボアル' ? 'selected' : '' }}>
-                                    オスロブ・モアルボアル</option>
+                                <option value="オスロブ・モアルボアル" {{ request('area') == 'オスロブ・モアルボアル' ? 'selected' : '' }}>オスロブ・モアルボアル</option>
                             </select>
 
-                            {{-- 🌟 追加：体験タグのチェックボックス --}}
-                            <div
-                                style="margin-bottom: 15px; background: #fafafa; padding: 12px; border-radius: 6px; border: 1px solid #eee;">
-                                <div style="font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px;">✨ 体験で絞り込む
-                                </div>
+                            <div style="margin-bottom: 15px; background: #fafafa; padding: 12px; border-radius: 6px; border: 1px solid #eee;">
+                                <div style="font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px;">✨ 体験で絞り込む</div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                                    <label
-                                        style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                    <label style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
                                         <input type="checkbox" name="activity" value="1" {{ request('activity') ? 'checked' : '' }}> 🏊 遊ぶ
                                     </label>
-                                    <label
-                                        style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-                                        <input type="checkbox" name="view" value="1" {{ request('view') ? 'checked' : '' }}>
-                                        📷 見る
+                                    <label style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                        <input type="checkbox" name="view" value="1" {{ request('view') ? 'checked' : '' }}> 📷 見る
                                     </label>
-                                    <label
-                                        style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                    <label style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
                                         <input type="checkbox" name="shopping" value="1" {{ request('shopping') ? 'checked' : '' }}> 🛍️ 買う
                                     </label>
-                                    <label
-                                        style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-                                        <input type="checkbox" name="food" value="1" {{ request('food') ? 'checked' : '' }}>
-                                        🍽️ 食べる
+                                    <label style="font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                        <input type="checkbox" name="food" value="1" {{ request('food') ? 'checked' : '' }}> 🍽️ 食べる
                                     </label>
                                 </div>
                             </div>
 
-                            {{-- 🌟 追加：並び替え（人気順 / 新着順） --}}
-                            <select name="sort"
-                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
+                            <select name="sort" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
                                 <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>🕒 新着順</option>
-                                <option value="bookmark_count" {{ request('sort') == 'bookmark_count' ? 'selected' : '' }}>🔥
-                                    人気順（保存数）</option>
+                                <option value="bookmark_count" {{ request('sort') == 'bookmark_count' ? 'selected' : '' }}>🔥 人気順（保存数）</option>
                             </select>
 
                             <button type="submit" class="search-btn">検索する</button>
@@ -377,7 +396,6 @@
     </div>
 
     @include('new_tourist_spot_modal')
-    {{-- 🌟 ポップアップの枠外をクリックした時に閉じるスクリプト --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             window.addEventListener('click', function (e) {
@@ -387,5 +405,4 @@
             });
         });
     </script>
-
 @endsection

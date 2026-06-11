@@ -160,6 +160,73 @@
         .search-btn:hover {
             background-color: #eee;
         }
+
+        /* 📱 ここから追加：スマホ対応（レスポンシブ）の上書き設定 */
+        @media (max-width: 768px) {
+            .container {
+                height: auto; /* スマホではスクロールの引っかかりを防ぐため高さを自動に */
+                margin-top: 60px;
+            }
+            .content-section {
+                padding: 15px 15px 60px 15px;
+            }
+            /* タイトルエリアを縦並びに */
+            .title-area {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 15px;
+                margin-bottom: 20px !important;
+            }
+            .title-area button {
+                width: 100%;
+                text-align: center;
+            }
+            /* トグルスイッチを少し小ぶりに、押しやすく調整 */
+            .switch-container {
+                gap: 10px;
+            }
+            .toggle-label {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            /* エリア検索行を縦積みに */
+            .search-row {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 10px;
+            }
+            .area-select {
+                width: 100%;
+                padding: 12px !important; /* 指でタップしやすい高さに変形 */
+            }
+            .search-btn {
+                width: 100%;
+                padding: 12px !important;
+                text-align: center;
+            }
+            /* 🌟 重要：ニッチ評価バーを潰さず2列×2行のグリッドにする */
+            .niche-rating-container {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+                padding: 10px !important;
+            }
+            .niche-rating-container span {
+                text-align: left;
+            }
+            /* カードフッターのボタンを幅100%に広げて押しやすく */
+            .spot-card-footer {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 12px;
+            }
+            .spot-card-footer a {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+                padding: 12px !important;
+            }
+        }
     </style>
 
     @if (session('success'))
@@ -237,7 +304,8 @@
                             <img src="https://placehold.co/600x200/e6f0f9/4a82b3?text=No+Image" class="spot-main-photo" alt="写真なし">
                         @endif
 
-                        <div style="background-color: #f4f8fb; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; border: 1px solid #e6f0f9; display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; color: #555;">
+                        {{-- 🌟 クラス名「niche-rating-container」を付与してスマホ時に2列2行グリッド化 --}}
+                        <div class="niche-rating-container" style="background-color: #f4f8fb; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; border: 1px solid #e6f0f9; display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; color: #555;">
                             <span>👥 客層: <span style="color: #1e8b9b;">{{ $spot->reviews->avg('customer_vibe') ? number_format($spot->reviews->avg('customer_vibe'), 1) : '-' }}</span></span>
                             <span>👁️ 照明: <span style="color: #1e8b9b;">{{ $spot->reviews->avg('eye_fatigue_level') ? number_format($spot->reviews->avg('eye_fatigue_level'), 1) : '-' }}</span></span>
                             <span>🪑 イス: <span style="color: #1e8b9b;">{{ $spot->reviews->avg('chair_comfort') ? number_format($spot->reviews->avg('chair_comfort'), 1) : '-' }}</span></span>
