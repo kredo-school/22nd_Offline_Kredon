@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="container py-5">
+<div class="container py-5 mt-5">
     <div class="row g-4">
         
         {{-- メインエリア --}}
@@ -23,8 +23,22 @@
             <div class="mb-4">
                 @include('healthcare.partials._action')
             </div>
-        </div>
 
+            {{-- 4. 注意 --}}
+            <div class="mb-4">
+                @include('healthcare.partials._notes')
+            </div>
+
+            {{-- 5. }}
+
+            {{-- }}
+
+            {{-- 5. 医務室 --}}
+            {{-- <div class="mb-4">
+                @include('healthcare.partials._nurse.office')
+            </div> --}}
+        </div>
+        
         {{-- サイドバー --}}
         <div class="col-12 col-md-4">
             <div class="sticky-top" style="top: 20px;">

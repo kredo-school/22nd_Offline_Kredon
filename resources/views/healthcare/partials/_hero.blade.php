@@ -14,7 +14,7 @@
                     Kredo生向けにわかりやすく案内します。
                 </p>
 
-                <div class="d-flex flex-wrap gap-2 align-items-center">
+                <div class="d-flex flex-column flex-sm-row flex-wrap gap-2 align-items-start align-items-sm-center">
                     <span class="text-dark">病院検索</span>
                     <span class="badge bg-success fs-6">海外旅行保険</span>
                     <span class="badge bg-success fs-6">JHDサポート</span>
@@ -24,7 +24,7 @@
 
             {{-- アイコン --}}
             <div class="col-12 col-md-4 text-center mt-4 mt-md-0">
-                <i class="fa-solid fa-heart-pulse" style="font-size:120px; color:#0ea58a;"></i>
+                <i class="fa-solid fa-heart-pulse" style="font-size:80px; color:#0ea58a;"></i>
             </div>
 
         </div>

@@ -8,7 +8,9 @@
 
     </div>
 
-    <div class="accordion accordion-flush" id="faqAccordion">
+    <div class="accordion accordion-flush" 
+         id="faqAccordion"      
+         style="background-color:#F1F4F2;">
 
         {{-- 1 --}}
         <div class="accordion-item">

@@ -24,13 +24,13 @@
                         <i class="fa-solid fa-magnifying-glass-location fa-3x" style="color:#0ea58a;"></i>
                     </div>
                     <div class="card-body">
-                        <h5 class="fw-bold text-center text-dark mb-0">医療機関を探す</h5>
+                        <h5 class="fw-bold text-center text-dark mb-0">病院を探す</h5>
                     </div>
                 </div>
             </a>
         </div>
 
-        {{-- 3. 医療機関のかかり方 --}}
+        {{-- 3. リピーター --}}
         <div class="col">
             <a href="#how-to-section" class="text-decoration-none">
                 <div class="card h-100 w-100 border rounded-4 shadow-sm border-0">
@@ -38,7 +38,7 @@
                         <i class="fa-solid fa-hospital fa-3x" style="color:#0ea58a;"></i>
                     </div>
                     <div class="card-body">
-                        <h5 class="fw-bold text-center text-dark mb-0">医療機関のかかり方</h5>
+                        <h5 class="fw-bold text-center text-dark mb-0">病院一覧</h5>
                     </div>
                 </div>
             </a>
