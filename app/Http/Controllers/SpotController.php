@@ -10,22 +10,29 @@ use Illuminate\Support\Facades\Auth;
 
 class SpotController extends Controller
 {
-    public function store(Request $request)
+  public function store(Request $request)
     {
-        // ① データの警備
-        $request->validate([
+        // 🌟 犯人を絶対に逃がさない手動バリデーション
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'area' => 'required|string',
-            'open_time' => 'nullable|string', 
-            'close_time' => 'nullable|string', 
-            'photos' => 'nullable|array|max:5', // 最大5枚まで許可
-            'photos.*' => 'image|max:10240', // 1枚あたり10MBまで
-            'customer_vibe' => 'nullable|integer|between:1,5',
-            'eye_fatigue_level' => 'nullable|integer|between:1,5',
-            'chair_comfort' => 'nullable|integer|between:1,5',
-            'desk_stability' => 'nullable|integer|between:1,5',
+            'hours_type' => 'required|in:specified,24h,unknown',
+            'open_time' => 'nullable|string',
+            'close_time' => 'nullable|string',
+            'photos' => 'nullable|array|max:4',
+            // ★超重要変更点：'image' をやめて、具体的な拡張子で許可する（AVIFも追加！）
+            'photos.*' => 'file|mimes:jpg,jpeg,png,gif,webp,avif|max:10240',
+            'customer_vibe' => 'required|integer|between:1,5',
+            'eye_fatigue_level' => 'required|integer|between:1,5',
+            'chair_comfort' => 'required|integer|between:1,5',
+            'desk_stability' => 'required|integer|between:1,5',
             'comment' => 'nullable|string',
         ]);
+
+        // もし入力チェックに引っかかったら、無言で戻さずに黒い画面で理由を自白させる！
+        if ($validator->fails()) {
+            dd('🚨【犯人判明】入力チェックで弾かれました！', $validator->errors()->toArray());
+        }
 
         DB::beginTransaction();
 
@@ -36,12 +43,20 @@ class SpotController extends Controller
 
             // 時間の合体処理
             $hours = null;
-            if ($request->filled('open_time') && $request->filled('close_time')) {
-                $hours = $request->open_time . ' - ' . $request->close_time;
-            } elseif ($request->filled('open_time')) {
-                $hours = $request->open_time . ' - 未定';
-            } elseif ($request->filled('close_time')) {
-                $hours = '未定 - ' . $request->close_time;
+            if ($request->hours_type === '24h') {
+                $hours = '24時間営業';
+            } elseif ($request->hours_type === 'unknown') {
+                $hours = '不明';
+            } else {
+                if ($request->filled('open_time') && $request->filled('close_time')) {
+                    $hours = $request->open_time . ' - ' . $request->close_time;
+                } elseif ($request->filled('open_time')) {
+                    $hours = $request->open_time . ' - 未定';
+                } elseif ($request->filled('close_time')) {
+                    $hours = '未定 - ' . $request->close_time;
+                } else {
+                    $hours = '未定';
+                }
             }
             $spot->hours = $hours;
 
@@ -49,52 +64,44 @@ class SpotController extends Controller
             $spot->has_power = $request->has('has_power');
             $spot->user_id = Auth::id();
 
-            // 🌟 まずスポット自体を保存してIDを確定させる
             $spot->save();
 
-            // 🌟 【進化版】複数画像の保存ロジック（IDごとのフォルダに整理）
+            // 複数画像の保存ロジック
             if ($request->hasFile('photos')) {
                 foreach ($request->file('photos') as $index => $photo) {
-                    // ユニークなファイル名を生成
                     $filename = uniqid() . '_' . time() . '.' . $photo->getClientOriginalExtension();
-                    // spots/スポットID/ファイル名 という階層で保存
                     $path = $photo->storeAs('spots/' . $spot->id, $filename, 'public');
 
-                    // 1枚目は従来の「代表写真」としても登録
                     if ($index === 0) {
                         $spot->photo_path = $path;
                         $spot->save();
                     }
 
-                    // spot_photos テーブルに保存
                     $spot->photos()->create([
                         'photo_path' => $path
                     ]);
                 }
             }
 
-            if (
-                $request->filled('customer_vibe') || $request->filled('eye_fatigue_level') ||
-                $request->filled('chair_comfort') || $request->filled('desk_stability') ||
-                $request->filled('comment')
-            ) {
-                $spot->reviews()->create([
-                    'user_id' => Auth::id(),
-                    'customer_vibe' => $request->customer_vibe,
-                    'eye_fatigue_level' => $request->eye_fatigue_level,
-                    'chair_comfort' => $request->chair_comfort,
-                    'desk_stability' => $request->desk_stability,
-                    'comment' => $request->comment,
-                ]);
-            }
+            // レビュー作成
+            $spot->reviews()->create([
+                'user_id' => Auth::id(),
+                'customer_vibe' => $request->customer_vibe,
+                'eye_fatigue_level' => $request->eye_fatigue_level,
+                'chair_comfort' => $request->chair_comfort,
+                'desk_stability' => $request->desk_stability,
+                'comment' => $request->comment,
+            ]);
 
             DB::commit();
 
-            return redirect()->route('spots.show', $spot->id)
+            return redirect('/') 
                 ->with('success', '✨ 新しいスポットと写真を登録しました！');
+
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->with('error', '登録中にエラーが発生しました。');
+            // 🌟 もしデータベース保存中にエラーが起きたら、黒い画面で理由を自白させる！
+            dd('🚨【犯人判明】DB保存中にエラーが起きました！', $e->getMessage(), '行番号: ' . $e->getLine());
         }
     }
 
@@ -115,7 +122,7 @@ class SpotController extends Controller
             'photos.*' => 'image|max:10240',
         ]);
 
-        $hours = $spot->hours; 
+        $hours = $spot->hours;
         if ($request->filled('open_time') || $request->filled('close_time')) {
             $open = $request->filled('open_time') ? $request->open_time : '未定';
             $close = $request->filled('close_time') ? $request->close_time : '未定';
@@ -156,9 +163,9 @@ class SpotController extends Controller
 
         if ($request->filled('keyword')) {
             $keyword = $request->keyword;
-            $query->where(function($q) use ($keyword) {
+            $query->where(function ($q) use ($keyword) {
                 $q->where('name', 'LIKE', "%{$keyword}%")
-                  ->orWhere('area', 'LIKE', "%{$keyword}%");
+                    ->orWhere('area', 'LIKE', "%{$keyword}%");
             });
         }
 
@@ -174,9 +181,9 @@ class SpotController extends Controller
             $query->where('has_power', true);
         }
 
-        $sort = $request->input('sort', 'newest'); 
+        $sort = $request->input('sort', 'newest');
         if ($sort === 'rating_high') {
-            $query->latest(); 
+            $query->latest();
         } elseif ($sort === 'bookmark_count') {
             $query->withCount('bookmarks')->orderBy('bookmarks_count', 'desc');
         } else {
@@ -193,5 +200,31 @@ class SpotController extends Controller
         // 🌟 クチコミに加えて、紐づく複数写真（photos）も一緒に持ってくる！
         $spot = Spot::with(['reviews.user', 'photos'])->findOrFail($id);
         return view('spot_detail', compact('spot'));
+    }
+    // app/Http/Controllers/SpotController.php に追加
+
+    public function useCoupon(Spot $spot)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'ログインが必要です。']);
+        }
+
+        // すでに今月使用済みの場合は弾く
+        if ($spot->isCouponUsedByMonth($user)) {
+            return response()->json(['success' => false, 'message' => '今月は既に使用済みです。']);
+        }
+
+        // 使用履歴を記録
+        \Illuminate\Support\Facades\DB::table('coupon_usages')->insert([
+            'user_id' => $user->id,
+            'spot_id' => $spot->id,
+            'used_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'クーポンを適用しました！']);
     }
 }

@@ -7,7 +7,7 @@
         .main-column { flex: 2; display: flex; flex-direction: column; gap: 25px; min-width: 0; }
         .side-column { flex: 1; max-width: 320px; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 20px; max-height: calc(100vh - 110px); overflow-y: auto; }
         .side-column::-webkit-scrollbar { display: none; }
-        .hero-banner { background-color: #1e8b9b; color: white; border-radius: 12px; padding: 40px 20px; margin-top: -24px; text-align: center; position: relative; overflow: hidden; }
+        .hero-banner { background-color: #1e8b9b; color: white; border-radius: 12px; padding: 40px 20px; margin-top: 0px; text-align: center; position: relative; overflow: hidden; }
         .hero-title { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
         .hero-subtitle { font-size: 14px; margin-bottom: 20px; opacity: 0.9; }
         .spot-card-horizontal { display: flex; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; text-decoration: none; color: inherit; transition: 0.2s; }

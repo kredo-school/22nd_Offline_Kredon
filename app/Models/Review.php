@@ -8,7 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     use HasFactory;
-
+    // 🌟 データベースへの一括保存を許可するリスト
+    protected $fillable = [
+        'spot_id',
+        'user_id',
+        'customer_vibe',
+        'eye_fatigue_level',
+        'chair_comfort',
+        'desk_stability',
+        'comment'
+    ];
     // 💡 どこのお店（Spot）に対するレビューなのかを振り返る電線
     public function spot()
     {

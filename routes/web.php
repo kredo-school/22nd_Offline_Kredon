@@ -1,4 +1,5 @@
 <?php
+
 use App\Models\TouristBookmark;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -82,4 +83,6 @@ Route::middleware('auth')->group(function () {
     // 🌟 観光スポット：クチコミ投稿＆削除
     Route::post('/tourist_spots/{tourist_spot}/reviews', [App\Http\Controllers\TouristReviewController::class, 'store'])->name('tourist_reviews.store');
     Route::delete('/tourist_reviews/{id}', [App\Http\Controllers\TouristReviewController::class, 'destroy'])->name('tourist_reviews.destroy');
+    // クーポン利用の非同期通信用ルート
+    Route::post('/spots/{spot}/coupon', [App\Http\Controllers\SpotController::class, 'useCoupon'])->name('spots.coupon.use');
 });

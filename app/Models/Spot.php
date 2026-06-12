@@ -122,4 +122,18 @@ class Spot extends Model
     {
         return $this->hasMany(SpotPhoto::class);
     }
+    // app/Models/Spot.php の中に追加
+
+public function isCouponUsedByMonth($user)
+{
+    if (!$user) {
+        return false;
+    }
+
+    return \Illuminate\Support\Facades\DB::table('coupon_usages')
+        ->where('user_id', $user->id)
+        ->where('spot_id', $this->id)
+        ->where('used_at', '>=', now()->startOfMonth()) // 今月の1日以降のデータがあるか
+        ->exists();
+}
 }

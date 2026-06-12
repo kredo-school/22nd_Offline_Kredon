@@ -44,7 +44,6 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            margin-top: -24px;
         }
 
         .hero-title {

@@ -44,7 +44,6 @@
             color: #666;
         }
 
-        /* 一覧用のすっきりメイン写真エリア */
         .spot-main-photo {
             width: 100%;
             height: 180px;
@@ -117,7 +116,6 @@
             border: 1px solid #eee;
         }
 
-        /* 🌟 修正ポイント1：左右の高さを強制的に同期させる（stretch） */
         .spot-layout-wrapper {
             display: flex;
             gap: 30px;
@@ -132,7 +130,6 @@
             gap: 12px;
         }
 
-        /* 🌟 修正ポイント2：高さを固定せず、右カラムに合わせて自動で伸びるようにする（flex: 1） */
         .main-photo-wrapper {
             width: 100%;
             flex: 1;
@@ -144,7 +141,6 @@
             position: relative;
         }
 
-        /* 🌟 修正ポイント3：伸びた枠に対して、比率を崩さずに画像を敷き詰める（object-fit: cover & absolute） */
         .main-photo-wrapper img {
             width: 100%;
             height: 100%;
@@ -192,7 +188,6 @@
             opacity: 1;
         }
 
-        /* 🌟 修正ポイント4：1画面に収めるため、右カラム全体の余白（gap）と要素サイズを圧縮 */
         .spot-right-col {
             flex: 1;
             min-width: 0;
@@ -290,7 +285,6 @@
             color: #666;
         }
 
-        /* マップの高さを180pxから140pxへ圧縮 */
         .mini-map {
             width: 100%;
             height: 140px;
@@ -335,7 +329,55 @@
             transform: translateY(-2px);
         }
 
-        /* 🌟 クーポンエリアの追加スタイル */
+        .view-counter-tooltip {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            color: #aaa;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+        .view-counter-tooltip:hover {
+            background-color: #f1f5f9;
+            color: #4a82b3;
+        }
+        .view-counter-tooltip .tooltip-text {
+            visibility: hidden;
+            width: 130px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 6px 0;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -65px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 11px;
+            font-weight: normal;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .view-counter-tooltip .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+        .view-counter-tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
         .coupon-container {
             background: linear-gradient(135deg, #ff6b6b, #ff8e8b);
             border-radius: 14px;
@@ -368,7 +410,7 @@
             margin-top: 10px;
         }
         .activate-coupon-btn:hover { background: #fff0f0; }
-        .activate-coupon-btn:disabled { background: #e0e0e0; color: #b0b0b0; cursor: not-allowed; box-shadow: none; }
+        .activate-coupon-btn:disabled { background: #e0e0e0 !important; color: #a0a0a0 !important; cursor: not-allowed; box-shadow: none !important; }
 
         .review-section {
             margin-top: 40px;
@@ -483,83 +525,23 @@
             height: 100%;
         }
 
-        /* 📱 スマホ対応（レスポンシブ）大幅強化 */
         @media (max-width: 768px) {
-            .container {
-                height: auto; /* 縦スクロールを完全に自由に解放 */
-                margin-top: 60px;
-            }
+            .container { height: auto; margin-top: 60px; }
+            .content-section { padding: 10px 15px 60px 15px; }
+            .spot-detail-header { align-items: center !important; gap: 10px; }
+            .spot-title-top { font-size: 20px !important; }
+            .spot-layout-wrapper { flex-direction: column; gap: 20px; }
+            .main-photo-wrapper { height: 240px; min-height: auto; flex: none; position: relative; }
+            .main-photo-wrapper img { position: absolute; }
+            .benefit-grid { grid-template-columns: repeat(2, 1fr); }
+            .detail-card { padding: 15px; }
+            .modal-content { width: 95%; padding: 15px; }
+            .rating-label { padding: 8px 0; font-size: 14px; }
+            .time-row-responsive { flex-direction: column; align-items: flex-start !important; gap: 5px !important; }
+            .time-row-responsive div { width: 100%; display: flex; align-items: center; gap: 10px; }
+            .time-row-responsive input { flex: 1; }
+            .good-bad-responsive { flex-direction: column; gap: 10px; }
             
-            .content-section {
-                padding: 10px 15px 60px 15px;
-            }
-
-            /* 🌟 追加：スマホヘッダーの微調整 */
-            .spot-detail-header {
-                align-items: center !important;
-                gap: 10px;
-            }
-            .spot-title-top {
-                font-size: 20px !important;
-            }
-
-            .spot-layout-wrapper {
-                flex-direction: column; /* 2カラムを縦積みに */
-                gap: 20px;
-            }
-
-            .main-photo-wrapper {
-                height: 240px; /* スマホに適した写真の高さに調整 */
-                min-height: auto;
-                flex: none;
-                position: relative;
-            }
-
-            .main-photo-wrapper img {
-                position: absolute;
-            }
-
-            .benefit-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .detail-card {
-                padding: 15px;
-            }
-
-            /* モーダル内部のレスポンシブ微調整 */
-            .modal-content {
-                width: 95%;
-                padding: 15px;
-            }
-
-            .rating-label {
-                padding: 8px 0;
-                font-size: 14px;
-            }
-
-            /* 営業時間のフレックス変更 */
-            .time-row-responsive {
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 5px !important;
-            }
-            .time-row-responsive div {
-                width: 100%;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            .time-row-responsive input {
-                flex: 1;
-            }
-
-            /* Good/Bad編集エリアをスマホでは縦に並べる */
-            .good-bad-responsive {
-                flex-direction: column;
-                gap: 10px;
-            }
-
             .activate-coupon-btn { display: block; }
             .pc-coupon-notice { display: none !important; }
         }
@@ -582,7 +564,6 @@
         <div class="content-section">
             <div class="detail-container">
 
-                {{-- 🌟 修正・改善ポイント：店名を左端、戻るボタンを右端に配置した共通ヘッダー構造 --}}
                 <div class="spot-detail-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%;">
                     <h1 class="spot-title-top" style="font-size: 26px; font-weight: bold; color: #333; margin: 0;">{{ $spot->name }}</h1>
                     <a href="{{ url('/') }}" class="back-link"><i class="fa-solid fa-chevron-left"></i> 一覧に戻る</a>
@@ -621,7 +602,6 @@
                         <div class="spot-right-col">
                             <div class="spot-header-top">
                                 <div>
-                                    {{-- 🌟 修正版：店名を最上部へ出したため、ここは星評価とリアル閲覧カウンターをスマートに統合 --}}
                                     <div class="spot-rating" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                                         <div style="display: flex; align-items: center; gap: 4px;">
                                             <i class="fa-solid fa-star"></i>
@@ -629,10 +609,12 @@
                                             <span style="color: #999; font-size: 13px; font-weight: normal;">/ {{ $spot->reviews->count() }}件</span>
                                         </div>
                                         
-                                        {{-- 👀 リアル閲覧カウンター表示 --}}
-                                        <div style="color: #4a82b3; font-size: 12px; font-weight: bold; background: #e6f0f9; padding: 3px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-                                            <i class="fa-solid fa-fire" style="color: #e53e3e;"></i>
-                                            {{ $spot->view_count ?? rand(120, 500) }}回 見られています
+                                        <div class="view-counter-tooltip">
+                                            <i class="fa-solid fa-chart-simple" style="margin-right: 4px;"></i> 統計データ
+                                            <span class="tooltip-text">
+                                                <i class="fa-solid fa-eye" style="margin-right: 3px;"></i>
+                                                {{ $spot->view_count ?? rand(120, 500) }}回 見られています
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -647,12 +629,11 @@
                             </div>
 
                             <div class="benefit-grid">
-    
                                 <div class="benefit-card {{ $spot->has_wifi ? 'active-facility' : '' }}" style="{{ $spot->has_wifi ? '' : 'opacity: 0.4; background: #f9f9f9;' }}">
                                     <i class="fa-solid fa-wifi" style="color: {{ $spot->has_wifi ? '#1e8b9b' : '#999' }};"></i>
                                     <div>
                                         <div class="benefit-title" style="color: {{ $spot->has_wifi ? '#333' : '#888' }};">高速Wi-Fi</div>
-                                        <div class="benefit-desc">{{ $spot->has_wifi ? '通信環境良好' : '設備なし' }}</div>
+                                        <div class="benefit-desc">{{ $spot->has_wifi ? '独自wi-fiあり' : '設備なし' }}</div>
                                     </div>
                                 </div>
                                 
@@ -660,7 +641,7 @@
                                     <i class="fa-solid fa-plug" style="color: {{ $spot->has_power ? '#1e8b9b' : '#999' }};"></i>
                                     <div>
                                         <div class="benefit-title" style="color: {{ $spot->has_power ? '#333' : '#888' }};">電源完備</div>
-                                        <div class="benefit-desc">{{ $spot->has_power ? '各席に完備' : '設備なし' }}</div>
+                                        <div class="benefit-desc">{{ $spot->has_power ? '設備あり' : '設備なし' }}</div>
                                     </div>
                                 </div>
 
@@ -681,13 +662,7 @@
                                     <div>
                                         <div class="benefit-title" style="color: {{ $isFocus ? '#333' : '#888' }};">ノイズレス環境</div>
                                         <div class="benefit-desc" style="color: {{ $isFocus ? '#1e8b9b' : '#999' }}; font-weight: {{ $isFocus ? 'bold' : 'normal' }};">
-                                            @if($reviewCount == 0)
-                                                クチコミ待ち
-                                            @elseif($isFocus)
-                                                集中作業◎
-                                            @else
-                                                少し賑やかかも
-                                            @endif
+                                            @if($reviewCount == 0) クチコミ待ち @elseif($isFocus) 集中作業◎ @else 少し賑やかかも @endif
                                         </div>
                                     </div>
                                 </div>
@@ -697,17 +672,10 @@
                                     <div>
                                         <div class="benefit-title" style="color: {{ $isComfort ? '#333' : '#888' }};">快適なイス・机</div>
                                         <div class="benefit-desc" style="color: {{ $isComfort ? '#1e8b9b' : '#999' }}; font-weight: {{ $isComfort ? 'bold' : 'normal' }};">
-                                            @if($reviewCount == 0)
-                                                クチコミ待ち
-                                            @elseif($isComfort)
-                                                長時間の作業◎
-                                            @else
-                                                長時間はキツイかも
-                                            @endif
+                                            @if($reviewCount == 0) クチコミ待ち @elseif($isComfort) 長時間の作業◎ @else 長時間はキツイかも @endif
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="mini-map">
@@ -725,16 +693,34 @@
                                 </div>
                             </div>
 
-                            {{-- 🎁 差別化：KREDON限定特典クーポンエリア --}}
+                            {{-- 🎁 改善版：サーバー連携型クーポンエリア --}}
                             <div class="coupon-container">
                                 <div style="font-size: 11px; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.5px;">💎 KREDONユーザー限定特典</div>
                                 <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px;">
                                     お店で提示すると <span style="font-size: 22px; color: #ffeaa7; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">10% OFF</span>
                                 </div>
                                 <div style="font-size: 11px; opacity: 0.9; margin-bottom: 10px;">※ご注文時にこの画面をスタッフにご提示ください</div>
-                                <button type="button" onclick="handleCouponActivation()" id="activeCouponBtn" class="activate-coupon-btn">
-                                    スタッフの前でタップして使う
-                                </button>
+                                
+                                @php
+                                    // Spotモデルに isCouponUsedByMonth() メソッドが追加されている前提の判定
+                                    // まだメソッドが未作成でもエラーにならないようにmethod_existsで安全に判定
+                                    $isCouponUsed = Auth::check() && method_exists($spot, 'isCouponUsedByMonth') ? $spot->isCouponUsedByMonth(Auth::user()) : false;
+                                @endphp
+
+                                @if(!Auth::check())
+                                    <button type="button" onclick="alert('クーポンの利用にはログインが必要です。')" class="activate-coupon-btn mobile-only-btn">
+                                        ログインしてクーポンを使う
+                                    </button>
+                                @elseif($isCouponUsed)
+                                    <button type="button" disabled class="activate-coupon-btn mobile-only-btn">
+                                        ✅ 今月は使用済み
+                                    </button>
+                                @else
+                                    <button type="button" onclick="handleCouponActivation()" id="activeCouponBtn" class="activate-coupon-btn mobile-only-btn">
+                                        スタッフの前でタップして使う
+                                    </button>
+                                @endif
+                                
                                 <div class="pc-coupon-notice" style="font-size: 11px; font-weight: bold; opacity: 0.9;">※クーポンはスマートフォンからご利用ください📱</div>
                             </div>
 
@@ -1048,17 +1034,39 @@
             thumbElement.classList.add('active');
         }
 
-        // 🌟 クーポンボタンのクリックイベント処理
+        // 🌟 バックエンド連携：クーポンボタンのクリックイベント処理
         function handleCouponActivation() {
             const btn = document.getElementById('activeCouponBtn');
             const isConfirmed = confirm("【確認】\n必ず店員さんの目の前でボタンを押してください。\nこのクーポンを使用済みにしますか？");
             
             if (isConfirmed) {
-                alert("クーポンを適用しました！\nお会計時に店員さんに見せてください。");
-                btn.innerHTML = "✅ 使用済み";
-                btn.style.backgroundColor = "#e0e0e0";
-                btn.style.color = "#a0a0a0";
-                btn.disabled = true;
+                // Fetch APIでバックエンドに非同期でデータを送信
+                fetch('{{ route('spots.coupon.use', ['spot' => $spot->id]) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message + "\nお会計時に店員さんに見せてください。");
+                        btn.innerHTML = "✅ 今月は使用済み";
+                        btn.style.backgroundColor = "#e0e0e0";
+                        btn.style.color = "#a0a0a0";
+                        btn.style.boxShadow = "none";
+                        btn.disabled = true;
+                    } else {
+                        // Laravelから送られてきたエラーメッセージ（今月は使用済み等）を表示
+                        alert("エラー: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("通信エラーが発生しました。");
+                });
             }
         }
 
