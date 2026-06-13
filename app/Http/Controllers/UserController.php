@@ -14,7 +14,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         // ========================================================
-        // 📚 学習スポット＆クチコミのデータ
+        // 📚 学習スポット＆クチコミのデータ（既存のまま完璧です）
         // ========================================================
         $myReviews = $user->reviews()->with('spot')->latest()->paginate(10, ['*'], 'reviews_page');
 
@@ -29,39 +29,44 @@ class UserController extends Controller
 
         $myBookmarks = $query->latest()->paginate(10, ['*'], 'bookmarks_page');
 
-
         // ========================================================
-        // 🌴 観光スポットのお気に入りデータ
+        // 🌴 観光スポットのお気に入りデータ（🌟 ここを大改造！）
         // ========================================================
-        $bookmarkedTouristSpots = $user->bookmarkedTouristSpots()->latest('tourist_bookmarks.created_at')->get();
+        $touristQuery = $user->bookmarkedTouristSpots();
+        $touristFilter = $request->query('tourist_filter'); // Bladeからの指令を受け取る
 
-
-        // ========================================================
-        // 🌟 Taka-san考案！週替わりピックアップ・アルゴリズム
-        // ========================================================
-        $weekNumber = now()->weekOfYear; // 現在が今年の第何週目か
-        $pickupSpot = null;
-        $pickupType = ''; // 'study' か 'tourist' か
-
-        if ($weekNumber % 2 == 0) {
-            // 💡 偶数週：観光スポットの1位
-            $pickupSpot = \App\Models\TouristSpot::withCount('bookmarks')
-                            ->orderByDesc('bookmarks_count')
-                            ->first();
-            $pickupType = 'tourist';
-        } else {
-            // 💡 奇数週：学習スポットの1位
-            $pickupSpot = \App\Models\Spot::withCount('bookmarks')
-                            ->orderByDesc('bookmarks_count')
-                            ->first();
-            $pickupType = 'study';
+        if ($touristFilter === 'area_cebu') {
+            // 💡 セブ市内（ITパーク、アヤラなど近場）だけを抽出
+            $touristQuery->whereIn('area', ['ITパーク', 'アヤラ']);
+        } elseif ($touristFilter === 'area_far') {
+            // 💡 遠方（ITパーク・アヤラ以外。マクタンやその他）を抽出
+            $touristQuery->whereNotIn('area', ['ITパーク', 'アヤラ']);
         }
 
+        // 最後に、絞り込んだ結果を「最近保存した順」で取得！
+        $bookmarkedTouristSpots = $touristQuery->latest('tourist_bookmarks.created_at')->get();
 
         // ========================================================
-        // 🌟 5つのデータをすべてまとめて画面（Blade）に渡す！
-        // ※この行が一番重要です！
+        // 🌟 10秒フリップ用の最強ピックアップ！
+        // 奇数・偶数週の縛りをなくし、「学習の1位」と「観光の1位」を同時に取得する
         // ========================================================
-        return view('mypage', compact('myReviews', 'myBookmarks', 'bookmarkedTouristSpots', 'pickupSpot', 'pickupType'));
+        $learningPickup = \App\Models\Spot::withCount('bookmarks')
+                            ->orderByDesc('bookmarks_count')
+                            ->first();
+
+        $touristPickup = \App\Models\TouristSpot::withCount('bookmarks')
+                            ->orderByDesc('bookmarks_count')
+                            ->first();
+
+        // ========================================================
+        // 🌟 データをすべてまとめて画面（Blade）に渡す！
+        // ========================================================
+        return view('mypage', compact(
+            'myReviews', 
+            'myBookmarks', 
+            'bookmarkedTouristSpots', 
+            'learningPickup', 
+            'touristPickup'
+        ));
     }
 }

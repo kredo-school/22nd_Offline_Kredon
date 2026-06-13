@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SpotController extends Controller
 {
-  public function store(Request $request)
+    public function store(Request $request)
     {
         // 🌟 犯人を絶対に逃がさない手動バリデーション
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -95,13 +95,30 @@ class SpotController extends Controller
 
             DB::commit();
 
-            return redirect('/') 
-                ->with('success', '✨ 新しいスポットと写真を登録しました！');
+            // 🌟 月数計算とガチャのテーブル選択
+            $months = 0;
+            if (Auth::check()) {
+                $months = Auth::user()->created_at->diffInMonths(now());
+            }
+            $category = $months < 4 ? 'basic' : 'advanced';
 
-        } catch (\Exception $e) {
+            // 🌟 データベースからランダムに1件Tipsを引く
+            $randomTip = \App\Models\Tip::where('category', $category)->inRandomOrder()->first();
+
+            // 🚨 真っ白対策の「安全装置」
+            $title = $randomTip ? $randomTip->title : '💡 情報シェアありがとうございます！';
+            $text = $randomTip ? $randomTip->text : '引き続き、セブでの生活と開発を楽しんでいきましょう！';
+
+            // 🌟 修正：引いたガチャの結果をトップページ（ / ）へ投げる！
+            return redirect('/') 
+                ->with('success', '✨ 新しい学習スポットを登録しました！')
+                ->with('reward_tip_title', $title)
+                ->with('reward_tip_text', $text);
+                
+        // 🚨 どんなエラーが起きても真っ白にせず黒い画面で自白させる最強のキャッチ網！
+        } catch (\Throwable $e) {
             DB::rollback();
-            // 🌟 もしデータベース保存中にエラーが起きたら、黒い画面で理由を自白させる！
-            dd('🚨【犯人判明】DB保存中にエラーが起きました！', $e->getMessage(), '行番号: ' . $e->getLine());
+            dd('🚨【原因判明】学習スポット登録でエラー発生！', $e->getMessage(), '行番号: ' . $e->getLine());
         }
     }
 

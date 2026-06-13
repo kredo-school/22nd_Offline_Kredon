@@ -156,7 +156,8 @@
     </div>
 </div>
 
-<script>
+ 
+   <script>
     function toggleTimeInput() {
         const type = document.querySelector('input[name="hours_type"]:checked').value;
         const timeInputArea = document.getElementById('timeInputArea');
@@ -187,7 +188,7 @@
 
         if (files.length > 4) {
             alert('アップロードできる写真は最大4枚までです。厳選した4枚をお願いします！');
-            event.target.value = ''; // 🚨 4枚オーバーの時だけクリアする
+            event.target.value = '';
             newSpotLabel.innerHTML = '<i class="fa-solid fa-camera" style="font-size: 24px; margin-bottom: 5px; display: block;"></i>タップして写真を選択';
             newSpotLabel.style.borderColor = '#4a82b3';
             newSpotLabel.style.color = '#4a82b3';
@@ -207,7 +208,6 @@
             newSpotLabel.style.backgroundColor = '#f4f8fb';
         }
 
-        // 🚨 正常な場合は value をクリアしない！ここがポイント！
         Array.from(files).forEach(file => {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -225,20 +225,14 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        @if(session('success'))
-            const tips = [
-                { title: "💻 開発効率を上げるルール化", text: "エラー解決のコツは、直感に頼らず『エラーログの事実』だけを追うことです。変数名や設計のルールをあらかじめ仕組み化しておけば、迷う時間をゼロにして開発速度を2倍にできます。" },
-                { title: "📺 おすすめ技術・学習チャンネル", text: "実戦的なWeb知識やITのトレンドを効率よくインプットするなら、YouTubeの『しまぶーのIT大学』や海外の『Traversy Media』が非常に有益です。BGM代わりに流し聞きするだけでも全体像が掴めます。" },
-                { title: "🏍️ セブ島快適移動ハック", text: "ITパークやアヤラ周辺の激しい渋滞をすり抜けるには、バイクタクシー配車アプリの『Angkas（アンカス）』や『JoyRide』が最速です。タクシーより安く、ローカルの時間を無駄にしません。" },
-                { title: "🗣️ 学習を深める『保留する力』", text: "すぐに答えが出ない問題に直面したとき、焦って投げ出さずに『分からない状態のまま持ちこたえる力（ネガティブ・ケイパビリティ）』が思考の深さを育てます。点と点が繋がる瞬間を待ちましょう。" }
-            ];
-
-            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+        // 🌟 Controllerから「ガチャ結果」が送られてきた時だけ発動！
+        @if(session('success') && session('reward_tip_title'))
             const tipContent = document.getElementById('rewardTipContent');
             
+            // 🌟 データベースから来たタイトルと本文をハメ込む！
             tipContent.innerHTML = `
-                <div style="font-weight: bold; color: #1e8b9b; margin-bottom: 8px;">${randomTip.title}</div>
-                <div style="color: #333; line-height: 1.6; font-size: 13px;">${randomTip.text}</div>
+                <div style="font-weight: bold; color: #1e8b9b; margin-bottom: 8px;">{{ session('reward_tip_title') }}</div>
+                <div style="color: #333; line-height: 1.6; font-size: 13px;">{{ session('reward_tip_text') }}</div>
             `;
             
             const flashMsg = document.getElementById('flash-message');

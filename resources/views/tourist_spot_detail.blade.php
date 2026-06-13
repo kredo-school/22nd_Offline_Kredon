@@ -336,10 +336,8 @@
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px;">📍 エリア</label>
                         <select name="area" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px;">
-                            <option value="マクタン島" {{ old('area', $tourist_spot->area) == 'マクタン島' ? 'selected' : '' }}>マクタン島</option>
-                            <option value="セブ市街" {{ old('area', $tourist_spot->area) == 'セブ市街' ? 'selected' : '' }}>セブ市街</option>
-                            <option value="オスロブ・モアルボアル" {{ old('area', $tourist_spot->area) == 'オスロブ・モアルボアル' ? 'selected' : '' }}>オスロブ・モアルボアル</option>
-                            <option value="その他（遠方）" {{ old('area', $tourist_spot->area) == 'その他（遠方）' ? 'selected' : '' }}>その他（遠方）</option>
+                            <option value="セブ島" {{ old('area', $tourist_spot->area) == 'セブ島' ? 'selected' : '' }}>セブ島</option>
+                            <option value="離島" {{ old('area', $tourist_spot->area) == '離島' ? 'selected' : '' }}>離島</option>
                         </select>
                     </div>
 

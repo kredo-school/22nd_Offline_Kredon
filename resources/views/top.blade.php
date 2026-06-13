@@ -1,6 +1,7 @@
 @extends('layouts.app')
 {{-- Takaさん専用の共通CSSを読み込む --}}
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
 @section('content')
     <style>
         .top-page-wrapper { display: flex; gap: 30px; width: 100%; max-width: 1100px; margin: 0 auto; align-items: flex-start; }
@@ -12,27 +13,37 @@
         .hero-subtitle { font-size: 14px; margin-bottom: 20px; opacity: 0.9; }
         .spot-card-horizontal { display: flex; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; text-decoration: none; color: inherit; transition: 0.2s; }
         .spot-card-horizontal:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
-        .spot-card-img-area { width: 180px; flex-shrink: 0; }
-        .spot-card-img-area img { width: 100%; height: 100%; object-fit: cover; }
+        .spot-card-img-area { 
+    width: 180px; 
+    height: 140px; /* 🌟 ここを追加！これで箱の高さが絶対固定されます */
+    flex-shrink: 0; 
+}
+.spot-card-img-area img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; /* 🌟 この魔法で、はみ出た部分は綺麗にカットされます */
+}
         .spot-card-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .spot-title { font-size: 18px; font-weight: bold; margin-bottom: 8px; color: #333; }
         .spot-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 10px; }
         .spot-tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag-item { font-size: 11px; font-weight: bold; color: #1e8b9b; background: #e6f0f9; padding: 4px 8px; border-radius: 4px; }
-        .side-box { background: white; border-radius: 12px; border: 1px solid #eee; padding: 20px; }
-        .side-box-title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 15px; border-bottom: 2px solid #1e8b9b; padding-bottom: 8px; }
-        .search-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; margin-bottom: 15px; }
-        .search-btn { width: 100%; padding: 12px; background-color: #1e8b9b; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        
+        /* 🌟 改善：パディングやマージンを削ってスリム化（下にスクロールさせるため） */
+        .side-box { background: white; border-radius: 12px; border: 1px solid #eee; padding: 15px; }
+        .side-box-title { font-size: 15px; font-weight: bold; color: #333; margin-bottom: 12px; border-bottom: 2px solid #1e8b9b; padding-bottom: 6px; }
+        .search-input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 13px; margin-bottom: 10px; }
+        .search-btn { width: 100%; padding: 10px; background-color: #1e8b9b; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .search-btn:hover { background-color: #166b78; }
 
-        /* 🌟 追加：注目スポット用のアニメーションCSS */
+        /* 注目スポット用のアニメーションCSS */
         .featured-spot-card {
             display: block;
             text-decoration: none;
             color: inherit;
             background: #fafafa;
             border-radius: 8px;
-            padding: 15px;
+            padding: 12px;
             transition: all 0.3s ease;
             border: 1px solid #eee;
         }
@@ -43,40 +54,16 @@
             border-color: #1e8b9b;
         }
 
-        /* 📱 ここから追加：スマホ対応（レスポンシブ）マジック！ */
+        /* 📱 スマホ対応（レスポンシブ） */
         @media (max-width: 768px) {
             .top-page-wrapper { flex-direction: column; gap: 20px; }
-            .main-column { display: contents; } /* 枠を解除して並べ替え可能に */
-            
+            .main-column { display: contents; } 
             .error-box { order: 1; width: 100%; }
-            
-            .hero-banner { 
-                order: 2; 
-                margin-top: 0; 
-                padding: 25px 15px; 
-                width: 100%; 
-                box-sizing: border-box; 
-            }
+            .hero-banner { order: 2; margin-top: 0; padding: 25px 15px; width: 100%; box-sizing: border-box; }
             .hero-title { font-size: 22px; margin-bottom: 5px; }
             .hero-subtitle { font-size: 12px; margin-bottom: 15px; }
-
-            .side-column { 
-                order: 3; 
-                position: static; 
-                max-height: none; 
-                overflow-y: visible; 
-                width: 100%; 
-                max-width: 100%; 
-            }
-
-            .spot-list-container { 
-                order: 4; 
-                width: 100%; 
-                display: flex; 
-                flex-direction: column; 
-                gap: 20px; 
-            }
-
+            .side-column { order: 3; position: static; max-height: none; overflow-y: visible; width: 100%; max-width: 100%; }
+            .spot-list-container { order: 4; width: 100%; display: flex; flex-direction: column; gap: 20px; }
             .spot-card-horizontal { flex-direction: column; }
             .spot-card-img-area { width: 100%; height: 200px; }
         }
@@ -174,21 +161,21 @@
                     <div class="side-box">
                         <div class="side-box-title">🔍 スポットを検索</div>
                         <form action="/" method="GET">
-                            <div style="margin-bottom: 15px; font-size: 14px; color: #555; display: flex; gap: 15px; padding-left: 5px;">
-                                <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+                            <div style="margin-bottom: 10px; font-size: 13px; color: #555; display: flex; gap: 10px; padding-left: 5px;">
+                                <label style="cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: bold;">
                                     <input type="checkbox" name="has_power" value="1" {{ request('has_power') ? 'checked' : '' }}> 🔌 コンセント
                                 </label>
-                                <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+                                <label style="cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: bold;">
                                     <input type="checkbox" name="has_wifi" value="1" {{ request('has_wifi') ? 'checked' : '' }}> 📶 Wi-Fi
                                 </label>
                             </div>
                             <input type="text" name="keyword" class="search-input" placeholder="キーワード（例：カフェ、静か）" value="{{ request('keyword') }}">
-                            <select name="sort" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px; border-color: #1e8b9b; color: #1e8b9b; font-weight: bold; cursor: pointer;">
+                            <select name="sort" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 13px; background-color: white; margin-bottom: 10px; border-color: #1e8b9b; color: #1e8b9b; font-weight: bold; cursor: pointer;">
                                 <option value="new" @selected(request('sort') == 'new' || !request()->has('sort'))>✨ 新着順（デフォルト）</option>
                                 <option value="old" @selected(request('sort') == 'old')>⏳ 古い順</option>
                                 <option value="reviews" @selected(request('sort') == 'reviews')>💬 クチコミの多い順</option>
                             </select>
-                            <select name="area" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white; margin-bottom: 15px;">
+                            <select name="area" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 13px; background-color: white; margin-bottom: 12px;">
                                 <option value="">-- エリアで絞り込む --</option>
                                 <option value="ITパーク" {{ request('area') == 'ITパーク' ? 'selected' : '' }}>ITパーク</option>
                                 <option value="アヤラ" {{ request('area') == 'アヤラ' ? 'selected' : '' }}>アヤラ</option>
@@ -209,7 +196,6 @@
                             $featuredBadge = "";
                             
                             if ($spots->isNotEmpty()) {
-                                // 1. 1週間以内の新規スポットを探す
                                 $featuredSpot = $spots->first(function($spot) {
                                     return $spot->created_at >= now()->subDays(7);
                                 });
@@ -217,24 +203,21 @@
                                 if ($featuredSpot) {
                                     $featuredBadge = "🆕 今週のNEWスポット";
                                 } else {
-                                    // 2. なければ、評価が一番高いスポットを選出
                                     $featuredSpot = $spots->sortByDesc('reviews_avg_rating')->first();
                                     $featuredBadge = "👑 殿堂入り高評価";
                                 }
                             }
                             
-                            // プレミアムユーザー向け：ランダムでマッサージ店を表示（1/3の確率）
-                            // ※本番環境でユーザーテーブルに is_premium ができたら Auth::user()->is_premium に変更
                             $showMassageAd = Auth::check() && rand(1, 3) === 1;
                         @endphp
 
                         @if($featuredSpot)
                             <a href="{{ route('spots.show', $featuredSpot->id) }}" class="featured-spot-card">
-                                <div style="font-size: 11px; color: white; background-color: #f0932b; display: inline-block; padding: 3px 8px; border-radius: 4px; font-weight: bold; margin-bottom: 8px;">
+                                <div style="font-size: 10px; color: white; background-color: #f0932b; display: inline-block; padding: 3px 6px; border-radius: 4px; font-weight: bold; margin-bottom: 6px;">
                                     {{ $featuredBadge }}
                                 </div>
                                 
-                                <div style="width: 100%; height: 120px; border-radius: 8px; overflow: hidden; margin-bottom: 10px;">
+                                <div style="width: 100%; height: 100px; border-radius: 6px; overflow: hidden; margin-bottom: 8px;">
                                     @if($featuredSpot->photo_path)
                                         <img src="{{ asset('storage/' . $featuredSpot->photo_path) }}" alt="{{ $featuredSpot->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                                     @else
@@ -242,8 +225,8 @@
                                     @endif
                                 </div>
                                 
-                                <div style="font-weight: bold; color: #333; font-size: 15px; margin-bottom: 4px;">{{ $featuredSpot->name }}</div>
-                                <div style="font-size: 12px; color: #666; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-weight: bold; color: #333; font-size: 14px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $featuredSpot->name }}</div>
+                                <div style="font-size: 11px; color: #666; display: flex; justify-content: space-between; align-items: center;">
                                     <span>
                                         @if($featuredSpot->reviews_avg_rating)
                                             <span style="color: #f0932b;">⭐ {{ number_format($featuredSpot->reviews_avg_rating, 1) }}</span>
@@ -259,16 +242,16 @@
                             <p style="font-size: 12px; color: #888; text-align: center;">現在注目のスポットを集計中です</p>
                         @endif
 
-                        {{-- 💆‍♂️ プレミアムユーザー限定のマッサージ広告（ランダム表示） --}}
+                        {{-- 💆‍♂️ プレミアムユーザー限定のマッサージ広告 --}}
                         @if($showMassageAd)
-                            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ddd;">
-                                <div style="font-size: 11px; color: #888; margin-bottom: 8px; font-weight: bold;">💎 Premium会員様へのおすすめ</div>
-                                <a href="#" style="display: block; text-decoration: none; background: linear-gradient(135deg, #2c3e50, #4ca1af); padding: 15px; border-radius: 8px; color: white; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <div style="font-size: 24px;">💆‍♀️</div>
+                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ddd;">
+                                <div style="font-size: 10px; color: #888; margin-bottom: 6px; font-weight: bold;">💎 Premium会員様へのおすすめ</div>
+                                <a href="#" style="display: block; text-decoration: none; background: linear-gradient(135deg, #2c3e50, #4ca1af); padding: 12px; border-radius: 8px; color: white; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="font-size: 20px;">💆‍♀️</div>
                                         <div>
-                                            <div style="font-size: 13px; font-weight: bold; margin-bottom: 2px;">Cebu Relax Spa</div>
-                                            <div style="font-size: 10px; opacity: 0.9;">勉強の疲れを癒やしませんか？<br>会員限定20%OFFクーポン配布中！</div>
+                                            <div style="font-size: 12px; font-weight: bold; margin-bottom: 2px;">Cebu Relax Spa</div>
+                                            <div style="font-size: 9px; opacity: 0.9;">勉強の疲れを癒やしませんか？<br>会員限定20%OFFクーポン配布中！</div>
                                         </div>
                                     </div>
                                 </a>
