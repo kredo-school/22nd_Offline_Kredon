@@ -48,7 +48,6 @@
             <div class="pickup-box">
                 <h3 style="font-size: 14px; font-weight: bold; color: #f0932b; margin: 0 0 15px 0; display: flex; justify-content: space-between; align-items: center;">
                     <span>💡 今週のおすすめスポット</span>
-                    <span style="font-size: 10px; color: #aaa; font-weight: normal;">10秒で切り替わります🔄</span>
                 </h3>
                 
                 {{-- 🌟 3Dフリップコンテナ --}}
@@ -119,7 +118,7 @@
              📚 セクション1：保存した学習スポット
              ========================================================================== --}}
         <div class="section-header-custom">
-            <h2 class="section-title" style="font-size: 20px; font-weight: bold; color: #007b8f; margin: 0;">📚 保存した学習スポット</h2>
+            <h2 class="section-title" style="font-size: 20px; font-weight: bold; color: #007b8f; margin: 0;">📚 お気に入り学習スポット</h2>
 
             <form action="{{ route('mypage') }}" method="GET" style="margin: 0;">
                 <select name="filter" class="filter-select" onchange="this.form.submit()" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px;">
@@ -133,7 +132,7 @@
         
         @if($myBookmarks->isEmpty())
             <p style="color: #999; background: white; padding: 40px; border-radius: 12px; text-align: center; border: 1px dashed #ccc; margin-bottom: 50px;">
-                保存された学習スポットはまだありません。
+                お気に入り学習スポットはまだありません。
             </p>
         @else
             <div class="grid-layout-custom">
@@ -176,7 +175,7 @@
              ========================================================================== --}}
         <div class="section-header-custom" style="margin-top: 60px;">
             <h2 class="section-title" style="font-size: 20px; font-weight: bold; color: #f0932b; margin: 0;">
-                🌴 保存した観光スポット
+                🌴 お気に入り観光スポット
             </h2>
 
             {{-- 🌟 改善：観光スポット用の具体的絞り込み --}}
@@ -192,7 +191,7 @@
 
         @if(!isset($bookmarkedTouristSpots) || $bookmarkedTouristSpots->isEmpty())
             <div style="background: white; padding: 40px; text-align: center; border-radius: 12px; border: 1px dashed #ccc; color: #999; margin-bottom: 50px;">
-                <p style="margin-bottom: 15px;">保存された観光スポットはまだありません。</p>
+                <p style="margin-bottom: 15px;">お気に入り観光スポットはまだありません。</p>
                 <a href="{{ route('tourist_spots.index') }}" style="display: inline-block; background-color: #f0932b; color: white; text-decoration: none; padding: 8px 18px; border-radius: 20px; font-weight: bold; font-size: 13px;">
                     観光スポットを探す
                 </a>

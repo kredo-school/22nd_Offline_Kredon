@@ -110,12 +110,12 @@ class SpotController extends Controller
             $text = $randomTip ? $randomTip->text : '引き続き、セブでの生活と開発を楽しんでいきましょう！';
 
             // 🌟 修正：引いたガチャの結果をトップページ（ / ）へ投げる！
-            return redirect('/') 
+            return redirect('/')
                 ->with('success', '✨ 新しい学習スポットを登録しました！')
                 ->with('reward_tip_title', $title)
                 ->with('reward_tip_text', $text);
-                
-        // 🚨 どんなエラーが起きても真っ白にせず黒い画面で自白させる最強のキャッチ網！
+
+            // 🚨 どんなエラーが起きても真っ白にせず黒い画面で自白させる最強のキャッチ網！
         } catch (\Throwable $e) {
             DB::rollback();
             dd('🚨【原因判明】学習スポット登録でエラー発生！', $e->getMessage(), '行番号: ' . $e->getLine());
@@ -126,9 +126,10 @@ class SpotController extends Controller
     {
         $spot = Spot::findOrFail($id);
 
-        if ($spot->user_id !== Auth::id()) {
-            abort(403, 'このスポットを編集する権限がありません。');
-        }
+        // 🌟 削除：Wiki型にするため、「自分以外の編集を弾く」ロックを解除！
+        // if ($spot->user_id !== Auth::id()) {
+        //     abort(403, 'このスポットを編集する権限がありません。');
+        // }
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -152,9 +153,13 @@ class SpotController extends Controller
             'hours' => $hours,
             'has_wifi' => $request->has('has_wifi') ? true : false,
             'has_power' => $request->has('has_power') ? true : false,
+            'last_edited_by' => Auth::id(), // 🌟 追加：最後に編集した人のIDを記録！
         ]);
-
-        // 🌟 編集時も専用フォルダに整理して保存
+        // 🌟 ここを追加！管理者のための「編集履歴のレシート」を発行
+        \App\Models\SpotEditHistory::create([
+            'spot_id' => $spot->id,
+            'user_id' => Auth::id(),
+        ]);
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $index => $photo) {
                 $filename = uniqid() . '_' . time() . '.' . $photo->getClientOriginalExtension();
@@ -215,7 +220,7 @@ class SpotController extends Controller
     public function show($id)
     {
         // 🌟 クチコミに加えて、紐づく複数写真（photos）も一緒に持ってくる！
-        $spot = Spot::with(['reviews.user', 'photos'])->findOrFail($id);
+        $spot = Spot::with(['reviews.user', 'photos', 'editHistories.user'])->findOrFail($id);
         return view('spot_detail', compact('spot'));
     }
     // app/Http/Controllers/SpotController.php に追加

@@ -346,7 +346,7 @@
         }
         .view-counter-tooltip .tooltip-text {
             visibility: hidden;
-            width: 130px;
+            width: 170px;
             background-color: #333;
             color: #fff;
             text-align: center;
@@ -356,7 +356,7 @@
             z-index: 10;
             bottom: 125%;
             left: 50%;
-            margin-left: -65px;
+            margin-left: -85px;
             opacity: 0;
             transition: opacity 0.2s;
             font-size: 11px;
@@ -609,11 +609,19 @@
                                             <span style="color: #999; font-size: 13px; font-weight: normal;">/ {{ $spot->reviews->count() }}件</span>
                                         </div>
                                         
+                                        {{-- 🌟 改善版：お気に入り数とネガティブ・ソーシャルプルーフ対策 --}}
+                                        @php
+                                            // データベースからこのスポットのお気に入り数を安全に取得
+                                            $bookmarkCount = $spot->bookmarks()->count();
+                                        @endphp
                                         <div class="view-counter-tooltip">
-                                            <i class="fa-solid fa-chart-simple" style="margin-right: 4px;"></i> 統計データ
+                                            <i class="fa-solid fa-heart" style="margin-right: 4px; color: #e53e3e;"></i> お気に入り
                                             <span class="tooltip-text">
-                                                <i class="fa-solid fa-eye" style="margin-right: 3px;"></i>
-                                                {{ $spot->view_count ?? rand(120, 500) }}回 見られています
+                                                @if($bookmarkCount < 5)
+                                                    ✨ 新着スポット！
+                                                @else
+                                                    ❤️ {{ $bookmarkCount }}人がお気に入り登録中
+                                                @endif
                                             </span>
                                         </div>
                                     </div>
@@ -684,12 +692,13 @@
                                 </iframe>
                             </div>
 
-                            <div>
-                                <div style="font-size: 12px; color: #666; margin-bottom: 3px;">📍 エリア：{{ $spot->area }}</div>
-                                <div style="font-size: 12px; color: #666; margin-bottom: 8px;">🕒 営業時間：{{ $spot->hours ?? '未設定' }}</div>
-                                <div class="spot-tags">
-                                    @if($spot->has_wifi)<span class="spot-tag">フリーWi-Fi</span>@endif
-                                    @if($spot->has_power)<span class="spot-tag">コンセント</span>@endif
+                            {{-- 🌟 改善：不要なタグを消し、エリアと営業時間の視認性を大幅アップ！ --}}
+                            <div style="background-color: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 5px;">
+                                <div style="font-size: 14px; font-weight: bold; color: #475569; margin-bottom: 6px;">
+                                    📍 エリア：<span style="color: #333; font-size: 15px;">{{ $spot->area }}</span>
+                                </div>
+                                <div style="font-size: 14px; font-weight: bold; color: #475569;">
+                                    🕒 営業時間：<span style="color: #333; font-size: 15px;">{{ $spot->hours ?? '未設定' }}</span>
                                 </div>
                             </div>
 
@@ -724,10 +733,31 @@
                                 <div class="pc-coupon-notice" style="font-size: 11px; font-weight: bold; opacity: 0.9;">※クーポンはスマートフォンからご利用ください📱</div>
                             </div>
 
-                            @if(Auth::check() && Auth::id() === $spot->user_id)
+                           {{-- 🌟 改善：ログインしていれば誰でも編集可能（Wiki型） --}}
+                            @if(Auth::check())
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div style="font-size: 12px; color: #475569; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fa-solid fa-clock-rotate-left" style="color: #1e8b9b;"></i>
+                                        最終更新: <strong>{{ $spot->lastEditor->name ?? $spot->user->name ?? '不明' }}</strong>さん
+                                        
+                                        {{-- 🌟 追加：履歴を見るボタン --}}
+                                        <button onclick="document.getElementById('historyModal-{{ $spot->id }}').classList.add('is-show')" style="background: none; border: none; color: #4a82b3; text-decoration: underline; cursor: pointer; font-size: 11px; margin-left: 4px; padding: 0;">
+                                            (履歴を見る)
+                                        </button>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button onclick="alert('「いいね」を送信しました！更新ありがとうございます！')" style="background: none; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-size: 11px; cursor: pointer; color: #64748b; transition: 0.2s;">
+                                            <i class="fa-regular fa-thumbs-up"></i> いいね
+                                        </button>
+                                        <button onclick="alert('運営に報告を送信しました。')" style="background: none; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-size: 11px; cursor: pointer; color: #e53e3e; transition: 0.2s;">
+                                            <i class="fa-solid fa-triangle-exclamation"></i> 報告
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <button onclick="document.getElementById('editSpotModal').classList.add('is-show')"
-                                    style="background-color: white; color: #4a82b3; border: 1px solid #4a82b3; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; width: 100%;">
-                                    <i class="fa-solid fa-pen"></i> 店舗情報を編集
+                                    style="background-color: white; color: #4a82b3; border: 1px solid #4a82b3; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; width: 100%; margin-bottom: 15px;">
+                                    <i class="fa-solid fa-pen"></i> スポット情報を編集（Wiki）
                                 </button>
                             @endif
 
@@ -798,7 +828,7 @@
                                                 <div style="flex: 1; color: #e53e3e; font-weight: bold;">👍 Good: <span
                                             style="font-weight: normal; color: #555;">{{ $review->good_point }}</span></div>@endif
                                             @if($review->bad_point)
-                                                <div style="flex: 1; color: #3182ce; font-weight: bold;">👎 Bad: <span
+                                                <div style="flex: 1; color: #3182ce; font-weight: bold;">気になる点: <span
                                             style="font-weight: normal; color: #555;">{{ $review->bad_point }}</span></div>@endif
                                         </div>
                                     @endif
@@ -868,7 +898,7 @@
                                                     <div style="flex: 1;"><label style="display: block; font-size: 12px; font-weight: bold; color: #e53e3e; margin-bottom: 5px;">👍 Good</label>
                                                         <input type="text" name="good_point" value="{{ $review->good_point }}" style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
                                                     </div>
-                                                    <div style="flex: 1;"><label style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">👎 Bad</label>
+                                                    <div style="flex: 1;"><label style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">気になる点</label>
                                                         <input type="text" name="bad_point" value="{{ $review->bad_point }}" style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
                                                     </div>
                                                 </div>
@@ -951,7 +981,7 @@
                     <div style="flex: 1;"><label style="display: block; font-size: 12px; font-weight: bold; color: #e53e3e; margin-bottom: 5px;">👍 Goodポイント</label>
                         <input type="text" name="good_point" style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
                     </div>
-                    <div style="flex: 1;"><label style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">👎 気になるポイント</label>
+                    <div style="flex: 1;"><label style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;"> 気になるポイント</label>
                         <input type="text" name="bad_point" style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
                     </div>
                 </div>
@@ -1085,6 +1115,67 @@
                         fileLabel.style.color = '#297a6a';
                     }
                 });
+            }
+        });
+    </script>
+    {{-- 🌟 追加：編集履歴一覧モーダル --}}
+    <div class="custom-modal" id="historyModal-{{ $spot->id }}">
+        <div class="modal-content" style="padding: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+                <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">📝 編集・更新履歴</h2>
+                <button type="button" onclick="document.getElementById('historyModal-{{ $spot->id }}').classList.remove('is-show')" class="close-btn" style="position: static;">×</button>
+            </div>
+            <div style="padding: 20px; max-height: 350px; overflow-y: auto;">
+                
+                @if($spot->editHistories && $spot->editHistories->count() > 0)
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        @foreach($spot->editHistories as $history)
+                            <li style="border-bottom: 1px dashed #eee; padding: 12px 0; font-size: 13px; color: #333;">
+                                <div style="color: #888; font-size: 11px; margin-bottom: 4px;">
+                                    {{ $history->created_at->format('Y年m月d日 H:i') }}
+                                </div>
+                                <strong>{{ $history->user->name ?? '退会したユーザー' }}</strong> さんが情報を更新しました
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p style="text-align: center; color: #999; font-size: 13px; margin-bottom: 0;">まだ情報の更新履歴はありません。</p>
+                @endif
+                
+                {{-- 一番最初の「新規登録」の記録も一番下に表示する粋な演出 --}}
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #f4f8fb; font-size: 13px; color: #333;">
+                    <div style="color: #888; font-size: 11px; margin-bottom: 4px;">
+                        {{ $spot->created_at->format('Y年m月d日 H:i') }}
+                    </div>
+                    <strong>{{ $spot->user->name ?? '不明' }}</strong> さんがスポットを新規登録しました
+                </div>
+                
+            </div>
+        </div>
+    </div>{{-- 🌟 自分の画面専用！Enterキーで次の入力項目へ移動する魔法 --}}
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const activeElement = document.activeElement;
+
+                // テキストエリア（感想）やボタンは本来のEnterの動きを優先
+                if (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'BUTTON' || activeElement.type === 'submit') {
+                    return; 
+                }
+
+                e.preventDefault();
+
+                const form = activeElement.closest('form');
+                if (!form) return;
+
+                const focusableElements = Array.from(
+                    form.querySelectorAll('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button[type="submit"]')
+                );
+
+                const currentIndex = focusableElements.indexOf(activeElement);
+                if (currentIndex > -1 && currentIndex < focusableElements.length - 1) {
+                    focusableElements[currentIndex + 1].focus();
+                }
             }
         });
     </script>

@@ -398,4 +398,31 @@
             });
         });
     </script>
+    {{-- 🌟 自分の画面専用！Enterキーで次の入力項目へ移動する魔法 --}}
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const activeElement = document.activeElement;
+
+                // テキストエリア（感想）やボタンは本来のEnterの動きを優先
+                if (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'BUTTON' || activeElement.type === 'submit') {
+                    return; 
+                }
+
+                e.preventDefault();
+
+                const form = activeElement.closest('form');
+                if (!form) return;
+
+                const focusableElements = Array.from(
+                    form.querySelectorAll('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button[type="submit"]')
+                );
+
+                const currentIndex = focusableElements.indexOf(activeElement);
+                if (currentIndex > -1 && currentIndex < focusableElements.length - 1) {
+                    focusableElements[currentIndex + 1].focus();
+                }
+            }
+        });
+    </script>
 @endsection

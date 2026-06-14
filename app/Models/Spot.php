@@ -136,4 +136,9 @@ public function isCouponUsedByMonth($user)
         ->where('used_at', '>=', now()->startOfMonth()) // 今月の1日以降のデータがあるか
         ->exists();
 }
+// 🌟 追加：このスポットの編集履歴を「新しい順（latest）」で全部持ってくる！
+    public function editHistories()
+    {
+        return $this->hasMany(SpotEditHistory::class)->latest();
+    }
 }
