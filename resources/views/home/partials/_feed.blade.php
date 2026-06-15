@@ -1,10 +1,10 @@
-<div class="feed-container">
+<div class="kk-feed-container">
     {{-- Market Section --}}
-    <section class="mb-5">
-        <h5 class="fw-bold m-0">Market</h5>
-        <div class="row row-cols-md-3 g-3">
+    <section class="kk-section">
+        <h5 class="kk-section-title">Market</h5>
+        <div class="kk-grid">
             @forelse($marketItems as $item)
-                <div class="col">@include('home.partials._post_card', ['item' => $item])</div>
+                <div class="kk-grid-item">@include('home.partials._post_card', ['item' => $item])</div>
             @empty
                 <p>投稿はありません。</p>
             @endforelse
@@ -12,23 +12,23 @@
     </section>
 
     {{-- Working Spot Section --}}
-    <section class="mb-5">
-        <h5 class="fw-bold m-0">Working</h5>
-        <div class="row row-cols-md-3 g-3">
+    <section class="kk-section">
+        <h5 class="kk-section-title">Working</h5>
+        <div class="kk-grid">
             @forelse($workingSpots as $item)
-                <div class="col">@include('home.partials._post_card', ['item' => $item])</div>
+                <div class="kk-grid-item">@include('home.partials._post_card', ['item' => $item])</div>
             @empty
                 <p>投稿はありません。</p>
             @endforelse
         </div>
     </section>
 
-    {{-- Tourist Spot Section (追加しました) --}}
-    <section class="mb-5">
-        <h5 class="fw-bold m-0">Tourist Spot</h5>
-        <div class="row row-cols-md-3 g-3">
+    {{-- Tourist Spot Section --}}
+    <section class="kk-section">
+        <h5 class="kk-section-title">Tourist Spot</h5>
+        <div class="kk-grid">
             @forelse($touristSpots as $item)
-                <div class="col">@include('home.partials._post_card', ['item' => $item])</div>
+                <div class="kk-grid-item">@include('home.partials._post_card', ['item' => $item])</div>
             @empty
                 <p>投稿はありません。</p>
             @endforelse
