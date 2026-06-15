@@ -3,8 +3,12 @@
         class="btn btn-danger rounded-circle d-flex flex-column align-items-center justify-content-center shadow-lg" 
         data-bs-toggle="modal" 
         data-bs-target="#emergencyModal"
-        style="width: 60px; height: 60px; position: fixed; bottom: 20px; right: 20px; z-index: 1050; border: 3px solid #fff;
-        transition: transform 0.2s ease-in-out;">
+        style="width: 50px; height: 50px; 
+               position: fixed; 
+               bottom: 20px; right: 20px; z-index: 1050; 
+               background-color: rgba(220, 53, 69, 0.85);
+               border: 3px solid #fff;
+               transition: all 0.2s ease-in-out;">
 
     {{-- アイコンとテキストの配置を微調整 --}}
     <i class="fa-solid fa-phone-flip fs-4"></i>

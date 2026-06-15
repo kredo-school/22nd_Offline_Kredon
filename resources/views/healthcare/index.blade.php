@@ -9,34 +9,46 @@
         
         {{-- メインエリア --}}
         <div class="col-12 col-md-8">
-            {{-- 1. Hero --}}
+            {{-- Hero --}}
             <div class="mb-4">
                 @include('healthcare.partials._hero')
             </div>
 
-            {{-- 2. 言語選択 --}}
+            {{-- 言語選択 --}}
             <div class="mb-4">
                 @include('healthcare.partials._language')
             </div>
 
-            {{-- 3. アクションボタン --}}
+            {{-- アクションボタン --}}
             <div class="mb-4">
                 @include('healthcare.partials._action')
             </div>
 
-            {{-- 4. 注意 --}}
+            {{-- 医務室 --}}
+            <div class="mb-4">
+                @include('healthcare.partials._medical_office')
+            </div>
+
+             {{-- 注意 --}}
             <div class="mb-4">
                 @include('healthcare.partials._notes')
             </div>
 
-            {{-- 5. }}
-
-            {{-- }}
-
-            {{-- 5. 医務室 --}}
+            {{-- よくある状況 --}}
             {{-- <div class="mb-4">
-                @include('healthcare.partials._nurse.office')
+                @include('healthcare.partials._situations')
+            </div>  --}}
+
+            {{-- wizard --}}
+            {{-- <div class="mb-4">
+                @include('healthcare.wizard._wizard_card')
             </div> --}}
+
+            {{--  病院一覧 --}}
+            <div class="mb-4">
+                @include('healthcare.partials._card')
+            </div>
+            
         </div>
         
         {{-- サイドバー --}}

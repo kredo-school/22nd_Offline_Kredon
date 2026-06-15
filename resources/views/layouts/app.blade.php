@@ -12,6 +12,7 @@
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    
 
     <style>
         html,
@@ -104,7 +105,7 @@
             .main-wrapper {
                 flex-direction: row !important;
                 height: calc(100vh - 70px) !important;
-                overflow: hidden !important;
+                /* overflow: hidden !important; */
                 /* margin-top: 70px; */
             }
 
@@ -115,7 +116,7 @@
                 flex-direction: column !important;
                 height: calc(100vh - 70px) !important;
                 width: calc(100% - 200px) !important;
-                overflow: hidden !important;
+                overflow-y: auto !important;
                 background-color: #f8f9fa;
             }
 

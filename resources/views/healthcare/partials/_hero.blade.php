@@ -5,13 +5,13 @@
 
             {{-- テキスト --}}
             <div class="col-12 col-md-8">
-                <h1 class="fw-bold mb-3 fs-3">
+                <h1 class="fw-bold mb-3">
                     Kredon Student Healthcare Support
                 </h1>
 
-                <p class="fs-5 text-muted mb-4">
-                    病院探し・海外旅行保険・緊急時対応を<br>
-                    Kredo生向けにわかりやすく案内します。
+                <p class="text-muted mb-4">
+                    病院探し・海外旅行保険・緊急時対応を
+                    Kredo生向けに案内します。
                 </p>
 
                 <div class="d-flex flex-column flex-sm-row flex-wrap gap-2 align-items-start align-items-sm-center">
