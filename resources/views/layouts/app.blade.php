@@ -45,6 +45,20 @@
             border-right: 1px solid #e9ecef;
         }
 
+        .spot-sub-link {
+            display: block;
+            text-decoration: none;
+            color: #6c757d;
+            padding: 8px 0 8px 48px;
+            font-size: 0.82rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .spot-sub-link:hover {
+            background-color: #edeae4;
+            color: #000;
+        }
+
         /* ── Mobile Drawer ── */
         .mobile-drawer {
             position: fixed;
@@ -151,7 +165,8 @@
             font-size: 0.85rem;
         }
 
-        .sidebar-link:hover {
+        .sidebar-link:hover,
+        .sidebar-link:active {
             background-color: #edeae4 !important;
             color: #000;
         }
@@ -163,7 +178,23 @@
             text-align: center;
         }
 
-        #spotSubmenu a:hover {
+        /* ── Spot submenu hover（PC・スマホ共通） ── */
+        #spotSubmenuPC a,
+        #spotSubmenu a {
+            display: block;
+            text-decoration: none;
+            color: #6c757d;
+            padding: 8px 0 8px 48px;
+            /* ps-5相当 */
+            font-size: 0.82rem;
+            transition: background 0.2s, color 0.2s;
+            border-radius: 6px;
+        }
+
+        #spotSubmenuPC a:hover,
+        #spotSubmenuPC a:active,
+        #spotSubmenu a:hover,
+        #spotSubmenu a:active {
             background-color: #edeae4;
             color: #000 !important;
         }
@@ -347,30 +378,26 @@
 
                 <div class="command">
                     {{-- SPOT --}}
-                    <a href="#" class="sidebar-link" onclick="toggleSpot(event)">
+                    <a href="#" class="sidebar-link {{ request()->routeIs('spot.*') ? 'active' : '' }}" onclick="toggleSpot(event)">
                         <i class="fa-solid fa-map-location-dot"></i> SPOT
                         <i class="fa-solid fa-chevron-down ms-auto small" id="spotChevron"
                             style="transition:transform 0.2s;"></i>
                     </a>
                     <div id="spotSubmenu" style="display:none;" class="ps-2">
-                        <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5"
-                            style="font-size:0.82rem;">Working</a>
-                        <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5"
-                            style="font-size:0.82rem;">Hospital</a>
-                        <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5"
-                            style="font-size:0.82rem;">Tourism</a>
+                        <a href="#" class="spot-sub-link {{ request()->routeIs('spot.working') ? 'active' : '' }}">Working</a>
+                        <a href="#" class="spot-sub-link {{ request()->routeIs('spot.hospital') ? 'active' : '' }}">Hospital</a>
+                        <a href="#" class="spot-sub-link {{ request()->routeIs('spot.tourism') ? 'active' : '' }}">Tourism</a>
                     </div>
 
-                    <a href="#" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> EVENT</a>
-                    <a href="#" class="sidebar-link"><i class="fa-solid fa-store"></i> MARKET</a>
-                    <a href="#" class="sidebar-link"><i class="fa-regular fa-bookmark"></i> BOOKMARK</a>
-                    <a href="#" class="sidebar-link"><i class="fa-regular fa-star"></i>
-                        REVIEW</a>
+                    <a href="#" class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}"><i class="fa-solid fa-calendar-days"></i> EVENT</a>
+                    <a href="#" class="sidebar-link {{ request()->routeIs('market.*') ? 'active' : '' }}"><i class="fa-solid fa-store"></i> MARKET</a>
+                    <a href="#" class="sidebar-link {{ request()->routeIs('bookmark.*') ? 'active' : '' }}"><i class="fa-regular fa-bookmark"></i> BOOKMARK</a>
+                    <a href="#" class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}"><i class="fa-regular fa-star"></i>REVIEW</a>
 
                     <hr class="mx-3 my-2 text-muted">
 
-                    <a href="#" class="sidebar-link"><i class="fa-regular fa-user"></i> MY PAGE</a>
-                    <a href="#" class="sidebar-link"><i class="fa-solid fa-gear"></i> SETTING</a>
+                    <a href="#" class="sidebar-link {{ request()->routeIs('mypage.*') ? 'active' : '' }}"><i class="fa-regular fa-user"></i> MY PAGE</a>
+                    <a href="#" class="sidebar-link {{ request()->routeIs('setting.*') ? 'active' : '' }}"><i class="fa-solid fa-gear"></i> SETTING</a>
                     <a href="#" class="sidebar-link"
                         onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i> LOGOUT
@@ -401,6 +428,7 @@
          PC用 左サイドバー（md以上）
     ══════════════════════════════════ --}}
         <div class="main-wrapper">
+            {{-- スマホ対応　（d-none) --}}
             <aside class="sidebar-left d-none d-md-block">
                 <div class="py-2">
                     <a class="d-block text-center" href="{{ url('/') }}">
@@ -408,7 +436,10 @@
                             style="height:130px;width:auto;object-fit:contain; margin-bottom: -30px; margin-top: -20px;">
                     </a>
 
-                    <div class="command">                       
+                    <hr class="mx-3 my-2 text-muted">
+
+
+                    <div class="command">
                         {{-- PCサイドバーのSPOTリンク --}}
                         <a href="#" class="sidebar-link" onclick="toggleSpotPC(event)">
                             <i class="fa-solid fa-map-location-dot"></i> SPOT
@@ -416,24 +447,21 @@
                                 style="transition:transform 0.2s;"></i>
                         </a>
                         <div id="spotSubmenuPC" style="display:none;" class="accordion-item">
-                            <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5"
-                                style="font-size:0.82rem;">Working</a>
-                            <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5"
-                                style="font-size:0.82rem;">Hospital</a>
-                            <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5"
-                                style="font-size:0.82rem;">Tourism</a>
+                            <a href="#" class="spot-sub-link {{ request()->routeIs('spot.working') ? 'active' : '' }}">Working</a>
+                            <a href="#" class="spot-sub-link {{ request()->routeIs('spot.hospital') ? 'active' : '' }}">Hospital</a>
+                            <a href="#" class="spot-sub-link {{ request()->routeIs('spot.tourism') ? 'active' : '' }}">Tourism</a>
                         </div>
 
-                        <a href="#" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> EVENT</a>
-                        <a href="#" class="sidebar-link"><i class="fa-solid fa-store"></i> MARKET</a>
-                        <a href="#" class="sidebar-link"><i class="fa-regular fa-bookmark"></i> BOOKMARK</a>
-                        <a href="#" class="sidebar-link"><i
-                                class="fa-regular fa-star"></i> REVIEW</a>
+                        <a href="#" class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}"><i class="fa-solid fa-calendar-days"></i> EVENT</a>
+                        <a href="#" class="sidebar-link {{ request()->routeIs('market.*') ? 'active' : '' }}"><i class="fa-solid fa-store"></i> MARKET</a>
+                        <a href="#" class="sidebar-link {{ request()->routeIs('bookmark.*') ? 'active' : '' }}"><i class="fa-regular fa-bookmark"></i> BOOKMARK</a>
+                        <a href="#" class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}"><i class="fa-regular fa-star"></i> REVIEW</a>
 
                         <hr class="mx-3 my-2 text-muted">
 
-                        <a href="#" class="sidebar-link"><i class="fa-regular fa-user"></i> MY PAGE</a>
-                        <a href="#" class="sidebar-link"><i class="fa-solid fa-gear"></i> SETTING</a>
+
+                        <a href="#" class="sidebar-link {{ request()->routeIs('mypage.*') ? 'active' : '' }}"><i class="fa-regular fa-user"></i> MY PAGE</a>
+                        <a href="#" class="sidebar-link {{ request()->routeIs('setting.*') ? 'active' : '' }}"><i class="fa-solid fa-gear"></i> SETTING</a>
                         <a href="#" class="sidebar-link"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i> LOGOUT
@@ -449,7 +477,8 @@
                             <div class="card-body p-3">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="fa-solid fa-crown" style="color:gold;"></i>
-                                    <h6 class="card-title fw-bold m-0 ms-1" style="color:darkcyan; font-size: 0.75rem;">KREDON PREMIUM
+                                    <h6 class="card-title fw-bold m-0 ms-1"
+                                        style="color:darkcyan; font-size: 0.75rem;">KREDON PREMIUM
                                     </h6>
                                 </div>
                                 <p class="card-text text-muted mb-3" style="font-size:0.8rem;line-height:1.4;">
@@ -494,6 +523,17 @@
             menu.style.display = isOpen ? 'none' : 'block';
             chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
         }
+
+        // ── SPOTサブメニュー（スマホ用）──
+        function toggleSpot(e) {
+            e.preventDefault();
+            const menu = document.getElementById('spotSubmenu');
+            const chevron = document.getElementById('spotChevron');
+            const isOpen = menu.style.display === 'block';
+            menu.style.display = isOpen ? 'none' : 'block';
+            chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+
 
         // スワイプで閉じる
         let touchStartX = 0;
