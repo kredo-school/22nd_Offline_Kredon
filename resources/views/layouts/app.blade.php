@@ -29,6 +29,15 @@
             right: 0;
             z-index: 1040;
             height: 70px;
+            overflow: visible !important;
+        }
+
+        .navbar-top .dropdown-menu {
+            position: absolute !important;
+            top: 100% !important;
+            right: 0 !important;
+            margin-top: 4px;
+            z-index: 1050;
         }
 
         /* ── Sidebar ── */
@@ -352,22 +361,45 @@
                             <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
                         @endif
                     @else
-                        <li class="nav-item">
-                            <a class="nav-link  d-flex align-items-center gap-2" href="#"
-                                role="button">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link d-flex align-items-center gap-2 dropdown-toggle" href="#"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 @if (Auth::user()->avatar)
                                     <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="avatar"
                                         style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
                                 @else
                                     <span
                                         style="display:inline-flex;align-items:center;justify-content:center;
-                                             width:32px;height:32px;border-radius:50%;background:#212529;
-                                             color:#fff;font-size:0.8rem;font-weight:bold;">
+                             width:32px;height:32px;border-radius:50%;background:#212529;
+                             color:#fff;font-size:0.8rem;font-weight:bold;">
                                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                                     </span>
                                 @endif
                                 {{ Auth::user()->name }}
                             </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa-regular fa-user me-2"></i>My Page
+                                    </a>
+                                </li>
+                                @if (Auth::user()->role == 1)
+                                    <li>
+                                        <a class="dropdown-item fw-bold" href="#" style="color: darkcyan;">
+                                            <i class="fa-solid fa-shield-halved me-2"></i>Admin Page
+                                        </a>
+                                    </li>
+                                @endif
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="#"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Logout
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     @endguest
                 </ul>
@@ -429,6 +461,16 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
+                                @if (Auth::user()->role === 1)
+                                    <li>
+                                        <a class="dropdown-item fw-bold" href="#" style="color: darkcyan;">
+                                            <i class="fa-solid fa-shield-halved me-2"></i>Admin Page
+                                        </a>
+                                    </li>
+                                @endif
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                                 <li>
                                     <a class="dropdown-item fw-bold" href="#" style="color: darkcyan;">
                                         <i class="fa-solid fa-crown me-2" style="color:gold;"></i>Premium Member
@@ -466,18 +508,15 @@
                 <i class="fa-solid fa-map-location-dot"></i>
                 <span>Spot</span>
             </a>
-            <a href="#"
-                class="bottom-nav-item {{ request()->routeIs('event.*') ? 'active' : '' }}">
+            <a href="#" class="bottom-nav-item {{ request()->routeIs('event.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Event</span>
             </a>
-            <a href="#"
-                class="bottom-nav-item {{ request()->routeIs('market.*') ? 'active' : '' }}">
+            <a href="#" class="bottom-nav-item {{ request()->routeIs('market.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-store"></i>
                 <span>Market</span>
             </a>
-            <a href="#"
-                class="bottom-nav-item {{ request()->routeIs('review.*') ? 'active' : '' }}">
+            <a href="#" class="bottom-nav-item {{ request()->routeIs('review.*') ? 'active' : '' }}">
                 <i class="fa-regular fa-star"></i>
                 <span>Review</span>
             </a>
@@ -528,31 +567,26 @@
                             <a href="#" class="spot-sub-link">Tourism</a>
                         </div>
 
-                        <a href="#"
-                            class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}">
+                        <a href="#" class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}">
                             <i class="fa-solid fa-calendar-days"></i> EVENT
                         </a>
-                        <a href="#"
-                            class="sidebar-link {{ request()->routeIs('market.*') ? 'active' : '' }}">
+                        <a href="#" class="sidebar-link {{ request()->routeIs('market.*') ? 'active' : '' }}">
                             <i class="fa-solid fa-store"></i> MARKET
                         </a>
                         <a href="#"
                             class="sidebar-link {{ request()->routeIs('bookmark.*') ? 'active' : '' }}">
                             <i class="fa-regular fa-bookmark"></i> BOOKMARK
                         </a>
-                        <a href="#"
-                            class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}">
+                        <a href="#" class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}">
                             <i class="fa-regular fa-star"></i> REVIEW
                         </a>
 
                         <hr class="mx-3 my-2 text-muted">
 
-                        <a href="#"
-                            class="sidebar-link {{ request()->routeIs('mypage.*') ? 'active' : '' }}">
+                        <a href="#" class="sidebar-link {{ request()->routeIs('mypage.*') ? 'active' : '' }}">
                             <i class="fa-regular fa-user"></i> MY PAGE
                         </a>
-                        <a href="#"
-                            class="sidebar-link {{ request()->routeIs('setting.*') ? 'active' : '' }}">
+                        <a href="#" class="sidebar-link {{ request()->routeIs('setting.*') ? 'active' : '' }}">
                             <i class="fa-solid fa-gear"></i> SETTING
                         </a>
                         <a href="#" class="sidebar-link"
