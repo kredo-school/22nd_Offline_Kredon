@@ -4,17 +4,14 @@
 
 @section('content') 
 
-<div class="custom-container">
-    <div class="custom-layout">
+<div class="kk-container">
+    <div class="kk-layout">
 
         {{-- メインエリア --}}
         <main class="main-column">
                 @include('home.partials._hero')
-            </div>
                 @include('home.partials._action')
-            </div>
                 @include('home.partials._feed')
-            </div>
         </main>
 
         {{-- 右カラム --}}

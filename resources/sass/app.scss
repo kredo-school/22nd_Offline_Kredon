@@ -6,3 +6,256 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+
+// KK
+/* 基本リセット */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 画像がカードを突き破らないようにする */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ボディのフォント設定 */
+body {
+    font-family: sans-serif;
+    line-height: 1.5;
+}
+/** Homepage **/ 
+
+/* home.blade.php */
+.kk-hero-title { font-size: 2rem; margin-bottom: 0.5rem; }
+
+.kk-hero-subtitle { font-size: 1rem; opacity: 0.8; }
+
+.kk-banner-title { color: white; margin-bottom: 1rem; }
+
+.kk-cta-button {
+    display: inline-block;
+    padding: 8px 20px;
+    background: white;
+    color: #333;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.kk-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.kk-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem; 
+}
+
+/* _hero.blade.php */
+.kk-hero-swiper {
+    width: 100%;
+    height: 400px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.kk-banner-box {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.kk-banner-content {
+    background: rgba(0,0,0,0.4);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* _action.blade.php */
+.kk-action-menu {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 2rem;
+}
+
+.kk-dropdown { position: relative; }
+
+.kk-dropdown-list {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background: white;
+    list-style: none;
+    padding: 5px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.kk-dropdown:hover .kk-dropdown-list { display: block; }
+
+.kk-dropdown-list li { list-style: none; }
+
+.kk-dropdown-list li a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 13px;
+}
+
+.kk-dropdown-list li a:hover { background: #f8f9fa; }
+
+.kk-menu-btn {
+    width: 100%;
+    padding: 20px 10px;
+    background: #fdfcf9;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.kk-menu-btn:hover { background: #f0ede8; }
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .kk-layout { grid-template-columns: 1fr; }
+    .kk-action-menu { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* _right_card.blade.php
+/* お知らせ用コンテナ */
+.kk-sticky-container { position: sticky; top: 85px; }
+
+.kk-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    height: 280px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.kk-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.kk-scroll-area { height: calc(100% - 40px); overflow-y: auto; }
+
+/* 通知アイテム */
+.kk-notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 0;
+}
+
+.kk-icon-wrap { margin-right: 12px; color: #0d6efd; font-size: 1.2rem; }
+.kk-content-wrap { flex-grow: 1; }
+.kk-item-title { font-weight: 600; font-size: 0.9rem; }
+.kk-item-date { color: #888; font-size: 0.8rem; }
+.kk-image-wrap img { width: 45px; height: 45px; object-fit: cover; border-radius: 8px; }
+
+.kk-divider { height: 1px; background: #eee; margin: 8px 0; }
+.kk-empty-text { text-align: center; margin-top: 2rem; color: #888; }
+.kk-link { text-decoration: none; font-size: 0.85rem; color: #0d6efd; }
+
+/* _post_card.blade.php */
+/* カード全体 */
+.kk-post-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ヘッダー */
+.kk-post-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 15px 0 15px;
+}
+.kk-avatar { width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; }
+.kk-user-name { font-weight: bold; font-size: 0.9rem; }
+.kk-post-date { color: #888; font-size: 0.7rem; }
+
+/* 画像 */
+.kk-post-image-wrap { padding: 10px; }
+.kk-post-image { 
+    width: 100%; 
+    height: auto; 
+    border-radius: 20px; 
+    display: block; 
+}
+
+/* 本文 */
+.kk-post-body { padding: 0 15px 10px 15px; }
+.kk-post-title { font-weight: bold; margin-bottom: 5px; }
+.kk-post-description { font-size: 0.85rem; color: #666; margin-bottom: 10px; }
+.kk-post-tags { color: #0dcaf0; font-size: 0.8rem; margin-bottom: 10px; }
+
+/* フッター */
+.kk-post-footer {
+    padding: 10px 15px 15px 15px;
+    border-top: 1px solid #f8f8f8;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* _feed.blade.php */
+/* セクション全体 */
+.kk-section { margin-bottom: 3rem; }
+.kk-section-title { font-weight: bold; margin-bottom: 1rem; }
+
+/* Gridレイアウト定義 */
+.kk-grid {
+    display: grid;
+    /* 3列表示を基本にする */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; /* カード間の隙間 */
+}
+
+/* スマホ対応（768px以下で1列に） */
+@media (max-width: 768px) {
+    .kk-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* タブレット対応（好みで1024px以下を2列にする場合） */
+@media (max-width: 1024px) {
+    .kk-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
