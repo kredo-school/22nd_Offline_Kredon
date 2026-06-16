@@ -11,6 +11,7 @@
         <main class="main-column">
                 @include('home.partials._hero')
                 @include('home.partials._action')
+                @include('home.partials._filter')
                 @include('home.partials._feed')
         </main>
 
