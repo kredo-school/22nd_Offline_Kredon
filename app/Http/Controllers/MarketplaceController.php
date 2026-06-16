@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth; 
 use Illuminate\Http\Request;
 use App\Models\ItemPost;
 
@@ -40,12 +40,13 @@ class MarketplaceController extends Controller
         ]);
 
         $item = ItemPost::create([
-            'title' => $request->title,
-            'location_name' => $request->location_name,
-            'description' => $request->description,
-            'category' => $request->category,
-            'status' => $request->status,
-        ]);
+        'user_id' => Auth::id(), // ★ここを追加
+        'title' => $request->title,
+        'location_name' => $request->location_name,
+        'description' => $request->description,
+        'category' => $request->category,
+        'status' => $request->status,
+    ]);
 
         // 画像保存
         if ($request->hasFile('images')) {

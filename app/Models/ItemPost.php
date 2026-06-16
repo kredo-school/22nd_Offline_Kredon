@@ -6,11 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class ItemPost extends Model
 {
-    protected $fillable = ['user_id', 'title', 'description', 'status', 'location_name', 'category'];
+    protected $fillable = [
+        'user_id',
+        'title',
+        'location_name',
+        'description',
+        'category',
+        'status',
+    ];
 
-    // 1つの投稿が複数の画像を持つ
     public function images()
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(ItemImage::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

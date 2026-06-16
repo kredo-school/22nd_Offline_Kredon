@@ -106,8 +106,31 @@
                         {{ $item->description }}
 
                     </p>
+                   @if(
+                        Auth::check() &&
+                        !empty($item->user_id) &&
+                        Auth::id() != $item->user_id
+                    )
 
-                    <hr>
+                    <form action="{{ route('chat.store') }}"
+                        method="POST">
+
+                        @csrf
+
+                        <input type="hidden"
+                            name="receiver_id"
+                            value="{{ $item->user_id }}">
+
+                        <button class="btn btn-success">
+                            Message Seller
+                        </button>
+
+                    </form>
+
+                    @endif
+                        <button class="btn btn-secondary" disabled>出品者情報がありません</button>
+                    @endif
+                     <hr>
 
                     <h5 class="fw-bold">
                         受け渡し場所
@@ -121,11 +144,7 @@
 
                     <hr>
 
-                    <button class="btn btn-success w-100">
-
-                        メッセージを送る
-
-                    </button>
+                  
 
                 </div>
 

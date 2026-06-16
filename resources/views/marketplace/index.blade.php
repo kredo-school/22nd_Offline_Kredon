@@ -19,6 +19,9 @@
 
 {{-- カテゴリ --}}
 <div class="mb-4">
+     <a href="{{ route('marketplace.create') }}" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Post Item
+     </a>
 
     <div class="row text-center py-3">
 

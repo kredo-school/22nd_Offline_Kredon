@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('item_posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // ここに統合
             $table->string('title');
             $table->string('location_name');
             $table->text('description');
