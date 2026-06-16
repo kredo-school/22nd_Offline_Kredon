@@ -532,7 +532,7 @@
             {{-- 右側アイコン --}}
             <div class="admin-navbar-icons">
                 {{-- ホーム（ユーザー側） --}}
-                <a href="{{ url('/') }}" class="icon-btn" title="View Site">
+                <a href="{{ url('/home') }}" class="icon-btn" title="View Site">
                     <i class="fa-solid fa-arrow-up-right-from-square fa-sm"></i>
                 </a>
 
@@ -602,7 +602,7 @@
             </a>
 
             <div class="topbar-right">
-                <a href="{{ url('/') }}" class="icon-btn" title="View Site">
+                <a href="{{ url('/home') }}" class="icon-btn" title="View Site">
                     <i class="fa-solid fa-arrow-up-right-from-square fa-sm"></i>
                 </a>
 

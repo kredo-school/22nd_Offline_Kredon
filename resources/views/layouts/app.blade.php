@@ -385,7 +385,7 @@
                                 </li>
                                 @if (Auth::user()->role == 1)
                                     <li>
-                                        <a class="dropdown-item fw-bold" href="#" style="color: darkcyan;">
+                                        <a class="dropdown-item fw-bold" href="{{ route('admin.dashboard') }}" style="color: darkcyan;">
                                             <i class="fa-solid fa-shield-halved me-2"></i>Admin Page
                                         </a>
                                     </li>
@@ -463,7 +463,7 @@
                                 </li>
                                 @if (Auth::user()->role === 1)
                                     <li>
-                                        <a class="dropdown-item fw-bold" href="#" style="color: darkcyan;">
+                                        <a class="dropdown-item fw-bold" href="{{ route('admin.dashboard') }}" style="color: darkcyan;">
                                             <i class="fa-solid fa-shield-halved me-2"></i>Admin Page
                                         </a>
                                     </li>

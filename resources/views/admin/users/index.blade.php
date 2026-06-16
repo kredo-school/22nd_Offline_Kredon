@@ -11,9 +11,9 @@
                 <h4 class="fw-bold mb-1">User Management</h4>
                 <p class="text-muted mb-0" style="font-size:0.85rem;">Control and manage all registered users</p>
             </div>
-            <a href="#" class="btn btn-dark px-4">
+            {{-- <a href="#" class="btn btn-dark px-4">
                 <i class="fa-solid fa-plus me-1"></i> Add New User
-            </a>
+            </a> --}}
         </div>
 
         {{-- ── Metric Cards ── --}}
@@ -61,7 +61,6 @@
                     <select class="form-select form-select-sm" style="width:auto;">
                         <option>Role</option>
                         <option>Member</option>
-                        <option>Moderator</option>
                         <option>Admin</option>
                     </select>
                     <div class="input-group input-group-sm" style="width:auto;">
@@ -106,7 +105,7 @@
                                         'name' => 'User @MikeB',
                                         'id' => '1203002',
                                         'email' => 'usermaskre7@gmail.com',
-                                        'role' => 'Moderator',
+                                        'role' => 'Member',
                                         'joined' => '2023-05-23 11:43 PM',
                                         'status' => 'Inactive',
                                         'login' => 5,
@@ -151,7 +150,7 @@
                                         'name' => 'User @User',
                                         'id' => '1203009',
                                         'email' => 'user.sarahk1@gmail.com',
-                                        'role' => 'Moderator',
+                                        'role' => 'Member',
                                         'joined' => '2023-07-25 14:20 PM',
                                         'status' => 'Inactive',
                                         'login' => 0,
@@ -192,7 +191,7 @@
                                         @php
                                             $roleColor = match ($user['role']) {
                                                 'Admin' => 'danger',
-                                                'Moderator' => 'success',
+                                                'Member' => 'success',
                                                 default => 'primary',
                                             };
                                         @endphp
@@ -232,7 +231,7 @@
                                                 <button id="currentRoleBtn_{{ $user['id'] }}" type="button"
                                                     class="btn 
                                                                 @if ($user['role'] == 'Admin') btn-outline-danger 
-                                                                @elseif($user['role'] == 'Moderator') btn-outline-success 
+                                                                @elseif($user['role'] == 'Member') btn-outline-success 
                                                                 @else btn-outline-primary @endif btn-sm py-0 px-2 dropdown-toggle"
                                                                                     data-bs-toggle="dropdown" aria-expanded="false">
                                                     {{ $user['role'] }}
@@ -252,9 +251,6 @@
                                                         'Admin': {
                                                             color: 'btn-outline-danger'
                                                         },
-                                                        'Moderator': {
-                                                            color: 'btn-outline-success'
-                                                        },
                                                         'Member': {
                                                             color: 'btn-outline-primary'
                                                         }
@@ -263,9 +259,6 @@
                                                     const badgeConfig = {
                                                         'Admin': {
                                                             color: 'bg-danger'
-                                                        },
-                                                        'Moderator': {
-                                                            color: 'bg-success'
                                                         },
                                                         'Member': {
                                                             color: 'bg-primary'

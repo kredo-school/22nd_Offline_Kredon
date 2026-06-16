@@ -24,7 +24,7 @@
         ];
         @endphp
         @foreach($tabs as $tab)
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-3 g-3">
             <a href="?tab={{ $tab['key'] }}"
                class="d-block p-3 text-decoration-none h-100 {{ $tab['active'] ? 'bg-dark text-white' : 'bg-white' }} {{ !$loop->last ? 'border-end' : '' }}">
                 <p class="mb-1" style="font-size:0.75rem; opacity: {{ $tab['active'] ? '0.7' : '1' }}; color: {{ $tab['active'] ? '#fff' : '#6c757d' }};">

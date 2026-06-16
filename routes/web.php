@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\EventsController;
 use App\Http\Controllers\Admin\ReviewsController;
 use App\Http\Controllers\Admin\MarketsController;
+use App\Http\Controllers\Admin\AnalysisController;
+use App\Http\Controllers\Admin\NotificationsController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,6 +44,12 @@ Route::group(['middleware' => 'auth'], function(){
         #Markets
         Route::get('markets', [App\Http\Controllers\Admin\MarketsController::class, 'index'])->name('markets.index');
         Route::get('markets/show/{id}', [App\Http\Controllers\Admin\MarketsController::class, 'show'])->name('markets.show');
+        
+        #Analysis
+        Route::get('analysis', [App\Http\Controllers\Admin\AnalysisController::class, 'index'])->name('analysis.index');
+        
+        #Notification
+        Route::get('notifications', [App\Http\Controllers\Admin\NotificationsController::class, 'index'])->name('notifications.index');
 
         
 
