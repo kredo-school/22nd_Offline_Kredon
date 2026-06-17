@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ReviewsController;
 use App\Http\Controllers\Admin\MarketsController;
 use App\Http\Controllers\Admin\AnalysisController;
 use App\Http\Controllers\Admin\NotificationsController;
+use App\Http\Controllers\Admin\SpotsController;
 
 
 Route::get('/', function () {
@@ -50,8 +51,10 @@ Route::group(['middleware' => 'auth'], function(){
         
         #Notification
         Route::get('notifications', [App\Http\Controllers\Admin\NotificationsController::class, 'index'])->name('notifications.index');
-
         
+        #Spots
+        Route::get('spots', [App\Http\Controllers\Admin\SpotsController::class, 'index'])->name('spots.index');
+
 
     });
 });

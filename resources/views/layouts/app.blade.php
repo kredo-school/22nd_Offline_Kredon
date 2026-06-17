@@ -352,6 +352,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fa-regular fa-envelope fa-lg"></i></a>
                     </li>
+
+                    {{-- User drop down --}}
                     <div class="vr mx-1"></div>
                     @guest
                         @if (Route::has('login'))

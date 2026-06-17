@@ -20,7 +20,7 @@
         <i class="fa-solid fa-users"></i> Users
     </a>
 
-    <a href="#" class="admin-nav-link">
+    <a href="{{ route('admin.spots.index') }}" class="admin-nav-link">
         <i class="fa-solid fa-location-dot"></i> Spots
     </a>
 

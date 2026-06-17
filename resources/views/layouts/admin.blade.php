@@ -520,6 +520,9 @@
             margin: 4px 0;
         }
     </style>
+
+    {{-- 各ページの @section('styles') がここに出力されます --}}
+    @yield('styles')
 </head>
 
 <body>
@@ -565,7 +568,7 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
                                 <a class="dropdown-item" href="#">
-                                    <i class="fa-regular fa-user me-2 text-muted"></i>Profile
+                                    <i class="fa-regular fa-user me-2 text-muted"></i>My Page
                                 </a>
                             </li>
                             <li>
@@ -618,19 +621,48 @@
                 </a>
 
                 @auth
-                    <a href="#">
-                        @if (Auth::user()->avatar)
-                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="avatar"
-                                style="width:28px;height:28px;border-radius:7px;object-fit:cover;">
-                        @else
-                            <span
-                                style="display:inline-flex;align-items:center;justify-content:center;
-                                     width:28px;height:28px;border-radius:7px;background:var(--admin-accent);
-                                     color:#fff;font-size:0.72rem;font-weight:700;">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            </span>
-                        @endif
-                    </a>
+                    {{-- スマホ用ユーザードロップダウン --}}
+                    <div class="dropdown admin-user-dropdown">
+                        <button class="icon-btn border-0 p-0" data-bs-toggle="dropdown" aria-expanded="false"
+                            style="background: transparent;">
+                            @if (Auth::user()->avatar)
+                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="avatar"
+                                    style="width:28px;height:28px;border-radius:7px;object-fit:cover;vertical-align: middle;">
+                            @else
+                                <span
+                                    style="display:inline-flex;align-items:center;justify-content:center;
+                             width:28px;height:28px;border-radius:7px;background:var(--admin-accent);
+                             color:#fff;font-size:0.72rem;font-weight:700;vertical-align: middle;">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </span>
+                            @endif
+                        </button>
+                        {{-- クリックしたときに出てくるメニュー（中身はPC版と同じ） --}}
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa-regular fa-user me-2 text-muted"></i>My Page
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa-solid fa-gear me-2 text-muted"></i>Settings
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="#"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
+                                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {{-- スマホ用のログアウトフォーム（IDが重複しないように命名を変更） --}}
+                    <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" class="d-none">@csrf
+                    </form>
                 @endauth
             </div>
         </div>
@@ -660,6 +692,9 @@
             {{-- コンテンツ --}}
             <main class="admin-content-body">
                 @yield('content')
+                {{-- 各ページの @section('scripts') がここに出力されます --}}
+                @yield('scripts')
+                {{-- @push('scripts') を使っているページ用に維持 --}}
                 @stack('scripts')
             </main>
 
@@ -680,15 +715,27 @@
             document.body.style.overflow = '';
         }
 
-        // スワイプで閉じる
+        // スワイプで閉じる（修正版）
         const drawer = document.getElementById('adminMobileDrawer');
         if (drawer) {
             let touchStartX = 0;
             drawer.addEventListener('touchstart', e => {
-                touchStartX = e.touches[0].clientX;
+                if (e.touches && e.touches[0]) {
+                    touchStartX = e.touches[0].clientX;
+                }
+            }, {
+                passive: true
             });
+
             drawer.addEventListener('touchend', e => {
-                if (touchStartX - e.changedTouches[0].clientX > 60) closeAdminDrawer();
+                if (e.changedTouches && e.changedTouches[0]) {
+                    const touchEndX = e.changedTouches[0].clientX;
+                    if (touchStartX - touchEndX > 60) {
+                        closeAdminDrawer();
+                    }
+                }
+            }, {
+                passive: true
             });
         }
 
@@ -704,7 +751,18 @@
                 }
             });
         });
+
+        // function toggleSpotPC(e) {
+        //     e.preventDefault();
+        //     const menu = document.getElementById('spotSubmenuPC');
+        //     const chevron = document.getElementById('spotChevronPC');
+        //     const isOpen = menu.style.display === 'block';
+        //     menu.style.display = isOpen ? 'none' : 'block';
+        //     chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        // }
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

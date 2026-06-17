@@ -3,7 +3,8 @@
 @section('title', 'Analysis')
 
 @section('content')
-<div class="p-4" style="overflow-y: auto; height: 100%;">
+{{-- 💡 修正ポイント1: height: 100% と overflow-y: auto を削除し、コンテンツに応じて自然にスクロールさせます --}}
+<div class="p-4">
 
     {{-- ── Header ── --}}
     <div class="d-flex align-items-center gap-3 mb-4">
@@ -19,9 +20,6 @@
             <button class="btn btn-outline-secondary btn-sm px-2 py-1">
                 <i class="fa-regular fa-calendar fa-xs"></i>
             </button>
-            {{-- <button class="btn btn-outline-secondary btn-sm px-2 py-1">
-                <i class="fa-regular fa-calendar fa-xs"></i>
-            </button> --}}
         </div>
     </div>
 
@@ -31,7 +29,7 @@
     <div class="row g-3 mb-3">
 
         {{-- ── Left: Users Deep-Dive ── --}}
-        <div class="col-12 col-xl-6">
+        <div class="col-12 col-xxl-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body p-3">
                     <h6 class="fw-bold mb-3">Users Deep-Dive <span class="text-muted fw-normal" style="font-size:0.78rem;">(Migrated from Users)</span></h6>
@@ -39,7 +37,7 @@
 
                         {{-- User Growth Trend --}}
                         <div class="col-12 col-sm-6">
-                            <div class="border rounded p-2">
+                            <div class="border rounded p-2 h-100">
                                 <div class="d-flex justify-content-between align-items-start mb-1">
                                     <span style="font-size:0.78rem; font-weight:600;">User Growth Trend</span>
                                     <div class="text-end">
@@ -52,17 +50,16 @@
                                     <span class="me-2">— Total Users</span>
                                     <span>— Premium Users</span>
                                 </div>
-                                <canvas id="userGrowthChart" height="110"></canvas>
+                                <canvas id="userGrowthChart"></canvas>
                             </div>
                         </div>
 
                         {{-- Demographics --}}
                         <div class="col-12 col-sm-6">
-                            <div class="border rounded p-2">
+                            <div class="border rounded p-2 h-100">
                                 <div class="fw-semibold mb-2" style="font-size:0.78rem;">Demographics (Age & Gender)</div>
                                 <div class="d-flex gap-2">
-                                    <canvas id="ageChart" height="110" style="flex:1;"></canvas>
-                                    {{-- <canvas id="genderChart" height="110" style="width:90px;flex-shrink:0;"></canvas> --}}
+                                    <canvas id="ageChart" style="flex:1;"></canvas>
                                 </div>
                                 <div class="d-flex gap-2 justify-content-center mt-1" style="font-size:0.68rem;">
                                     <span><span style="color:#4a90d9;">●</span> Male</span>
@@ -74,7 +71,7 @@
 
                         {{-- Free→Premium Funnel --}}
                         <div class="col-12 col-sm-6">
-                            <div class="border rounded p-2">
+                            <div class="border rounded p-2 h-100">
                                 <div class="fw-semibold mb-2" style="font-size:0.78rem;">Free→Premium Funnel</div>
                                 <div id="funnelChart" style="font-size:0.72rem;">
                                     @php
@@ -104,9 +101,8 @@
 
                         {{-- Regional Distribution --}}
                         <div class="col-12 col-sm-6">
-                            <div class="border rounded p-2">
+                            <div class="border rounded p-2 h-100">
                                 <div class="fw-semibold mb-2" style="font-size:0.78rem;">Regional Distribution</div>
-                                {{-- SVG mini map of Cebu --}}
                                 <div class="position-relative bg-light rounded d-flex align-items-center justify-content-center"
                                      style="height:120px; background: linear-gradient(135deg,#d4e8f7,#b8d4ee) !important;">
                                     <svg viewBox="0 0 200 160" style="width:100%;height:100%;opacity:0.85;">
@@ -135,7 +131,7 @@
         </div>
 
         {{-- ── Right: Spots / Reviews Performance ── --}}
-        <div class="col-12 col-xl-6">
+        <div class="col-12 col-xxl-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body p-3">
                     <h6 class="fw-bold mb-3">Spots / Reviews Performance <span class="text-muted fw-normal" style="font-size:0.78rem;">(Migrated from Spots/Reviews)</span></h6>
@@ -143,7 +139,7 @@
 
                         {{-- Spot Evaluation Ranking --}}
                         <div class="col-12 col-sm-6">
-                            <div class="border rounded p-2">
+                            <div class="border rounded p-2 h-100" style="overflow-x: auto;">
                                 <div class="fw-semibold mb-2" style="font-size:0.78rem;">Spot Evaluation Ranking</div>
                                 <table class="table table-sm mb-0" style="font-size:0.7rem;">
                                     <thead>
@@ -152,7 +148,6 @@
                                             <th class="py-0">Spot</th>
                                             <th class="py-0 text-center">Avg.</th>
                                             <th class="py-0 text-center">Reviews</th>
-                                            {{-- <th class="py-0 text-center">Rank</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -181,7 +176,6 @@
                                                 @for($i=1;$i<=5;$i++)<span style="{{ $i>$s['stars']?'opacity:0.3':'' }}">★</span>@endfor
                                             </td>
                                             <td class="py-1 text-center">{{ $s['reviews'] }}</td>
-                                            {{-- <td class="py-1 text-center">{{ $s['rank'] }}</td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -195,7 +189,7 @@
                             {{-- Traffic Top 10 --}}
                             <div class="border rounded p-2 flex-fill">
                                 <div class="fw-semibold mb-2" style="font-size:0.78rem;">Traffic Top 10 (Checks & Views)</div>
-                                <canvas id="trafficChart" height="130"></canvas>
+                                <canvas id="trafficChart"></canvas>
                                 <div class="d-flex justify-content-center gap-3 mt-1" style="font-size:0.68rem;">
                                     <span><span style="color:#4a90d9;">■</span> Checks & Views</span>
                                     <span><span style="color:#f0ad4e;">■</span> Bookmark Rate</span>
@@ -205,7 +199,7 @@
                             {{-- Evaluation Distribution Graph --}}
                             <div class="border rounded p-2 flex-fill">
                                 <div class="fw-semibold mb-2" style="font-size:0.78rem;">Evaluation Distribution Graph</div>
-                                <canvas id="evalDistChart" height="120"></canvas>
+                                <canvas id="evalDistChart"></canvas>
                             </div>
 
                         </div>
@@ -222,7 +216,7 @@
     <div class="row g-3">
 
         {{-- ── Left: Overall Insights ── --}}
-        <div class="col-12 col-xl-6">
+        <div class="col-12 col-xxl-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body p-3">
                     <h6 class="fw-bold mb-3">Overall Insights <span class="text-muted fw-normal" style="font-size:0.78rem;">(Across Categories)</span></h6>
@@ -230,7 +224,7 @@
 
                         {{-- Category Post Trend --}}
                         <div class="col-12 col-sm-6">
-                            <div class="border rounded p-2">
+                            <div class="border rounded p-2 h-100">
                                 <div class="fw-semibold mb-1" style="font-size:0.78rem;">Category Post Trend (Spots & Events)</div>
                                 <div class="d-flex flex-wrap gap-2 mb-1" style="font-size:0.68rem;">
                                     <span><span style="color:#4a90d9;">●</span> Cafe</span>
@@ -238,13 +232,13 @@
                                     <span><span style="color:#f0ad4e;">●</span> Restaurant</span>
                                     <span><span style="color:#5cb85c;">●</span> Events</span>
                                 </div>
-                                <canvas id="categoryTrendChart" height="130"></canvas>
+                                <canvas id="categoryTrendChart"></canvas>
                             </div>
                         </div>
 
                         {{-- Reporting Breakdown --}}
                         <div class="col-12 col-sm-6">
-                            <div class="border rounded p-2">
+                            <div class="border rounded p-2 h-100">
                                 <div class="fw-semibold mb-1" style="font-size:0.78rem;">Reporting Breakdown (By Category)</div>
                                 <div class="d-flex align-items-center gap-2 mt-2">
                                     <div style="position:relative;width:120px;height:120px;flex-shrink:0;">
@@ -270,7 +264,7 @@
         </div>
 
         {{-- ── Right: Engagement Metrics ── --}}
-        <div class="col-12 col-xl-6">
+        <div class="col-12 col-xxl-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body p-3">
                     <h6 class="fw-bold mb-3">Engagement Metrics</h6>
@@ -278,18 +272,18 @@
 
                         {{-- Engagement Rate Trend --}}
                         <div class="col-12 col-sm-6">
-                            <div class="border rounded p-2">
+                            <div class="border rounded p-2 h-100">
                                 <div class="fw-semibold mb-1" style="font-size:0.78rem;">Engagement Rate Trend</div>
                                 <div class="text-muted mb-1" style="font-size:0.65rem;">Engagement Rate (%)</div>
-                                <canvas id="engagementChart" height="130"></canvas>
+                                <canvas id="engagementChart"></canvas>
                             </div>
                         </div>
 
                         {{-- Activity Type Breakdown --}}
                         <div class="col-12 col-sm-6">
-                            <div class="border rounded p-2">
+                            <div class="border rounded p-2 h-100">
                                 <div class="fw-semibold mb-1" style="font-size:0.78rem;">Activity Type Breakdown</div>
-                                <canvas id="activityChart" height="130"></canvas>
+                                <canvas id="activityChart"></canvas>
                             </div>
                         </div>
 
@@ -307,6 +301,10 @@
 Chart.defaults.font.family = 'inherit';
 Chart.defaults.font.size   = 10;
 Chart.defaults.color       = '#6c757d';
+
+// 💡 修正ポイント3: 全てのチャートで縦横比を正しく維持しつつレスポンシブ対応させるオプションをデフォルト適用します
+Chart.defaults.responsive = true;
+Chart.defaults.maintainAspectRatio = true;
 
 const years = ['2024', '2024', '2025', '2026'];
 
@@ -355,22 +353,6 @@ new Chart(document.getElementById('ageChart'), {
             x: { grid: { display: false }, ticks: { font: { size: 8 } } },
             y: { ticks: { font: { size: 8 }, maxTicksLimit: 4 }, grid: { color: '#f0f0f0' } },
         },
-    },
-});
-
-// ── Gender Pie Chart ──
-new Chart(document.getElementById('genderChart'), {
-    type: 'pie',
-    data: {
-        labels: ['Male', 'Female', 'Other'],
-        datasets: [{
-            data: [45, 48, 7],
-            backgroundColor: ['#4a90d9', '#e8516a', '#a0a0a0'],
-            borderWidth: 1,
-        }],
-    },
-    options: {
-        plugins: { legend: { display: false } },
     },
 });
 
@@ -425,7 +407,7 @@ new Chart(document.getElementById('evalDistChart'), {
 new Chart(document.getElementById('categoryTrendChart'), {
     type: 'line',
     data: {
-        labels: ['2024','2024-2026','2026'],
+        labels: ['2024','2025','2026'],
         datasets: [
             { label:'Cafe',       data:[200,400,800], borderColor:'#4a90d9', tension:0.4, fill:false, pointRadius:2 },
             { label:'Cafe2',      data:[100,300,600], borderColor:'#e8516a', tension:0.4, fill:false, pointRadius:2 },
@@ -463,7 +445,7 @@ new Chart(document.getElementById('reportingChart'), {
 new Chart(document.getElementById('engagementChart'), {
     type: 'line',
     data: {
-        labels: ['2024','2024-2026','2026'],
+        labels: ['2024','2025','2026'],
         datasets: [{
             data: [10, 25, 45],
             borderColor: '#4a90d9',
