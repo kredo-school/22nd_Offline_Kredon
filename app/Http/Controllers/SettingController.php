@@ -6,6 +6,29 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    protected $user;
+    public function __construct()
+{
+    // 本番環境になったらここを差し替える
+    // $this->user = auth()->user();
+
+    $this->user = $this->dummyUser();
+}
+
+// 一覧
+    public function index()  
+{
+    return redirect()->route('settings.account');
+}
+
+// ── 各設定ページ ──
+    public function account()      { return view('settings.account',      ['user' => $this->user]); }
+    public function display()      { return view('settings.display',      ['user' => $this->user]); }
+    public function notification() { return view('settings.notification', ['user' => $this->user]); }
+    public function comment()      { return view('settings.comment',      ['user' => $this->user]); }
+    public function privacy()      { return view('settings.privacy',      ['user' => $this->user]); }
+    public function app()          { return view('settings.app',          ['user' => $this->user]); }
+
     // ダミーデータ（本番では auth()->user() に差し替え）& objectにキャスト効果: 本番移行時にbladeの書き換えの必要がなくなる
     private function dummyUser(): object
     {
@@ -21,14 +44,6 @@ class SettingController extends Controller
             'profile_public' => true,
         ];
     }
-
-    // ── 表示 ──────────────────────────────
-    public function account()      { return view('settings.account',      ['user' => $this->dummyUser()]); }
-    public function display()      { return view('settings.display',      ['user' => $this->dummyUser()]); }
-    public function notification() { return view('settings.notification', ['user' => $this->dummyUser()]); }
-    public function comment()      { return view('settings.comment',      ['user' => $this->dummyUser()]); }
-    public function privacy()      { return view('settings.privacy',      ['user' => $this->dummyUser()]); }
-    public function app()          { return view('settings.app',          ['user' => $this->dummyUser()]); }
 
     // 保存（中身はDB完成後に実装） 
     public function updateAccount(Request $request)

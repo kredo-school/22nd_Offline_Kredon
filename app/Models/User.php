@@ -45,4 +45,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // app/Models/User.php
+    public function characterTemps()
+    {
+        return $this->belongsTo (CharacterTemp::class, 'character_temp_ic');
+    }
+
+    // 選択中キャラを取得（未選択ならデフォルトを返す）
+    public function getCharacterActiveAttribute()
+    {
+        return $this->characterTemp
+        ?? CharacterTemp::where('is_default', 'true')->first;
+    }
 }
