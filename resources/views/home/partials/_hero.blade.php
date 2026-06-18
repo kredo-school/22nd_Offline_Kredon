@@ -1,11 +1,11 @@
-<div class="swiper kk-hero-swiper">
+<div class="swiper hp-hero-swiper">
     <div class="swiper-wrapper">
         {{-- 固定のウェルカム画像 --}}
         <div class="swiper-slide">
-            <div class="kk-banner-box" style="background-image: url('{{ asset('images/welcome-bg.jpg') }}');">
-                <div class="kk-banner-content">
-                    <h1 class="kk-hero-title">Welcome to Kredon</h1>
-                    <p class="kk-hero-subtitle">Have fun</p>
+            <div class="hp-banner-box" style="background-image: url('{{ asset('images/welcome-bg.jpg') }}');">
+                <div class="hp-banner-content">
+                    <h1 class="hp-hero-title">Welcome to Kredon</h1>
+                    <p class="hp-hero-subtitle">Have fun</p>
                 </div>
             </div>
         </div>
@@ -20,14 +20,14 @@
 
         @foreach($dummyBanners as $banner)
             <div class="swiper-slide">
-                <div class="kk-banner-box" style="background-image: url('{{ asset($banner['path']) }}');">
-                   <div class="kk-banner-content">
-                       <h2 class="kk-banner-title">{{ $banner['title'] }}</h2>
-                       <a href="{{ $banner['url'] }}" class="kk-cta-button">more</a>
+                <div class="hp-banner-box" style="background-image: url('{{ asset($banner['path']) }}');">
+                   <div class="hp-banner-content">
+                       <h2 class="hp-banner-title">{{ $banner['title'] }}</h2>
+                       <a href="{{ $banner['url'] }}" class="hp-cta-button">more</a>
                    </div>
                 </div>
             </div>
         @endforeach
     </div>
-    <div class="kk-slider-pagination"></div>
+    <div class="hp-slider-pagination"></div>
 </div>

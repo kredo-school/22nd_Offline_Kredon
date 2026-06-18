@@ -1,47 +1,34 @@
-<div class="kk-filter-control-area">
-    <div class="kk-sort-wrapper">
+<div class="hp-filter-control-area">
+    
+    <div class="hp-filter-inner">
 
-        {{-- 検索バー --}}
-        <form action="#" method="GET" class="kk-search-form">
-
-            @if(request('sort'))
-                <input type="hidden" name="sort" value="{{ request('sort') }}">
-            @endif
-
-            <div class="kk-search-inner">
-                <i class="fa-solid fa-magnifying-glass kk-search-icon"></i>
-                <input type="text"
-                       name="keyword"
-                       placeholder="商品や場所を検索..."
-                       class="kk-search-input"
-                       value="{{ request('keyword') }}"
-                       autocomplete="off">
-                @if(request('keyword'))
-                    <button type="submit" name="keyword" value="" class="kk-search-clear" aria-label="クリア">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                @endif
-            </div>
-
-            <button type="submit" class="kk-search-submit" aria-label="検索">
-                検索
-            </button>
-        </form>
-
-        {{-- ソートピル --}}
-        <div class="kk-sort-pills" role="group" aria-label="並び替え">
+        <div class="hp-sort-pills" role="group" aria-label="並び替え">
             @foreach([
-                'ranking' => 'おすすめ順',
-                'newest'  => '新着順',
-                'rating'  => '評価が高い順',
-                'reviews' => '口コミ順',
-            ] as $value => $label)
-                <a href="{{ request()->fullUrlWithQuery(['sort' => $value]) }}"
-                   class="kk-sort-pill {{ request('sort', 'ranking') === $value ? 'is-active' : '' }}">
-                    {{ $label }}
-                </a>
-            @endforeach
-        </div>
+                'newest'  => '新着',
+                'ranking' => '人気',
+                'rating'  => '評価',
+                'reviews' => '口コミ',
+                ] as $value => $label)
 
+            <a href="{{ request()->fullUrlWithQuery(['sort' => $value]) }}"
+               class="hp-sort-pill {{ request('sort', 'ranking') === $value ? 'is-active' : '' }}">
+                {{ $label }}
+            </a>
+        @endforeach
+    </div>
+
+        <div class="hp-view-controls">
+            <select class="hp-sort-select" onchange="location.href=this.value;">
+                <option value="?order=newest">新着順</option>
+                <option value="?order=ranking">人気</option>
+                <option value="?order=rating">評価</option>
+                <option value="?order=reviews">口コミ</option>
+            </select>
+
+            <div class="hp-view-toggle">
+                <button class="hp-toggle-btn active">▦</button>
+                <button class="hp-toggle-btn">≣</button>
+            </div>
+        </div>
     </div>
 </div>

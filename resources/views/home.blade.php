@@ -4,8 +4,8 @@
 
 @section('content') 
 
-<div class="kk-container">
-    <div class="kk-layout">
+<div class="hp-container">
+    <div class="hp-layout">
 
         {{-- メインエリア --}}
         <main class="main-column">
