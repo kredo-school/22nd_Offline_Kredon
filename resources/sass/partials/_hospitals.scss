@@ -1,0 +1,67 @@
+// _card.blade.php
+// 病院カード全体の設定
+.hs-card {
+    border-radius: 12px;
+    border: none;
+    overflow: hidden; /* 子要素がはみ出さないように */
+    transition: transform 0.3s ease; // 滑らかな動きにする設定
+    flex-direction: column; /* 縦並びにする */
+
+    &:hover {
+        transform: scale(1.1); // マウスホバーで拡大
+    }
+
+    .hs-card-header {
+        border-radius: 12px 12px 0 0 !important;
+    }
+}
+
+.bg-light-gray {
+    background-color: #F1F4F2;
+}
+
+/* 強制反映テスト */
+.hospital-image-container {
+    height: 180px !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.hospital-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+// ブックマークボタンのスタイル
+.btn-bookmark {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+        background: #ffc107;
+        color: white;
+    }
+}
+
+// フォームコントロールのスタイル
+.hs-form-control {
+    &:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+}

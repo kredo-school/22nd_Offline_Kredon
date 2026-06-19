@@ -10,7 +10,8 @@ class HealthcareController extends Controller
     public function index()
     {
         // 病院一覧取得
-        $hospitals = HospitalTest::orderBy('is_clinic')
+        $hospitals = HospitalTest::with('images')
+            ->orderBy('is_clinic')
             ->orderBy('duration_walk')
             ->get();
 
