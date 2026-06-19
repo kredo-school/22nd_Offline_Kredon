@@ -200,7 +200,7 @@
                                     };
                                 @endphp
                                 <tr>
-                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox" style="form-check-input item-check"></td>
                                     <td>
                                         <div class="fw-medium mb-1">{{ $review['text'] }}</div>
                                         <div class="text-muted" style="font-size:0.75rem;">
@@ -244,7 +244,7 @@
                                             {{ $review['status'] }}
                                         </span>
                                     </td>
-                                   
+
                                     <td>
                                         <div class="d-flex gap-1">
                                             <a href="#" class="btn btn-outline-secondary btn-sm py-0 px-2"
@@ -255,7 +255,7 @@
                                                 style="font-size:0.72rem;">Delete</button>
                                         </div>
                                     </td>
-                                    
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -280,18 +280,17 @@
             </div>
         </div>
     </div>
-
-    @push('scripts')
-        <script>
-            // review一覧 全選択
-            document.getElementById('selectAllreviews')?.addEventListener('change', function() {
-                document.querySelectorAll('.item-check').forEach(cb => cb.checked = this.checked);
-                updateCount('.item-check', 'selectedItemCount');
-            });
-            document.querySelectorAll('.item-check').forEach(cb => {
-                cb.addEventListener('change', () => updateCount('.item-check', 'selectedItemCount'));
-            });
-        </script>
-    @endpush
-
 @endsection
+
+@push('scripts')
+    <script>
+        // review一覧 全選択
+        document.getElementById('selectAllreviews')?.addEventListener('change', function() {
+            document.querySelectorAll('.item-check').forEach(cb => cb.checked = this.checked);
+            updateCount('.item-check', 'selectedItemCount');
+        });
+        document.querySelectorAll('.item-check').forEach(cb => {
+            cb.addEventListener('change', () => updateCount('.item-check', 'selectedItemCount'));
+        });
+    </script>
+@endpush

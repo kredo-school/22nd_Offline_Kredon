@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+        {{-- Bootstrap--}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
 
     <style>
         html,
@@ -592,9 +594,7 @@
             </div>
         </nav>
 
-        {{-- ══════════════════════════════════
-スマホ用 Topbar（md未満）
-══════════════════════════════════ --}}
+        {{-- ══════════════════════════════════   スマホ用 Topbar（md未満）   ══════════════════════════════════ --}}
         <div class="admin-mobile-topbar d-flex d-md-none">
             <button class="hamburger-btn" onclick="openAdminDrawer()" aria-label="Menu">
                 <i class="fa-solid fa-bars"></i>
@@ -762,7 +762,7 @@
         // }
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script> --}}
 </body>
 
 </html>

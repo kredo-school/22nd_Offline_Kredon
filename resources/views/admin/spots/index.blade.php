@@ -527,7 +527,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Placeholder: wire up delete confirmation once route/controller exist
@@ -541,4 +541,4 @@
             });
         });
     </script>
-@endsection
+@endpush
