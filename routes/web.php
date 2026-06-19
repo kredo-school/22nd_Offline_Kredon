@@ -22,6 +22,7 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
     Route::get('app',          [SettingController::class, 'app'])          ->name('app');
 
     Route::patch('account',      [SettingController::class, 'updateAccount'])      ->name('account.update');
+    Route::patch('comment',      [SettingController::class, 'updateComment'])      ->name('comment.update');
     Route::patch('notification', [SettingController::class, 'updateNotification']) ->name('notification.update');
     Route::patch('privacy',      [SettingController::class, 'updatePrivacy'])      ->name('privacy.update');
 });

@@ -1,108 +1,85 @@
+{{--
+    設定ページ共通レイアウト（親テンプレート）
+    ─────────────────────────────────────────
+    各タブ（_account.blade.php 等）は @extends('settings.index') で
+    この骨格を継承し、@section('settings-content') に固有コンテンツを書く。
+
+    768px未満 : 縦積み（タブ → コンテンツ）
+    768px以上 : 左ナビ + 右コンテンツの2カラム
+--}}
 @extends('layouts.app')
 
+@php
+    /*
+     * 設定タブの定義を1箇所に集約。
+     * 新タブ追加時は配列に1行足すだけでナビが自動更新される。
+     * （本番では ViewComposer や Config へ移すのがより望ましい）
+     */
+    $settingsNav = [
+        ['route' => 'settings.account',      'icon' => 'fa-regular fa-user',           'label' => 'アカウント'],
+        ['route' => 'settings.display',      'icon' => 'fa-regular fa-eye',            'label' => '表示設定'],
+        ['route' => 'settings.notification', 'icon' => 'fa-regular fa-bell',           'label' => '通知'],
+        ['route' => 'settings.comment',      'icon' => 'fa-regular fa-comment',        'label' => 'コメント・安全'],
+        ['route' => 'settings.privacy',      'icon' => 'fa-solid fa-shield-halved',    'label' => 'プライバシー'],
+        ['route' => 'settings.app',          'icon' => 'fa-solid fa-mobile-screen',    'label' => 'アプリ設定'],
+    ];
+@endphp
+
 @section('content')
-<div class="kk-st-wrap">
 
-    {{-- ── 設定サイドバー ── --}}
-    <aside class="kk-st-sidebar">
+<div class="st-wrap">
 
-        <div class="kk-st-sidebar__head">
-            <i class="fa-solid fa-gear kk-st-sidebar__gear"></i>
-            <h2 class="kk-st-sidebar__title">設定</h2>
-        </div>
+    {{-- ページ見出し（全タブ共通） --}}
+    <header class="st-wrap__head">
+        <h1 class="st-wrap__title">設定</h1>
+        <p class="st-wrap__desc">アカウントや表示、プライバシーなど各種設定をカスタマイズできます。</p>
+    </header>
 
-        <p class="kk-st-sidebar__desc">
-            アカウント、プライバシーなど各種設定をカスタマイズできます。
-        </p>
+    {{-- 768px以上: 左ナビ + 右エリア / 未満: 縦積み --}}
+    <div class="st-wrap__body">
 
-        <nav aria-label="設定メニュー">
-            <ul class="kk-st-nav">
-
-                <li>
-                    <a href="{{ route('settings.account') }}"
-                       class="kk-st-nav__link {{ request()->routeIs('settings.account') ? 'is-active' : '' }}">
-                        <i class="fa-regular fa-user"></i>
-                        アカウント
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('settings.display') }}"
-                       class="kk-st-nav__link {{ request()->routeIs('settings.display') ? 'is-active' : '' }}">
-                        <i class="fa-regular fa-eye"></i>
-                        表示設定
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('settings.notification') }}"
-                       class="kk-st-nav__link {{ request()->routeIs('settings.notification') ? 'is-active' : '' }}">
-                        <i class="fa-regular fa-bell"></i>
-                        通知
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('settings.comment') }}"
-                       class="kk-st-nav__link {{ request()->routeIs('settings.comment') ? 'is-active' : '' }}">
-                        <i class="fa-regular fa-comment"></i>
-                        コメント・安全設定
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('settings.privacy') }}"
-                       class="kk-st-nav__link {{ request()->routeIs('settings.privacy') ? 'is-active' : '' }}">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        プライバシー
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('settings.app') }}"
-                       class="kk-st-nav__link {{ request()->routeIs('settings.app') ? 'is-active' : '' }}">
-                        <i class="fa-solid fa-mobile-screen"></i>
-                        アプリ設定
-                    </a>
-                </li>
-
+        {{--
+            インナーナビ
+            request()->routeIs() で現在のルートと照合し is-active を付与。
+            aria-current="page" でスクリーンリーダーにも現在位置を伝える。
+        --}}
+        <nav class="st-inner-nav" aria-label="設定メニュー">
+            <ul class="st-inner-nav__list" role="list">
+                @foreach ($settingsNav as $item)
+                    @php $isActive = request()->routeIs($item['route']); @endphp
+                    <li>
+                        <a href="{{ route($item['route']) }}"
+                           class="st-inner-nav__link {{ $isActive ? 'is-active' : '' }}"
+                           @if($isActive) aria-current="page" @endif>
+                            <i class="{{ $item['icon'] }}" aria-hidden="true"></i>
+                            <span>{{ $item['label'] }}</span>
+                        </a>
+                    </li>
+                @endforeach
             </ul>
         </nav>
 
-        {{-- Premium バナー --}}
-        <div class="kk-st-premium">
-            <p class="kk-st-premium__badge">
-                <i class="fa-solid fa-crown"></i> KREDON Premium
-            </p>
-            <p class="kk-st-premium__copy">
-                限定イベント・高度なフィルター・無制限のゲームプレイが楽しめます。
-            </p>
-            <a href="#" class="kk-st-premium__btn">詳細を見る</a>
+        {{-- 各タブの固有コンテンツが入るメインエリア --}}
+        <div class="st-wrap__content">
+
+            {{-- フラッシュメッセージ: 保存成功・エラーを全タブ共通で表示 --}}
+            @if (session('success'))
+                <div class="st-alert st-alert--success" role="alert">
+                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="st-alert st-alert--error" role="alert">
+                    <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @yield('settings-content')
+
         </div>
-
-    </aside>
-
-    {{-- ── メインコンテンツ ── --}}
-    <main class="kk-st-main">
-
-        {{-- フラッシュメッセージ --}}
-        @if(session('success'))
-            <div class="kk-st-alert kk-st-alert--success" role="alert">
-                <i class="fa-solid fa-circle-check"></i>
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="kk-st-alert kk-st-alert--error" role="alert">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                {{ session('error') }}
-            </div>
-        @endif
-
-        @yield('settings-content')
-
-    </main>
-
+    </div>
 </div>
+
 @endsection

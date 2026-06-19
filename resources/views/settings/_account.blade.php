@@ -1,338 +1,501 @@
+{{--
+    アカウント設定タブ
+    768px未満 : 設定リスト → サイドバーウィジェットの順で縦積み
+    768px以上 : 設定リスト（左）+ ウィジェット（右）の2カラム
+--}}
 @extends('settings.index')
 
 @section('settings-content')
 
-<div class="kk-st-account">
+<div class="st-page">
 
-    {{-- ページタイトル --}}
-    <div class="kk-st-section">
-        <h3 class="kk-st-section__title">アカウント設定</h3>
-        <p class="kk-st-section__sub">
-            アカウント、プライバシーなど各種設定をカスタマイズできます。
-        </p>
-    </div>
+    {{--　メイン: アカウント設定リスト --}}
+    <div class="st-page__main">
 
-    <div class="kk-st-account__layout">
+        <section class="st-card st-card--account" aria-labelledby="account-heading">
 
-        {{-- 左：設定フォーム群 --}}
-        <div class="kk-st-account__forms">
+            <div class="st-card__head">
+                <h2 id="account-heading" class="st-card__heading">アカウント設定</h2>
+                <p class="st-card__lead">
+                    プロフィール、セキュリティ、メンバーシップなどアカウント情報を管理できます。
+                </p>
+            </div>
 
-            {{-- プロフィール編集 --}}
-            <section class="kk-st-card">
-                <h4 class="kk-st-card__title">
-                    <i class="fa-regular fa-user"></i> プロフィール編集
-                </h4>
+            {{-- 各行 = 1つの設定項目。label/value + action のパターンで統一 --}}
+            <ul class="st-setting-list" role="list">
 
-                <form action="{{ route('settings.account.update') }}"
-                      method="POST"
-                      enctype="multipart/form-data">
-                    @csrf
-                    @method('PATCH')
-
-                    {{-- アバター --}}
-                    <div class="kk-st-avatar-row">
-                        <div class="kk-st-avatar">
-                            @if($user->avatar)
-                                <img src="{{ $user->avatar }}" alt="アバター">
+                {{-- ── プロフィール編集 ── --}}
+                <li class="st-setting-item st-setting-item--profile">
+                    <div class="st-setting-item__profile">
+                        {{-- アバター: 画像がなければ名前の頭文字を表示 --}}
+                        <div class="st-avatar st-avatar--lg">
+                            @if ($user->avatar)
+                                <img src="{{ $user->avatar }}" alt="{{ $user->name }}のアバター">
                             @else
-                                <span class="kk-st-avatar__placeholder">
+                                <span class="st-avatar__placeholder" id="row-avatar-char">
                                     {{ mb_substr($user->name, 0, 1) }}
                                 </span>
                             @endif
+                            <span class="st-avatar__camera" aria-hidden="true">
+                                <i class="fa-solid fa-camera"></i>
+                            </span>
                         </div>
-                        <div class="kk-st-avatar-row__actions">
-                            <label class="kk-st-btn kk-st-btn--ghost kk-st-btn--sm" for="avatar_input">
-                                <i class="fa-solid fa-camera"></i> 画像を変更
-                            </label>
-                            <input type="file"
-                                   id="avatar_input"
-                                   name="avatar"
-                                   accept="image/*"
-                                   class="kk-st-avatar__file-input">
+                        <div>
+                            <p class="st-setting-item__label">プロフィール編集</p>
+                            <p class="st-setting-item__desc">プロフィール画像やカバー画像を変更できます。</p>
                         </div>
                     </div>
+                    {{-- dialog要素: JSライブラリ不要・ネイティブでモーダル表示 --}}
+                    <button type="button"
+                            class="st-btn st-btn--ghost st-btn--sm"
+                            onclick="document.getElementById('modal-profile').showModal()">
+                        編集する
+                    </button>
+                </li>
 
-                    {{-- 名前 --}}
-                    <div class="kk-st-field">
-                        <label class="kk-st-field__label" for="name">ユーザー名</label>
-                        <input type="text"
-                               id="name"
-                               name="name"
-                               class="kk-st-input @error('name') is-error @enderror"
-                               value="{{ old('name', $user->name) }}"
-                               maxlength="50">
-                        @error('name')
-                            <p class="kk-st-field__error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- 自己紹介 --}}
-                    <div class="kk-st-field">
-                        <label class="kk-st-field__label" for="bio">自己紹介</label>
-                        <textarea id="bio"
-                                  name="bio"
-                                  class="kk-st-input kk-st-input--textarea @error('bio') is-error @enderror"
-                                  maxlength="200"
-                                  rows="3">{{ old('bio', $user->bio) }}</textarea>
-                        @error('bio')
-                            <p class="kk-st-field__error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="kk-st-card__footer">
-                        <button type="submit" class="kk-st-btn kk-st-btn--primary">
-                            保存する
-                        </button>
-                    </div>
-                </form>
-            </section>
-
-            {{--  メールアドレス --}}
-            <section class="kk-st-card">
-                <h4 class="kk-st-card__title">
-                    <i class="fa-regular fa-envelope"></i> メールアドレス
-                </h4>
-
-                <form action="{{ route('settings.account.update') }}"
-                      method="POST">
-                    @csrf
-                    @method('PATCH')
-
-                    <div class="kk-st-field">
-                        <label class="kk-st-field__label" for="email">メールアドレス</label>
-                        <input type="email"
-                               id="email"
-                               name="email"
-                               class="kk-st-input @error('email') is-error @enderror"
-                               value="{{ old('email', $user->email) }}">
-                        @error('email')
-                            <p class="kk-st-field__error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="kk-st-card__footer">
-                        <button type="submit" class="kk-st-btn kk-st-btn--primary">
-                            変更する
-                        </button>
-                    </div>
-                </form>
-            </section>
-
-            {{--  パスワード --}}
-            <section class="kk-st-card">
-                <h4 class="kk-st-card__title">
-                    <i class="fa-solid fa-lock"></i> パスワード
-                </h4>
-
-                <form action="{{ route('settings.account.update') }}"
-                      method="POST">
-                    @csrf
-                    @method('PATCH')
-
-                    <div class="kk-st-field">
-                        <label class="kk-st-field__label" for="current_password">現在のパスワード</label>
-                        <input type="password"
-                               id="current_password"
-                               name="current_password"
-                               class="kk-st-input">
-                    </div>
-
-                    <div class="kk-st-field">
-                        <label class="kk-st-field__label" for="password">新しいパスワード</label>
-                        <input type="password"
-                               id="password"
-                               name="password"
-                               class="kk-st-input">
-                    </div>
-
-                    <div class="kk-st-field">
-                        <label class="kk-st-field__label" for="password_confirmation">確認用パスワード</label>
-                        <input type="password"
-                               id="password_confirmation"
-                               name="password_confirmation"
-                               class="kk-st-input">
-                    </div>
-
-                    <div class="kk-st-card__footer">
-                        <button type="submit" class="kk-st-btn kk-st-btn--primary">
-                            変更する
-                        </button>
-                    </div>
-                </form>
-            </section>
-
-            {{--  2段階認証 --}}
-            <section class="kk-st-card">
-                <h4 class="kk-st-card__title">
-                    <i class="fa-solid fa-shield-halved"></i> 2段階認証（2FA）
-                </h4>
-
-                <div class="kk-st-row">
-                    <div>
-                        <p class="kk-st-row__label">2段階認証を有効にする</p>
-                        <p class="kk-st-row__desc">ログイン時にSMSまたは認証アプリで確認します</p>
-                    </div>
-                    {{-- TODO: DB完成後に $user->two_factor_enabled を使用 --}}
-                    <label class="kk-st-toggle" aria-label="2段階認証の切り替え">
-                        <input type="checkbox" {{ false ? 'checked' : '' }}>
-                        <span class="kk-st-toggle__slider"></span>
-                    </label>
-                </div>
-            </section>
-
-            {{--  プレミアムステータス --}}
-            <section class="kk-st-card">
-                <h4 class="kk-st-card__title">
-                    <i class="fa-solid fa-crown"></i> プレミアムステータス
-                </h4>
-
-                <div class="kk-st-row">
-                    <div>
-                        <p class="kk-st-row__label">現在のプラン</p>
-                        <p class="kk-st-row__desc">
-                            {{-- TODO: $user->plan で切り替え --}}
-                            @if($user->plan === 'premium')
-                                <span class="kk-st-badge kk-st-badge--premium">
-                                    <i class="fa-solid fa-crown"></i> KREDON Premium
-                                </span>
-                            @else
-                                <span class="kk-st-badge kk-st-badge--free">無料プラン</span>
-                            @endif
+                {{-- ── ユーザー名 ── --}}
+                <li class="st-setting-item">
+                    <div class="st-setting-item__body">
+                        <p class="st-setting-item__label">ユーザー名</p>
+                        <p class="st-setting-item__value" id="display-name">
+                            {{ $user->name }}
+                            <span class="st-setting-item__handle">{{ '@' . $user->username }}</span>
                         </p>
                     </div>
-                    @if($user->plan !== 'premium')
-                        <a href="#" class="kk-st-btn kk-st-btn--primary kk-st-btn--sm">
-                            アップグレード
-                        </a>
-                    @endif
-                </div>
-            </section>
-
-            {{--  ログアウト --}}
-            <section class="kk-st-card">
-                <h4 class="kk-st-card__title">
-                    <i class="fa-solid fa-right-from-bracket"></i> ログアウト
-                </h4>
-                <p class="kk-st-card__desc">すべてのデバイスからログアウトします。</p>
-
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="kk-st-btn kk-st-btn--ghost">
-                        ログアウト
+                    <button type="button"
+                            class="st-btn st-btn--ghost st-btn--sm"
+                            onclick="document.getElementById('modal-username').showModal()">
+                        変更
                     </button>
-                </form>
-            </section>
+                </li>
 
-            {{-- ⑦ アカウント削除 --}}
-            <section class="kk-st-card kk-st-card--danger">
-                <h4 class="kk-st-card__title kk-st-card__title--danger">
-                    <i class="fa-solid fa-triangle-exclamation"></i> アカウントの削除
-                </h4>
-                <p class="kk-st-card__desc">
-                    削除すると、すべてのデータが完全に失われます。この操作は取り消せません。
-                </p>
-                <button type="button"
-                        class="kk-st-btn kk-st-btn--danger"
-                        onclick="document.getElementById('kk-delete-modal').showModal()">
-                    アカウントを削除する
-                </button>
-            </section>
-
-        </div>
-
-        {{-- 右 --}}
-        <aside class="kk-st-account__preview">
-            <p class="kk-st-preview__label">ライブプレビュー</p>
-            <p class="kk-st-preview__sub">あなたのプロフィールはこのように表示されます</p>
-
-            <div class="kk-st-preview__card">
-                {{-- アバター --}}
-                <div class="kk-st-preview__avatar" id="preview-avatar">
-                    {{ mb_substr($user->name, 0, 1) }}
-                </div>
-
-                {{-- 名前 --}}
-                <p class="kk-st-preview__name" id="preview-name">{{ $user->name }}</p>
-                <p class="kk-st-preview__email" id="preview-email">{{ $user->email }}</p>
-
-                {{-- 統計ダミー --}}
-                <div class="kk-st-preview__stats">
-                    <div class="kk-st-preview__stat">
-                        <span class="kk-st-preview__stat-num">2,840</span>
-                        <span class="kk-st-preview__stat-label">フォロワー</span>
+                {{-- ── 自己紹介 ── --}}
+                <li class="st-setting-item">
+                    <div class="st-setting-item__body">
+                        <p class="st-setting-item__label">自己紹介 (Bio)</p>
+                        <p class="st-setting-item__value st-setting-item__value--bio" id="display-bio">{{ $user->bio }}</p>
                     </div>
-                    <div class="kk-st-preview__stat">
-                        <span class="kk-st-preview__stat-num">312</span>
-                        <span class="kk-st-preview__stat-label">フォロー中</span>
-                    </div>
-                </div>
+                    <button type="button"
+                            class="st-btn st-btn--ghost st-btn--sm"
+                            onclick="document.getElementById('modal-bio').showModal()">
+                        変更
+                    </button>
+                </li>
 
-                {{-- 自己紹介 --}}
-                <p class="kk-st-preview__bio" id="preview-bio">{{ $user->bio }}</p>
-            </div>
-        </aside>
+                {{-- ── メールアドレス ── --}}
+                <li class="st-setting-item">
+                    <div class="st-setting-item__body">
+                        <p class="st-setting-item__label">メールアドレス</p>
+                        <p class="st-setting-item__value" id="display-email">{{ $user->email }}</p>
+                    </div>
+                    <button type="button"
+                            class="st-btn st-btn--ghost st-btn--sm"
+                            onclick="document.getElementById('modal-email').showModal()">
+                        変更
+                    </button>
+                </li>
+
+                {{-- ── パスワード ── --}}
+                <li class="st-setting-item">
+                    <div class="st-setting-item__body">
+                        <p class="st-setting-item__label">パスワード</p>
+                        {{-- 実際の値は表示せずマスク。セキュリティのベストプラクティス --}}
+                        <p class="st-setting-item__value st-setting-item__value--masked" aria-label="パスワードは設定済み">••••••••••••</p>
+                    </div>
+                    <button type="button"
+                            class="st-btn st-btn--ghost st-btn--sm"
+                            onclick="document.getElementById('modal-password').showModal()">
+                        変更
+                    </button>
+                </li>
+
+                {{-- ── 2段階認証 ── --}}
+                <li class="st-setting-item">
+                    <div class="st-setting-item__body">
+                        <p class="st-setting-item__label">二段階認証 (2FA)</p>
+                        <p class="st-setting-item__desc">アカウントのセキュリティを強化します。</p>
+                    </div>
+                    {{-- disabled: DB/API完成まで操作不可。本番ではformでPATCH送信 --}}
+                    <label class="st-toggle" aria-label="2段階認証の切り替え">
+                        <input type="checkbox" {{ $user->two_factor_enabled ? 'checked' : '' }} disabled>
+                        <span class="st-toggle__slider"></span>
+                    </label>
+                </li>
+
+                {{-- ── プレミアムステータス ── --}}
+                <li class="st-setting-item">
+                    <div class="st-setting-item__body">
+                        <p class="st-setting-item__label">プレミアムステータス</p>
+                        <div class="st-setting-item__premium">
+                            @if ($user->plan === 'premium')
+                                <span class="st-badge st-badge--premium">
+                                    <i class="fa-solid fa-crown" aria-hidden="true"></i> KREDON Premium
+                                </span>
+                                <span class="st-badge st-badge--active">アクティブ</span>
+                            @else
+                                <span class="st-badge st-badge--free">無料プラン</span>
+                            @endif
+                        </div>
+                    </div>
+                    @if ($user->plan === 'premium')
+                        <a href="#" class="st-btn st-btn--ghost st-btn--sm">詳細を見る</a>
+                    @else
+                        <a href="#" class="st-btn st-btn--primary st-btn--sm">アップグレード</a>
+                    @endif
+                </li>
+
+                {{-- ── ログアウト ── --}}
+                <li class="st-setting-item">
+                    <div class="st-setting-item__body">
+                        <p class="st-setting-item__label">ログアウト</p>
+                        <p class="st-setting-item__desc">すべてのデバイスからログアウトします。</p>
+                    </div>
+                    {{-- POST + @csrf: Laravelのログアウトは必ずPOST --}}
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="st-btn st-btn--outline-danger st-btn--sm">
+                            ログアウト
+                        </button>
+                    </form>
+                </li>
+
+                {{-- アカウント削除 --}}
+                <li class="st-setting-item st-setting-item--danger">
+                    <div class="st-setting-item__body">
+                        <p class="st-setting-item__label st-setting-item__label--danger">アカウント削除</p>
+                        <p class="st-setting-item__desc st-setting-item__desc--danger">
+                            アカウントとデータを完全に削除します。この操作は取り消せません。
+                        </p>
+                    </div>
+                    <button type="button"
+                            class="st-btn st-btn--outline-danger st-btn--sm"
+                            onclick="document.getElementById('delete-modal').showModal()">
+                        アカウントを削除
+                    </button>
+                </li>
+
+            </ul>
+        </section>
 
     </div>
+
+
+    {{--  右サイドバー: プレビュー & ステータス768px未満では設定リストの下に表示 --}}
+    <aside class="st-page__aside" aria-label="アカウントプレビュー">
+
+        {{-- ── ライブプレビュー ── --}}
+        <div class="st-widget">
+            <h3 class="st-widget__title">
+                <i class="fa-regular fa-eye" aria-hidden="true"></i> ライブプレビュー
+            </h3>
+            <p class="st-widget__sub">あなたのプロフィールはこのように表示されます</p>
+
+            {{-- テーマ名 + 変更ボタン --}}
+            <div class="st-preview__theme-row">
+                <span class="st-preview__theme">
+                    <i class="fa-solid fa-palette" aria-hidden="true"></i> {{ $user->theme }}
+                </span>
+                <button type="button" class="st-btn st-btn--ghost st-btn--xs">変更</button>
+            </div>
+
+            {{-- バナー + イベント情報（見本の投稿プレビュー風） --}}
+            <div class="st-preview__banner">
+                <div class="st-preview__event">
+                    <p class="st-preview__event-title">{{ $user->preview_event['title'] }}</p>
+                    <p class="st-preview__event-date">{{ $user->preview_event['date'] }}</p>
+                </div>
+            </div>
+
+            {{-- ミニプロフィールカード --}}
+            <div class="st-preview__card">
+                <div class="st-preview__avatar" id="preview-avatar">
+                    {{ mb_substr($user->name, 0, 1) }}
+                </div>
+                @if ($user->plan === 'premium')
+                    <span class="st-preview__premium-tag">PREMIUM</span>
+                @endif
+                <p class="st-preview__name" id="preview-name">{{ $user->name }}</p>
+                <p class="st-preview__handle" id="preview-handle">{{ '@' . $user->username }}</p>
+
+                {{-- 投稿数のみ表示（フォロー機能は未実装のため Followers/Following は除外） --}}
+                <div class="st-preview__stats">
+                    <div class="st-preview__stat">
+                        <span class="st-preview__stat-num">{{ number_format($user->posts_count) }}</span>
+                        <span class="st-preview__stat-label">Posts</span>
+                    </div>
+                </div>
+
+                <p class="st-preview__bio" id="preview-bio">{{ $user->bio }}</p>
+            </div>
+        </div>
+
+        {{-- ── アカウントステータス ── --}}
+        <div class="st-widget">
+            <h3 class="st-widget__title">
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i> アカウントステータス
+            </h3>
+            {{-- dl/dt/dd: キー・バリューのペアを意味的に正しくマークアップ cssで、左側と右側を分けて表示するレイアウト--}}
+
+            {{--目的： これらはgoogleに正しく伝えるために使用する  --}}
+            <dl class="st-status-list">
+                <div class="st-status-list__row">
+                    <dt>Status</dt>
+                    <dd><span class="st-badge st-badge--active">Active</span></dd>
+                </div>
+                <div class="st-status-list__row">
+                    <dt>Membership Plan</dt>
+                    <dd>{{ $user->plan === 'premium' ? 'KREDON Premium' : 'Free Plan' }}</dd>
+                </div>
+                <div class="st-status-list__row">
+                    <dt>Registration Date</dt>
+                    <dd>{{ date('F j, Y', strtotime($user->created_at)) }}</dd>
+                </div>
+                <div class="st-status-list__row">
+                    <dt>Last Login</dt>
+                    <dd>{{ $user->last_login }}</dd>
+                </div>
+                <div class="st-status-list__row">
+                    <dt>Account Security</dt>
+                    <dd><span class="st-badge st-badge--active">{{ $user->security_label }}</span></dd>
+                </div>
+            </dl>
+        </div>
+
+        {{-- ── 通知プレビュー ── --}}
+        <div class="st-widget">
+            <h3 class="st-widget__title">
+                <i class="fa-regular fa-bell" aria-hidden="true"></i> 通知プレビュー
+            </h3>
+            <ul class="st-notif-list" role="list">
+                @foreach ($user->notifications as $notif)
+                    <li class="st-notif-list__item">
+                        <span class="st-notif-list__icon st-notif-list__icon--{{ $notif['color'] }}" aria-hidden="true">
+                            <i class="fa-solid {{ $notif['icon'] }}"></i>
+                        </span>
+                        <div class="st-notif-list__body">
+                            <p class="st-notif-list__text">{{ $notif['text'] }}</p>
+                            <p class="st-notif-list__time">{{ $notif['time'] }}</p>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+            <a href="{{ route('settings.notification') }}" class="st-notif-list__more">
+                すべての通知を表示
+            </a>
+        </div>
+
+    </aside>
 
 </div>
 
 
-{{-- 削除確認モーダル --}}
-<dialog id="kk-delete-modal" class="kk-st-modal">
-    <div class="kk-st-modal__inner">
-        <h3 class="kk-st-modal__title">
-            <i class="fa-solid fa-triangle-exclamation"></i>
+{{-- 編集モーダル群<dialog> を使用: アクセシビリティ対応・JSライブラリ不要
+     各フォームは @method('PATCH') で RESTful に更新ルートへ送信 --}}
+
+<dialog id="modal-profile" class="st-modal" aria-labelledby="modal-profile-title">
+    <div class="st-modal__inner">
+        <h3 id="modal-profile-title" class="st-modal__title st-modal__title--normal">
+            <i class="fa-regular fa-user" aria-hidden="true"></i> プロフィール編集
+        </h3>
+        <form action="{{ route('settings.account.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
+            <div class="st-avatar-row">
+                <div class="st-avatar st-avatar--lg">
+                    @if ($user->avatar)
+                        <img src="{{ $user->avatar }}" alt="アバター">
+                    @else
+                        <span class="st-avatar__placeholder">{{ mb_substr($user->name, 0, 1) }}</span>
+                    @endif
+                </div>
+                <label class="st-btn st-btn--ghost st-btn--sm" for="avatar_input">
+                    <i class="fa-solid fa-camera" aria-hidden="true"></i> 画像を変更
+                </label>
+                <input type="file" id="avatar_input" name="avatar" accept="image/*" class="st-avatar__file-input">
+            </div>
+            <div class="st-modal__footer">
+                <button type="button" class="st-btn st-btn--ghost"
+                        onclick="document.getElementById('modal-profile').close()">キャンセル</button>
+                <button type="submit" class="st-btn st-btn--primary">保存する</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<dialog id="modal-username" class="st-modal" aria-labelledby="modal-username-title">
+    <div class="st-modal__inner">
+        <h3 id="modal-username-title" class="st-modal__title st-modal__title--normal">ユーザー名の変更</h3>
+        <form action="{{ route('settings.account.update') }}" method="POST">
+            @csrf
+            @method('PATCH')
+            <div class="st-field">
+                <label class="st-field__label" for="name">表示名</label>
+                <input type="text" id="name" name="name" class="st-input"
+                       value="{{ old('name', $user->name) }}" maxlength="50" required>
+            </div>
+            <div class="st-field">
+                <label class="st-field__label" for="username">ユーザーID</label>
+                <div class="st-input-prefix">
+                    <span aria-hidden="true">@</span>
+                    <input type="text" id="username" name="username" class="st-input"
+                           value="{{ old('username', $user->username) }}" maxlength="30" required>
+                </div>
+            </div>
+            <div class="st-modal__footer">
+                <button type="button" class="st-btn st-btn--ghost"
+                        onclick="document.getElementById('modal-username').close()">キャンセル</button>
+                <button type="submit" class="st-btn st-btn--primary">変更する</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<dialog id="modal-bio" class="st-modal" aria-labelledby="modal-bio-title">
+    <div class="st-modal__inner">
+        <h3 id="modal-bio-title" class="st-modal__title st-modal__title--normal">自己紹介の変更</h3>
+        <form action="{{ route('settings.account.update') }}" method="POST">
+            @csrf
+            @method('PATCH')
+            <div class="st-field">
+                <label class="st-field__label" for="bio">自己紹介 (Bio)</label>
+                <textarea id="bio" name="bio" class="st-input st-input--textarea"
+                          maxlength="200" rows="4">{{ old('bio', $user->bio) }}</textarea>
+            </div>
+            <div class="st-modal__footer">
+                <button type="button" class="st-btn st-btn--ghost"
+                        onclick="document.getElementById('modal-bio').close()">キャンセル</button>
+                <button type="submit" class="st-btn st-btn--primary">変更する</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<dialog id="modal-email" class="st-modal" aria-labelledby="modal-email-title">
+    <div class="st-modal__inner">
+        <h3 id="modal-email-title" class="st-modal__title st-modal__title--normal">メールアドレスの変更</h3>
+        <form action="{{ route('settings.account.update') }}" method="POST">
+            @csrf
+            @method('PATCH')
+            <div class="st-field">
+                <label class="st-field__label" for="email">メールアドレス</label>
+                <input type="email" id="email" name="email" class="st-input"
+                       value="{{ old('email', $user->email) }}" required>
+            </div>
+            <div class="st-modal__footer">
+                <button type="button" class="st-btn st-btn--ghost"
+                        onclick="document.getElementById('modal-email').close()">キャンセル</button>
+                <button type="submit" class="st-btn st-btn--primary">変更する</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<dialog id="modal-password" class="st-modal" aria-labelledby="modal-password-title">
+    <div class="st-modal__inner">
+        <h3 id="modal-password-title" class="st-modal__title st-modal__title--normal">パスワードの変更</h3>
+        <form action="{{ route('settings.account.update') }}" method="POST">
+            @csrf
+            @method('PATCH')
+            <div class="st-field">
+                <label class="st-field__label" for="current_password">現在のパスワード</label>
+                <input type="password" id="current_password" name="current_password" class="st-input" autocomplete="current-password">
+            </div>
+            <div class="st-field">
+                <label class="st-field__label" for="password">新しいパスワード</label>
+                <input type="password" id="password" name="password" class="st-input" autocomplete="new-password">
+            </div>
+            <div class="st-field">
+                <label class="st-field__label" for="password_confirmation">確認用パスワード</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" class="st-input" autocomplete="new-password">
+            </div>
+            <div class="st-modal__footer">
+                <button type="button" class="st-btn st-btn--ghost"
+                        onclick="document.getElementById('modal-password').close()">キャンセル</button>
+                <button type="submit" class="st-btn st-btn--primary">変更する</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<dialog id="delete-modal" class="st-modal" aria-labelledby="delete-modal-title">
+    <div class="st-modal__inner">
+        <h3 id="delete-modal-title" class="st-modal__title">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
             本当に削除しますか？
         </h3>
-        <p class="kk-st-modal__desc">
+        <p class="st-modal__desc">
             この操作は取り消せません。アカウントに紐づくすべての投稿・データが削除されます。
         </p>
-        <div class="kk-st-modal__footer">
-            <button type="button"
-                    class="kk-st-btn kk-st-btn--ghost"
-                    onclick="document.getElementById('kk-delete-modal').close()">
-                キャンセル
-            </button>
+        <div class="st-modal__footer">
+            <button type="button" class="st-btn st-btn--ghost"
+                    onclick="document.getElementById('delete-modal').close()">キャンセル</button>
+            {{-- TODO: route('settings.account.destroy') を本番で実装 --}}
             <form action="#" method="POST">
-                {{-- TODO: route('settings.account.destroy') --}}
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="kk-st-btn kk-st-btn--danger">
-                    削除する
-                </button>
+                <button type="submit" class="st-btn st-btn--danger">削除する</button>
             </form>
         </div>
     </div>
 </dialog>
 
 
-{{-- ライブプレビュー用JS --}}
+{{--
+    ライブプレビュー同期JS
+    モーダル入力 → 右サイドバーのプレビューを即時反映（DB保存前のUX向上）
+    @push('scripts'): layouts.app の @stack('scripts') に出力される
+--}}
 @push('scripts')
 <script>
-    // 名前入力 → プレビュー即時反映
-    document.getElementById('name')?.addEventListener('input', function () {
-        const name = this.value || 'ユーザー名';
-        document.getElementById('preview-name').textContent = name;
-        document.getElementById('preview-avatar').textContent = name.charAt(0);
-    });
+(function () {
+    'use strict';
 
-    // 自己紹介 → プレビュー即時反映
+    const previewName   = document.getElementById('preview-name');
+    const previewHandle = document.getElementById('preview-handle');
+    const previewBio    = document.getElementById('preview-bio');
+    const previewAvatar = document.getElementById('preview-avatar');
+    const displayName   = document.getElementById('display-name');
+    const displayBio    = document.getElementById('display-bio');
+    const rowAvatarChar = document.getElementById('row-avatar-char');
+
+    const defaultUsername = @json($user->username);
+    const defaultName     = @json($user->name);
+
+    /** 表示名・ユーザーIDの変更をプレビューと設定行へ反映 */
+    function syncUsername() {
+        const name   = document.getElementById('name')?.value || defaultName;
+        const handle = document.getElementById('username')?.value || defaultUsername;
+
+        if (previewName)   previewName.textContent = name;
+        if (previewHandle) previewHandle.textContent = '@' + handle;
+        if (previewAvatar && !previewAvatar.querySelector('img')) {
+            previewAvatar.textContent = name.charAt(0);
+        }
+        if (rowAvatarChar) rowAvatarChar.textContent = name.charAt(0);
+        if (displayName) {
+            displayName.innerHTML = `${name} <span class="st-setting-item__handle">@${handle}</span>`;
+        }
+    }
+
+    document.getElementById('name')?.addEventListener('input', syncUsername);
+    document.getElementById('username')?.addEventListener('input', syncUsername);
+
     document.getElementById('bio')?.addEventListener('input', function () {
-        document.getElementById('preview-bio').textContent = this.value;
+        if (previewBio)  previewBio.textContent  = this.value;
+        if (displayBio)  displayBio.textContent  = this.value;
     });
 
-    // アバター画像 → プレビュー即時反映
     document.getElementById('avatar_input')?.addEventListener('change', function () {
         const file = this.files[0];
-        if (!file) return;
+        if (!file || !previewAvatar) return;
         const reader = new FileReader();
-        reader.onload = e => {
-            const el = document.getElementById('preview-avatar');
-            el.innerHTML = `<img src="${e.target.result}" alt="プレビュー"
-                                 style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        reader.onload = (e) => {
+            previewAvatar.innerHTML =
+                `<img src="${e.target.result}" alt="プレビュー" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
         };
         reader.readAsDataURL(file);
     });
+})();
 </script>
 @endpush
 

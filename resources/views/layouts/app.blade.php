@@ -433,7 +433,7 @@
                         <hr class="mx-3 my-2 text-muted">
 
                         <a href="#" class="sidebar-link"><i class="fa-regular fa-user"></i> MY PAGE</a>
-                        <a href="#" class="sidebar-link"><i class="fa-solid fa-gear"></i> SETTING</a>
+                        <a href="{{ route('settings.index') }}" class="sidebar-link"><i class="fa-solid fa-gear"></i> SETTING</a>
                         <a href="#" class="sidebar-link"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i> LOGOUT
