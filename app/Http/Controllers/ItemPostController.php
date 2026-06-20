@@ -12,6 +12,6 @@ class ItemPostController extends Controller
         $posts = ItemPost::with('user')->latest()->get();
 
         // ビューにデータを渡す（resources/views/posts/index.blade.php を表示する場合）
-        return view('home', compact('posts', 'events'));
+        return view('home', compact('posts'));
     }
 }

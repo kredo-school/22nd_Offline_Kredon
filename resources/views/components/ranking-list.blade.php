@@ -22,7 +22,7 @@
                 <div class="hp-rank-title">{{ $item->title }}</div>
                 <div class="small hp-rank-meta">
                     {{ $item->value }} {{ $metric }} 
-                    <span class="text-muted">| 参加者: {{ $item->participants_count ?? 0 }}名</span>
+                    <span class="text-muted">| 総プレイヤー数: {{ $totalPlayers }}名</span>
                 </div>
             </div>
 

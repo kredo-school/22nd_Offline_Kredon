@@ -11,6 +11,7 @@ class RankingList extends Component
     public $title;
     public $metric;
     public $items;
+    public $label;
 
     public function __construct($type = 'market')
     {
@@ -26,8 +27,8 @@ class RankingList extends Component
                 break;
 
             case 'spot':
-                $this->title  = 'スポットランキング';
-                $this->metric = '件のレビュー';
+                $this->title  = '観光スポットランキング';
+                $this->metric = 'レビュー';
                 $this->items  = [
                     (object)['title' => 'オスロブ',    'value' => 4,   'url' => null],
                     (object)['title' => 'カワサン',    'value' => 3.7, 'url' => null],

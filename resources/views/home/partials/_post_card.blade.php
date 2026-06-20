@@ -25,7 +25,7 @@
 
     {{-- アクションボタン --}}
     <div class="hp-post-footer">
-        <span><i class="fa-regular fa-comment"></i> 12</span>
+        <a href="#" class="hp-comment-link"></a>
         <span><i class="fa-regular fa-bookmark"></i></span>
     </div>
 </div>
