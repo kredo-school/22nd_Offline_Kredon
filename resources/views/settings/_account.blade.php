@@ -9,7 +9,7 @@
 
 <div class="st-page">
 
-    {{--　メイン: アカウント設定リスト --}}
+    {{-- メイン: アカウント設定リスト --}}
     <div class="st-page__main">
 
         <section class="st-card st-card--account" aria-labelledby="account-heading">
@@ -115,11 +115,22 @@
                         <p class="st-setting-item__label">二段階認証 (2FA)</p>
                         <p class="st-setting-item__desc">アカウントのセキュリティを強化します。</p>
                     </div>
-                    {{-- disabled: DB/API完成まで操作不可。本番ではformでPATCH送信 --}}
-                    <label class="st-toggle" aria-label="2段階認証の切り替え">
-                        <input type="checkbox" {{ $user->two_factor_enabled ? 'checked' : '' }} disabled>
-                        <span class="st-toggle__slider"></span>
-                    </label>
+
+                    @if($user->two_factor_enabled)
+                        {{-- ON状態: 押すと無効化される --}}
+                        <form action="{{ route('settings.two-factor.disable') }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="st-toggle st-toggle--button" aria-label="2段階認証を無効化">
+                                <span class="st-toggle__slider st-toggle__slider--on"></span>
+                            </button>
+                        </form>
+                    @else
+                        {{-- OFF状態: 押すとQRコード設定画面へ --}}
+                        <a href="{{ route('settings.two-factor.setup') }}" class="st-toggle st-toggle--button" aria-label="2段階認証を設定">
+                            <span class="st-toggle__slider"></span>
+                        </a>
+                    @endif
                 </li>
 
                 {{-- ── プレミアムステータス ── --}}
@@ -234,9 +245,8 @@
             <h3 class="st-widget__title">
                 <i class="fa-solid fa-circle-info" aria-hidden="true"></i> アカウントステータス
             </h3>
-            {{-- dl/dt/dd: キー・バリューのペアを意味的に正しくマークアップ cssで、左側と右側を分けて表示するレイアウト--}}
-
-            {{--目的： これらはgoogleに正しく伝えるために使用する  --}}
+            {{-- dl/dt/dd: キー・バリューのペアを意味的に正しくマークアップ。cssで左側と右側を分けて表示する --}}
+            {{-- 目的: これらの構造はGoogleなどに情報を正しく伝えるために使用する --}}
             <dl class="st-status-list">
                 <div class="st-status-list__row">
                     <dt>Status</dt>
@@ -289,7 +299,8 @@
 </div>
 
 
-{{-- 編集モーダル群<dialog> を使用: アクセシビリティ対応・JSライブラリ不要
+{{-- 編集モーダル群
+     <dialog> を使用: アクセシビリティ対応・JSライブラリ不要
      各フォームは @method('PATCH') で RESTful に更新ルートへ送信 --}}
 
 <dialog id="modal-profile" class="st-modal" aria-labelledby="modal-profile-title">

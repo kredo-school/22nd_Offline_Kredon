@@ -30,7 +30,7 @@
 <div class="st-wrap">
 
     {{-- ページ見出し（全タブ共通） --}}
-    <header class="st-wrap__head">
+    <header> class="st-wrap__head">
         <h1 class="st-wrap__title">設定</h1>
         <p class="st-wrap__desc">アカウントや表示、プライバシーなど各種設定をカスタマイズできます。</p>
     </header>
