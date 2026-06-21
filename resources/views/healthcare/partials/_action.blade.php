@@ -48,13 +48,13 @@
 
         {{-- 4. その他 --}}
         <div class="col">
-            <a href="#support-section" class="text-decoration-none">
+            <a href="#hsSituationAccordion" class="text-decoration-none">
                 <div class="card h-100 w-100 border rounded-4 shadow-sm border-0">
                     <div class="text-center py-4" style="background-color:#F1F4F2;">
                         <i class="fa-solid fa-plus fa-3x" style="color:#0ea58a;"></i>
                     </div>
                     <div class="card-body">
-                        <h5 class="fw-bold text-start text-dark mb-0">よくある質問</h5>
+                        <h5 class="fw-bold text-start text-dark mb-0">よくある状況</h5>
                     </div>
                 </div>
             </a>

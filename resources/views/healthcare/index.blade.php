@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Kredon Support')
+@section('title', 'Hospital')
 
 @section('content')
 
@@ -54,7 +54,7 @@
         {{-- サイドバー --}}
         <div class="col-12 col-md-4">
             <div class="sticky-top" style="top: 20px;">
-                @include('healthcare.partials._faq')
+                @include('healthcare.partials._faq', ['faqCategories' => $faqCategories])
             </div>
         </div>
 

@@ -15,9 +15,17 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::UpdateOrCreate(
+            ['email' => 'test@example.com'], 
+            [                                
+                'name' => 'Test User',
+                'password' => bcrypt('password'),
+            ]
+        );
+        // 追加したシーダーを呼び出す
+        $this->call([
+            FaqCategoyTestSeeder::class,
+            FaqTestSeeder::class,
         ]);
     }
 }
