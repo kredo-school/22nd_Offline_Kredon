@@ -67,14 +67,14 @@ class SettingDummyData
                     'color'   => 'blue',
                     'enabled' => true,
                 ],
-                [
-                    'key'     => 'follow',
-                    'label'   => 'フォロー通知',
-                    'desc'    => 'あなたをフォローしたときに通知します。',
-                    'icon'    => 'fa-solid fa-user-plus',
-                    'color'   => 'teal',
-                    'enabled' => true,
-                ],
+                // [
+                //     'key'     => 'follow',
+                //     'label'   => 'フォロー通知',
+                //     'desc'    => 'あなたをフォローしたときに通知します。',
+                //     'icon'    => 'fa-solid fa-user-plus',
+                //     'color'   => 'teal',
+                //     'enabled' => true,
+                // ],
                 [
                     'key'     => 'event',
                     'label'   => 'イベント通知',
@@ -126,7 +126,7 @@ class SettingDummyData
                 [
                     'icon'  => 'fa-solid fa-user-plus',
                     'color' => 'teal',
-                    'text'  => 'Mariaさんがあなたをフォローしました',
+                    'text'  => 'Mariaさんがあなたの商品にコメントしました。',
                     'time'  => '2時間前',
                 ],
                 [

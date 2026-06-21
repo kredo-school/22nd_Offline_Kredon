@@ -5,8 +5,15 @@
 @import 'variables';
 
 // Bootstrap
+
+// usersettings
 @import 'bootstrap/scss/bootstrap';
-@import 'pages/settings';
+@import 'usersettings/settings';
+@import 'usersettings/shared';
+@import 'usersettings/accounts';
+@import 'usersettings/notifications';
+@import 'usersettings/comments';
+@import 'usersettings/privacy';
 
 /*
  * app.blade.php の .navbar-top は position:fixed; height:70px。

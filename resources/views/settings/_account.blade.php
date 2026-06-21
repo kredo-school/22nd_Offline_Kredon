@@ -1,8 +1,3 @@
-{{--
-    アカウント設定タブ
-    768px未満 : 設定リスト → サイドバーウィジェットの順で縦積み
-    768px以上 : 設定リスト（左）+ ウィジェット（右）の2カラム
---}}
 @extends('settings.index')
 
 @section('settings-content')
@@ -24,7 +19,7 @@
             {{-- 各行 = 1つの設定項目。label/value + action のパターンで統一 --}}
             <ul class="st-setting-list" role="list">
 
-                {{-- ── プロフィール編集 ── --}}
+                {{-- プロフィール編集 --}}
                 <li class="st-setting-item st-setting-item--profile">
                     <div class="st-setting-item__profile">
                         {{-- アバター: 画像がなければ名前の頭文字を表示 --}}
@@ -53,7 +48,7 @@
                     </button>
                 </li>
 
-                {{-- ── ユーザー名 ── --}}
+                {{-- ユーザー名 --}}
                 <li class="st-setting-item">
                     <div class="st-setting-item__body">
                         <p class="st-setting-item__label">ユーザー名</p>
@@ -69,7 +64,7 @@
                     </button>
                 </li>
 
-                {{-- ── 自己紹介 ── --}}
+                {{-- 自己紹介 --}}
                 <li class="st-setting-item">
                     <div class="st-setting-item__body">
                         <p class="st-setting-item__label">自己紹介 (Bio)</p>
@@ -82,7 +77,7 @@
                     </button>
                 </li>
 
-                {{-- ── メールアドレス ── --}}
+                {{-- メールアドレス --}}
                 <li class="st-setting-item">
                     <div class="st-setting-item__body">
                         <p class="st-setting-item__label">メールアドレス</p>
@@ -109,7 +104,7 @@
                     </button>
                 </li>
 
-                {{-- ── 2段階認証 ── --}}
+                {{-- 2段階認証  --}}
                 <li class="st-setting-item">
                     <div class="st-setting-item__body">
                         <p class="st-setting-item__label">二段階認証 (2FA)</p>
@@ -117,7 +112,7 @@
                     </div>
 
                     @if($user->two_factor_enabled)
-                        {{-- ON状態: 押すと無効化される --}}
+                        {{ ON状態: 押すと無効化される }}
                         <form action="{{ route('settings.two-factor.disable') }}" method="POST">
                             @csrf
                             @method('DELETE')
@@ -133,7 +128,7 @@
                     @endif
                 </li>
 
-                {{-- ── プレミアムステータス ── --}}
+                {{-- プレミアムステータス  --}}
                 <li class="st-setting-item">
                     <div class="st-setting-item__body">
                         <p class="st-setting-item__label">プレミアムステータス</p>
@@ -155,7 +150,7 @@
                     @endif
                 </li>
 
-                {{-- ── ログアウト ── --}}
+                {{--  ログアウト  --}}
                 <li class="st-setting-item">
                     <div class="st-setting-item__body">
                         <p class="st-setting-item__label">ログアウト</p>
@@ -194,7 +189,7 @@
     {{--  右サイドバー: プレビュー & ステータス768px未満では設定リストの下に表示 --}}
     <aside class="st-page__aside" aria-label="アカウントプレビュー">
 
-        {{-- ── ライブプレビュー ── --}}
+        {{--  ライブプレビュー  --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
                 <i class="fa-regular fa-eye" aria-hidden="true"></i> ライブプレビュー
@@ -240,7 +235,7 @@
             </div>
         </div>
 
-        {{-- ── アカウントステータス ── --}}
+        {{--  アカウントステータス  --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
                 <i class="fa-solid fa-circle-info" aria-hidden="true"></i> アカウントステータス

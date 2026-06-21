@@ -17,7 +17,7 @@
                 @csrf
                 @method('PATCH')
 
-                {{-- ── 通知の種類 ── --}}
+                {{-- 通知の種類  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
                         <i class="fa-regular fa-bell" aria-hidden="true"></i> 通知の種類
@@ -43,7 +43,7 @@
                     @endforeach
                 </div>
 
-                {{-- ── 通知の受け取り方法 ── --}}
+                {{-- 通知の受け取り方法 --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
                         <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> 通知の受け取り方法
@@ -85,7 +85,7 @@
     {{-- 右サイドバー: プレビュー & ステータス --}}
     <aside class="st-page__aside" aria-label="通知プレビュー">
 
-        {{-- ── ライブプレビュー（スマホモック） ── --}}
+        {{--  ライブプレビュー（スマホモック）  --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
                 <i class="fa-regular fa-eye" aria-hidden="true"></i> ライブプレビュー
@@ -115,7 +115,7 @@
             </div>
         </div>
 
-        {{-- ── 通知ステータス ── --}}
+        {{--  通知ステータス  --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
                 <i class="fa-solid fa-circle-info" aria-hidden="true"></i> 通知ステータス
@@ -141,7 +141,7 @@
             </button>
         </div>
 
-        {{-- ── トラブルシューティング ── --}}
+        {{--  トラブルシューティング  --}}
         <a href="#" class="st-notify-help">
             <i class="fa-solid fa-life-ring" aria-hidden="true"></i>
             <span>通知が届かない場合</span>

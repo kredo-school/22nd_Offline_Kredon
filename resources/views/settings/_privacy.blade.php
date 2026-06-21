@@ -17,7 +17,7 @@
                 @csrf
                 @method('PATCH')
 
-                {{-- ── 1. アカウントのプライバシー ── --}}
+                {{--  1. アカウントのプライバシー  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
                         <i class="fa-solid fa-user-shield" aria-hidden="true"></i> アカウントのプライバシー
@@ -42,7 +42,7 @@
                     @endforeach
                 </div>
 
-                {{-- ── 2. 投稿・アクティビティの公開範囲 ── --}}
+                {{--  2. 投稿・アクティビティの公開範囲  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
                         <i class="fa-regular fa-eye" aria-hidden="true"></i> 投稿・アクティビティの公開範囲
@@ -83,7 +83,7 @@
                     @endforeach
                 </div>
 
-                {{-- ── 3. 位置情報・ロケーション ── --}}
+                {{--  3. 位置情報・ロケーション  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
                         <i class="fa-solid fa-location-dot" aria-hidden="true"></i> 位置情報・ロケーション
@@ -124,7 +124,7 @@
                     @endforeach
                 </div>
 
-                {{-- ── 4. メッセージ・検索のプライバシー ── --}}
+                {{--  4. メッセージ・検索のプライバシー  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
                         <i class="fa-regular fa-envelope" aria-hidden="true"></i> メッセージ・検索のプライバシー

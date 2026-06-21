@@ -1,15 +1,10 @@
-{{--
-    コメント・安全設定タブ
-    768px未満 : 設定パネル → プレビューウィジェットの順で縦積み
-    768px以上 : 設定パネル（左）+ プレビュー（右）の2カラム
---}}
 @extends('settings.index')
 
 @section('settings-content')
 
 <div class="st-page">
 
-    {{-- メイン: コメント・安全設定 --}}
+    {{ メイン: コメント・安全設定 }}
     <div class="st-page__main">
 
         <section class="st-card st-card--account" aria-labelledby="comment-heading">
@@ -30,7 +25,7 @@
                 @csrf
                 @method('PATCH')
 
-                {{-- ── 1. コメントの基本設定 ── --}}
+                {{--  1. コメントの基本設定 --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
                         <i class="fa-regular fa-comment" aria-hidden="true"></i> コメントの基本設定
@@ -73,7 +68,7 @@
                     </div>
                 </div>
 
-                {{-- ── 2. NGワード・フィルター ── --}}
+                {{--  2. NGワード・フィルター --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
                         <i class="fa-solid fa-filter" aria-hidden="true"></i> NGワード・フィルター
@@ -108,7 +103,7 @@
                     </div>
                 </div>
 
-                {{-- ── 3. スパム・不正対策 ── --}}
+                {{-- 3. スパム・不正対策 --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
                         <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> スパム・不正対策
@@ -144,7 +139,7 @@
 
             </form>
 
-            {{-- ── 4. ブロック・ミュート管理（リンク行） ── --}}
+            {{-- 4. ブロック・ミュート管理（リンク行） --}}
             <div class="st-section-block">
                 <h3 class="st-section-block__title">
                     <i class="fa-solid fa-ban" aria-hidden="true"></i> ブロック・ミュート管理
@@ -173,7 +168,7 @@
                 </a>
             </div>
 
-            {{-- ── 5. レポート・履歴 ── --}}
+            {{-- 5. レポート・履歴 --}}
             <div class="st-section-block">
                 <h3 class="st-section-block__title">
                     <i class="fa-solid fa-flag" aria-hidden="true"></i> レポート・履歴
@@ -208,7 +203,7 @@
     {{-- 右サイドバー: プレビュー & 安全ステータ --}}
     <aside class="st-page__aside" aria-label="コメント設定プレビュー">
 
-        {{-- ── ライブプレビュー（投稿表示） ── --}}
+        {{-- ライブプレビュー（投稿表示） --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
                 <i class="fa-regular fa-eye" aria-hidden="true"></i> ライブプレビュー
@@ -241,7 +236,7 @@
             </div>
         </div>
 
-        {{-- ── コメントのプレビュー ── --}}
+        {{-- コメントのプレビュー  --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
                 <i class="fa-regular fa-comments" aria-hidden="true"></i> コメントのプレビュー
@@ -271,7 +266,7 @@
             </p>
         </div>
 
-        {{-- ── 安全ステータス ── --}}
+        {{--  安全ステータス  --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
                 <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> 安全ステータス

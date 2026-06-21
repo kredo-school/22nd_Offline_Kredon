@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Settings\AccountController;
+use App\Http\Controllers\Settings\NotificationController;
+use App\Http\Controllers\Settings\PrivacyController;
+use App\Http\Controllers\Settings\CommentController;
 use App\Http\Controllers\Settings\TwoFactorController;
 
 Route::get('/', function () {
@@ -13,20 +17,32 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->prefix('settings')->name('settings.')->group(function () {
-    Route::get('/',          [SettingController::class, 'index'])        ->name('index');
+    Route::get('/',[SettingController::class, 'index'])        ->name('index');
     
-     Route::get('account',      [SettingController::class, 'account'])      ->name('account');
-    Route::get('display',      [SettingController::class, 'display'])      ->name('display');
-    Route::get('notification', [SettingController::class, 'notification']) ->name('notification');
-    Route::get('comment',      [SettingController::class, 'comment'])      ->name('comment');
-    Route::get('privacy',      [SettingController::class, 'privacy'])      ->name('privacy');
-    Route::get('privacy/guide', [SettingController::class, 'privacyGuide'])->name('privacy.guide');
-    Route::get('app',          [SettingController::class, 'app'])          ->name('app');
+    // account
+     Route::get('account',[AccountController::class, 'account'])      ->name('account');
+     Route::patch('account',      [AccountController::class, 'updateAccount'])      ->name('account.update');
 
-    Route::patch('account',      [SettingController::class, 'updateAccount'])      ->name('account.update');
-    Route::patch('comment',      [SettingController::class, 'updateComment'])      ->name('comment.update');
-    Route::patch('notification', [SettingController::class, 'updateNotification']) ->name('notification.update');
-    Route::patch('privacy',      [SettingController::class, 'updatePrivacy'])      ->name('privacy.update');
+    // display
+    Route::get('display',[SettingController::class, 'display'])->name('display');
+
+    // notification
+    Route::get('notification', [NotificationController::class, 'notification'])->name('notification');
+    Route::patch('notification', [NotificationController::class, 'updateNotification']) ->name('notification.update');
+
+    // comment
+    Route::get('comment',      [CommentController::class, 'comment'])      ->name('comment');
+    Route::patch('comment',      [CommentController::class, 'updateComment'])      ->name('comment.update');
+
+    // privacy
+    Route::get('privacy', [PrivacyController::class, 'privacy'])->name('privacy');
+    Route::patch('privacy', [PrivacyController::class, 'updatePrivacy'])->name('privacy.update');
+
+    Route::get('privacy/guide', [PrivacyController::class, 'privacyGuide'])->name('privacy.guide');
+    
+
+    // app
+    Route::get('app',[SettingController::class, 'app'])->name('app');
 
     // ↓ この3行を追加
     Route::get('two-factor/setup',    [TwoFactorController::class, 'setup'])  ->name('two-factor.setup');
