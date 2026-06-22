@@ -19,8 +19,12 @@ return new class extends Migration
 
             // 受信者
             $table->foreignId('recipient_id')
+                ->nullable()
                 ->constrained('users')
                 ->cascadeOnDelete();
+
+            // 配信対象：all/ member(premium)/ custom
+                $table->string('target_type')->default('custom');
 
             // template由来のカテゴリをコピー (フィルタ高速化のための非正規化)
             $table->string('category');
@@ -31,6 +35,7 @@ return new class extends Migration
 
             // 通知クリック時の遷移先情報など: {"post_id":1,"comment_id":5,"url":"/reviews/1"}
             $table->json('data')->nullable();
+
 
             $table->boolean('is_read')->default(false);
             $table->timestamp('read_at')->nullable();

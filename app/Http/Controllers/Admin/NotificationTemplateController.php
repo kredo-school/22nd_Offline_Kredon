@@ -14,11 +14,11 @@ class NotificationTemplateController extends Controller
     {
         return [
             'category'      => ['required', Rule::in(['system', 'comment', 'reply', 'like', 'event', 'item_alert', 'digest'])],
-            'type'          => ['required', Rule::in(['manual', 'auto', 'scheduled'])],
+            // 'type'          => ['required', Rule::in(['manual', 'auto', 'scheduled'])],
             'title'         => ['required', 'string', 'max:255'],
             'body'          => ['required', 'string'],
-            'trigger_event' => ['nullable', 'string', 'max:255', 'required_if:type,auto'],
-            'schedule_cron' => ['nullable', 'string', 'max:255', 'required_if:type,scheduled'],
+            // 'trigger_event' => ['nullable', 'string', 'max:255', 'required_if:type,auto'],
+            // 'schedule_cron' => ['nullable', 'string', 'max:255', 'required_if:type,scheduled'],
             'target_type'   => ['required', Rule::in(['all', 'post_author', 'comment_author', 'subscriber', 'custom'])],
             'is_active'     => ['nullable', 'boolean'],
         ];
