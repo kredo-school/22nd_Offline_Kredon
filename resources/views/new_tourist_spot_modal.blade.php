@@ -1,11 +1,10 @@
 <style>
-    /* モーダル基本スタイル */
+    /* 共通モーダルスタイル（CSSの重複がある場合は片方だけでOKです） */
     .custom-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 9999; }
     .custom-modal.is-show { display: flex; }
     .modal-content { background-color: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
     .close-btn { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; background: none; border: none; color: #888; }
 
-    /* 📱 スマホ対応（レスポンシブ） */
     @media (max-width: 768px) {
         .modal-content { width: 95%; padding: 15px; }
         .time-input-group { flex-direction: column; align-items: flex-start !important; gap: 5px !important; }
@@ -14,6 +13,8 @@
         .checkbox-label { font-size: 13px !important; }
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.3/dist/heic2any.min.js"></script>
 
 <div class="custom-modal" id="newTouristSpotModal">
     <div class="modal-content" style="padding: 0;">
@@ -63,7 +64,6 @@
                 <input type="url" name="booking_url" placeholder="https://example.com" style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px;">
             </div>
 
-            {{-- 🌟 統一ポイント：学習スポットと同じ「営業時間」のUIを採用！ --}}
             <div class="time-input-group" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 12px; border-radius: 6px; display: flex; flex-direction: column; background-color: #fafafa;">
                 <span style="font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px; display: block;">🕒 営業時間</span>
                 
@@ -81,8 +81,15 @@
             </div>
 
             <div style="margin-bottom: 25px;">
-                <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸 写真を追加</label>
-                <input type="file" name="photo" accept="image/*" style="width: 100%; font-size: 14px;">
+                <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸 スポットの写真（最大10枚・ドラッグ可）</label>
+                <div class="file-upload-wrapper">
+                    <div class="file-upload-btn" id="newTouristSpotFileBtn" style="border-color: #f0932b; color: #f0932b; background-color: #fff4e6;">
+                        <i class="fa-solid fa-camera" style="font-size: 24px; margin-bottom: 5px; display: block;"></i>
+                        タップまたは写真をここにドロップ
+                    </div>
+                    <input type="file" name="photos[]" multiple accept="image/*" class="file-upload-input" id="newTouristSpotFileInput" onchange="previewTouristSpotPhotos(event)">
+                </div>
+                <div id="touristPhotoPreviewContainer" style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;"></div>
             </div>
 
             <div style="text-align: center;">
@@ -111,7 +118,6 @@
 </div>
 
 <script>
-    // 🌟 観光用の関数名に変更して、学習用とのカブリを防止
     function toggleTouristTimeInput() {
         const typeElement = document.querySelector('input[name="hours_type"]:checked');
         if (!typeElement) return; 
@@ -136,12 +142,79 @@
 
     document.addEventListener('DOMContentLoaded', toggleTouristTimeInput);
 
+    // 🌟 観光スポット用の HEIC対応・非同期版のプレビュー関数
+    async function previewTouristSpotPhotos(event) {
+        const container = document.getElementById('touristPhotoPreviewContainer');
+        const fileBtn = document.getElementById('newTouristSpotFileBtn');
+        container.innerHTML = '<span style="font-size: 12px; color: #666;">処理中...少しお待ちください⏳</span>'; 
+        
+        const input = event.target;
+        const files = Array.from(input.files);
+
+        if (files.length > 10) {
+            alert('アップロードできる写真は最大10枚までです。厳選した10枚をお願いします！');
+            input.value = '';
+            container.innerHTML = '';
+            resetTouristFileLabel(fileBtn);
+            return;
+        }
+
+        const dt = new DataTransfer();
+        container.innerHTML = ''; 
+
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            
+            // 💡 HEICの場合はJPGに変換
+            if (file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
+                try {
+                    const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg" });
+                    file = new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpg'), { type: "image/jpeg" });
+                } catch (error) {
+                    console.error("HEIC変換エラー:", error);
+                    continue; 
+                }
+            }
+            
+            dt.items.add(file);
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '65px';
+                img.style.height = '65px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '8px';
+                img.style.border = '1px solid #ddd';
+                container.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        input.files = dt.files;
+
+        if (dt.files.length > 0) {
+            fileBtn.innerHTML = '<i class="fa-solid fa-check" style="font-size: 24px; margin-bottom: 5px; display: block; color: #d35400;"></i>' + dt.files.length + '枚の画像を選択中（変換完了✨）';
+            fileBtn.style.borderColor = '#d35400';
+            fileBtn.style.color = '#d35400';
+            fileBtn.style.backgroundColor = '#fae5d3';
+        } else {
+            resetTouristFileLabel(fileBtn);
+        }
+    }
+
+    function resetTouristFileLabel(label) {
+        label.innerHTML = '<i class="fa-solid fa-camera" style="font-size: 24px; margin-bottom: 5px; display: block;"></i>タップまたは写真をここにドロップ';
+        label.style.borderColor = '#f0932b';
+        label.style.color = '#f0932b';
+        label.style.backgroundColor = '#fff4e6';
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        // 🌟 Controllerから「ガチャ結果」が送られてきた時だけ発動！
         @if(session('success') && session('reward_tip_title'))
             const tipContent = document.getElementById('rewardTipContent');
 
-            // 🌟 データベースから来たタイトルと本文をハメ込む！（色はオレンジ）
             tipContent.innerHTML = `
                 <div style="font-weight: bold; color: #f0932b; margin-bottom: 8px;">{{ session('reward_tip_title') }}</div>
                 <div style="color: #333; line-height: 1.6; font-size: 13px;">{{ session('reward_tip_text') }}</div>
@@ -150,7 +223,6 @@
             const flashMsg = document.getElementById('flash-message');
             if (flashMsg) flashMsg.style.display = 'none';
 
-            // 🌟 修正：正しいID（touristRewardModal）を開く指令！
             setTimeout(() => { document.getElementById('touristRewardModal').classList.add('is-show'); }, 100);
         @endif
     });

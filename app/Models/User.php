@@ -6,6 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Review;
+use App\Models\Spot;
+use App\Models\TouristSpot;
 
 class User extends Authenticatable
 {
@@ -45,15 +48,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
     // ユーザーが書いたレビューを引っ張るための電線
     public function reviews()
     {
         return $this->hasMany(Review::class);
     }
+
     public function bookmarks()
     {
         return $this->belongsToMany(Spot::class, 'bookmarks')->withTimestamps();
     }
+
+    // 🌟 追加：学習スポット（Spot）とのお気に入り（bookmarksテーブル）の繋がり
+    public function bookmarkedStudySpots()
+    {
+        return $this->belongsToMany(Spot::class, 'bookmarks', 'user_id', 'spot_id')->withTimestamps();
+    }
+
     // 🌟 ユーザーが保存した観光スポット一覧を取得
     public function bookmarkedTouristSpots()
     {

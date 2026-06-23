@@ -63,8 +63,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
-
-
+    // 🌟 スポット削除用のルートを開通！
+    Route::delete('/spots/{id}', [\App\Http\Controllers\SpotController::class, 'destroy'])->name('spots.destroy');
+    Route::post('/spots/photos/reorder', [App\Http\Controllers\SpotController::class, 'reorderPhotos'])->name('spots.photos.reorder')->middleware('auth');
     // ==========================================
     // 2階：観光スポット用の管理機能（🌟新しく追加！）
     // ==========================================

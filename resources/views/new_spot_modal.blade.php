@@ -9,9 +9,10 @@
     .rating-label { flex: 1; text-align: center; background-color: #f4f8fb; border: 1px solid #c9d8e4; border-radius: 8px; padding: 10px 0; cursor: pointer; font-size: 16px; font-weight: bold; color: #555; transition: all 0.2s ease; }
     .rating-radio:checked+.rating-label { background-color: #1e8b9b; color: white; border-color: #1e8b9b; }
 
+    /* 🌟 ドラッグ＆ドロップ対応の統一CSS */
     .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
     .file-upload-btn { background-color: #f4f8fb; border: 2px dashed #4a82b3; color: #4a82b3; padding: 20px; border-radius: 8px; font-weight: bold; text-align: center; display: block; cursor: pointer; transition: 0.2s; }
-    .file-upload-input { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; }
+    .file-upload-input { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; width: 100%; }
 
     @media (max-width: 768px) {
         .modal-content { width: 95%; padding: 15px; }
@@ -21,6 +22,8 @@
         .time-input-group span { display: none; }
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.3/dist/heic2any.min.js"></script>
 
 <div class="custom-modal" id="newSpotModal">
     <div class="modal-content" style="padding: 0;">
@@ -87,11 +90,11 @@
             </div>
 
             <div style="margin-bottom: 25px;">
-                <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px;">📸 スポットの外観・内観写真（最大4枚まで選択可）</label>
+                <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px;">📸 スポットの外観・内観写真（最大10枚・ドラッグ可）</label>
                 <div class="file-upload-wrapper">
                     <div class="file-upload-btn" id="newSpotFileBtn">
                         <i class="fa-solid fa-camera" style="font-size: 24px; margin-bottom: 5px; display: block;"></i>
-                        タップして写真を選択
+                        タップまたは写真をここにドロップ
                     </div>
                     <input type="file" name="photos[]" multiple accept="image/*" class="file-upload-input" id="newSpotFileInput" onchange="previewSpotPhotos(event)">
                 </div>
@@ -156,8 +159,7 @@
     </div>
 </div>
 
- 
-   <script>
+<script>
     function toggleTimeInput() {
         const type = document.querySelector('input[name="hours_type"]:checked').value;
         const timeInputArea = document.getElementById('timeInputArea');
@@ -177,38 +179,44 @@
         }
     }
 
-    // 初期状態のセット
     document.addEventListener('DOMContentLoaded', toggleTimeInput);
 
-    function previewSpotPhotos(event) {
+    // 🌟 HEIC対応・非同期版のプレビュー関数
+    async function previewSpotPhotos(event) {
         const container = document.getElementById('photoPreviewContainer');
         const newSpotLabel = document.getElementById('newSpotFileBtn');
-        container.innerHTML = ''; 
-        const files = event.target.files;
-
-        if (files.length > 4) {
-            alert('アップロードできる写真は最大4枚までです。厳選した4枚をお願いします！');
-            event.target.value = '';
-            newSpotLabel.innerHTML = '<i class="fa-solid fa-camera" style="font-size: 24px; margin-bottom: 5px; display: block;"></i>タップして写真を選択';
-            newSpotLabel.style.borderColor = '#4a82b3';
-            newSpotLabel.style.color = '#4a82b3';
-            newSpotLabel.style.backgroundColor = '#f4f8fb';
+        container.innerHTML = '<span style="font-size: 12px; color: #666;">処理中...少しお待ちください⏳</span>'; 
+        
+        const input = event.target;
+        const files = Array.from(input.files);
+        
+        if (files.length > 10) {
+            alert('アップロードできる写真は最大10枚までです。厳選した10枚をお願いします！');
+            input.value = '';
+            container.innerHTML = '';
+            resetFileLabel(newSpotLabel);
             return;
         }
 
-        if (files.length > 0) {
-            newSpotLabel.innerHTML = '<i class="fa-solid fa-check" style="font-size: 24px; margin-bottom: 5px; display: block; color: #297a6a;"></i>' + files.length + '枚の画像を選択中';
-            newSpotLabel.style.borderColor = '#297a6a';
-            newSpotLabel.style.color = '#297a6a';
-            newSpotLabel.style.backgroundColor = '#f0faf8';
-        } else {
-            newSpotLabel.innerHTML = '<i class="fa-solid fa-camera" style="font-size: 24px; margin-bottom: 5px; display: block;"></i>タップして写真を選択';
-            newSpotLabel.style.borderColor = '#4a82b3';
-            newSpotLabel.style.color = '#4a82b3';
-            newSpotLabel.style.backgroundColor = '#f4f8fb';
-        }
+        const dt = new DataTransfer();
+        container.innerHTML = ''; 
 
-        Array.from(files).forEach(file => {
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            
+            // 💡 HEICの場合はJPGに変換
+            if (file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
+                try {
+                    const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg" });
+                    file = new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpg'), { type: "image/jpeg" });
+                } catch (error) {
+                    console.error("HEIC変換エラー:", error);
+                    continue; 
+                }
+            }
+            
+            dt.items.add(file);
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = document.createElement('img');
@@ -221,15 +229,31 @@
                 container.appendChild(img);
             };
             reader.readAsDataURL(file);
-        });
+        }
+
+        input.files = dt.files;
+
+        if (dt.files.length > 0) {
+            newSpotLabel.innerHTML = '<i class="fa-solid fa-check" style="font-size: 24px; margin-bottom: 5px; display: block; color: #297a6a;"></i>' + dt.files.length + '枚の画像を選択中（変換完了✨）';
+            newSpotLabel.style.borderColor = '#297a6a';
+            newSpotLabel.style.color = '#297a6a';
+            newSpotLabel.style.backgroundColor = '#f0faf8';
+        } else {
+            resetFileLabel(newSpotLabel);
+        }
+    }
+
+    function resetFileLabel(label) {
+        label.innerHTML = '<i class="fa-solid fa-camera" style="font-size: 24px; margin-bottom: 5px; display: block;"></i>タップまたは写真をここにドロップ';
+        label.style.borderColor = '#4a82b3';
+        label.style.color = '#4a82b3';
+        label.style.backgroundColor = '#f4f8fb';
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // 🌟 Controllerから「ガチャ結果」が送られてきた時だけ発動！
         @if(session('success') && session('reward_tip_title'))
             const tipContent = document.getElementById('rewardTipContent');
             
-            // 🌟 データベースから来たタイトルと本文をハメ込む！
             tipContent.innerHTML = `
                 <div style="font-weight: bold; color: #1e8b9b; margin-bottom: 8px;">{{ session('reward_tip_title') }}</div>
                 <div style="color: #333; line-height: 1.6; font-size: 13px;">{{ session('reward_tip_text') }}</div>
