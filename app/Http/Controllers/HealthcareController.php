@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\HospitalTest;
+use App\Models\Hospital;
 use Carbon\Carbon;
 
 class HealthcareController extends Controller
@@ -10,7 +10,7 @@ class HealthcareController extends Controller
     public function index()
     {
         // 病院一覧取得
-        $hospitals = HospitalTest::with('images')
+        $hospitals = Hospital::with('images')
             ->orderBy('is_clinic')
             ->orderBy('duration_walk')
             ->get();
@@ -24,7 +24,7 @@ class HealthcareController extends Controller
         $faqController = new \App\Http\Controllers\FaqController();
         $faqCategories = $faqController->getFaqData();
 
-        $faqCategories = \App\Models\FaqCategoryTest::with('faqs')->get();
+        $faqCategories = \App\Models\FaqCategory::with('faqs')->get();
 
         return view('healthcare.index', compact('hospitals', 'doctorStatus', 'faqCategories'));
     }   

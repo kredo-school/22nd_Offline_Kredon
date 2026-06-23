@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class HospitalTest extends Model
+class Hospital extends Model
 {
     protected $table = 'hospitals_test';
 
@@ -15,6 +15,22 @@ class HospitalTest extends Model
     {
         return $this->hasMany(HospitalImage::class, 'hospital_id');
     }
+
+    // ブックマークとのリレーション
+    public function bookmarks()
+    {
+        return $this->morphMany(Bookmark::class, 'bookmarkable');
+    }
+
+    // ブックマークされているか判定するメソッド
+    public function isBookmarkedBy($user)
+    {
+        if (!$user) {
+            return false;
+        }
+        return $this->bookmarks()->where('user_id', $user->id)->exists;
+    }
+
     // 営業中かを判定するメソッド
     public function isCurrentlyOpen()
     {

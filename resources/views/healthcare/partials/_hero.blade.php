@@ -1,20 +1,20 @@
-<div class="card border-0 overflow-hidden shadow-sm">
-    <div class="p-5" style="background-color: #d7ebe6">
-        
+<div class="hs-hero">
+    <div class="hs-hero__inner">
+
         <div class="row align-items-center">
 
             {{-- テキスト --}}
             <div class="col-12 col-md-8">
-                <h1 class="fw-bold mb-3">
+                <h1 class="hs-hero__title">
                     Kredon Student Healthcare Support
                 </h1>
 
-                <p class="text-muted mb-4">
+                <p class="hs-hero__desc">
                     病院探し・海外旅行保険・緊急時対応を
                     Kredo生向けに案内します。
                 </p>
 
-                <div class="d-flex flex-column flex-sm-row flex-wrap gap-2 align-items-start align-items-sm-center">
+                <div class="hs-hero__tags">
                     <span class="text-dark">病院検索</span>
                     <span class="badge bg-success fs-6">海外旅行保険</span>
                     <span class="badge bg-success fs-6">JHDサポート</span>
@@ -23,8 +23,8 @@
             </div>
 
             {{-- アイコン --}}
-            <div class="col-12 col-md-4 text-center mt-4 mt-md-0">
-                <i class="fa-solid fa-heart-pulse" style="font-size:80px; color:#0ea58a;"></i>
+            <div class="col-12 col-md-4 text-center">
+                <i class="fa-solid fa-heart-pulse hs-hero__icon"></i>
             </div>
 
         </div>

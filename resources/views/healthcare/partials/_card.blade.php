@@ -2,20 +2,24 @@
     @foreach($hospitals as $hospital)
     <div class="col-12 col-lg-6">
         {{-- hs-card クラスを適用 --}}
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-light-gray hs-card">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden hs-card-bg hs-card">
             
             {{-- hospital-image-container を指定 --}}
-            <div class="hospital-image-container">
+            <div class="hs-image-container">
                 @php
                     $image = $hospital->images->first();
                 @endphp
 
                 {{-- hospital-image クラスを指定 --}}
                 <img src="{{ $image ? asset('storage/' . $image->image_path) : asset('images/default-hospital.jpg') }}"
-                     class="hospital-image"
+                     class="hs-image"
                      alt="{{ $hospital->name }}">
                 
-                <button type="button" class="btn-bookmark" aria-label="ブックマーク">
+                <button type="button" 
+                        class="hs-btn-bookmark {{ $hospital->isBookmarkedBy(auth()->user()) ? 'is-active' : '' }}" 
+                        aria-label="ブックマーク"
+                        data-id="{{ $hospital->id }}"
+                        data-type="App\Models\Hospital">
                     <i class="fa-solid fa-bookmark"></i>
                 </button>
             </div>

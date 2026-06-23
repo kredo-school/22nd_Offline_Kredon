@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Faq;
 
-class FaqCategoryTest extends Model
+class Faqcategory extends Model
 {   
     protected $table = 'faq_categories_test'; 
 
@@ -12,6 +13,6 @@ class FaqCategoryTest extends Model
 
     public function faqs()
     {
-        return $this->hasMany(FaqTest::class,'faq_category_id');    
+        return $this->hasMany(Faq::class,'faq_category_id');    
     }
 }

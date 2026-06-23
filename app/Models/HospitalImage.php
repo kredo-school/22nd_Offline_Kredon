@@ -12,6 +12,6 @@ class HospitalImage extends Model
 
     public function hospital()
     {
-        return $this->belongsTo(HospitalTest::class, 'hospital_id');
+        return $this->belongsTo(Hospital::class, 'hospital_id');
     }
 }

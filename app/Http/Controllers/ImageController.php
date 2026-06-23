@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\HospitalTest;
+use App\Models\Hospital;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreHospitalImageRequest;
 
@@ -14,7 +14,7 @@ class ImageController extends Controller
 
         $path = $request->file('image')->store('hospital', 'public');
 
-        $hospital = HospitalTest::findOrFail($hospitalId);
+        $hospital = Hospital::findOrFail($hospitalId);
         
         $hospital -> images()->create([
             'image_path' => $path,

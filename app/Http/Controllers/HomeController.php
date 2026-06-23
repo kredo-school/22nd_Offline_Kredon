@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\FaqCategoryTest;
+use App\Models\FaqCategory;
 class HomeController extends Controller
 {
     /**
