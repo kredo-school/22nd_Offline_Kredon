@@ -1,11 +1,12 @@
 import './bootstrap';
 
 import Swiper from 'swiper';
-import { Pagination, Autoplay } from 'swiper/modules';
+import { Pagination, Autoplay, Navigation } from 'swiper/modules';
 
 // CSSのインポート
 import 'swiper/css';
 import 'swiper/css/pagination';
+import 'swiper/css/navigation'; 
 // ホームページ
-import './hp';
+import './homepage/hp';
 

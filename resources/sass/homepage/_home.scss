@@ -43,17 +43,57 @@ body {
 
 .hp-layout {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1.5rem; 
+    grid-template-columns: 3fr 1fr;
+    gap: 2rem; 
     align-items: start;
 }
 
 /* _hero.blade.php */
 .hp-hero-swiper {
     width: 100%;
-    height: 400px;
+    min-width: 0;
+    height: 400px !important;
     border-radius: 16px;
     overflow: hidden;
+    position: relative;
+}
+
+.swiper-wrapper {
+    height: 100%;
+}
+
+.swiper-slide {
+    height: 100%;
+    display: flex; 
+}
+
+.hp-hero-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 15px;
+    height: 50px;
+    background: #f0f0f0;
+}
+
+/* 矢印ボタンをFlexbox内の要素として配置 */
+.hp-hero-controls .swiper-button-prev,
+.hp-hero-controls .swiper-button-next {
+    position: static !important; /* 絶対配置を完全に無効化 */
+    margin: 0 !important;
+    width: 30px !important;
+    height: 30px !important;
+    color: #000 !important;
+    background: #fff !important;
+    border-radius: 50%;
+    &::after { font-size: 1rem !important; }
+}
+
+/* インジケーターをFlexbox内の要素として配置 */
+.hp-hero-controls .swiper-pagination {
+    position: static !important;
+    width: auto !important;
 }
 
 .hp-banner-box {
@@ -66,7 +106,7 @@ body {
     justify-content: center;
     align-items: center;
     color: white;
-}
+    }
 
 .hp-banner-content {
     background: rgba(0,0,0,0.4);
@@ -139,11 +179,11 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
-    // height: 100%;
+    height: 100%;
     min-height: 300px;
     overflow: hidden;
 }
-.hp-post-header { display: flex; align-items: center; padding: 15px 15px 0 15px; }
+.hp-post-header { display: flex; align-items: center; padding: 15px 15px 0 15px;}
 
 .hp-avatar { width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; }
 
@@ -155,7 +195,7 @@ body {
 
 .hp-post-image { width: 100%; height: auto; border-radius: 20px; display: block; }
 
-.hp-post-body { padding: 0 15px 10px 15px; }
+.hp-post-body { padding: 0 15px 10px 15px; flex-grow: 1;}
 
 .hp-post-title { font-weight: bold; margin-bottom: 5px; }
 
@@ -163,7 +203,7 @@ body {
 
 .hp-post-tags { color: #0dcaf0; font-size: 0.8rem; margin-bottom: 10px; }
 
-.hp-post-footer { padding: 10px 15px 15px 15px; border-top: 1px solid #f8f8f8; display: flex; justify-content: space-between; font-size: 0.9rem; color: #555; }
+.hp-post-footer { padding: 10px 15px 15px 15px; border-top: 1px solid #f8f8f8; display: flex; justify-content: space-between; font-size: 0.9rem; color: #555; margin-top: auto;}
 
 /* _feed.blade.php */
 .hp-section { margin-bottom: 3rem; }
@@ -200,6 +240,11 @@ body {
 .hp-sort-pill.is-active { background: #0d6efd; border-color: #0d6efd; color: #fff; font-weight: 500; pointer-events: none; }
 
 /* _right_card.blade.php */
+.side-column {
+    min-width: 260px;
+    flex-shrink: 0;
+}
+
 .hp-sticky-container { position: sticky; top: 90px; width: 100%; }
 
 .hp-card { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 16px; height: 280px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 24px; }
@@ -224,9 +269,22 @@ body {
 
 .hp-ranking-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
 
-.hp-ranking-icon { width: 30px; text-align: center; flex-shrink: 0; }
+.hp-ranking-icon { width: 30px; text-align: center; flex-shrink: 0; font-size: 1.25rem; }
 
 .hp-rank-content { flex: 1; min-width: 0; }
+
+/* ランキング専用のアイコン色定義 */
+.rank-gold {
+    color: #FFD700; // ゴールド
+}
+
+.rank-silver {
+    color: #C0C0C0; // シルバー
+}
+
+.rank-bronze {
+    color: #CD7F32; // ブロンズ
+}
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
