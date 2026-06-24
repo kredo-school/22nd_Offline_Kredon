@@ -11,9 +11,6 @@
                 <h4 class="fw-bold mb-1">User Management</h4>
                 <p class="text-muted mb-0" style="font-size:0.85rem;">Control and manage all registered users</p>
             </div>
-            {{-- <a href="#" class="btn btn-dark px-4">
-                <i class="fa-solid fa-plus me-1"></i> Add New User
-            </a> --}}
         </div>
 
         {{-- ── Metric Cards ── --}}
@@ -61,6 +58,7 @@
                     <select class="form-select form-select-sm" style="width:auto;">
                         <option>Role</option>
                         <option>Member</option>
+                        <option>Premium-Member</option>
                         <option>Admin</option>
                     </select>
                     <div class="input-group input-group-sm" style="width:auto;">
@@ -105,7 +103,7 @@
                                         'name' => 'User @MikeB',
                                         'id' => '1203002',
                                         'email' => 'usermaskre7@gmail.com',
-                                        'role' => 'Member',
+                                        'role' => 'Premium-Member',
                                         'joined' => '2023-05-23 11:43 PM',
                                         'status' => 'Inactive',
                                         'login' => 5,
@@ -192,6 +190,7 @@
                                             $roleColor = match ($user['role']) {
                                                 'Admin' => 'danger',
                                                 'Member' => 'success',
+                                                'Premium-Member' => 'info',
                                                 default => 'primary',
                                             };
                                         @endphp
@@ -224,7 +223,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1 flex-wrap">
-                                            <button class="btn btn-outline-secondary btn-sm py-0 px-2">Edit</button>
+                                            {{-- <button class="btn btn-outline-secondary btn-sm py-0 px-2">Edit</button> --}}
 
                                             {{-- ── 右側のRoleドロップダウン ── --}}
                                             <div class="btn-group">
@@ -232,6 +231,7 @@
                                                     class="btn 
                                                                 @if ($user['role'] == 'Admin') btn-outline-danger 
                                                                 @elseif($user['role'] == 'Member') btn-outline-success 
+                                                                @elseif($user['role'] == 'Premium-Member') btn-outline-info 
                                                                 @else btn-outline-primary @endif btn-sm py-0 px-2 dropdown-toggle"
                                                                                     data-bs-toggle="dropdown" aria-expanded="false">
                                                     {{ $user['role'] }}
@@ -253,6 +253,9 @@
                                                         },
                                                         'Member': {
                                                             color: 'btn-outline-primary'
+                                                        },
+                                                        'Premium-Member': {
+                                                            color: 'btn-outline-info'
                                                         }
                                                     };
 
@@ -262,6 +265,9 @@
                                                         },
                                                         'Member': {
                                                             color: 'bg-primary'
+                                                        },
+                                                        'Premium-Member': {
+                                                            color: 'bg-info'
                                                         }
                                                     };
 
@@ -402,7 +408,7 @@
                                                 })();
                                             </script>
 
-                                            <button class="btn btn-outline-secondary btn-sm py-0 px-2">View</button>
+                                            <button class="btn btn-outline-secondary btn-sm py-0 px-2">Detail</button>
                                         </div>
                                     </td>
                                 </tr>

@@ -27,10 +27,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['middleware' => 'auth'], function () {
 
+    //Admin
     Route::group(['middleware' => 'auth'], function () {
 
-        // とりあえず表示させるため、一時的に 'middleware' => 'admin' を消す
-        Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+        Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
 
             #Dashboard
             Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -50,23 +50,24 @@ Route::group(['middleware' => 'auth'], function () {
 
             #Analysis
             Route::get('analysis', [App\Http\Controllers\Admin\AnalysisController::class, 'index'])->name('analysis.index');
-           
-            #Notification
-            Route::get('notifications', [App\Http\Controllers\Admin\NotificationsController::class, 'index'])->name('notifications.index');
-            Route::resource('notifications', NotificationsController::class)
-                ->only(['store', 'update', 'destroy']);
-            Route::resource('notification-templates', NotificationTemplateController::class)
-                ->only(['store', 'update', 'destroy'])
-                ->names('notification-templates');
-
 
             #Spots
             Route::get('spots', [App\Http\Controllers\Admin\SpotsController::class, 'index'])->name('spots.index');
+
+            #Notification
+            // 固定パスのルートは resource より前に置く(順序が重要)
+            Route::patch('/notifications/{notification}/status', [NotificationsController::class, 'updateStatus'])
+                ->name('notifications.update-status');
+
+            Route::post('/notifications/mark-all-read', [NotificationsController::class, 'markAllRead'])
+                ->name('notifications.mark-all-read');
+
+            Route::resource('notifications', \App\Http\Controllers\Admin\NotificationsController::class)
+                ->only(['index', 'store', 'edit', 'update', 'destroy']);
+
+            Route::resource('notification-templates', NotificationTemplateController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->names('notification-templates');
         });
     });
-    #正規管理者ルート
-    // Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function(){
-
-    //     Route::get('index', [AdminController::class, 'index'])->name('index');
-    // });
 });

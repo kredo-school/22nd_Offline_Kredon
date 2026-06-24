@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-        {{-- Bootstrap--}}
+    {{-- Bootstrap --}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 
@@ -523,7 +523,7 @@
         }
     </style>
 
-    {{-- 各ページの @section('styles') がここに出力されます --}}
+    {{-- 各ページの @section('styles') がここに出力 --}}
     @yield('styles')
 </head>
 
@@ -532,7 +532,7 @@
 
         {{-- ══════════════════════════════════
          PC用 Topbar Navbar（md以上）
-    ══════════════════════════════════ --}}
+    　　　══════════════════════════════════ --}}
         <nav class="admin-navbar d-none d-md-flex">
             {{-- 右側アイコン --}}
             <div class="admin-navbar-icons">
@@ -542,10 +542,13 @@
                 </a>
 
                 {{-- 通知 --}}
-                <a href="#" class="icon-btn" title="Notifications">
+                <button type="button" class="icon-btn" title="Notifications" data-bs-toggle="modal"
+                    data-bs-target="#sentNotificationsModal" id="notifBellBtn">
                     <i class="fa-solid fa-bell"></i>
-                    <span class="badge-dot"></span>
-                </a>
+                    @if ($unreadNotificationsCount > 0)
+                        <span class="badge-dot" id="notifBadgeDot"></span>
+                    @endif
+                </button>
 
                 {{-- メッセージ --}}
                 <a href="#" class="icon-btn" title="Messages">
@@ -609,11 +612,14 @@
                     <i class="fa-solid fa-arrow-up-right-from-square fa-sm"></i>
                 </a>
 
-                <a href="#" class="icon-btn position-relative me-2">
+                <button type="button" class="icon-btn position-relative me-2" data-bs-toggle="modal"
+                    data-bs-target="#sentNotificationsModal" id="notifBellBtnMobile">
                     <i class="fa-solid fa-bell"></i>
-                    <span class="position-absolute badge rounded-pill bg-danger"
-                        style="font-size:0.5rem;padding:2px 4px;top:-3px;right:-5px;">2</span>
-                </a>
+                    @if ($unreadNotificationsCount > 0)
+                        <span class="position-absolute badge rounded-pill bg-danger" id="notifBadgeMobile"
+                            style="font-size:0.5rem;padding:2px 4px;top:-3px;right:-5px;">{{ $unreadNotificationsCount }}</span>
+                    @endif
+                </button>
 
                 {{-- メッセージ --}}
                 <a href="#" class="icon-btn me-2" title="Messages">
@@ -667,21 +673,15 @@
             </div>
         </div>
 
-        {{-- ══════════════════════════════════
-         Drawer Overlay
-    ══════════════════════════════════ --}}
+        {{--   Drawer Overlay  --}}
         <div class="drawer-overlay" id="adminDrawerOverlay" onclick="closeAdminDrawer()"></div>
 
-        {{-- ══════════════════════════════════
-         スマホ用ドロワー
-    ══════════════════════════════════ --}}
+        {{--  スマホ用ドロワー    --}}
         <div class="admin-mobile-drawer" id="adminMobileDrawer">
             @include('layouts.admin-sidebar')
         </div>
 
-        {{-- ══════════════════════════════════
-         メインラッパー
-    ══════════════════════════════════ --}}
+        {{--  メインラッパー --}}
         <div class="admin-main-wrapper">
 
             {{-- PC用左サイドバー --}}
@@ -697,8 +697,126 @@
                 {{-- @push('scripts') を使っているページ用に維持 --}}
                 @stack('scripts')
             </main>
-
         </div>
+
+        {{--  Sent Notifications Modal --}}
+        <div class="modal fade" id="sentNotificationsModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">
+                            <i class="fa-solid fa-bell me-2 text-secondary"></i>Notifications
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body p-0" style="max-height: 70vh; overflow-y: auto;">
+                        @forelse ($sentNotifications as $notif)
+                            @php
+                                $categoryBadgeMap = [
+                                    'system' => [
+                                        'bg' => '#E6F1FB',
+                                        'color' => '#0C447C',
+                                        'icon' => 'fa-gear',
+                                        'label' => 'System',
+                                    ],
+                                    'comment' => [
+                                        'bg' => '#EAF3DE',
+                                        'color' => '#3B6D11',
+                                        'icon' => 'fa-comment',
+                                        'label' => 'Comment',
+                                    ],
+                                    'reply' => [
+                                        'bg' => '#EAF3DE',
+                                        'color' => '#3B6D11',
+                                        'icon' => 'fa-reply',
+                                        'label' => 'Reply',
+                                    ],
+                                    'like' => [
+                                        'bg' => '#FDEEF1',
+                                        'color' => '#A3275B',
+                                        'icon' => 'fa-heart',
+                                        'label' => 'Like',
+                                    ],
+                                    'event' => [
+                                        'bg' => '#FFF4E0',
+                                        'color' => '#9A6700',
+                                        'icon' => 'fa-calendar-day',
+                                        'label' => 'Event',
+                                    ],
+                                    'item_alert' => [
+                                        'bg' => '#EEEDFE',
+                                        'color' => '#534AB7',
+                                        'icon' => 'fa-shop',
+                                        'label' => 'Item Alert',
+                                    ],
+                                    'digest' => [
+                                        'bg' => '#E6F1FB',
+                                        'color' => '#0C447C',
+                                        'icon' => 'fa-cubes',
+                                        'label' => 'Digest',
+                                    ],
+                                ];
+                                $badge = $categoryBadgeMap[$notif->category] ?? [
+                                    'bg' => '#F1F1F1',
+                                    'color' => '#555',
+                                    'icon' => 'fa-tag',
+                                    'label' => $notif->category,
+                                ];
+
+                                $targetLabelMap = [
+                                    'all' => 'All Users',
+                                    'subscriber' => 'Subscribers',
+                                    'custom' => 'Custom',
+                                ];
+                                $targetLabel = $targetLabelMap[$notif->target_type] ?? $notif->target_type;
+
+                                $isUnread = !in_array($notif->id, $readNotificationIds);
+                            @endphp
+                            <div
+                                class="d-flex align-items-start gap-3 px-4 py-3 border-bottom {{ $isUnread ? 'bg-light' : '' }}">
+                                <span class="badge rounded-pill mt-1"
+                                    style="background-color:{{ $badge['bg'] }}; color:{{ $badge['color'] }}; font-weight:500; flex-shrink:0;">
+                                    <i class="fa-solid {{ $badge['icon'] }} me-1"></i>{{ $badge['label'] }}
+                                </span>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <p class="fw-semibold mb-1" style="font-size:0.88rem;">{{ $notif->title }}
+                                        </p>
+                                        @if ($isUnread)
+                                            <span class="badge bg-primary rounded-pill"
+                                                style="font-size:0.6rem;">NEW</span>
+                                        @endif
+                                    </div>
+                                    <p class="text-muted mb-1 text-truncate"
+                                        style="font-size:0.8rem; max-width: 420px;">
+                                        {{ $notif->body }}
+                                    </p>
+                                    <p class="text-muted mb-0" style="font-size:0.72rem;">
+                                        Target: {{ $targetLabel }} ・
+                                        {{ optional($notif->sent_at)->format('Y-m-d H:i') }}
+                                    </p>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center text-muted py-5">
+                                <i class="fa-solid fa-bell-slash fa-2x mb-2"></i>
+                                <p class="mb-0">No notifications sent yet.</p>
+                            </div>
+                        @endforelse
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="{{ route('admin.notifications.index', ['tab' => 'list']) }}"
+                            class="btn btn-outline-secondary btn-sm">
+                            View All in Notification Management
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -713,6 +831,30 @@
             document.getElementById('adminMobileDrawer').classList.remove('open');
             document.getElementById('adminDrawerOverlay').classList.remove('open');
             document.body.style.overflow = '';
+        }
+
+        // 通知の既読機能
+        // ── 通知モーダルを開いたら既読にする ──
+        const sentNotifModalEl = document.getElementById('sentNotificationsModal');
+        if (sentNotifModalEl) {
+            sentNotifModalEl.addEventListener('shown.bs.modal', function() {
+                fetch('{{ route('admin.notifications.mark-all-read') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json',
+                        },
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('notifBadgeDot')?.remove();
+                            document.getElementById('notifBadgeMobile')?.remove();
+                        }
+                    })
+                    .catch(err => console.error('Mark as read failed:', err));
+            });
         }
 
         // スワイプで閉じる（修正版）
@@ -762,7 +904,6 @@
         // }
     </script>
 
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script> --}}
 </body>
 
 </html>

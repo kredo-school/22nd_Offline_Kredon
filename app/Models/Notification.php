@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notification extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'notifications';
 
@@ -45,6 +46,11 @@ class Notification extends Model
     public function recipient(): BelongsTo
     {
         return $this->belongsTo(User::class, 'recipient_id');
+    }
+
+    public function reads()
+    {
+        return $this->hasMany(NotificationRead::class);
     }
 
     // --- Scopes ---
@@ -84,7 +90,7 @@ class Notification extends Model
         return $query->where('status', 'pending')
             ->where(function ($q) {
                 $q->whereNull('scheduled_at')
-                  ->orWhere('scheduled_at', '<=', now());
+                    ->orWhere('scheduled_at', '<=', now());
             });
     }
 
