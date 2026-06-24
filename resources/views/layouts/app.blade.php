@@ -329,18 +329,10 @@
         ══════════════════════════════════ --}}
         <nav class="navbar navbar-light bg-white border-bottom navbar-top shadow-sm d-none d-md-flex">
             <div class="container-fluid px-4">
-                {{-- <form class="d-flex mx-auto" style="width:40%;">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-0">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </span>
-                        <input class="form-control bg-light border-0" type="search" placeholder="Search here...">
-                    </div>
-                </form> --}}
-
+               
                 <ul class="navbar-nav ms-auto align-items-center flex-row gap-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa-solid fa-house-chimney fa-lg"></i></a>
+                        <a class="nav-link" href="{{ ('/home') }}"><i class="fa-solid fa-house-chimney fa-lg"></i></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="#">
@@ -352,6 +344,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fa-regular fa-envelope fa-lg"></i></a>
                     </li>
+
+                    {{-- User drop down --}}
                     <div class="vr mx-1"></div>
                     @guest
                         @if (Route::has('login'))
@@ -385,7 +379,7 @@
                                 </li>
                                 @if (Auth::user()->role == 1)
                                     <li>
-                                        <a class="dropdown-item fw-bold" href="#" style="color: darkcyan;">
+                                        <a class="dropdown-item fw-bold" href="{{ route('admin.dashboard') }}" style="color: darkcyan;">
                                             <i class="fa-solid fa-shield-halved me-2"></i>Admin Page
                                         </a>
                                     </li>
@@ -412,7 +406,7 @@
         <nav class="navbar-top bg-white border-bottom shadow-sm d-flex d-md-none">
             <div class="mobile-topbar w-100">
                 {{-- ロゴ中央 --}}
-                <a href="{{ url('/') }}">
+                <a href="{{ url('/home') }}">
                     <img src="{{ asset('images/kredon.png') }}" alt="Kredon" class="logo-img">
                 </a>
 
@@ -463,7 +457,7 @@
                                 </li>
                                 @if (Auth::user()->role === 1)
                                     <li>
-                                        <a class="dropdown-item fw-bold" href="#" style="color: darkcyan;">
+                                        <a class="dropdown-item fw-bold" href="{{ route('admin.dashboard') }}" style="color: darkcyan;">
                                             <i class="fa-solid fa-shield-halved me-2"></i>Admin Page
                                         </a>
                                     </li>
@@ -546,7 +540,7 @@
         <div class="main-wrapper">
             <aside class="sidebar-left d-none d-md-block">
                 <div class="py-2">
-                    <a class="d-block text-center" href="{{ url('/') }}">
+                    <a class="d-block text-center" href="{{ url('/home') }}">
                         <img src="{{ asset('images/kredon.png') }}" alt="Logo"
                             style="height:130px;width:auto;object-fit:contain; margin-bottom: -30px; margin-top: -20px;">
                     </a>
