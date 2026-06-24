@@ -112,7 +112,7 @@
                     </div>
 
                     @if($user->two_factor_enabled)
-                        {{ ON状態: 押すと無効化される }}
+                        {{-- ON状態: 押すと無効化される --}}
                         <form action="{{ route('settings.two-factor.disable') }}" method="POST">
                             @csrf
                             @method('DELETE')
@@ -444,65 +444,4 @@
         </div>
     </div>
 </dialog>
-
-
-{{--
-    ライブプレビュー同期JS
-    モーダル入力 → 右サイドバーのプレビューを即時反映（DB保存前のUX向上）
-    @push('scripts'): layouts.app の @stack('scripts') に出力される
---}}
-@push('scripts')
-<script>
-(function () {
-    'use strict';
-
-    const previewName   = document.getElementById('preview-name');
-    const previewHandle = document.getElementById('preview-handle');
-    const previewBio    = document.getElementById('preview-bio');
-    const previewAvatar = document.getElementById('preview-avatar');
-    const displayName   = document.getElementById('display-name');
-    const displayBio    = document.getElementById('display-bio');
-    const rowAvatarChar = document.getElementById('row-avatar-char');
-
-    const defaultUsername = @json($user->username);
-    const defaultName     = @json($user->name);
-
-    /** 表示名・ユーザーIDの変更をプレビューと設定行へ反映 */
-    function syncUsername() {
-        const name   = document.getElementById('name')?.value || defaultName;
-        const handle = document.getElementById('username')?.value || defaultUsername;
-
-        if (previewName)   previewName.textContent = name;
-        if (previewHandle) previewHandle.textContent = '@' + handle;
-        if (previewAvatar && !previewAvatar.querySelector('img')) {
-            previewAvatar.textContent = name.charAt(0);
-        }
-        if (rowAvatarChar) rowAvatarChar.textContent = name.charAt(0);
-        if (displayName) {
-            displayName.innerHTML = `${name} <span class="st-setting-item__handle">@${handle}</span>`;
-        }
-    }
-
-    document.getElementById('name')?.addEventListener('input', syncUsername);
-    document.getElementById('username')?.addEventListener('input', syncUsername);
-
-    document.getElementById('bio')?.addEventListener('input', function () {
-        if (previewBio)  previewBio.textContent  = this.value;
-        if (displayBio)  displayBio.textContent  = this.value;
-    });
-
-    document.getElementById('avatar_input')?.addEventListener('change', function () {
-        const file = this.files[0];
-        if (!file || !previewAvatar) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            previewAvatar.innerHTML =
-                `<img src="${e.target.result}" alt="プレビュー" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-        };
-        reader.readAsDataURL(file);
-    });
-})();
-</script>
-@endpush
-
 @endsection

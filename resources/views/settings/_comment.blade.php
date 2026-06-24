@@ -4,7 +4,7 @@
 
 <div class="st-page">
 
-    {{ メイン: コメント・安全設定 }}
+    {{-- メイン: コメント・安全設定 --}}
     <div class="st-page__main">
 
         <section class="st-card st-card--account" aria-labelledby="comment-heading">
@@ -295,29 +295,4 @@
     </aside>
 
 </div>
-
-
-{{--
-    セグメントコントロールの見た目同期
-    ラジオボタン選択時に .is-active クラスを切り替える
---}}
-@push('scripts')
-<script>
-(function () {
-    'use strict';
-
-    document.querySelectorAll('.st-segment').forEach(function (group) {
-        group.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                group.querySelectorAll('.st-segment__btn').forEach(function (btn) {
-                    btn.classList.remove('is-active');
-                });
-                this.closest('.st-segment__btn').classList.add('is-active');
-            });
-        });
-    });
-})();
-</script>
-@endpush
-
 @endsection
