@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
 
 class ItemPost extends Model
@@ -15,10 +16,11 @@ class ItemPost extends Model
         'status',
     ];
 
-    public function images()
-    {
-        return $this->hasMany(ItemImage::class);
-    }
+
+public function images()
+{
+    return $this->hasMany(Image::class);
+}
 
     public function user()
     {
