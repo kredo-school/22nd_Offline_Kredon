@@ -51,6 +51,7 @@ class User extends Authenticatable
         ];
     }
 
+
     // 標準の Notifiable::notifications() と名前が衝突するため appNotifications にしています
 
     public function appNotifications(): HasMany

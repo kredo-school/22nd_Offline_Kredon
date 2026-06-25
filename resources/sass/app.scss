@@ -5,4 +5,26 @@
 @import 'variables';
 
 // Bootstrap
+
+// usersettings
 @import 'bootstrap/scss/bootstrap';
+@import 'usersettings/settings';
+@import 'usersettings/shared';
+@import 'usersettings/accounts';
+@import 'usersettings/notifications';
+@import 'usersettings/comments';
+@import 'usersettings/privacy';
+@import 'usersettings/display';
+@import 'usersettings/app';
+
+/*
+ * app.blade.php の .navbar-top は position:fixed; height:70px。
+ * デスクトップ用インラインCSSで .content-body { margin-top: 0 !important } となっており、
+ * 設定ページ上部がヘッダーに隠れる。app.blade.php は触れないため SCSS で上書きする。
+ */
+/* app.scss の末尾 */
+@media (min-width: 768px) {
+    .content-body {
+        margin-top: 70px !important;
+    }
+}
