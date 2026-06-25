@@ -335,10 +335,13 @@
                         <a class="nav-link" href="{{ ('/home') }}"><i class="fa-solid fa-house-chimney fa-lg"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link position-relative" href="#">
+                        <a class="nav-link position-relative" href="#" data-bs-toggle="modal"
+                            data-bs-target="#userNotificationsModal" id="notifBellBtnPC">
                             <i class="fa-solid fa-bell fa-lg"></i>
-                            <span
-                                class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+                            @if (($unreadNotificationsCount ?? 0) > 0)
+                                <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger"
+                                    id="notifBadgePC">{{ $unreadNotificationsCount }}</span>
+                            @endif
                         </a>
                     </li>
                     <li class="nav-item">
@@ -412,10 +415,14 @@
 
                 {{-- 右アイコン --}}
                 <div class="mobile-topbar-icons">
-                    <a href="#" class="position-relative">
+                     <a href="#" class="position-relative" data-bs-toggle="modal"
+                        data-bs-target="#userNotificationsModal" id="notifBellBtnMobile">
                         <i class="fa-solid fa-bell"></i>
-                        <span class="position-absolute badge rounded-pill bg-danger"
-                            style="font-size:0.55rem;padding:2px 4px;top:-4px;right:-6px;">2</span>
+                        @if (($unreadNotificationsCount ?? 0) > 0)
+                            <span class="position-absolute badge rounded-pill bg-danger"
+                                style="font-size:0.55rem;padding:2px 4px;top:-4px;right:-6px;"
+                                id="notifBadgeMobile">{{ $unreadNotificationsCount }}</span>
+                        @endif
                     </a>
                     <a href="#">
                         <i class="fa-regular fa-envelope"></i>
@@ -617,10 +624,38 @@
                 @yield('content')
                 @stack('scripts')
             </main>
+
+            @include('layouts.notif-modal')
         </div>
     </div>
 
     <script>
+         // ── ユーザー通知モーダル：開いたら一括既読化 ──
+        const userNotifModalEl = document.getElementById('userNotificationsModal');
+        if (userNotifModalEl) {
+            userNotifModalEl.addEventListener('shown.bs.modal', function () {
+                fetch('{{ route("notifications.mark-all-read") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('notifBadgePC')?.remove();
+                        document.getElementById('notifBadgeMobile')?.remove();
+                        document.querySelectorAll('.notif-item.unread').forEach(el => {
+                            el.classList.remove('unread');
+                        });
+                    }
+                })
+                .catch(err => console.error('Mark as read failed:', err));
+            });
+        }
+
         // ── PC SPOTサブメニュー ──
         function toggleSpotPC(e) {
             e.preventDefault();
