@@ -16,6 +16,9 @@ use App\Http\Controllers\Admin\NotificationTemplateController;
 
 use App\Http\Controllers\Admin\SpotsController;
 
+#User Controller
+use App\Http\Controllers\NotificationsController as UserNotificationController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,9 +30,16 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['middleware' => 'auth'], function () {
 
+    // User
+        #notification
+    Route::post('/notifications/mark-all-read', [NotificationsController::class, 'markAllRead'])
+        ->name('notifications.mark-all-read');
+
+
+
+
     //Admin
     Route::group(['middleware' => 'auth'], function () {
-
         Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
 
             #Dashboard

@@ -730,7 +730,7 @@
                                     'reply' => [
                                         'bg' => '#EAF3DE',
                                         'color' => '#3B6D11',
-                                        'icon' => 'fa-reply',
+                                        'icon' => 'fa-reply',#3B6D11
                                         'label' => 'Reply',
                                     ],
                                     'like' => [

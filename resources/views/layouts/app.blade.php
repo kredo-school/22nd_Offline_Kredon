@@ -329,24 +329,19 @@
         ══════════════════════════════════ --}}
         <nav class="navbar navbar-light bg-white border-bottom navbar-top shadow-sm d-none d-md-flex">
             <div class="container-fluid px-4">
-                {{-- <form class="d-flex mx-auto" style="width:40%;">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-0">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </span>
-                        <input class="form-control bg-light border-0" type="search" placeholder="Search here...">
-                    </div>
-                </form> --}}
-
+               
                 <ul class="navbar-nav ms-auto align-items-center flex-row gap-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa-solid fa-house-chimney fa-lg"></i></a>
+                        <a class="nav-link" href="{{ ('/home') }}"><i class="fa-solid fa-house-chimney fa-lg"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link position-relative" href="#">
+                        <a class="nav-link position-relative" href="#" data-bs-toggle="modal"
+                            data-bs-target="#userNotificationsModal" id="notifBellBtnPC">
                             <i class="fa-solid fa-bell fa-lg"></i>
-                            <span
-                                class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+                            @if (($unreadNotificationsCount ?? 0) > 0)
+                                <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger"
+                                    id="notifBadgePC">{{ $unreadNotificationsCount }}</span>
+                            @endif
                         </a>
                     </li>
                     <li class="nav-item">
@@ -414,16 +409,20 @@
         <nav class="navbar-top bg-white border-bottom shadow-sm d-flex d-md-none">
             <div class="mobile-topbar w-100">
                 {{-- ロゴ中央 --}}
-                <a href="{{ url('/') }}">
+                <a href="{{ url('/home') }}">
                     <img src="{{ asset('images/kredon.png') }}" alt="Kredon" class="logo-img">
                 </a>
 
                 {{-- 右アイコン --}}
                 <div class="mobile-topbar-icons">
-                    <a href="#" class="position-relative">
+                     <a href="#" class="position-relative" data-bs-toggle="modal"
+                        data-bs-target="#userNotificationsModal" id="notifBellBtnMobile">
                         <i class="fa-solid fa-bell"></i>
-                        <span class="position-absolute badge rounded-pill bg-danger"
-                            style="font-size:0.55rem;padding:2px 4px;top:-4px;right:-6px;">2</span>
+                        @if (($unreadNotificationsCount ?? 0) > 0)
+                            <span class="position-absolute badge rounded-pill bg-danger"
+                                style="font-size:0.55rem;padding:2px 4px;top:-4px;right:-6px;"
+                                id="notifBadgeMobile">{{ $unreadNotificationsCount }}</span>
+                        @endif
                     </a>
                     <a href="#">
                         <i class="fa-regular fa-envelope"></i>
@@ -548,7 +547,7 @@
         <div class="main-wrapper">
             <aside class="sidebar-left d-none d-md-block">
                 <div class="py-2">
-                    <a class="d-block text-center" href="{{ url('/') }}">
+                    <a class="d-block text-center" href="{{ url('/home') }}">
                         <img src="{{ asset('images/kredon.png') }}" alt="Logo"
                             style="height:130px;width:auto;object-fit:contain; margin-bottom: -30px; margin-top: -20px;">
                     </a>
@@ -625,10 +624,38 @@
                 @yield('content')
                 @stack('scripts')
             </main>
+
+            @include('layouts.notif-modal')
         </div>
     </div>
 
     <script>
+         // ── ユーザー通知モーダル：開いたら一括既読化 ──
+        const userNotifModalEl = document.getElementById('userNotificationsModal');
+        if (userNotifModalEl) {
+            userNotifModalEl.addEventListener('shown.bs.modal', function () {
+                fetch('{{ route("notifications.mark-all-read") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('notifBadgePC')?.remove();
+                        document.getElementById('notifBadgeMobile')?.remove();
+                        document.querySelectorAll('.notif-item.unread').forEach(el => {
+                            el.classList.remove('unread');
+                        });
+                    }
+                })
+                .catch(err => console.error('Mark as read failed:', err));
+            });
+        }
+
         // ── PC SPOTサブメニュー ──
         function toggleSpotPC(e) {
             e.preventDefault();
