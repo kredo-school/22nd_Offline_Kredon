@@ -4,13 +4,16 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
+        'role',
     ];
 
     /**
@@ -46,16 +51,21 @@ class User extends Authenticatable
         ];
     }
 
-    // app/Models/User.php
-    public function characterTemps()
+
+    // 標準の Notifiable::notifications() と名前が衝突するため appNotifications にしています
+
+    public function appNotifications(): HasMany
     {
-        return $this->belongsTo (CharacterTemp::class, 'character_temp_ic');
+        return $this->hasMany(\App\Models\Notification::class, 'recipient_id');
     }
 
-    // 選択中キャラを取得（未選択ならデフォルトを返す）
-    public function getCharacterActiveAttribute()
+    public function unreadAppNotifications(): HasMany
     {
-        return $this->characterTemp
-        ?? CharacterTemp::where('is_default', 'true')->first;
+        return $this->appNotifications()->where('is_read', false);
+    }
+
+    public function notificationSubscriptions(): HasMany
+    {
+        return $this->hasMany(\App\Models\NotificationSubscription::class);
     }
 }
