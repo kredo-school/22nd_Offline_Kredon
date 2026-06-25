@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name') }} | @yield('title')</title>
@@ -39,8 +42,7 @@
         .main-wrapper {
             display: flex;
             flex-direction: column;
-            /* 🌟 スマホ対応：ナビバーの下に潜り込まないようにマージンを復活！ */
-            margin-top: 70px; 
+            margin-top: 70px;
             padding-top: 0;
             min-height: calc(100vh - 70px);
         }
@@ -69,7 +71,7 @@
             body,
             #app {
                 height: 100vh;
-                overflow: hidden; /* 全体のスクロールを止めるのは正解 */
+                overflow: hidden;
             }
 
             .navbar-top {
@@ -84,11 +86,10 @@
 
             .content-body {
                 margin-left: 200px;
-                /* 🌟 ここが最大の原因でした！高さを指定して overflow-y: auto; に変更！ */
-                height: calc(100vh - 70px); 
-                overflow-y: auto; 
+                height: calc(100vh - 70px);
+                overflow-y: auto;
                 background-color: #f8f9fa;
-                padding-bottom: 50px; /* 一番下までスクロールした時の余白 */
+                padding-bottom: 50px;
             }
         }
 
