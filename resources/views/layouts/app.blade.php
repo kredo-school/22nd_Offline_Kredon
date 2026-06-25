@@ -223,7 +223,7 @@
                     </ul>
                 </div>
             </div>
-        </nav>
+        </div>
 
         <div class="main-wrapper">
             <aside class="sidebar-left d-none d-md-block">

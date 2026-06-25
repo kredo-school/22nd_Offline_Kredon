@@ -1,0 +1,256 @@
+// コメント・安全設定タブ専用
+
+.st-toggle-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-top: 1px solid $st-border;
+
+    &__body { flex: 1; min-width: 0; }
+
+    &__label {
+        font-size: 13px;
+        font-weight: 600;
+        color: $st-text;
+        margin: 0 0 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    &__desc {
+        font-size: 12px;
+        color: $st-text-sub;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    &__action {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .st-toggle-row { padding: 16px 24px; }
+}
+
+// セグメントコントロール（NGワード強度）
+.st-segment__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: $st-text-sub;
+    margin: 0;
+    padding: 0 20px 8px;
+}
+
+.st-segment {
+    display: flex;
+    gap: 0;
+    padding: 0 20px 16px;
+
+    &__btn {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid $st-border;
+        background: $st-surface;
+        color: $st-text-sub;
+        cursor: pointer;
+        transition: background 0.12s, color 0.12s, border-color 0.12s;
+
+        &:first-child { border-radius: 8px 0 0 8px; }
+        &:last-child  { border-radius: 0 8px 8px 0; }
+        &:not(:first-child) { border-left: none; }
+
+        &.is-active {
+            background: $st-blue;
+            color: $st-surface;
+            border-color: $st-blue;
+        }
+
+        &:hover:not(.is-active) { background: $st-bg; }
+    }
+}
+
+@media (min-width: 768px) {
+    .st-segment__label { padding: 0 24px 8px; }
+    .st-segment { padding: 0 24px 20px; }
+}
+
+// リンク行（ブロック管理・履歴）
+.st-link-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-top: 1px solid $st-border;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.12s;
+
+    &:hover { background: $st-bg; }
+
+    &__label {
+        font-size: 13px;
+        font-weight: 600;
+        color: $st-text;
+        margin: 0;
+    }
+
+    &__meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: $st-text-sub;
+        flex-shrink: 0;
+    }
+
+    &__chevron {
+        font-size: 10px;
+        color: $st-text-sub;
+    }
+}
+
+@media (min-width: 768px) {
+    .st-link-row { padding: 16px 24px; }
+}
+
+// 投稿ライブプレビュー
+.st-post-preview {
+    border: 1px solid $st-border;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.st-post-preview__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+}
+
+.st-post-preview__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: $st-green;
+    color: $st-surface;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.st-post-preview__meta { flex: 1; min-width: 0; }
+
+.st-post-preview__name {
+    font-size: 12px;
+    font-weight: 700;
+    color: $st-text;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.st-post-preview__time {
+    font-size: 10px;
+    color: $st-text-sub;
+    margin: 0;
+}
+
+.st-post-preview__text {
+    font-size: 12px;
+    color: $st-text;
+    margin: 0;
+    padding: 0 12px 10px;
+    line-height: 1.5;
+}
+
+.st-post-preview__image {
+    height: 120px;
+    background: linear-gradient(135deg, #2A87C8 0%, #6BBD99 50%, #87CEEB 100%);
+}
+
+.st-post-preview__actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 12px;
+    border-top: 1px solid $st-border;
+    font-size: 14px;
+    color: $st-text-sub;
+}
+
+// コメントプレビューリスト
+.st-comment-preview-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.st-comment-preview-list__item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid $st-border;
+
+    &:last-child { border-bottom: none; }
+}
+
+.st-comment-preview-list__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: $st-green;
+    color: $st-surface;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.st-comment-preview-list__name {
+    font-size: 12px;
+    font-weight: 700;
+    color: $st-text;
+    margin: 0 0 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.st-comment-preview-list__text {
+    font-size: 11px;
+    color: $st-text;
+    margin: 0 0 2px;
+    line-height: 1.4;
+}
+
+.st-comment-preview-list__time {
+    font-size: 10px;
+    color: $st-text-sub;
+    margin: 0;
+}
+
+.st-comment-preview-list__note {
+    font-size: 10px;
+    color: $st-text-sub;
+    margin: 10px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid $st-border;
+    line-height: 1.5;
+}

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Review;
 use App\Models\Spot;
 use App\Models\TouristSpot;
@@ -36,6 +37,13 @@ class User extends Authenticatable
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    // 標準の Notifiable::notifications() と名前が衝突するため appNotifications にしています
+    public function appNotifications(): HasMany
+    {
+        // FIXME: Gitの衝突でAimiさんのコードの中身が消失していたため仮置きしています
+        return $this->hasMany(\App\Models\Notification::class);
     }
 
     public function bookmarks()
