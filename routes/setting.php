@@ -5,7 +5,9 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Settings\AccountController;
 use App\Http\Controllers\Settings\NotificationController;
 use App\Http\Controllers\Settings\PrivacyController;
+use App\Http\Controllers\Settings\AppController;
 use App\Http\Controllers\Settings\CommentController;
+use App\Http\Controllers\Settings\DisplayController;
 use App\Http\Controllers\Settings\TwoFactorController;
 
 Route::middleware('auth')->prefix('settings')->name('settings.')->group(function () {
@@ -16,7 +18,8 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
      Route::patch('account',      [AccountController::class, 'updateAccount'])      ->name('account.update');
 
     // display
-    Route::get('display',[SettingController::class, 'display'])->name('display');
+    Route::get('display', [DisplayController::class, 'display'])->name('display');
+    Route::patch('display', [DisplayController::class, 'updateDisplay'])->name('display.update');
 
     // notification
     Route::get('notification', [NotificationController::class, 'notification'])->name('notification');
@@ -34,9 +37,9 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
     
 
     // app
-    Route::get('app',[SettingController::class, 'app'])->name('app');
+    Route::get('app', [AppController::class, 'app'])->name('app');
+    Route::patch('app', [AppController::class, 'updateApp'])->name('app.update');
 
-    // ↓ この3行を追加
     Route::get('two-factor/setup',    [TwoFactorController::class, 'setup'])  ->name('two-factor.setup');
     Route::post('two-factor/confirm', [TwoFactorController::class, 'confirm'])->name('two-factor.confirm');
     Route::delete('two-factor',       [TwoFactorController::class, 'disable'])->name('two-factor.disable');

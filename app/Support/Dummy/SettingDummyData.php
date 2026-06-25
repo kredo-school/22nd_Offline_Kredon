@@ -345,6 +345,155 @@ class SettingDummyData
         ];
     }
 
+    public static function displaySettings(): object
+    {
+        return (object) [
+            'color_mode'    => 'light', // light | dark | system
+            'character_id'  => 'kuredon',
+            'color_modes'   => [
+                [
+                    'value' => 'light',
+                    'label' => 'ライト',
+                    'desc'  => '明るい背景で読みやすく表示します。',
+                    'icon'  => 'fa-regular fa-sun',
+                ],
+                [
+                    'value' => 'dark',
+                    'label' => 'ダーク',
+                    'desc'  => '目に優しい暗色テーマで表示します。',
+                    'icon'  => 'fa-regular fa-moon',
+                ],
+                [
+                    'value' => 'system',
+                    'label' => 'システム',
+                    'desc'  => '端末の設定（ライト/ダーク）に合わせます。',
+                    'icon'  => 'fa-solid fa-desktop',
+                ],
+            ],
+            'characters' => [
+                [
+                    'id'      => 'kuredon',
+                    'name'    => 'クレドン',
+                    'desc'    => 'セブ島ITパークの公式マスコット。元気でフレンドリー。',
+                    'image'   => '/images/characters/kuredon.png',
+                    'initial' => 'ク',
+                    'bg'      => '#2A87C8',
+                    'accent'  => 'blue',
+                ],
+                [
+                    'id'      => 'kurejina',
+                    'name'    => 'クレジナ',
+                    'desc'    => 'マーケットやイベント情報が得意なキャラクター。',
+                    'image'   => '/images/characters/kurejina.png',
+                    'initial' => 'ジ',
+                    'bg'      => '#6BBD99',
+                    'accent'  => 'teal',
+                ],
+                [
+                    'id'      => 'kuremichi',
+                    'name'    => 'クレミチ',
+                    'desc'    => '勉強スポットや留学生活の相談に乗ってくれるキャラクター。',
+                    'image'   => '/images/characters/kuremichi.png',
+                    'initial' => 'ミ',
+                    'bg'      => '#7B61FF',
+                    'accent'  => 'purple',
+                ],
+            ],
+            'status_summary' => [
+                'color_mode'   => 'ライト',
+                'character'    => 'クレドン',
+                'auth_screens' => 'ログイン・新規登録',
+            ],
+            'preview' => [
+                'login_title'    => 'KREDON Cebu へログイン',
+                'register_title' => 'ITパーク留学生アカウント作成',
+                'sample_post'    => '今日のITパークランチ、カフェテリアが空いてて最高でした 🌴',
+                'sample_user'    => '留学セブ太郎',
+            ],
+        ];
+    }
+
+    public static function appSettings(): object
+    {
+        return (object) [
+            'ai_recommendations'  => true,
+            'continue_learning'   => true,
+            'auto_translate'      => true,
+            'translate_language'  => 'ja',
+            'translate_languages' => [
+                'ja' => '日本語 (デフォルト)',
+                'en' => 'English',
+                'tl' => 'Tagalog',
+            ],
+            'data_saver'          => false,
+            'wifi_hd_only'        => true,
+            'location_accuracy'   => true,
+            'spot_priority'       => 'popular',
+            'spot_priority_options' => [
+                'popular'  => '人気順',
+                'nearby'   => '近い順',
+                'recent'   => '新着順',
+            ],
+            'map_priority'        => 'spot',
+            'map_priority_options' => [
+                'spot'  => 'スポット優先',
+                'event' => 'イベント優先',
+                'mixed' => 'バランス',
+            ],
+            'cache_size'    => '512 MB',
+            'storage_free'  => '8.2 GB',
+            'app_version'   => 'v2.3.1',
+            'network'       => 'Wi-Fi接続中',
+            'recommended_spots' => [
+                [
+                    'name'     => 'Kawasan Falls',
+                    'location' => 'Badian, Cebu',
+                    'rating'   => '4.7',
+                    'gradient' => 'linear-gradient(135deg, #2A87C8 0%, #6BBD99 100%)',
+                ],
+                [
+                    'name'     => 'IT Park Cebu',
+                    'location' => 'Cebu IT Park',
+                    'rating'   => '4.5',
+                    'gradient' => 'linear-gradient(135deg, #7B61FF 0%, #2A87C8 100%)',
+                ],
+                [
+                    'name'     => 'Mactan Beach',
+                    'location' => 'Lapu-Lapu City',
+                    'rating'   => '4.6',
+                    'gradient' => 'linear-gradient(135deg, #F5A623 0%, #6BBD99 100%)',
+                ],
+            ],
+            'preview_notifications' => [
+                [
+                    'icon'  => 'fa-regular fa-comment',
+                    'color' => 'blue',
+                    'text'  => 'Johnさんがレビューにコメントしました',
+                    'time'  => '1時間前',
+                ],
+                [
+                    'icon'  => 'fa-solid fa-calendar-days',
+                    'color' => 'purple',
+                    'text'  => '新しいイベントが公開されました',
+                    'time'  => '3時間前',
+                ],
+                [
+                    'icon'  => 'fa-solid fa-store',
+                    'color' => 'orange',
+                    'text'  => 'マーケット出品に反応がありました',
+                    'time'  => '5時間前',
+                ],
+            ],
+            'status_summary' => [
+                'data_saver'     => 'オフ',
+                'auto_translate' => 'オン (日本語)',
+                'cache_size'     => '512 MB',
+                'storage_free'   => '8.2 GB',
+                'network'        => 'Wi-Fi接続中',
+            ],
+        ];
+    }
+
     public static function commentSettings(): object
     {
         return (object) [
