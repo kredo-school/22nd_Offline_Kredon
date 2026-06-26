@@ -4,8 +4,11 @@
 
 @section('content')
 
-<div class="container-fluid px-4">
+<h1>
+    EVENT PAGE
+</h1>
 
+<div class="container-fluid px-4">
     {{-- EVENT BANNER --}}
     <div class="mb-4">
         <img src="{{ asset('images/event-banner.png') }}"
