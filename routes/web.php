@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\NotificationTemplateController;
 
 use App\Http\Controllers\Admin\SpotsController;
 
+require __DIR__.'/setting.php';
 
 Route::get('/', function () {
     return view('welcome');
