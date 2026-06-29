@@ -53,7 +53,7 @@
             </div>
 
             <div class="modal-body py-2">
-                <form method="post" enctype="multipart/form-data" id="editForm">
+                <form action="{{ route('all_reviews.update', $review->id) }}" method="post" enctype="multipart/form-data" id="editForm">
                     @csrf
                     @method('PATCH')
 
@@ -379,7 +379,7 @@
 
                         // action
                         document.getElementById('editForm').action =
-                            `/review/${this.dataset.id}`;
+                            `/all_reviews/${this.dataset.id}/update`;
                     });
                 });
             });

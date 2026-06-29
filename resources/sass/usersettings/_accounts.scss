@@ -1,0 +1,447 @@
+// アカウント設定タブ専用
+
+// ── 設定行リスト ──
+
+.st-setting-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.st-setting-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid $st-border;
+
+    &:last-child { border-bottom: none; }
+    &--profile   { align-items: center; }
+    &--danger    { background: rgba(#E55353, 0.02); }
+}
+
+.st-setting-item__profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+.st-setting-item__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.st-setting-item__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: $st-text-sub;
+    margin: 0 0 4px;
+
+    &--danger { color: #E55353; }
+}
+
+.st-setting-item__value {
+    font-size: 14px;
+    font-weight: 600;
+    color: $st-text;
+    margin: 0;
+    line-height: 1.5;
+    word-break: break-word;
+
+    &--bio    { font-weight: 400; font-size: 13px; }
+    &--masked { letter-spacing: 2px; color: $st-text-sub; font-weight: 400; }
+}
+
+.st-setting-item__handle {
+    display: inline;
+    font-weight: 400;
+    color: $st-text-sub;
+    font-size: 13px;
+    margin-left: 4px;
+}
+
+.st-setting-item__desc {
+    font-size: 12px;
+    color: $st-text-sub;
+    margin: 0;
+    line-height: 1.5;
+
+    &--danger { color: rgba(#E55353, 0.85); }
+}
+
+.st-setting-item__premium {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 479px) {
+    .st-setting-item {
+        flex-wrap: wrap;
+
+        > .st-btn,
+        > form,
+        > a.st-btn,
+        > .st-toggle {
+            margin-left: auto;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .st-setting-item        { padding: 18px 24px; gap: 16px; }
+    .st-setting-item__label { font-size: 13px; }
+    .st-setting-item__value { font-size: 15px; }
+}
+
+// ── アバター ──
+
+.st-avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.st-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: $st-green;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+    &--lg { width: 64px; height: 64px; }
+}
+
+.st-avatar__camera {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: $st-blue;
+    color: $st-surface;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    border: 2px solid $st-surface;
+}
+
+.st-avatar__placeholder {
+    font-size: 22px;
+    font-weight: 700;
+    color: $st-surface;
+    line-height: 1;
+}
+
+.st-avatar__file-input { display: none; }
+
+// ── アカウント用ライブプレビュー ──
+
+.st-preview__theme-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.st-preview__theme {
+    font-size: 11px;
+    font-weight: 600;
+    color: $st-text-sub;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    i { color: $st-blue; }
+}
+
+.st-preview__banner {
+    position: relative;
+    z-index: 0;
+    height: 100px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2A87C8 0%, #6BBD99 45%, #F5A623 100%);
+    overflow: hidden;
+    margin-bottom: -32px;
+}
+
+.st-preview__event {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 12px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+    color: $st-surface;
+}
+
+.st-preview__event-title {
+    font-size: 11px;
+    font-weight: 700;
+    margin: 0 0 2px;
+}
+
+.st-preview__event-date {
+    font-size: 10px;
+    margin: 0;
+    opacity: 0.85;
+}
+
+.st-preview__card {
+    position: relative;
+    z-index: 1;
+    background: $st-surface;
+    border: 1px solid $st-border;
+    border-radius: 12px;
+    padding: 40px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+}
+
+.st-preview__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: $st-green;
+    color: $st-surface;
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 3px solid $st-surface;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.st-preview__premium-tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: darken($st-premium, 5%);
+    background: rgba($st-premium, 0.15);
+    border: 1px solid rgba($st-premium, 0.35);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.st-preview__name {
+    font-size: 14px;
+    font-weight: 700;
+    color: $st-text;
+    margin: 4px 0 0;
+}
+
+.st-preview__handle {
+    font-size: 11px;
+    color: $st-text-sub;
+    margin: 0;
+}
+
+.st-preview__stats {
+    display: flex;
+    gap: 16px;
+    margin: 8px 0 4px;
+}
+
+.st-preview__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.st-preview__stat-num {
+    font-size: 15px;
+    font-weight: 700;
+    color: $st-text;
+}
+
+.st-preview__stat-label {
+    font-size: 10px;
+    color: $st-text-sub;
+}
+
+.st-preview__bio {
+    font-size: 11px;
+    color: $st-text-sub;
+    margin: 4px 0 0;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+// ── フォーム・モーダル（アカウント編集用） ──
+
+.st-field {
+    margin-bottom: 14px;
+    &:last-of-type { margin-bottom: 0; }
+}
+
+.st-field__label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: $st-text;
+    margin-bottom: 6px;
+}
+
+.st-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid $st-border;
+    border-radius: 8px;
+    font-size: 14px;
+    color: $st-text;
+    background: $st-surface;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &:focus {
+        border-color: $st-blue;
+        box-shadow: 0 0 0 3px rgba($st-blue, 0.1);
+    }
+
+    &--textarea {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+    }
+}
+
+.st-input-prefix {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    span {
+        font-size: 14px;
+        color: $st-text-sub;
+        font-weight: 600;
+    }
+
+    .st-input { flex: 1; }
+}
+
+.st-modal {
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    width: min(480px, 90vw);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+
+    &::backdrop { background: rgba(0, 0, 0, 0.4); }
+}
+
+.st-modal__inner {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.st-modal__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #E55353;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &--normal {
+        color: $st-text;
+        i { color: $st-blue; }
+    }
+}
+
+.st-modal__desc {
+    font-size: 13px;
+    color: $st-text-sub;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.st-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+// ── アカウント通知プレビューリスト ──
+
+.st-notif-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+}
+
+.st-notif-list__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid $st-border;
+
+    &:last-child { border-bottom: none; }
+}
+
+.st-notif-list__icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+
+    &--pink  { background: rgba(#E91E8C, 0.12); color: #E91E8C; }
+    &--blue  { background: rgba($st-blue, 0.12); color: $st-blue; }
+    &--green { background: rgba($st-green-dark, 0.15); color: $st-green-dark; }
+}
+
+.st-notif-list__text {
+    font-size: 12px;
+    color: $st-text;
+    margin: 0 0 2px;
+    line-height: 1.4;
+}
+
+.st-notif-list__time {
+    font-size: 10px;
+    color: $st-text-sub;
+    margin: 0;
+}
+
+.st-notif-list__more {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: $st-blue;
+    text-decoration: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid $st-border;
+
+    &:hover { text-decoration: underline; }
+}

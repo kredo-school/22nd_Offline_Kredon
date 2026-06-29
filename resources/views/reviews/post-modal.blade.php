@@ -67,7 +67,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('reviews.store') }}" method="post" enctype="multipart/form-data"
+                <form action="{{ route('all_reviews.store') }}" method="post" enctype="multipart/form-data"
                     id="reviewForm">
                     @csrf
 

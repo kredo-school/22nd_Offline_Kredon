@@ -11,185 +11,94 @@ use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
+
+use App\Models\User;
+
 class ReviewController extends Controller
 {
-    private $review;
 
-    public function __construct(Review $review)
-    {
-        $this->review = $review;
-    }
-
-    // 一覧表示 categoryごとにタブで分ける
     public function index()
     {
-        $all_reviews = Review::with(['user', 'images'])
-            ->latest()
-            ->get();
-
-        $working_reviews = $all_reviews->filter(function ($review) {
-            return Str::contains(
-                $review->title . ' ' . $review->comment,
-                ['Working', 'Work', 'Office', 'Coworking', 'Remote', 'Freelance', 'Productivity', 'Focus', 'Quiet', 'Space', 'Desk']
-            );
-        });
-
-        $hospital_reviews = $all_reviews->filter(function ($review) {
-            return Str::contains(
-                $review->title . ' ' . $review->comment,
-                ['Hospital', 'Clinic', 'Medical', 'Doctor', 'Healthcare', 'Nurse', 'Treatment', 'Surgery', 'Pharmacy']
-            );
-        });
-
-        $tourism_reviews = $all_reviews->filter(function ($review) {
-            return Str::contains(
-                $review->title . ' ' . $review->comment,
-                ['Beach', 'Tourism', 'Spot', 'Tourist', 'Sightseeing', 'Attraction', 'Ocean', 'Mountain', 'Park', 'Museum','Travel','Vacation','Resort','Nature','Adventure','Hiking','Camping','Landmark','Historical','Cultural']
-            );
-        });
-
-        return view('reviews.index', compact(
-            'all_reviews',
-            'working_reviews',
-            'hospital_reviews',
-            'tourism_reviews'
-        ));
+        return view('reviews.index');
     }
 
-    public function create()
-    {
-        return view('reviews.create');
-    }
 
-    public function store(Request $request)
+    // 🌟 既存のお店に対する「追加レビュー」を保存する係
+    public function store(Request $request, $spot_id)
     {
+        // ① 入力データの警備（バリデーション）
         $request->validate([
-            'location_id' => 'required|integer|min:1',
-            'title'     => 'required|string|max:255',
-            'comment'   => 'required|string',
-            'rating'    => 'required|integer|min:1|max:5',
-            'amenities'   => 'nullable|array',              // ★ 追加
-            'amenities.*' => 'string|in:wifi,outlet,air-conditioner,parking,toilet', // ★ 追加
-            'images'    => 'nullable|array|max:5',
-            'images.*'  => 'image|mimes:jpeg,png,jpg|max:2048',
+            'customer_vibe' => 'nullable|integer|between:1,5',
+            'eye_fatigue_level' => 'nullable|integer|between:1,5',
+            'chair_comfort' => 'nullable|integer|between:1,5',
+            'desk_stability' => 'nullable|integer|between:1,5',
+            'good_point' => 'nullable|string|max:255',
+            'bad_point' => 'nullable|string|max:255',
+            'comment' => 'nullable|string',
+            // 'photo' => 'nullable|image|max:2048', // ※写真は後で実装するので一旦コメントアウト
         ]);
 
-        $review = Review::create([
-            'user_id'        => Auth::id(),
-            'location_id'    => $request->location_id, //仮置き
-            // 'category'       => $request->category,
-            'title'          => $request->title,
-            'comment'        => $request->comment,
-            'rating'         => $request->rating,
-            'amenities'   => $request->amenities ?? [],
+        $user = Auth::user();
+
+        // ② Reviewsテーブルに新しいレビューを保存！
+        $review = new Review();
+        $review->user_id = $user->id;
+        $review->spot_id = $spot_id; // どのお店のレビューかを紐付ける！
+        $review->customer_vibe = $request->customer_vibe;
+        $review->eye_fatigue_level = $request->eye_fatigue_level;
+        $review->chair_comfort = $request->chair_comfort;
+        $review->desk_stability = $request->desk_stability;
+        $review->good_point = $request->good_point;
+        $review->bad_point = $request->bad_point;
+        $review->comment = $request->comment;
+
+        $review->save();
+
+        return back()->with('success', '✨ レビューを投稿しました！平均点が更新されました！');
+    }
+
+    // 🌟 レビュー編集（更新）処理
+    public function update(Request $request, $id)
+    {
+        $review = \App\Models\Review::findOrFail($id);
+
+        // セキュリティ対策：絶対に本人しか編集できないようにする
+        if ($review->user_id !== \Illuminate\Support\Facades\Auth::id()) {
+            abort(403, '権限がありません');
+        }
+
+        // 写真が新しくアップロードされたら保存（それ以外はそのまま）
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('reviews', 'public');
+            $review->photo_path = $path;
+        }
+
+        // データを上書き保存
+        $review->update([
+            'customer_vibe' => $request->customer_vibe,
+            'eye_fatigue_level' => $request->eye_fatigue_level,
+            'chair_comfort' => $request->chair_comfort,
+            'desk_stability' => $request->desk_stability,
+            'good_point' => $request->good_point,
+            'bad_point' => $request->bad_point,
+            'comment' => $request->comment,
         ]);
 
-        //    画像の保存処理
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('review_images', 'public');
-                $review->images()->create([
-                    'image_path' => $path,
-                ]);
-            }
-        }
-
-        return redirect()->route('reviews.index')->with('success', 'Review created successfully!');
+        return back()->with('success', 'レビューを更新しました！');
     }
 
-    #SPOT検索API
-    public function searchLocations(Request $request)
+    // 🌟 レビュー削除処理
+    public function destroy($id)
     {
-        $keyword = $request->get('q', '');
+        $review = \App\Models\Review::findOrFail($id);
 
-        #仮data
-        $dummy = collect([
-            ['id' => 1, 'name' => 'A Co-working Space(Ayala)', 'address' => '12345', 'category' => 'working', 'rating' => 4.5],
-            ['id' => 2, 'name' => 'B Hospital', 'address' => '67890', 'category' => 'hospital', 'rating' => 4.0],
-            ['id' => 3, 'name' => 'C Tourism Spot', 'address' => '54321', 'category' => 'tourism', 'rating' => 4.8],
-        ]);
-
-        $results = $keyword ? $dummy->filter(fn($l) => str_contains(strtolower($l['name']), strtolower($keyword)))->values() : $dummy;
-
-        return response()->json($results);
-    }
-
-    public function edit(Review $review): View
-    {
-        // 自分以外の投稿は４０３
-        abort_if(Auth::id() !== $review->user_id, 403);
-        return view('reviews.edit', compact('review'));
-    }
-
-    // Update
-    public function update(Request $request, Review $review): RedirectResponse
-{
-    // dd($request->all());
-    // 送信されたdelete_imagesとDBのimage_pathを比較
-    // dd([
-    //     'delete_images' => $request->delete_images,
-    //     'db_image_paths' => $review->images->pluck('image_path'),
-    // ]);
-
-    abort_if(Auth::id() !== $review->user_id, 403);
-
-    $request->validate([
-        'title'           => 'required|string|max:255',
-        'comment'         => 'required|string',
-        'rating'          => 'required|integer|min:1|max:5',
-        'amenities'       => 'nullable|array',
-        'amenities.*'     => 'string|in:wifi,outlet,air-conditioner,parking,toilet',
-        'images'          => 'nullable|array|max:5',
-        'images.*'        => 'image|mimes:jpeg,png,jpg|max:2048',
-        'delete_images'   => 'nullable|array',   // ★ 追加
-        'delete_images.*' => 'nullable|string',  // ★ 追加
-    ]);
-
-    // ★ 既存画像の削除
-    if ($request->has('delete_images')) {
-        foreach ($request->delete_images as $path) {
-            $image = $review->images()->where('image_path', $path)->first();
-         
-            if ($image) {
-                Storage::disk('public')->delete($path);
-                $image->delete();
-            }
-        }
-    }
-
-    $review->update([
-        'location_id' => $request->location_id ?? $review->location_id,
-        'title'       => $request->title,
-        'comment'     => $request->comment,
-        'rating'      => $request->rating,
-        'amenities'   => $request->amenities ?? [],
-    ]);
-
-    // 新規画像の追加
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $path = $image->store('review_images', 'public');
-            $review->images()->create(['image_path' => $path]);
-        }
-    }
-
-    return redirect()->route('reviews.index')->with('success', 'Review updated!');
-}
-
-    // Delete
-    public function destroy(Review $review): RedirectResponse
-    {
-        abort_if(Auth::id() !== $review->user_id, 403);
-        // ① storageから画像ファイルを物理削除
-        foreach ($review->images as $image) {
-            Storage::disk('public')->delete($image->image_path);
+        // セキュリティ対策：絶対に本人しか削除できないようにする
+        if ($review->user_id !== \Illuminate\Support\Facades\Auth::id()) {
+            abort(403, '権限がありません');
         }
 
-        // ② DBのreviewを削除（cascade により review_imagesも自動削除）
         $review->delete();
 
-        return redirect()->route('reviews.index')->with('success', 'Review deleted!');
+        return back()->with('success', 'レビューを削除しました！');
     }
-
-    
 }

@@ -321,7 +321,7 @@
     </style>
 </head>
 
-<body class="@yield('body-class')">
+<body>
     <div id="app">
 
         {{-- ══════════════════════════════════
@@ -329,10 +329,10 @@
         ══════════════════════════════════ --}}
         <nav class="navbar navbar-light bg-white border-bottom navbar-top shadow-sm d-none d-md-flex">
             <div class="container-fluid px-4">
-
+               
                 <ul class="navbar-nav ms-auto align-items-center flex-row gap-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/home') }}"><i class="fa-solid fa-house-chimney fa-lg"></i></a>
+                        <a class="nav-link" href="{{ ('/home') }}"><i class="fa-solid fa-house-chimney fa-lg"></i></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="#" data-bs-toggle="modal"
@@ -517,7 +517,7 @@
                 <i class="fa-solid fa-store"></i>
                 <span>Market</span>
             </a>
-            <a href="{{ route('reviews.index') }}" class="bottom-nav-item {{ request()->routeIs('review.*') ? 'active' : '' }}">
+            <a href="{{ route('all_reviews.index') }}" class="bottom-nav-item {{ request()->routeIs('review.*') ? 'active' : '' }}">
                 <i class="fa-regular fa-star"></i>
                 <span>Review</span>
             </a>
@@ -578,7 +578,7 @@
                             class="sidebar-link {{ request()->routeIs('bookmark.*') ? 'active' : '' }}">
                             <i class="fa-regular fa-bookmark"></i> BOOKMARK
                         </a>
-                        <a href="{{ route('reviews.index') }}" class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}">
+                        <a href="{{ route('all_reviews.index') }}" class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}">
                             <i class="fa-regular fa-star"></i> REVIEW
                         </a>
 

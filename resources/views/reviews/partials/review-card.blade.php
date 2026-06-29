@@ -82,8 +82,8 @@
                                 </li>
 
                                 <li>
-                                    <form action="{{ route('reviews.destroy', $review->id) }}" method="POST"
-                                        onsubmit="return conform('Delete this review?')">
+                                    <form action="{{ route('all_reviews.destroy', $review->id) }}" method="POST"
+                                        onsubmit="return confirm('Delete this review?')">
                                         @csrf
                                         @method('DELETE')
 

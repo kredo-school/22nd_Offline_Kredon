@@ -2,39 +2,31 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
-
-use HasFactory;
-    // セキュリティー
+    use HasFactory;
+    // 🌟 データベースへの一括保存を許可するリスト
     protected $fillable = [
+        'spot_id',
         'user_id',
-        'location_id',
-        // 'category',
-        'rating',
-        'title',
-        'comment',
-        'amenities',
+        'customer_vibe',
+        'eye_fatigue_level',
+        'chair_comfort',
+        'desk_stability',
+        'comment'
     ];
-
-    //★ 追加：DB保存時はJSON、取得時は自動でarrayに変換
-    protected $casts = [
-        'amenities' => 'array',
-    ];
-
-    // １つのレビューは複数の写真を持っている
-    public function images()
+    // 💡 どこのお店（Spot）に対するレビューなのかを振り返る電線
+    public function spot()
     {
-        return $this->hasMany(ReviewImage::class);
+        return $this->belongsTo(Spot::class);
     }
 
-    // user_idを外部キーとして、ユーザーテーブルとリレーションを定義
+    // 💡 誰（User）が書いたレビューなのかを振り返る電線
     public function user()
     {
-        return $this->belongsTo(User::class);   
+        return $this->belongsTo(User::class);
     }
 }
