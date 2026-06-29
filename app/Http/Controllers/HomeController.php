@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\ItemPost; 
-use App\Models\Event;
-use App\Models\Notification;
+use Illuminate\Http\Request; 
 class HomeController extends Controller
 {
     /**
@@ -25,17 +22,49 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $marketItems = ItemPost::all();
-        $workingSpots = ItemPost::all(); //仮
-        $touristSpots = ItemPost::all(); //仮
+        //  モックデータ
         
-        $events = Event::where('start_date', '>=', now())
-                       ->orderby('start_date', 'asc')
-                       ->take(5)
-                       ->get();
+        // マーケットアイテムのモック
+        $dummyItem = new \stdClass();
+        $dummyItem->title = '人気のマーケットアイテムA';
+        $dummyItem->description = 'これはテスト用の説明文です。';
+        $dummyItem->user = new \stdClass();
+        $dummyItem->user->name = 'テストユーザー';
+        $dummyItem->created_at = new class { public function diffForHumans() { return '1時間前'; } };
 
-        $notifications = Notification::latest()->take(3)->get();
+        $marketItems = [$dummyItem];
 
-        return view('home', compact('marketItems', 'workingSpots', 'touristSpots', 'events', 'notifications'));
+        $workingSpots = []; 
+        $touristSpots = [];
+
+        //  通知のモック
+        $n1 = new \stdClass();
+        $n1->title = 'ダミー通知1';
+        $n1->created_at = new class { public function diffForHumans() { return 'たった今'; } };
+        $n1->image_url = 'https://placehold.co/45/45';
+
+        $notifications = [$n1];
+
+        $category = request('category', 'market');
+
+        switch ($category) {
+
+            case 'working':
+            $posts = $workingSpots;
+            break;
+
+            case 'tourist':
+            $posts = $touristSpots;
+            break;
+
+            default:
+            $posts = $marketItems;
+            break;
+            }
+        
+            return view('home', [
+                'posts' => $posts,
+                'notifications' => $notifications
+        ]);
     }
 }

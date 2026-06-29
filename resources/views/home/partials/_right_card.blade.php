@@ -26,8 +26,6 @@
         </div>
 
         {{-- コンポーネント化したランキングを配置 --}}
-        <x-ranking-list type="market" />
-        <x-ranking-list type="spot" />
         <x-ranking-list type="game_score" />
         <x-ranking-list type="game_level" />
     </div>

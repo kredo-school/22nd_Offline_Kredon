@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\ItemPost;
 
-class ItemPostSeeder extends Seeder
+class PostSeeder extends Seeder
 {
     /**
      * Run the database seeds.

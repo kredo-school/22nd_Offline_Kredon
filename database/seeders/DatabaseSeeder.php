@@ -22,8 +22,7 @@ class DatabaseSeeder extends Seeder
         
         $this->call([
             NotificationSeeder::class,
-            EventSeeder::class,
-            ItemPostSeeder::class,
+            PostSeeder::class,
         ]);
        
     }

@@ -6,7 +6,7 @@
                 <div class="hp-banner-box" style="background-image: url('{{ asset('images/welcome-bg.jpg') }}');">
                     <div class="hp-banner-content">
                         <h1 class="hp-hero-title">Welcome to Kredon</h1>
-                        <p class="hp-hero-subtitle">Have fun</p>
+                        <p class="hp-hero-subtitle"></p>
                     </div>
                 </div>
             </div>

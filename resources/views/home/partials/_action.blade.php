@@ -1,45 +1,59 @@
 <nav class="hp-action-menu">
-    
-    <div class="hp-dropdown">
-        <button class="hp-menu-btn">
-            <i class="fa-solid fa-location-dot"></i> <span>Spot</span>
-        </button>
-        <ul class="hp-dropdown-list">
-            <li><a href="#">Working</a></li>
-            <li><a href="#">Tourist</a></li>
-            <li><a href="#">Hospital</a></li>
-        </ul>
-    </div>
 
-    <div class="hp-dropdown">
-        <button class="hp-menu-btn">
-            <i class="fa-solid fa-cart-shopping"></i> <span>Market</span>
-        </button>
-        <ul class="hp-dropdown-list">
-            <li><a href="#">商品をもらう</a></li>
-            <li><a href="#">商品を譲る</a></li>
-            <li><a href="#">欲しいものリスト</a></li>
-        </ul>
-    </div>
+    <a href="#" class="hp-menu-btn hp-spot">
 
-    <div class="hp-dropdown">
-        <button class="hp-menu-btn">
-            <i class="fa-solid fa-gamepad"></i> <span>Game</span>
-        </button>
-        <ul class="hp-dropdown-list">
-            <li><a href="#">Play</a></li>
-            <li><a href="#">Ranking</a></li>
-        </ul>
-    </div>
+        <i class="fa-solid fa-location-dot"></i>
 
-    <div class="hp-dropdown">
-        <button class="hp-menu-btn">
-            <i class="fa-solid fa-ellipsis"></i> <span>More</span>
-        </button>
-        <ul class="hp-dropdown-list">
-            <li><a href="#">Post</a></li>
-            <li><a href="#">Review</a></li>
-            <li><a href="#">Bookmark</a></li>
-        </ul>
-    </div>
+        <span class="hp-menu-title">
+            Spot
+        </span>
+
+        <span class="hp-menu-subtitle">
+            Places & Services
+        </span>
+
+    </a>
+
+    <a href="#" class="hp-menu-btn hp-market">
+
+        <i class="fa-solid fa-gift"></i>
+
+        <span class="hp-menu-title">
+            Market
+        </span>
+
+        <span class="hp-menu-subtitle">
+            Free Exchange
+        </span>
+
+    </a>
+
+    <a href="#" class="hp-menu-btn hp-game">
+
+        <i class="fa-solid fa-gamepad"></i>
+
+        <span class="hp-menu-title">
+            Game
+        </span>
+
+        <span class="hp-menu-subtitle">
+            Play & Ranking
+        </span>
+
+    </a>
+
+    <a href="#" class="hp-menu-btn hp-more">
+
+        <i class="fa-solid fa-comments"></i>
+
+        <span class="hp-menu-title">
+            Community
+        </span>
+
+        <span class="hp-menu-subtitle">
+            Reviews & More
+        </span>
+
+    </a>
+
 </nav>
