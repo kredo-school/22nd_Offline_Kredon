@@ -25,6 +25,41 @@
 
         /* Desktop */
         @media (min-width: 768px) {
+
+            html,
+            body,
+            #app {
+                height: 100vh !important;
+                overflow: hidden !important;
+            }
+
+            .navbar-top {
+                margin-left: 200px;
+            }
+
+            .main-wrapper {
+                flex-direction: row !important;
+                height: calc(100vh - 70px) !important;
+                overflow: hidden !important;
+            }
+
+           .content-body {
+
+            margin-left: 200px !important;
+
+            margin-top: 0 !important;
+
+            display: block !important;
+
+            min-height: calc(100vh - 70px) !important;
+
+            width: calc(100% - 200px) !important;
+
+            overflow-y: auto !important;
+
+            background-color: #f8f9fa;
+
+            }
             html, body, #app { height: 100vh; overflow: hidden; }
             .navbar-top { margin-left: 200px; }
             .main-wrapper { flex-direction: row; height: calc(100vh - 70px); margin-top: 70px; }
@@ -60,6 +95,9 @@
 
 <body>
     <div id="app">
+
+          <nav class="navbar navbar-light bg-white border-bottom navbar-top shadow-sm d-none d-md-flex">
+            <div class="container-fluid px-4">
         {{-- Desktop Topbar --}}
         <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom navbar-top sticky-top shadow-sm d-none d-md-flex">
             <div class="container-fluid px-4">
@@ -76,6 +114,12 @@
                         <a class="nav-link" href="{{ url('/home') }}"><i class="fa-solid fa-house-chimney fa-lg"></i></a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link position-relative" href="#" data-bs-toggle="modal"
+                            data-bs-target="#userNotificationsModal" id="notifBellBtnPC">
+                            <i class="fa-solid fa-bell fa-lg"></i>
+                            @if (($unreadNotificationsCount ?? 0) > 0)
+                                <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger"
+                                    id="notifBadgePC">{{ $unreadNotificationsCount }}</span>
                         <a class="nav-link position-relative" href="#" data-bs-toggle="modal" data-bs-target="#userNotificationsModal" id="notifBellBtnPC">
                             <i class="fa-solid fa-bell fa-lg"></i>
                             @if (($unreadNotificationsCount ?? 0) > 0)
@@ -112,6 +156,25 @@
             </div>
         </nav>
 
+        {{-- ══════════════════════════════════
+             スマホ用 Topbar（md未満）
+        ══════════════════════════════════ --}}
+        <nav class="navbar-top bg-white border-bottom shadow-sm d-flex d-md-none">
+            <div class="mobile-topbar w-100">
+                {{-- ロゴ中央 --}}
+                <a href="{{ url('/home') }}">
+                    <img src="{{ asset('images/kredon.png') }}" alt="Kredon" class="logo-img">
+                </a>
+
+                {{-- 右アイコン --}}
+                <div class="mobile-topbar-icons">
+                     <a href="#" class="position-relative" data-bs-toggle="modal"
+                        data-bs-target="#userNotificationsModal" id="notifBellBtnMobile">
+                        <i class="fa-solid fa-bell"></i>
+                        @if (($unreadNotificationsCount ?? 0) > 0)
+                            <span class="position-absolute badge rounded-pill bg-danger"
+                                style="font-size:0.55rem;padding:2px 4px;top:-4px;right:-6px;"
+                                id="notifBadgeMobile">{{ $unreadNotificationsCount }}</span>
         {{-- スマホ用 Topbar --}}
         <nav class="navbar-top bg-white border-bottom shadow-sm d-flex d-md-none align-items-center px-3 justify-content-between">
             <a href="{{ url('/home') }}">
@@ -142,6 +205,9 @@
         <div class="main-wrapper">
             <aside class="sidebar-left d-none d-md-block">
                 <div class="py-2">
+                    <a class="d-block text-center" href="{{ url('/home') }}">
+                        <img src="{{ asset('images/kredon.png') }}" alt="Logo"
+                            style="height:130px;width:auto;object-fit:contain; margin-bottom: -30px; margin-top: -20px;">
                     <a class="d-block text-center" href="{{ url('/') }}">
                         <img src="{{ asset('images/kredon.png') }}" alt="Logo" style="height:130px;width:auto;object-fit:contain; margin-bottom: -30px; margin-top: -20px;">
                     </a>
@@ -157,6 +223,19 @@
                             <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5" style="font-size:0.82rem; color: #6c757d;">Tourism</a>
                         </div>
 
+                        <a href="{{ route('event.index') }}" class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}">
+                            <i class="fa-solid fa-calendar-days"></i> EVENT
+                        </a>
+                        <a href="{{ route('marketplace.index') }}" class="sidebar-link {{ request()->routeIs('market.*') ? 'active' : '' }}">
+                            <i class="fa-solid fa-store"></i> MARKET
+                        </a>
+                        <a href="#"
+                            class="sidebar-link {{ request()->routeIs('bookmark.*') ? 'active' : '' }}">
+                            <i class="fa-regular fa-bookmark"></i> BOOKMARK
+                        </a>
+                        <a href="#" class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}">
+                            <i class="fa-regular fa-star"></i> REVIEW
+                        </a>
                         <script>
                             function toggleSpot(e) {
                                 e.preventDefault();
@@ -206,14 +285,22 @@
             </aside>
 
             <main class="content-body">
+                  
+
                 @yield('content')
             </main>
 
+            {{-- @include('layouts.notif-modal') --}}
             @include('layouts.notif-modal')
         </div>
     </div>
 
     <script>
+         ── ユーザー通知モーダル：開いたら一括既読化 ──
+        const userNotifModalEl = document.getElementById('userNotificationsModal');
+        if (userNotifModalEl) {
+            userNotifModalEl.addEventListener('shown.bs.modal', function () {
+               {{-- fetch('{{ route("notifications.mark-all-read") }}', { --}}
          // ── ユーザー通知モーダル：開いたら一括既読化 ──
         const userNotifModalEl = document.getElementById('userNotificationsModal');
         if (userNotifModalEl) {
@@ -238,6 +325,16 @@
                 })
                 .catch(err => console.error('Mark as read failed:', err));
             });
+        }
+
+        // ── PC SPOTサブメニュー ──
+        function toggleSpotPC(e) {
+            e.preventDefault();
+            const menu = document.getElementById('spotSubmenuPC');
+            const chevron = document.getElementById('spotChevronPC');
+            const isOpen = menu.style.display === 'block';
+            menu.style.display = isOpen ? 'none' : 'block';
+            chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
         }
     </script>
 </body>
