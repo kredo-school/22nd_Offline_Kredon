@@ -1,0 +1,183 @@
+// 通知設定タブ専用
+
+// 通知種別行（カラーアイコン付き）
+.st-notify-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-top: 1px solid $st-border;
+
+    &__icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 14px;
+
+        &--blue   { background: rgba($st-blue, 0.12); color: $st-blue; }
+        &--teal   { background: rgba($st-green-dark, 0.15); color: $st-green-dark; }
+        &--purple { background: rgba(#7B61FF, 0.12); color: #7B61FF; }
+        &--orange { background: rgba($st-premium, 0.15); color: darken($st-premium, 5%); }
+        &--gold   { background: rgba($st-premium, 0.18); color: darken($st-premium, 12%); }
+        &--gray   { background: $st-bg; color: $st-text-sub; }
+    }
+
+    &__body { flex: 1; min-width: 0; }
+
+    &__label {
+        font-size: 13px;
+        font-weight: 600;
+        color: $st-text;
+        margin: 0 0 4px;
+    }
+
+    &__desc {
+        font-size: 12px;
+        color: $st-text-sub;
+        margin: 0;
+        line-height: 1.5;
+    }
+}
+
+@media (min-width: 768px) {
+    .st-notify-row { padding: 16px 24px; }
+}
+
+// ── スマホモック（ライブプレビュー） ──
+
+.st-phone-preview {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0 8px;
+}
+
+.st-phone-preview__frame {
+    width: 100%;
+    max-width: 240px;
+    margin: 0 auto;
+    background: $st-surface;
+    border: 2px solid $st-border;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.st-phone-preview__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 14px;
+    border-bottom: 1px solid $st-border;
+    background: $st-bg;
+}
+
+.st-phone-preview__title {
+    font-size: 13px;
+    font-weight: 700;
+    color: $st-text;
+    flex-shrink: 0;
+}
+
+.st-phone-preview__mark-read {
+    font-size: 10px;
+    font-weight: 600;
+    color: $st-blue;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-align: right;
+    line-height: 1.3;
+
+    &:hover { text-decoration: underline; }
+}
+
+.st-phone-preview__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 280px;
+    overflow-y: auto;
+    background: $st-surface;
+}
+
+.st-phone-preview__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid $st-border;
+    background: $st-surface;
+
+    &:last-child { border-bottom: none; }
+    &:nth-child(even) { background: rgba($st-bg, 0.65); }
+}
+
+.st-phone-preview__item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+
+    &.st-notify-row__icon--blue   { background: rgba($st-blue, 0.12); color: $st-blue; }
+    &.st-notify-row__icon--teal   { background: rgba($st-green-dark, 0.15); color: $st-green-dark; }
+    &.st-notify-row__icon--purple { background: rgba(#7B61FF, 0.12); color: #7B61FF; }
+    &.st-notify-row__icon--orange { background: rgba($st-premium, 0.15); color: darken($st-premium, 5%); }
+    &.st-notify-row__icon--gold   { background: rgba($st-premium, 0.18); color: darken($st-premium, 12%); }
+    &.st-notify-row__icon--gray   { background: $st-bg; color: $st-text-sub; }
+}
+
+.st-phone-preview__item-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.st-phone-preview__item-text {
+    font-size: 11px;
+    color: $st-text;
+    margin: 0 0 3px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.st-phone-preview__item-time {
+    font-size: 10px;
+    color: $st-text-sub;
+    margin: 0;
+}
+
+// トラブルシューティングリンク
+.st-notify-help {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: $st-surface;
+    border: 1px solid $st-border;
+    border-radius: 12px;
+    text-decoration: none;
+    color: $st-text;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.12s;
+
+    i:first-child { color: $st-blue; font-size: 14px; }
+    span { flex: 1; }
+
+    &:hover { background: $st-bg; }
+
+    &__chevron {
+        font-size: 10px;
+        color: $st-text-sub;
+    }
+}

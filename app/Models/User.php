@@ -2,47 +2,29 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Review;
+use App\Models\Spot;
+use App\Models\TouristSpot;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'avatar',
-        'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -51,20 +33,34 @@ class User extends Authenticatable
         ];
     }
 
-    // 標準の Notifiable::notifications() と名前が衝突するため appNotifications にしています
+    // ユーザーが書いたレビューを引っ張るための電線
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 
+    // 標準の Notifiable::notifications() と名前が衝突するため appNotifications にしています
     public function appNotifications(): HasMany
     {
-        return $this->hasMany(\App\Models\Notification::class, 'recipient_id');
+        // FIXME: Gitの衝突でAimiさんのコードの中身が消失していたため仮置きしています
+        return $this->hasMany(\App\Models\Notification::class);
     }
 
-    public function unreadAppNotifications(): HasMany
+    public function bookmarks()
     {
-        return $this->appNotifications()->where('is_read', false);
+        return $this->belongsToMany(Spot::class, 'bookmarks')->withTimestamps();
     }
 
-    public function notificationSubscriptions(): HasMany
+    // 🌟 追加：学習スポット（Spot）とのお気に入り（bookmarksテーブル）の繋がり
+    public function bookmarkedStudySpots()
     {
-        return $this->hasMany(\App\Models\NotificationSubscription::class);
+        return $this->belongsToMany(Spot::class, 'bookmarks', 'user_id', 'spot_id')->withTimestamps();
+    }
+
+    // 🌟 ユーザーが保存した観光スポット一覧を取得
+    public function bookmarkedTouristSpots()
+    {
+        // tourist_bookmarks テーブルを中間テーブルとして、TouristSpot モデルを結びつける
+        return $this->belongsToMany(TouristSpot::class, 'tourist_bookmarks', 'user_id', 'tourist_spot_id')->withTimestamps();
     }
 }

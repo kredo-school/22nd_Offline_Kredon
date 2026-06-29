@@ -1,0 +1,33 @@
+stash@{0}: On feature/healthcare: back-before-conflict-resolution
+
+resources/css/app.css
+resources/views/home.blade.php
+resources/views/layouts/app.blade.php
+stash@{1}: WIP on feature/homepage: 305df03 feat: migrate and seed setup with models fix
+
+resources/css/app.css
+resources/views/home.blade.php
+resources/views/home/partials/_action.blade.php
+resources/views/home/partials/_feed.blade.php
+resources/views/home/partials/_hero.blade.php
+resources/views/home/partials/_post_card.blade.php
+resources/views/home/partials/_right_card.blade.php
+resources/views/layouts/app.blade.php
+stash@{2}: WIP on feature/healthcare: 2e4f742 wip: ヘルスケア画面のウィザードUI実装途中
+
+resources/views/healthcare.blade.php
+resources/views/healthcare/_faq.blade.php
+resources/views/healthcare/_hero.blade.php
+resources/views/healthcare/_wizard.blade.php
+resources/views/layouts/app.blade.php
+routes/web.php
+stash@{3}: WIP on feature/usersetting: 8c19192 Merge pull request #2 from kredo-school/Navbar-Aimi
+
+routes/web.php
+stash@{4}: WIP on feature/healthcare-layout: 6bb57c1 Merge branch 'main' of https://github.com/kredo-school/22nd_Offline_Kredon into feature/healthcare-layout
+
+resources/views/healthcare/_hero.blade.php
+routes/web.php
+stash@{5}: On main: !!GitHub_Desktop<main>
+
+package-lock.json
