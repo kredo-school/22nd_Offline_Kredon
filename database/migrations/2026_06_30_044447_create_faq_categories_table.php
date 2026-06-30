@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('hospitals_test', function (Blueprint $table) {
-            $table->string('short_name')->nullable()->after('name');
+        Schema::create('faq_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->string('icon_class');
+            $table->integer('sort_order')->default(0);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('hospitals_test', function (Blueprint $table) {
-            $table->dropColumn('short_name');
-        });
+        Schema::dropIfExists('faq_categories');
     }
 };
