@@ -3,30 +3,39 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Support\Dummy\SettingDummyData;
-use Illuminate\Http\Request;
+use App\Http\Requests\Settings\UpdateAppRequest;
+use App\Services\UserSettingsService;
 
 class AppController extends Controller
 {
-    protected object $user;
-
-    public function __construct()
-    {
-        $this->user = SettingDummyData::user();
-    }
+    public function __construct(protected UserSettingsService $settingsService) {}
 
     public function app()
     {
+        $user = auth()->user();
+
         return view('settings._app', [
-            'user' => $this->user,
-            'app'  => SettingDummyData::appSettings(),
+            'user' => $this->settingsService->accountViewData($user),
+            'app'  => $this->settingsService->appSettings($user),
         ]);
     }
 
-    public function updateApp(Request $request)
+    public function updateApp(UpdateAppRequest $request)
     {
-        // TODO: auth()->user()->update($request->validated());
-        // TODO: 更新後、ライブプレビューに反映されるようにフロントエンドへ信号を送る
+        $user     = auth()->user();
+        $settings = $this->settingsService->ensureSettings($user);
+
+        $settings->update([
+            'app_settings' => $this->settingsService->mergeAppSettings($request->all()),
+        ]);
+
         return back()->with('success', 'アプリ設定を保存しました');
+    }
+
+    public function resetApp()
+    {
+        $this->settingsService->resetAppSettings(auth()->user());
+
+        return back()->with('success', 'アプリ設定を初期値にリセットしました');
     }
 }
