@@ -55,7 +55,7 @@ Route::get('/tourist_spots/{id}', [TouristSpotController::class, 'show'])->name(
 |--------------------------------------------------------------------------
 */
 Auth::routes();
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/search', [App\Http\Controllers\HomeController::class, 'search'])->name('search');
@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/spots/{id}', [SpotController::class, 'destroy'])->name('spots.destroy');
     Route::post('/spots/photos/reorder', [SpotController::class, 'reorderPhotos'])->name('spots.photos.reorder');
     Route::post('/spots/{id}/bookmark', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
-    Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('spots_reviews.store');
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     Route::post('/spots/{spot}/coupon', [SpotController::class, 'useCoupon'])->name('spots.coupon.use');

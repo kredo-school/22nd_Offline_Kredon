@@ -111,20 +111,46 @@
                 </button>
             </div>
 
-            {{-- 検索フォーム --}}
+         {{-- 検索フォーム --}}
             <div class="card border-0 bg-transparent mb-4">
-                <form class="d-flex w-100">
+                <form class="d-flex w-100" onsubmit="return false;">
                     <div class="input-group shadow-sm" style="border-radius: 30px; max-width: 600px;">
                         <span class="input-group-text bg-white border-0"
                             style="border-top-left-radius: 30px; border-bottom-left-radius: 30px;">
                             <i class="fa-solid fa-magnifying-glass text-muted"></i>
                         </span>
-                        <input class="form-control bg-white border-0" type="search"
+                        <input id="reviewSearchInput" class="form-control bg-white border-0" type="search"
                             placeholder="Search the title or key words..."
-                            style="border-top-right-radius: 30px; border-bottom-right-radius: 30px;">
+                            style="border-top-right-radius: 30px; border-bottom-right-radius: 30px;"
+                            oninput="filterReviews(this.value)">
                     </div>
                 </form>
             </div>
+
+            <script>
+                function filterReviews(keyword) {
+                    const cards = document.querySelectorAll('.review-card');
+                    const chars = [...keyword.trim()].filter(c => c !== ''); // 入力文字を1文字ずつ配列化
+
+                    cards.forEach(card => {
+                        const col = card.closest('.col'); // グリッドのラッパーごと表示/非表示
+                        const title = (card.dataset.title || '').toLowerCase();
+                        const comment = (card.dataset.comment || '').toLowerCase();
+                        const target = title + comment;
+
+                        // キーワードが空なら全件表示
+                        if (chars.length === 0) {
+                            col.style.display = '';
+                            return;
+                        }
+
+                        // タイトル or コメントに、入力した文字のうち1文字でも含まれていればヒット
+                        const isMatch = chars.some(c => target.includes(c.toLowerCase()));
+
+                        col.style.display = isMatch ? '' : 'none';
+                    });
+                }
+            </script>
 
             {{-- カテゴリータブメニュー --}}
             <ul class="nav nav-tabs border-bottom mb-4" id="categoryTab" role="tablist">
