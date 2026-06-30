@@ -26,6 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+
         $user = Auth::user();
 
         // ① あゆみさんが作っていた「学習スポット」のデータ取得

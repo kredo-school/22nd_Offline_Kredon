@@ -3,12 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Review;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+use App\Models\Review;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+
+
+use App\Models\User;
 
 class ReviewController extends Controller
 {
+
+    public function index()
+    {
+        return view('reviews.index');
+    }
+
+
     // 🌟 既存のお店に対する「追加レビュー」を保存する係
     public function store(Request $request, $spot_id)
     {
@@ -24,7 +38,7 @@ class ReviewController extends Controller
             // 'photo' => 'nullable|image|max:2048', // ※写真は後で実装するので一旦コメントアウト
         ]);
 
-       $user = Auth::user();
+        $user = Auth::user();
 
         // ② Reviewsテーブルに新しいレビューを保存！
         $review = new Review();
@@ -37,13 +51,13 @@ class ReviewController extends Controller
         $review->good_point = $request->good_point;
         $review->bad_point = $request->bad_point;
         $review->comment = $request->comment;
-        
+
         $review->save();
 
         return back()->with('success', '✨ レビューを投稿しました！平均点が更新されました！');
     }
-    
-// 🌟 レビュー編集（更新）処理
+
+    // 🌟 レビュー編集（更新）処理
     public function update(Request $request, $id)
     {
         $review = \App\Models\Review::findOrFail($id);
