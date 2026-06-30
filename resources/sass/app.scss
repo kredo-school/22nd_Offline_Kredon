@@ -21,10 +21,21 @@
  * app.blade.php の .navbar-top は position:fixed; height:70px。
  * デスクトップ用インラインCSSで .content-body { margin-top: 0 !important } となっており、
  * 設定ページ上部がヘッダーに隠れる。app.blade.php は触れないため SCSS で上書きする。
+ *
+ * [Step1] admin マージ後の overflow:hidden により設定ページがクリップされるため、
+ * overflow-y:auto を追加。固定 height は min-height に変更してスクロール可能にする。
  */
-/* app.scss の末尾 */
 @media (min-width: 768px) {
     .content-body {
+        // margin-top: 70px !important;  /* 変更前 */
         margin-top: 70px !important;
+
+        // overflow: hidden !important;   /* 変更前: app.blade.php インラインCSS */
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        // height: calc(100vh - 70px) !important;  /* 変更前: app.blade.php インラインCSS */
+        height: auto !important;
+        min-height: calc(100vh - 70px) !important;
     }
 }
