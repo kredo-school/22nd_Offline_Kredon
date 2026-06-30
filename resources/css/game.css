@@ -1,0 +1,269 @@
+.game-screen{
+
+    position:relative;
+
+    width:100%;
+    height:100vh;
+
+    overflow:hidden;
+
+    background:url('/images/beach-bg.png');
+
+    background-size:cover;
+    background-position:center;
+}
+
+/* TOP BAR */
+
+.top-bar{
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:70px;
+
+    background:#082342;
+
+    border-bottom:4px solid white;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 40px;
+
+    color:white;
+
+    font-size:28px;
+
+    z-index:100;
+}
+
+/* LOGO */
+
+.game-logo{
+
+    position:absolute;
+
+    top:80px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    text-align:center;
+
+    color:white;
+}
+
+.game-logo h1{
+
+    font-size:80px;
+    margin:0;
+
+    text-shadow:
+        4px 4px 0 #000;
+}
+
+.game-logo span{
+
+    font-size:40px;
+    color:#f4b23a;
+
+    font-weight:bold;
+}
+
+/* BOARD */
+
+.mission-board{
+
+    position:absolute;
+
+    left:80px;
+    top:180px;
+
+    width:450px;
+
+    background:#f7e7bc;
+
+    border:10px solid #7f4e1d;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    box-shadow:0 0 0 6px #3f240b;
+}
+
+.board-title{
+
+    background:#8c5328;
+
+    color:white;
+
+    text-align:center;
+
+    font-size:30px;
+
+    padding:10px;
+
+    margin-bottom:20px;
+}
+
+.mission-board li{
+
+    font-size:24px;
+
+    margin-bottom:12px;
+
+    list-style:none;
+}
+
+/* CHARACTER */
+
+.player-character{
+
+    position:absolute;
+
+    width:220px;
+
+    right:420px;
+    top:260px;
+
+    image-rendering:pixelated;
+}
+
+/* DOG */
+
+.dog{
+
+    position:absolute;
+
+    width:100px;
+
+    left:530px;
+    top:500px;
+
+    image-rendering:pixelated;
+}
+
+/* HUT */
+
+.hut{
+
+    position:absolute;
+
+    width:350px;
+
+    right:120px;
+    top:220px;
+
+    image-rendering:pixelated;
+}
+
+/* SIGN */
+
+.adventure-sign{
+
+    position:absolute;
+
+    right:140px;
+    top:500px;
+
+    background:#9a602d;
+
+    border:8px solid #5b3618;
+
+    color:white;
+
+    font-size:40px;
+
+    padding:20px 40px;
+
+    font-weight:bold;
+}
+
+/* BUTTONS */
+
+.menu-buttons{
+
+    position:absolute;
+
+    bottom:60px;
+    left:50%;
+
+    transform:translateX(-50%);
+}
+
+.btn-red,
+.btn-blue,
+.btn-yellow,
+.btn-green{
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    text-decoration:none;
+
+    color:white;
+
+    font-weight:bold;
+
+    border:5px solid #000;
+
+    text-shadow:2px 2px #000;
+}
+
+.btn-red{
+
+    width:500px;
+    height:90px;
+
+    background:#cf3e39;
+
+    font-size:38px;
+
+    margin-bottom:10px;
+}
+
+.row-buttons{
+
+    display:flex;
+    gap:10px;
+
+    margin-bottom:10px;
+}
+
+.btn-blue{
+
+    width:245px;
+    height:90px;
+
+    background:#3572c6;
+
+    font-size:24px;
+}
+
+.btn-yellow{
+
+    width:245px;
+    height:90px;
+
+    background:#d8921b;
+
+    font-size:24px;
+}
+
+.btn-green{
+
+    width:500px;
+    height:90px;
+
+    background:#2c8f3f;
+
+    font-size:36px;
+}
