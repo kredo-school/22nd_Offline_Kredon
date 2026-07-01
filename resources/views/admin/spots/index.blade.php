@@ -10,10 +10,10 @@
                 <h4 class="fw-bold mb-1">Spot Management</h4>
                 <p class="text-muted mb-0" style="font-size:0.85rem;">Manage Working, Tourism, and Hospital spots</p>
             </div>
-            <button type="button" class="btn btn-primary"
+            {{-- <button type="button" class="btn btn-primary"
                 onclick="document.querySelector('[data-bs-target=&quot;#tab-working&quot;]')?.click()">
                 <i class="fa-solid fa-plus me-1"></i> New Spot
-            </button>
+            </button> --}}
         </div>
 
         {{-- Category Tabs --}}
@@ -21,20 +21,19 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="tab-working-btn" data-bs-toggle="tab" data-bs-target="#tab-working"
                     type="button" role="tab">
-                    <i class="fa-solid fa-briefcase me-1"></i> Working <span
-                        class="badge bg-light text-dark ms-1">128</span>
+                    <i class="fa-solid fa-briefcase me-1"></i> Working 
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-tourism-btn" data-bs-toggle="tab" data-bs-target="#tab-tourism"
                     type="button" role="tab">
-                    <i class="fa-solid fa-camera me-1"></i> Tourism <span class="badge bg-light text-dark ms-1">214</span>
+                    <i class="fa-solid fa-camera me-1"></i> Tourism 
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-hospital-btn" data-bs-toggle="tab" data-bs-target="#tab-hospital"
                     type="button" role="tab">
-                    <i class="fa-solid fa-hospital me-1"></i> Hospital <span class="badge bg-light text-dark ms-1">76</span>
+                    <i class="fa-solid fa-hospital me-1"></i> Hospital
                 </button>
             </li>
         </ul>
@@ -44,39 +43,37 @@
             {{-- ============ TAB 1: WORKING ============ --}}
             <div class="tab-pane fade show active" id="tab-working" role="tabpanel">
 
-                {{-- Metric cards --}}
+                {{-- Metric cards: status列が無いためDBに実在する値で構成 --}}
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
                                 <p class="text-muted mb-1" style="font-size:0.8rem;">Total Spots</p>
-                                <h4 class="fw-bold mb-0">128</h4>
+                                <h4 class="fw-bold mb-0">{{ $workingSpots->count() }}</h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
-                                <p class="text-muted mb-1" style="font-size:0.8rem;">Published</p>
-                                <h4 class="fw-bold mb-0">104</h4>
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">81%</p>
+                                <p class="text-muted mb-1" style="font-size:0.8rem;">With WiFi</p>
+                                <h4 class="fw-bold mb-0">{{ $workingSpots->where('has_wifi', 1)->count() }}</h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
-                                <p class="text-muted mb-1" style="font-size:0.8rem;">Draft</p>
-                                <h4 class="fw-bold mb-0">18</h4>
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">Pending review</p>
+                                <p class="text-muted mb-1" style="font-size:0.8rem;">With Power Outlet</p>
+                                <h4 class="fw-bold mb-0">{{ $workingSpots->where('has_power', 1)->count() }}</h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
-                                <p class="text-muted mb-1" style="font-size:0.8rem;">Unpublished</p>
-                                <h4 class="fw-bold mb-0">6</h4>
+                                <p class="text-muted mb-1" style="font-size:0.8rem;">Missing Photo</p>
+                                <h4 class="fw-bold mb-0">{{ $workingSpots->whereNull('photo_path')->count() }}</h4>
                             </div>
                         </div>
                     </div>
@@ -85,110 +82,103 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
 
-                        {{-- Filter row --}}
+                        {{-- Filter row: status列が無いため検索のみ --}}
                         <div class="d-flex gap-2 mb-3 flex-wrap">
-                            <select class="form-select form-select-sm" style="width:auto;">
-                                <option>All Status</option>
-                                <option>Published</option>
-                                <option>Draft</option>
-                                <option>Unpublished</option>
-                            </select>
-                            <input type="text" class="form-control form-control-sm flex-grow-1"
-                                placeholder="Search by spot name..." style="min-width:200px;">
+                            <input type="text" id="working-search" class="form-control form-control-sm flex-grow-1"
+                                placeholder="Search by spot name or area..." style="min-width:200px;">
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table align-middle">
+                            <table class="table align-middle" id="working-table">
                                 <thead>
                                     <tr class="text-muted" style="font-size:0.75rem;">
                                         <th>Spot Name</th>
                                         <th>Area</th>
+                                        <th>Hours</th>
                                         <th>Evaluation</th>
-                                        <th>Status</th>
+                                        <th>WiFi</th>
+                                        <th>Power</th>
                                         <th>Updated</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody style="font-size:0.875rem;">
-                                    @php
-                                        $dummyWorkingSpots = [
-                                            [
-                                                'name' => 'Ayala Center Cebu - Office Tower',
-                                                'area' => 'Cebu Business Park',
-                                                'rating' => 4.5,
-                                                'status' => 'published',
-                                                'updated' => '2026/06/12',
-                                            ],
-                                            [
-                                                'name' => 'IT Park Coworking Space',
-                                                'area' => 'Lahug',
-                                                'rating' => 4.2,
-                                                'status' => 'published',
-                                                'updated' => '2026/06/10',
-                                            ],
-                                            [
-                                                'name' => 'Mandaue Manufacturing Hub',
-                                                'area' => 'Mandaue',
-                                                'rating' => null,
-                                                'status' => 'draft',
-                                                'updated' => '2026/06/15',
-                                            ],
-                                            [
-                                                'name' => 'Old Town Print Shop',
-                                                'area' => 'Colon',
-                                                'rating' => 3.1,
-                                                'status' => 'unpublished',
-                                                'updated' => '2026/05/28',
-                                            ],
-                                        ];
-                                    @endphp
-
-                                    @foreach ($dummyWorkingSpots as $spot)
-                                        <tr>
+                                    @forelse ($workingSpots as $spot)
+                                        <tr data-name="{{ strtolower($spot->name . ' ' . $spot->area) }}">
                                             <td class="fw-semibold">
                                                 <div class="d-flex align-items-center gap-2">
-                                                    <span
-                                                        class="d-inline-flex align-items-center justify-content-center bg-light rounded"
-                                                        style="width:32px;height:32px;color:#adb5bd;">
-                                                        <i class="fa-solid fa-image"></i>
-                                                    </span>
-                                                    {{ $spot['name'] }}
+                                                    @if ($spot->photo_path)
+                                                        <img src="{{ asset('storage/' . $spot->photo_path) }}"
+                                                            alt="{{ $spot->name }}" class="rounded"
+                                                            style="width:32px;height:32px;object-fit:cover;">
+                                                    @else
+                                                        <span
+                                                            class="d-inline-flex align-items-center justify-content-center bg-light rounded"
+                                                            style="width:32px;height:32px;color:#adb5bd;">
+                                                            <i class="fa-solid fa-image"></i>
+                                                        </span>
+                                                    @endif
+                                                    {{ $spot->name }}
                                                 </div>
                                             </td>
-                                            <td class="text-muted">{{ $spot['area'] }}</td>
+                                            <td class="text-muted">{{ $spot->area }}</td>
+                                            <td class="text-muted" style="font-size:0.8rem;">{{ $spot->hours ?? '—' }}</td>
                                             <td>
-                                                @if ($spot['rating'])
-                                                    <span style="color:#854F0B; font-size:0.8rem;"><i
-                                                            class="fa-solid fa-star"></i> {{ $spot['rating'] }}</span>
+                                                @if ($spot->reviews_count > 0)
+                                                    <span style="color:#854F0B; font-size:0.8rem;">
+                                                        <i class="fa-solid fa-star"></i>
+                                                        {{ number_format($spot->reviews_avg_rating, 1) }}
+                                                    </span>
+                                                    <span class="text-muted"
+                                                        style="font-size:0.72rem;">({{ $spot->reviews_count }})</span>
                                                 @else
                                                     <span class="text-muted">—</span>
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($spot['status'] === 'published')
+                                                @if ($spot->has_wifi)
                                                     <span class="badge rounded-pill"
-                                                        style="background-color:#EAF3DE; color:#27500A; font-weight:500;">Published</span>
-                                                @elseif ($spot['status'] === 'draft')
-                                                    <span class="badge rounded-pill"
-                                                        style="background-color:#F1EFE8; color:#444441; font-weight:500;">Draft</span>
+                                                        style="background-color:#EAF3DE; color:#27500A; font-weight:500;">
+                                                        <i class="fa-solid fa-wifi"></i>
+                                                    </span>
                                                 @else
-                                                    <span class="badge rounded-pill"
-                                                        style="background-color:#FCEBEB; color:#791F1F; font-weight:500;">Unpublished</span>
+                                                    <span class="text-muted">—</span>
                                                 @endif
                                             </td>
-                                            <td class="text-muted" style="font-size:0.8rem;">{{ $spot['updated'] }}</td>
+                                            <td>
+                                                @if ($spot->has_power)
+                                                    <span class="badge rounded-pill"
+                                                        style="background-color:#EAF3DE; color:#27500A; font-weight:500;">
+                                                        <i class="fa-solid fa-plug"></i>
+                                                    </span>
+                                                @else
+                                                    <span class="text-muted">—</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-muted" style="font-size:0.8rem;">
+                                                {{ optional($spot->updated_at)->format('Y/m/d') ?? '—' }}
+                                            </td>
                                             <td>
                                                 <div class="d-flex gap-1">
-                                                    <a href="#" class="btn btn-outline-secondary btn-sm py-0 px-2"
+                                                    <a href="#"
+                                                        class="btn btn-outline-secondary btn-sm py-0 px-2"
                                                         style="font-size:0.72rem;">Detail</a>
-                                                    <button class="btn btn-outline-secondary btn-sm py-0 px-2"
-                                                        style="font-size:0.72rem;">Edit</button>
-                                                    <button class="btn btn-outline-danger btn-sm py-0 px-2"
+                                                    <a href="#"
+                                                        class="btn btn-outline-secondary btn-sm py-0 px-2"
+                                                        style="font-size:0.72rem;">Edit</a>
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger btn-sm py-0 px-2 js-delete-spot"
+                                                        data-id="{{ $spot->id }}"
                                                         style="font-size:0.72rem;">Delete</button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="8" class="text-center text-muted py-4">No working spots found.
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -205,33 +195,31 @@
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
                                 <p class="text-muted mb-1" style="font-size:0.8rem;">Total Spots</p>
-                                <h4 class="fw-bold mb-0">214</h4>
+                                <h4 class="fw-bold mb-0">{{ $tourismSpots->count() }}</h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
-                                <p class="text-muted mb-1" style="font-size:0.8rem;">Published</p>
-                                <h4 class="fw-bold mb-0">189</h4>
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">88%</p>
+                                <p class="text-muted mb-1" style="font-size:0.8rem;">With Activity</p>
+                                <h4 class="fw-bold mb-0">{{ $tourismSpots->where('has_activity', 1)->count() }}</h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
-                                <p class="text-muted mb-1" style="font-size:0.8rem;">Draft</p>
-                                <h4 class="fw-bold mb-0">21</h4>
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">Pending review</p>
+                                <p class="text-muted mb-1" style="font-size:0.8rem;">With Great View</p>
+                                <h4 class="fw-bold mb-0">{{ $tourismSpots->where('has_view', 1)->count() }}</h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
-                                <p class="text-muted mb-1" style="font-size:0.8rem;">Unpublished</p>
-                                <h4 class="fw-bold mb-0">4</h4>
+                                <p class="text-muted mb-1" style="font-size:0.8rem;">With Food</p>
+                                <h4 class="fw-bold mb-0">{{ $tourismSpots->where('has_food', 1)->count() }}</h4>
                             </div>
                         </div>
                     </div>
@@ -241,121 +229,109 @@
                     <div class="card-body p-4">
 
                         <div class="d-flex gap-2 mb-3 flex-wrap">
-                            <select class="form-select form-select-sm" style="width:auto;">
-                                <option>All Status</option>
-                                <option>Published</option>
-                                <option>Draft</option>
-                                <option>Unpublished</option>
-                            </select>
-                            <select class="form-select form-select-sm" style="width:auto;">
-                                <option>All Price Ranges</option>
-                                <option>Free</option>
-                                <option>$</option>
-                                <option>$$</option>
-                                <option>$$$</option>
-                            </select>
-                            <input type="text" class="form-control form-control-sm flex-grow-1"
-                                placeholder="Search by spot name..." style="min-width:200px;">
+                            <input type="text" id="tourism-search" class="form-control form-control-sm flex-grow-1"
+                                placeholder="Search by spot name or area..." style="min-width:200px;">
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table align-middle">
+                            <table class="table align-middle" id="tourism-table">
                                 <thead>
                                     <tr class="text-muted" style="font-size:0.75rem;">
                                         <th>Spot Name</th>
-                                        <th>Price Range</th>
                                         <th>Area</th>
+                                        <th>Budget</th>
                                         <th>Evaluation</th>
-                                        <th>Status</th>
+                                        <th>Amenities</th>
                                         <th>Updated</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody style="font-size:0.875rem;">
-                                    @php
-                                        $dummyTourismSpots = [
-                                            [
-                                                'name' => 'Temple of Leah',
-                                                'price' => '$$',
-                                                'area' => 'Busay',
-                                                'rating' => 4.8,
-                                                'status' => 'published',
-                                                'updated' => '2026/06/14',
-                                            ],
-                                            [
-                                                'name' => 'Kawasan Falls',
-                                                'price' => '$',
-                                                'area' => 'Badian',
-                                                'rating' => 4.9,
-                                                'status' => 'published',
-                                                'updated' => '2026/06/09',
-                                            ],
-                                            [
-                                                'name' => 'Sirao Flower Garden',
-                                                'price' => 'Free',
-                                                'area' => 'Sirao',
-                                                'rating' => null,
-                                                'status' => 'draft',
-                                                'updated' => '2026/06/16',
-                                            ],
-                                            [
-                                                'name' => "Magellan's Cross",
-                                                'price' => 'Free',
-                                                'area' => 'Cebu City',
-                                                'rating' => 4.3,
-                                                'status' => 'published',
-                                                'updated' => '2026/06/01',
-                                            ],
-                                        ];
-                                    @endphp
-
-                                    @foreach ($dummyTourismSpots as $spot)
-                                        <tr>
+                                    @forelse ($tourismSpots as $spot)
+                                        <tr data-name="{{ strtolower($spot->name . ' ' . $spot->area) }}">
                                             <td class="fw-semibold">
                                                 <div class="d-flex align-items-center gap-2">
-                                                    <span
-                                                        class="d-inline-flex align-items-center justify-content-center bg-light rounded"
-                                                        style="width:32px;height:32px;color:#adb5bd;">
-                                                        <i class="fa-solid fa-image"></i>
-                                                    </span>
-                                                    {{ $spot['name'] }}
+                                                    @if ($spot->photo_path)
+                                                        <img src="{{ asset('storage/' . $spot->photo_path) }}"
+                                                            alt="{{ $spot->name }}" class="rounded"
+                                                            style="width:32px;height:32px;object-fit:cover;">
+                                                    @else
+                                                        <span
+                                                            class="d-inline-flex align-items-center justify-content-center bg-light rounded"
+                                                            style="width:32px;height:32px;color:#adb5bd;">
+                                                            <i class="fa-solid fa-image"></i>
+                                                        </span>
+                                                    @endif
+                                                    {{ $spot->name }}
                                                 </div>
                                             </td>
-                                            <td class="text-muted">{{ $spot['price'] }}</td>
-                                            <td class="text-muted">{{ $spot['area'] }}</td>
+                                            <td class="text-muted">{{ $spot->area }}</td>
+                                            <td class="text-muted">{{ $spot->budget ?? '—' }}</td>
                                             <td>
-                                                @if ($spot['rating'])
-                                                    <span style="color:#854F0B; font-size:0.8rem;"><i
-                                                            class="fa-solid fa-star"></i> {{ $spot['rating'] }}</span>
+                                                @if ($spot->reviews_count > 0)
+                                                    <span style="color:#854F0B; font-size:0.8rem;">
+                                                        <i class="fa-solid fa-star"></i>
+                                                        {{ number_format($spot->reviews_avg_rating, 1) }}
+                                                    </span>
+                                                    <span class="text-muted"
+                                                        style="font-size:0.72rem;">({{ $spot->reviews_count }})</span>
                                                 @else
                                                     <span class="text-muted">—</span>
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($spot['status'] === 'published')
-                                                    <span class="badge rounded-pill"
-                                                        style="background-color:#EAF3DE; color:#27500A; font-weight:500;">Published</span>
-                                                @elseif ($spot['status'] === 'draft')
-                                                    <span class="badge rounded-pill"
-                                                        style="background-color:#F1EFE8; color:#444441; font-weight:500;">Draft</span>
-                                                @else
-                                                    <span class="badge rounded-pill"
-                                                        style="background-color:#FCEBEB; color:#791F1F; font-weight:500;">Unpublished</span>
-                                                @endif
+                                                <div class="d-flex gap-1 flex-wrap">
+                                                    @if ($spot->has_activity)
+                                                        <span class="badge rounded-pill"
+                                                            style="background-color:#EAF3DE; color:#27500A;"><i
+                                                                class="fa-solid fa-person-hiking"></i></span>
+                                                    @endif
+                                                    @if ($spot->has_view)
+                                                        <span class="badge rounded-pill"
+                                                            style="background-color:#EAF3DE; color:#27500A;"><i
+                                                                class="fa-solid fa-mountain-sun"></i></span>
+                                                    @endif
+                                                    @if ($spot->has_shopping)
+                                                        <span class="badge rounded-pill"
+                                                            style="background-color:#EAF3DE; color:#27500A;"><i
+                                                                class="fa-solid fa-bag-shopping"></i></span>
+                                                    @endif
+                                                    @if ($spot->has_food)
+                                                        <span class="badge rounded-pill"
+                                                            style="background-color:#EAF3DE; color:#27500A;"><i
+                                                                class="fa-solid fa-utensils"></i></span>
+                                                    @endif
+                                                    @if (!$spot->has_activity && !$spot->has_view && !$spot->has_shopping && !$spot->has_food)
+                                                        <span class="text-muted">—</span>
+                                                    @endif
+                                                </div>
                                             </td>
-                                            <td class="text-muted" style="font-size:0.8rem;">{{ $spot['updated'] }}</td>
+                                            <td class="text-muted" style="font-size:0.8rem;">
+                                                {{ optional($spot->updated_at)->format('Y/m/d') ?? '—' }}
+                                            </td>
                                             <td>
+                                                {{-- 表示か非表示だけでもいいかも？ --}}
+
                                                 <div class="d-flex gap-1">
-                                                    <a href="#" class="btn btn-outline-secondary btn-sm py-0 px-2"
+                                                    <a href="#"
+                                                        class="btn btn-outline-secondary btn-sm py-0 px-2"
                                                         style="font-size:0.72rem;">Detail</a>
-                                                    <button class="btn btn-outline-secondary btn-sm py-0 px-2"
-                                                        style="font-size:0.72rem;">Edit</button>
-                                                    <button class="btn btn-outline-danger btn-sm py-0 px-2"
+                                                    <a href="#"
+                                                        class="btn btn-outline-secondary btn-sm py-0 px-2"
+                                                        style="font-size:0.72rem;">Edit</a>
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger btn-sm py-0 px-2 js-delete-spot"
+                                                        data-id="{{ $spot->id }}"
                                                         style="font-size:0.72rem;">Delete</button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted py-4">No tourism spots found.
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
