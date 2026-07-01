@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TouristSpotController extends Controller
 {
-   public function store(Request $request)
+  public function store(Request $request)
     {
         // 🌟 観光スポット用のバリデーション（最大10枚・複数画像・AVIF対応）
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -149,8 +149,8 @@ class TouristSpotController extends Controller
                 $rewardText  = $selectedTip['text'];
             }
 
-            // 🌟 3. 引いたガチャの結果をトップページへ投げる！（観光用のIDで発動）
-            return redirect('/')
+            // 🌟 3. 引いたガチャの結果を「観光スポット一覧」へ投げる！
+            return redirect()->route('tourist_spots.index')
                 ->with('success', '✨ 新しい観光スポットを登録しました！')
                 ->with('reward_tip_title', $rewardTitle)
                 ->with('reward_tip_text', $rewardText);
