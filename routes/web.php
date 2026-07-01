@@ -74,7 +74,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/reviews/search-locations', [AllReviewController::class, 'searchLocations'])->name('locations.search');
 
 
-
+#Market
 Route::get('/market', [MarketplaceController::class, 'index'])->name('marketplace.index');
 Route::get('/market/create', [MarketplaceController::class, 'create'])->name('marketplace.create');
 Route::post('/market/store', [MarketplaceController::class, 'store'])->name('marketplace.store');
@@ -178,8 +178,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/spots/{id}', [SpotController::class, 'update'])->name('spots.update');
     Route::delete('/spots/{id}', [SpotController::class, 'destroy'])->name('spots.destroy');
     Route::post('/spots/photos/reorder', [SpotController::class, 'reorderPhotos'])->name('spots.photos.reorder');
-    Route::post('/spots/{id}/bookmark', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
-    Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('spots_reviews.store');
+    Route::post('/spots/{id}/5', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
+    Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     Route::post('/spots/{spot}/coupon', [SpotController::class, 'useCoupon'])->name('spots.coupon.use');
@@ -199,7 +199,7 @@ Route::middleware('auth')->group(function () {
         ->name('notifications.mark-all-read');
  
     // ユーザー通知
-    Route::post('/notifications/mark-all-read', [NotificationsController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    // Route::post('/notifications/mark-all-read', [NotificationsController::class, 'markAllRead'])->name('notifications.mark-all-read');
 });
 
 
