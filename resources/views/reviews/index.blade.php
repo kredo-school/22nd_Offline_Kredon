@@ -4,98 +4,85 @@
 
 @section('content')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <style>
+       /* min-heightは　overflowへの許可 */
+    .review-wrapper {
+        display: flex;
+        height: 100%;
+        flex-direction: row;
+        min-height: 0;
+        overflow: hidden;
+    }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        .review-wrapper {
-            /* height: calc(100vh - 70px); */
-            display: flex;
-            height: 100%;
-            flex-direction: row;
-            min-height: 0;
+    .main-content {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+        min-width: 0;
+        background-color: #f8f9fa;
+    }
 
-            overflow: hidden;
-            /* min-heightは　overflowへの許可 */
-        }
+    .sidebar-right {
+        height: 100%;
+        width: 280px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        min-height: 0;
+        background-color: #f7f5f0;
+        border-left: 1px solid #e9ecef;
+        padding: 20px;
+    }
 
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            /* min-heightは　overflowへの許可 */
-            min-height: 0;
-            min-width: 0;
-            background-color: #f8f9fa;
+    h5 {
+        margin-top: 0;
+    }
 
-            /* margin-top: 0; */
-        }
+    #categoryTab .nav-link {
+        border: none;
+        border-bottom: 2px solid transparent;
+        background-color: transparent;
+        font-size: 0.9rem;
+        color: #6c757d;
+        transition: all 0.2s ease;
+    }
 
-        .sidebar-right {
-            height: 100%;
-            width: 280px;
-            flex-shrink: 0;
-            overflow-y: auto;
+    #categoryTab .nav-link.active {
+        border-bottom: 2px solid rgb(19, 189, 189);
+        color: rgb(19, 189, 189) !important;
+        background-color: transparent;
+    }
 
-            min-height: 0;
-            /* top: 0; */
-            /* height: calc(100vh - 70px); */
-            background-color: #f7f5f0;
-            border-left: 1px solid #e9ecef;
-            padding: 20px;
-        }
+    #categoryTab .nav-link.active i {
+        color: rgb(19, 189, 189) !important;
+    }
 
-        h5 {
-            margin-top: 0;
-        }
+    #categoryTab .nav-link:hover {
+        border-bottom: 2px solid rgb(19, 189, 189);
+        color: rgb(19, 189, 189);
+    }
 
-        #categoryTab .nav-link {
-            border: none;
-            border-bottom: 2px solid transparent;
-            background-color: transparent;
-            font-size: 0.9rem;
-            color: #6c757d;
-            transition: all 0.2s ease;
-        }
+    .review-card {
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-        #categoryTab .nav-link.active {
-            border-bottom: 2px solid rgb(19, 189, 189);
-            color: rgb(19, 189, 189) !important;
-            background-color: transparent;
-        }
+    .review-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08) !important;
+    }
 
-        #categoryTab .nav-link.active i {
-            color: rgb(19, 189, 189) !important;
-        }
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 
-        #categoryTab .nav-link:hover {
-            border-bottom: 2px solid rgb(19, 189, 189);
-            color: rgb(19, 189, 189);
-        }
-
-        .review-card {
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .review-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08) !important;
-        }
-
-        .text-truncate-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .preview-amenities {
-            font-size: 0.9rem;
-            color: #5c9ad0;
-        }
-    </style>
+    .preview-amenities {
+        font-size: 0.9rem;
+        color: #5c9ad0;
+    }
+</style>
 
     {{-- <div class="container-fluid px-0 review-wrapper"> --}}
     <div class="review-wrapper">
