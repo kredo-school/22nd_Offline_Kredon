@@ -328,7 +328,7 @@
                                 <a href="{{ route('tourist_spots.show', $tourist_spot->id) }}" class="spot-card-horizontal">
                                     <div class="spot-card-img-area">
                                         @if($tourist_spot->photo_path)
-                                            <img src="{{ asset('storage/' . $tourist_spot->photo_path) }}" alt="スポット写真">
+                                            <img src="{{'tourist_spots/'. $tourist_spot->photo_path) }}" alt="スポット写真">
                                         @else
                                             <img src="https://placehold.co/400x300/fff4e6/f0932b?text=No+Photo" alt="写真なし">
                                         @endif
