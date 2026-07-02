@@ -12,11 +12,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            SpotSeeder::class,
+            UserSeeder::class,
             CharacterTempSeeder::class,
             NgWordSeeder::class,
-            UserSeeder::class,
             UserSettingSeeder::class,
+            SpotSeeder::class,
+            PostSeeder::class,
+            TouristSpotSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }

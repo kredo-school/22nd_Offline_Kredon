@@ -119,6 +119,6 @@ class Notification extends Model
      */
     public function getUrl(): ?string
     {
-        return $this->data['url'] ?? null;
+        return $this->data['url'] ?? $this->data['link_url'] ?? null;
     }
 }
