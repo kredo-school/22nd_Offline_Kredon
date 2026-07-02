@@ -40,34 +40,31 @@
                             <div class="col-12 col-sm-6">
                                 <div class="border rounded p-2 h-100">
                                     <div class="d-flex justify-content-between align-items-start mb-1">
-                                        <span style="font-size:0.78rem; font-weight:600;">User Growth Trend</span>
+                                        <span style="font-size:0.78rem; font-weight:600;">User Growth & Churn Trend</span>
                                         <div class="text-end">
                                             <div style="font-size:0.7rem; color:#6c757d;">Total Users</div>
-                                            <div class="fw-bold" style="font-size:1.1rem; line-height:1.2;">45,210</div>
-                                            <div class="text-success" style="font-size:0.7rem;">+ 15%</div>
+                                            <div class="fw-bold" style="font-size:1.1rem; line-height:1.2;">
+                                                {{ number_format(end($growth['totalSeries']) ?: 0) }}
+                                            </div>
                                         </div>
                                     </div>
                                     <div style="font-size:0.68rem; color:#6c757d;" class="mb-1">
-                                        <span class="me-2">— Total Users</span>
-                                        <span>— Premium Users</span>
+                                        <span class="me-2"><span style="color:#4a90d9;">●</span> Cumulative
+                                            Registrations</span>
+                                        <span><span style="color:#e8516a;">●</span> Cumulative Churn</span>
                                     </div>
-                                    <canvas id="userGrowthChart"></canvas>
+                                    <div style="position:relative; height:160px;">
+                                        <canvas id="userGrowthChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
 
-                            {{-- Demographics --}}
+                            {{-- Dormancy Funnel --}}
                             <div class="col-12 col-sm-6">
                                 <div class="border rounded p-2 h-100">
-                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">Demographics (Age & Gender)
-                                    </div>
-                                    <div class="d-flex gap-2">
-                                        <canvas id="ageChart" style="flex:1;"></canvas>
-                                    </div>
-                                    <div class="d-flex gap-2 justify-content-center mt-1" style="font-size:0.68rem;">
-                                        <span><span style="color:#4a90d9;">●</span> Male</span>
-                                        <span><span style="color:#e8516a;">●</span> Female</span>
-                                        <span><span style="color:#a0a0a0;">●</span> other</span>
-                                    </div>
+                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">Dormancy Funnel (Days Since
+                                        Last Login)</div>
+                                    <div style="position:relative; height:120px;"><canvas id="dormancyChart"></canvas></div>
                                 </div>
                             </div>
 
@@ -103,34 +100,66 @@
                                 </div>
                             </div>
 
-                            {{-- Regional Distribution --}}
+                            {{-- Time-to-Churn --}}
                             <div class="col-12 col-sm-6">
                                 <div class="border rounded p-2 h-100">
-                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">Regional Distribution</div>
-                                    <div class="position-relative bg-light rounded d-flex align-items-center justify-content-center"
-                                        style="height:120px; background: linear-gradient(135deg,#d4e8f7,#b8d4ee) !important;">
-                                        <svg viewBox="0 0 200 160" style="width:100%;height:100%;opacity:0.85;">
-                                            <ellipse cx="80" cy="80" rx="18" ry="55"
-                                                fill="#6aaa6a" transform="rotate(-15,80,80)" />
-                                            <ellipse cx="140" cy="60" rx="12" ry="35"
-                                                fill="#6aaa6a" transform="rotate(10,140,60)" />
-                                            <circle cx="78" cy="65" r="10" fill="#fff" opacity="0.85" />
-                                            <text x="72" y="69" font-size="6" fill="#333" font-weight="bold">Cebu
-                                                City</text>
-                                            <text x="74" y="76" font-size="5" fill="#555">3</text>
-                                            <circle cx="62" cy="100" r="8" fill="#fff" opacity="0.85" />
-                                            <text x="54" y="103" font-size="5.5" fill="#333"
-                                                font-weight="bold">Cobalog</text>
-                                            <text x="59" y="110" font-size="5" fill="#555">2</text>
-                                            <circle cx="148" cy="55" r="8" fill="#fff" opacity="0.85" />
-                                            <text x="140" y="58" font-size="5.5" fill="#333"
-                                                font-weight="bold">Mandaue</text>
-                                            <text x="145" y="65" font-size="5" fill="#555">2</text>
-                                            <circle cx="148" cy="90" r="8" fill="#fff" opacity="0.85" />
-                                            <text x="140" y="93" font-size="5.5" fill="#333"
-                                                font-weight="bold">Mandaue</text>
-                                            <text x="145" y="100" font-size="5" fill="#555">4</text>
-                                        </svg>
+                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">Time-to-Churn (Registration →
+                                        Ban/Delete)</div>
+                                    @if ($timeToChurn)
+                                        <div class="d-flex gap-4">
+                                            <div>
+                                                <div style="font-size:0.68rem;color:#6c757d;">Average</div>
+                                                <div class="fw-bold" style="font-size:1.3rem;">{{ $timeToChurn['avg'] }}
+                                                    <span style="font-size:0.7rem;font-weight:normal;">days</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:0.68rem;color:#6c757d;">Median</div>
+                                                <div class="fw-bold" style="font-size:1.3rem;">{{ $timeToChurn['median'] }}
+                                                    <span style="font-size:0.7rem;font-weight:normal;">days</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-muted mt-1" style="font-size:0.65rem;">Based on
+                                            {{ $timeToChurn['sample_size'] }} churned users</div>
+                                    @else
+                                        <div class="text-muted" style="font-size:0.75rem;">No churned users yet</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Role Comparison --}}
+                            <div class="col-12 col-sm-6">
+                                <div class="border rounded p-2 h-100">
+                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">Role Comparison</div>
+                                    <table class="table table-sm mb-0" style="font-size:0.7rem;">
+                                        <thead>
+                                            <tr class="text-muted">
+                                                <th class="py-0">Role</th>
+                                                <th class="py-0 text-center">Users</th>
+                                                <th class="py-0 text-center">Avg. Logins</th>
+                                                <th class="py-0 text-center">Dormancy Rate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($roleComparison as $label => $stats)
+                                                <tr>
+                                                    <td class="py-1">{{ $label }}</td>
+                                                    <td class="py-1 text-center">{{ $stats['total'] }}</td>
+                                                    <td class="py-1 text-center">{{ $stats['avg_login_count'] }}</td>
+                                                    <td class="py-1 text-center">{{ $stats['dormancy_rate'] }}%</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            {{-- Login Count Distribution --}}
+                            <div class="col-12 col-sm-6">
+                                <div class="border rounded p-2 h-100">
+                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">Login Count Distribution</div>
+                                    <div style="position:relative; height:140px;"><canvas id="loginDistChart"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -248,7 +277,8 @@
                                                     <td class="py-1 text-center text-warning"
                                                         style="font-size:0.65rem;letter-spacing:-1px;">
                                                         @for ($i = 1; $i <= 5; $i++)
-                                                            <span style="{{ $i > $s['stars'] ? 'opacity:0.3' : '' }}">★</span>
+                                                            <span
+                                                                style="{{ $i > $s['stars'] ? 'opacity:0.3' : '' }}">★</span>
                                                         @endfor
                                                     </td>
                                                     <td class="py-1 text-center">{{ $s['reviews'] }}</td>
@@ -266,7 +296,8 @@
                                 <div class="border rounded p-2 flex-fill">
                                     <div class="fw-semibold mb-2" style="font-size:0.78rem;">Traffic Top 10 (Checks &
                                         Views)</div>
-                                    <canvas id="trafficChart"></canvas>
+                                    <div style="position:relative; height:150px;"><canvas id="trafficChart"></canvas>
+                                    </div>
                                     <div class="d-flex justify-content-center gap-3 mt-1" style="font-size:0.68rem;">
                                         <span><span style="color:#4a90d9;">■</span> Checks & Views</span>
                                         <span><span style="color:#f0ad4e;">■</span> Bookmark Rate</span>
@@ -277,7 +308,8 @@
                                 <div class="border rounded p-2 flex-fill">
                                     <div class="fw-semibold mb-2" style="font-size:0.78rem;">Evaluation Distribution Graph
                                     </div>
-                                    <canvas id="evalDistChart"></canvas>
+                                    <div style="position:relative; height:150px;"><canvas id="evalDistChart"></canvas>
+                                    </div>
                                 </div>
 
                             </div>
@@ -288,9 +320,7 @@
             </div>
         </div>
 
-        {{-- ══════════════════════════════════════════════════════
-         Row 2: Overall Insights | Engagement Metrics
-    ══════════════════════════════════════════════════════ --}}
+        {{--    Row 2: Overall Insights | Engagement Metrics   --}}
         <div class="row g-3">
 
             {{-- ── Left: Overall Insights ── --}}
@@ -312,7 +342,8 @@
                                         <span><span style="color:#f0ad4e;">●</span> Restaurant</span>
                                         <span><span style="color:#5cb85c;">●</span> Events</span>
                                     </div>
-                                    <canvas id="categoryTrendChart"></canvas>
+                                    <div style="position:relative; height:140px;"><canvas
+                                            id="categoryTrendChart"></canvas></div>
                                 </div>
                             </div>
 
@@ -358,7 +389,8 @@
                                 <div class="border rounded p-2 h-100">
                                     <div class="fw-semibold mb-1" style="font-size:0.78rem;">Engagement Rate Trend</div>
                                     <div class="text-muted mb-1" style="font-size:0.65rem;">Engagement Rate (%)</div>
-                                    <canvas id="engagementChart"></canvas>
+                                    <div style="position:relative; height:120px;"><canvas id="engagementChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
 
@@ -366,7 +398,8 @@
                             <div class="col-12 col-sm-6">
                                 <div class="border rounded p-2 h-100">
                                     <div class="fw-semibold mb-1" style="font-size:0.78rem;">Activity Type Breakdown</div>
-                                    <canvas id="activityChart"></canvas>
+                                    <div style="position:relative; height:120px;"><canvas id="activityChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
 
@@ -387,18 +420,18 @@
 
             // 💡 修正ポイント3: 全てのチャートで縦横比を正しく維持しつつレスポンシブ対応させるオプションをデフォルト適用します
             Chart.defaults.responsive = true;
-            Chart.defaults.maintainAspectRatio = true;
+            Chart.defaults.maintainAspectRatio = false;
 
             const years = ['2024', '2024', '2025', '2026'];
 
-            // ── User Growth Trend ──
+            // ── User Growth & Churn Trend ──
             new Chart(document.getElementById('userGrowthChart'), {
                 type: 'line',
                 data: {
-                    labels: years,
+                    labels: @json($growth['labels']),
                     datasets: [{
-                            label: 'Total Users',
-                            data: [20000, 30000, 38000, 45210],
+                            label: 'Cumulative Registrations',
+                            data: @json($growth['totalSeries']),
                             borderColor: '#4a90d9',
                             backgroundColor: 'rgba(74,144,217,0.08)',
                             tension: 0.4,
@@ -406,8 +439,8 @@
                             pointRadius: 2,
                         },
                         {
-                            label: 'Premium Users',
-                            data: [2000, 5000, 9000, 14000],
+                            label: 'Cumulative Churn',
+                            data: @json($growth['churnSeries']),
                             borderColor: '#e8516a',
                             backgroundColor: 'transparent',
                             tension: 0.4,
@@ -447,22 +480,64 @@
                 },
             });
 
-            // ── Age Bar Chart ──
-            new Chart(document.getElementById('ageChart'), {
+            // ── Dormancy Funnel ──
+            new Chart(document.getElementById('dormancyChart'), {
                 type: 'bar',
                 data: {
-                    labels: ['18-24', '25-34', '35-44', '45+'],
+                    labels: ['Active (0-7d)', 'Cooling (8-30d)', 'Dormant (31-90d)', 'Long Dormant (90d+)'],
                     datasets: [{
-                            data: [30, 50, 35, 15],
-                            backgroundColor: '#4a90d9',
-                            barPercentage: 0.6
+                        data: [
+                            {{ $dormancy['active'] }},
+                            {{ $dormancy['cooling'] }},
+                            {{ $dormancy['dormant'] }},
+                            {{ $dormancy['long_dormant'] }},
+                        ],
+                        backgroundColor: ['#5cb85c', '#f0ad4e', '#e8516a', '#a0a0a0'],
+                        barPercentage: 0.6,
+                    }],
+                },
+                options: {
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 8
+                                }
+                            },
+                            grid: {
+                                color: '#f0f0f0'
+                            }
                         },
-                        {
-                            data: [20, 40, 25, 10],
-                            backgroundColor: '#e8516a',
-                            barPercentage: 0.6
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 8
+                                }
+                            }
                         },
-                    ],
+                    },
+                },
+            });
+
+            // ── Login Count Distribution ──
+            new Chart(document.getElementById('loginDistChart'), {
+                type: 'bar',
+                data: {
+                    labels: @json(array_keys($loginDistribution)),
+                    datasets: [{
+                        data: @json(array_values($loginDistribution)),
+                        backgroundColor: '#4a90d9',
+                        barPercentage: 0.6,
+                    }],
                 },
                 options: {
                     plugins: {
@@ -486,7 +561,7 @@
                                 font: {
                                     size: 8
                                 },
-                                maxTicksLimit: 4
+                                maxTicksLimit: 5
                             },
                             grid: {
                                 color: '#f0f0f0'

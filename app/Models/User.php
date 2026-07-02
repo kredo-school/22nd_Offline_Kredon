@@ -14,12 +14,19 @@ use App\Models\TouristSpot;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
+
+    const ROLE_ADMIN = 1;
+    const ROLE_MEMBER = 2;
+    const ROLE_PREMIUM = 3;
 
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
+        // 'avatar',
+        'email_verified_at',
     ];
 
     protected $hidden = [
@@ -28,11 +35,37 @@ class User extends Authenticatable
     ];
 
     protected function casts(): array
+{
+    return [
+        'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+}
+
+    public function getRoleNameAttribute(): string
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return match ((int) $this->role) {
+            self::ROLE_ADMIN => 'Admin',
+            self::ROLE_PREMIUM => 'Premium-Member',
+            default => 'Member',
+        };
+    }
+
+    // Admin user 管理用
+    public function getStatusAttribute(): string
+    {
+        if ($this->trashed()) {
+            return 'Banned';
+        }
+
+        // このアプリはメール認証機能が無いため、email_verified_atを
+        // 「管理者による手動Inactive化フラグ」として転用する
+        if (! is_null($this->email_verified_at)) {
+            return 'Inactive';
+        }
+
+        return 'Active'; // デフォルトはActive
     }
 
     // ユーザーが書いたレビューを引っ張るための電線

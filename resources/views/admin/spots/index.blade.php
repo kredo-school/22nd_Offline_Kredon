@@ -25,17 +25,17 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-tourism-btn" data-bs-toggle="tab" data-bs-target="#tab-tourism"
-                    type="button" role="tab">
-                    <i class="fa-solid fa-camera me-1"></i> Tourism 
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-hospital-btn" data-bs-toggle="tab" data-bs-target="#tab-hospital"
-                    type="button" role="tab">
-                    <i class="fa-solid fa-hospital me-1"></i> Hospital
-                </button>
-            </li>
+                type="button" role="tab">
+                <i class="fa-solid fa-hospital me-1"></i> Hospital
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-tourism-btn" data-bs-toggle="tab" data-bs-target="#tab-tourism"
+                type="button" role="tab">
+                <i class="fa-solid fa-camera me-1"></i> Tourism 
+            </button>
+        </li>
         </ul>
 
         <div class="tab-content" id="spotTabsContent">
