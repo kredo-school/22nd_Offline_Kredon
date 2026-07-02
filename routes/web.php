@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\NotificationTemplateController;
 use App\Http\Controllers\Admin\SpotsController;
 use App\Http\Controllers\Admin\SpotsController as AdminSpotsController;
 
+require __DIR__.'/setting.php';
 
 /*
 |--------------------------------------------------------------------------

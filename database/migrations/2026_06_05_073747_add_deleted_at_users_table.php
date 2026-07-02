@@ -12,10 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            Schema::table('users', function (Blueprint $table) {
-            // usersテーブルに deleted_at カラムを追加
             $table->softDeletes(); 
-        });
         });
     }
 
@@ -25,10 +22,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            Schema::table('users', function (Blueprint $table) {
             // ロールバック時に deleted_at カラムを削除
             $table->dropSoftDeletes();
-        });
         });
     }
 };

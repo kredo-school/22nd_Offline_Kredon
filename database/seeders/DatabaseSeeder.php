@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Spot;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,6 +11,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(SpotSeeder::class);
+        $this->call([
+            SpotSeeder::class,
+            CharacterTempSeeder::class,
+            NgWordSeeder::class,
+            UserSeeder::class,
+            UserSettingSeeder::class,
+        ]);
     }
 }

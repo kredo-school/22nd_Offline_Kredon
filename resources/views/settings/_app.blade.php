@@ -53,7 +53,7 @@
                             <p class="st-app-action-row__label">おすすめをリセット</p>
                             <p class="st-app-action-row__desc">学習履歴をリセットし、おすすめを最初からやり直します。</p>
                         </div>
-                        <button type="button" class="st-btn st-btn--ghost st-btn--sm">リセットする</button>
+                        <button type="button" class="st-btn st-btn--ghost st-btn--sm" disabled title="準備中">リセットする</button>
                     </div>
                 </div>
 
@@ -126,22 +126,12 @@
                     <div class="st-app-action-row">
                         <div class="st-app-action-row__body">
                             <p class="st-app-action-row__label">キャッシュを削除</p>
-                            <p class="st-app-action-row__desc">一時ファイルを削除してストレージを解放します。</p>
+                            <p class="st-app-action-row__desc">ブラウザに保存された一時データを削除します。</p>
                         </div>
                         <button type="button" class="st-btn st-btn--ghost st-btn--sm" id="app-clear-cache">
                             キャッシュを削除
                         </button>
                     </div>
-
-                    <a href="#" class="st-link-row">
-                        <div>
-                            <p class="st-link-row__label">ストレージ使用量</p>
-                        </div>
-                        <span class="st-link-row__meta">
-                            {{ $app->cache_size }}
-                            <i class="fa-solid fa-chevron-right st-link-row__chevron" aria-hidden="true"></i>
-                        </span>
-                    </a>
                 </div>
 
                 {{--  スポット・マップ設定  --}}
@@ -197,15 +187,12 @@
                         <i class="fa-solid fa-ellipsis" aria-hidden="true"></i> その他
                     </h3>
 
-                    <a href="#" class="st-link-row">
+                    <div class="st-link-row st-link-row--static">
                         <div>
                             <p class="st-link-row__label">アプリバージョン</p>
                         </div>
-                        <span class="st-link-row__meta">
-                            {{ $app->app_version }}
-                            <i class="fa-solid fa-chevron-right st-link-row__chevron" aria-hidden="true"></i>
-                        </span>
-                    </a>
+                        <span class="st-link-row__meta">v{{ $app->app_version }}</span>
+                    </div>
 
                     <a href="#" class="st-link-row">
                         <div>
@@ -243,12 +230,6 @@
 
                 {{-- プロフィールカード --}}
                 <div class="st-app-preview__profile">
-                    <div class="st-preview__banner">
-                        <div class="st-preview__event">
-                            <p class="st-preview__event-title">{{ $user->preview_event['title'] }}</p>
-                            <p class="st-preview__event-date">{{ $user->preview_event['date'] }}</p>
-                        </div>
-                    </div>
                     <div class="st-preview__card">
                         <div class="st-preview__avatar">{{ mb_substr($user->name, 0, 1) }}</div>
                         @if ($user->plan === 'premium')
@@ -267,23 +248,25 @@
                 </div>
 
                 {{-- AIおすすめスポット --}}
-                <div class="st-app-preview__spots {{ $app->ai_recommendations ? '' : 'is-hidden' }}"
+                <div class="st-app-preview__spots {{ ($app->ai_recommendations && count($app->recommended_spots)) ? '' : 'is-hidden' }}"
                      id="app-preview-spots">
                     <p class="st-app-preview__spots-title">
                         <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> AIおすすめ
                     </p>
                     <div class="st-app-spot-scroll">
-                        @foreach ($app->recommended_spots as $spot)
+                        @forelse ($app->recommended_spots as $spot)
                             <article class="st-app-spot-card">
                                 <div class="st-app-spot-card__image"
-                                     style="background: {{ $spot['gradient'] }}"></div>
+                                     style="background: {{ $spot['gradient'] ?? 'linear-gradient(135deg, #2A87C8 0%, #6BBD99 100%)' }}"></div>
                                 <p class="st-app-spot-card__name">{{ $spot['name'] }}</p>
                                 <p class="st-app-spot-card__meta">
-                                    <i class="fa-solid fa-star" aria-hidden="true"></i> {{ $spot['rating'] }}
-                                    · {{ $spot['location'] }}
+                                    <i class="fa-solid fa-star" aria-hidden="true"></i> {{ $spot['rating'] ?? '—' }}
+                                    · {{ $spot['location'] ?? '' }}
                                 </p>
                             </article>
-                        @endforeach
+                        @empty
+                            <p class="st-app-preview__empty">おすすめスポットはまだありません</p>
+                        @endforelse
                     </div>
                 </div>
 
@@ -293,7 +276,7 @@
                         <i class="fa-regular fa-bell" aria-hidden="true"></i> 通知
                     </p>
                     <ul class="st-notif-list" role="list">
-                        @foreach ($app->preview_notifications as $notif)
+                        @forelse ($app->preview_notifications as $notif)
                             <li class="st-notif-list__item">
                                 <span class="st-notif-list__icon st-notif-list__icon--{{ $notif['color'] }}" aria-hidden="true">
                                     <i class="{{ $notif['icon'] }}"></i>
@@ -303,7 +286,11 @@
                                     <p class="st-notif-list__time">{{ $notif['time'] }}</p>
                                 </div>
                             </li>
-                        @endforeach
+                        @empty
+                            <li class="st-notif-list__item st-notif-list__item--empty">
+                                <p class="st-notif-list__text">通知はまだありません</p>
+                            </li>
+                        @endforelse
                     </ul>
                 </div>
             </div>
@@ -325,22 +312,17 @@
                     <dd id="app-status-translate">{{ $app->status_summary['auto_translate'] }}</dd>
                 </div>
                 <div class="st-status-list__row">
-                    <dt>キャッシュサイズ</dt>
-                    <dd id="app-status-cache">{{ $app->status_summary['cache_size'] }}</dd>
-                </div>
-                <div class="st-status-list__row">
-                    <dt>ストレージ空き</dt>
-                    <dd>{{ $app->status_summary['storage_free'] }}</dd>
-                </div>
-                <div class="st-status-list__row">
-                    <dt>ネットワーク</dt>
-                    <dd>{{ $app->status_summary['network'] }}</dd>
+                    <dt>アプリバージョン</dt>
+                    <dd>v{{ $app->app_version }}</dd>
                 </div>
             </dl>
 
-            <button type="button" class="st-btn st-btn--outline-danger st-btn--full st-btn--sm">
-                すべての設定をリセット
-            </button>
+            <form action="{{ route('settings.app.reset') }}" method="POST">
+                @csrf
+                <button type="submit" class="st-btn st-btn--outline-danger st-btn--full st-btn--sm">
+                    すべての設定をリセット
+                </button>
+            </form>
         </div>
 
     </aside>
