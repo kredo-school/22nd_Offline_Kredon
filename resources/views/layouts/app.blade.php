@@ -96,8 +96,7 @@
 <body>
     <div id="app">
 
-          <nav class="navbar navbar-light bg-white border-bottom navbar-top shadow-sm d-none d-md-flex">
-            <div class="container-fluid px-4">
+          
         {{-- Desktop Topbar --}}
         <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom navbar-top sticky-top shadow-sm d-none d-md-flex">
             <div class="container-fluid px-4">
@@ -120,10 +119,7 @@
                             @if (($unreadNotificationsCount ?? 0) > 0)
                                 <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger"
                                     id="notifBadgePC">{{ $unreadNotificationsCount }}</span>
-                        <a class="nav-link position-relative" href="#" data-bs-toggle="modal" data-bs-target="#userNotificationsModal" id="notifBellBtnPC">
-                            <i class="fa-solid fa-bell fa-lg"></i>
-                            @if (($unreadNotificationsCount ?? 0) > 0)
-                                <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger" id="notifBadgePC">{{ $unreadNotificationsCount }}</span>
+
                             @endif
                         </a>
                     </li>
@@ -159,23 +155,7 @@
         {{-- ══════════════════════════════════
              スマホ用 Topbar（md未満）
         ══════════════════════════════════ --}}
-        <nav class="navbar-top bg-white border-bottom shadow-sm d-flex d-md-none">
-            <div class="mobile-topbar w-100">
-                {{-- ロゴ中央 --}}
-                <a href="{{ url('/home') }}">
-                    <img src="{{ asset('images/kredon.png') }}" alt="Kredon" class="logo-img">
-                </a>
-
-                {{-- 右アイコン --}}
-                <div class="mobile-topbar-icons">
-                     <a href="#" class="position-relative" data-bs-toggle="modal"
-                        data-bs-target="#userNotificationsModal" id="notifBellBtnMobile">
-                        <i class="fa-solid fa-bell"></i>
-                        @if (($unreadNotificationsCount ?? 0) > 0)
-                            <span class="position-absolute badge rounded-pill bg-danger"
-                                style="font-size:0.55rem;padding:2px 4px;top:-4px;right:-6px;"
-                                id="notifBadgeMobile">{{ $unreadNotificationsCount }}</span>
-        {{-- スマホ用 Topbar --}}
+      
         <nav class="navbar-top bg-white border-bottom shadow-sm d-flex d-md-none align-items-center px-3 justify-content-between">
             <a href="{{ url('/home') }}">
                 <img src="{{ asset('images/kredon.png') }}" alt="Kredon" style="height: 40px;">
@@ -205,9 +185,6 @@
         <div class="main-wrapper">
             <aside class="sidebar-left d-none d-md-block">
                 <div class="py-2">
-                    <a class="d-block text-center" href="{{ url('/home') }}">
-                        <img src="{{ asset('images/kredon.png') }}" alt="Logo"
-                            style="height:130px;width:auto;object-fit:contain; margin-bottom: -30px; margin-top: -20px;">
                     <a class="d-block text-center" href="{{ url('/') }}">
                         <img src="{{ asset('images/kredon.png') }}" alt="Logo" style="height:130px;width:auto;object-fit:contain; margin-bottom: -30px; margin-top: -20px;">
                     </a>
@@ -223,19 +200,7 @@
                             <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5" style="font-size:0.82rem; color: #6c757d;">Tourism</a>
                         </div>
 
-                        <a href="{{ route('event.index') }}" class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}">
-                            <i class="fa-solid fa-calendar-days"></i> EVENT
-                        </a>
-                        <a href="{{ route('marketplace.index') }}" class="sidebar-link {{ request()->routeIs('market.*') ? 'active' : '' }}">
-                            <i class="fa-solid fa-store"></i> MARKET
-                        </a>
-                        <a href="#"
-                            class="sidebar-link {{ request()->routeIs('bookmark.*') ? 'active' : '' }}">
-                            <i class="fa-regular fa-bookmark"></i> BOOKMARK
-                        </a>
-                        <a href="#" class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}">
-                            <i class="fa-regular fa-star"></i> REVIEW
-                        </a>
+                        
                         <script>
                             function toggleSpot(e) {
                                 e.preventDefault();
@@ -247,8 +212,8 @@
                             }
                         </script>
 
-                        <a href="#" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> EVENT</a>
-                        <a href="#" class="sidebar-link"><i class="fa-solid fa-store"></i> MARKET</a>
+                        <a href="{{ route('event.index') }}" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> EVENT</a>
+                        <a href="{{ route('marketplace.index') }}" class="sidebar-link"><i class="fa-solid fa-store"></i> MARKET</a>
                         @auth
                             <a href="{{ route('mypage') }}" class="sidebar-link"><i class="fa-regular fa-bookmark"></i> BOOKMARK</a>
                             <a href="{{ route('mypage') }}" class="sidebar-link"><i class="fa-regular fa-star"></i> REVIEW</a>
@@ -289,19 +254,11 @@
 
                 @yield('content')
             </main>
-
-            {{-- @include('layouts.notif-modal') --}}
             @include('layouts.notif-modal')
         </div>
     </div>
 
     <script>
-         ── ユーザー通知モーダル：開いたら一括既読化 ──
-        const userNotifModalEl = document.getElementById('userNotificationsModal');
-        if (userNotifModalEl) {
-            userNotifModalEl.addEventListener('shown.bs.modal', function () {
-               {{-- fetch('{{ route("notifications.mark-all-read") }}', { --}}
-         // ── ユーザー通知モーダル：開いたら一括既読化 ──
         const userNotifModalEl = document.getElementById('userNotificationsModal');
         if (userNotifModalEl) {
             userNotifModalEl.addEventListener('shown.bs.modal', function () {
@@ -327,7 +284,7 @@
             });
         }
 
-        // ── PC SPOTサブメニュー ──
+       
         function toggleSpotPC(e) {
             e.preventDefault();
             const menu = document.getElementById('spotSubmenuPC');

@@ -1,132 +1,285 @@
 @extends('layouts.app')
 
-@section('title','Chat')
+@section('title','Private Chat')
 
 @section('content')
 
-<div class="container">
+@php
+$partner = $chat->user_one_id == auth()->id()
+    ? $chat->userTwo
+    : $chat->userOne;
 
-    <div class="card border-0 shadow-sm">
+$lastDate = "";
+@endphp
 
-        {{-- Header --}}
-        <div class="card-header bg-primary text-white">
+<style>
 
-            <h5 class="mb-0">
-                Chat Room
-            </h5>
+html, body{
+    height:100%;
+    margin:0;
+    overflow:hidden;
+}
 
-        </div>
+.chat-container{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+}
 
-        {{-- Messages --}}
-        <div class="card-body"
-             style="
-                height:500px;
-                overflow-y:auto;
-                background:#f5f5f5;
-             ">
 
-            @foreach($chat->messages as $message)
+.chat-header{
+    background:white;
+    border-bottom:1px solid #ddd;
+    padding:15px 20px;
+}
 
-                @if($message->user_id == auth()->id())
+.chat-body{
+    flex:1;
+    overflow-y:auto;
+    overflow-x:hidden;
+    background:#f5f5f5;
+    padding:20px;
+    padding-bottom:100px;
+}
+.chat-footer{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:white;
+    border-top:1px solid #ddd;
+    padding:12px;
+    z-index:999;
+}
 
-                    {{-- My Message --}}
-                    <div class="d-flex justify-content-end mb-3">
+.my-message{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:15px;
+}
 
-                        <div
-                            class="p-2 text-white"
-                            style="
-                                background:#0d6efd;
-                                border-radius:15px;
-                                max-width:70%;
-                            ">
+.other-message{
+    display:flex;
+    justify-content:flex-start;
+    margin-bottom:15px;
+}
 
-                            {{ $message->message }}
+.my-bubble{
 
-                            <div
-                                class="small text-end mt-1"
-                                style="font-size:10px;">
+    background:#0d6efd;
+    color:white;
+    padding:12px 15px;
+    border-radius:20px 20px 5px 20px;
+    max-width:70%;
 
-                                {{ $message->created_at->format('H:i') }}
+}
 
-                            </div>
+.other-bubble{
 
-                        </div>
+    background:white;
+    padding:12px 15px;
+    border-radius:20px 20px 20px 5px;
+    border:1px solid #ddd;
+    max-width:70%;
 
-                    </div>
+}
 
-                @else
+.chat-time{
 
-                    {{-- Other User --}}
-                    <div class="d-flex justify-content-start mb-3">
+    font-size:11px;
+    opacity:.8;
+    text-align:right;
+    margin-top:5px;
 
-                        <div
-                            class="p-2 bg-white border"
-                            style="
-                                border-radius:15px;
-                                max-width:70%;
-                            ">
+}
 
-                            {{ $message->message }}
+.date-divider{
 
-                            <div
-                                class="small text-muted mt-1"
-                                style="font-size:10px;">
+    text-align:center;
+    margin:20px 0;
 
-                                {{ $message->created_at->format('H:i') }}
+}
 
-                            </div>
+.date-divider span{
 
-                        </div>
+    background:#6c757d;
+    color:white;
+    padding:5px 12px;
+    border-radius:15px;
+    font-size:12px;
 
-                    </div>
+}
 
-                @endif
+.avatar{
 
-            @endforeach
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#6c757d;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-right:10px;
 
-        </div>
+}
 
-        {{-- Send Form --}}
-        <div class="card-footer bg-white">
+</style>
 
-            <form
-                action="{{ route('chat.send',$chat->id) }}"
-                method="POST">
+<div class="container-fluid p-0">
 
-                @csrf
+    {{-- Header --}}
+    <div class="chat-header">
 
-                <div class="input-group">
+        <div class="d-flex align-items-center">
 
-                    <input
-                        type="text"
-                        name="message"
-                        class="form-control"
-                        placeholder="Type a message..."
-                        required>
+            <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
+                 style="width:50px;height:50px;">
 
-                    <button
-                        class="btn btn-primary">
+                {{ strtoupper(substr($partner->name,0,1)) }}
 
-                        Send
+            </div>
 
-                    </button>
+            <div class="ms-3">
 
-                </div>
+                <h4 class="mb-0">
+                    {{ $partner->name }}
+                </h4>
 
-            </form>
+                <small class="text-muted">
+                    Private Chat
+                </small>
+
+            </div>
 
         </div>
 
     </div>
 
+    {{-- Messages --}}
+    <div id="chatBody" class="chat-body">
+
+        @foreach($chat->messages as $message)
+
+            @php
+            $currentDate = $message->created_at->format('Y-m-d');
+            @endphp
+
+            @if($lastDate != $currentDate)
+
+                @php
+                $lastDate = $currentDate;
+                @endphp
+
+                <div class="date-divider">
+
+                    <span>
+
+                        {{ $message->created_at->format('M d, Y') }}
+
+                    </span>
+
+                </div>
+
+            @endif
+
+            @if($message->user_id==auth()->id())
+
+                <div class="my-message">
+
+                    <div class="my-bubble">
+
+                        {{ $message->message }}
+
+                        <div class="chat-time">
+
+                            {{ $message->created_at->format('H:i') }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            @else
+
+                <div class="other-message">
+
+                    <div class="avatar">
+
+                        {{ strtoupper(substr($partner->name,0,1)) }}
+
+                    </div>
+
+                    <div class="other-bubble">
+
+                        <strong>
+
+                            {{ $partner->name }}
+
+                        </strong>
+
+                        <br>
+
+                        {{ $message->message }}
+
+                        <div class="chat-time text-muted">
+
+                            {{ $message->created_at->format('H:i') }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            @endif
+
+        @endforeach
+
+    </div>
+
 </div>
 
-{{-- Auto Scroll --}}
+{{-- Footer --}}
+<div class="chat-footer">
+
+   <div class="card-footer bg-white">
+
+        <form action="{{ route('chat.send',$chat) }}"
+              method="POST">
+
+            @csrf
+
+            <div class="input-group">
+
+                <input
+                    type="text"
+                    name="message"
+                    class="form-control"
+                    placeholder="Type a message..."
+                    autocomplete="off"
+                    required>
+
+                 <button class="btn btn-primary">
+
+                        Send
+
+                    </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 <script>
-window.onload = function() {
-    let chatBody = document.querySelector('.card-body');
-    chatBody.scrollTop = chatBody.scrollHeight;
-}
+
+const body=document.getElementById("chatBody");
+
+body.scrollTop=body.scrollHeight;
+
 </script>
 
 @endsection

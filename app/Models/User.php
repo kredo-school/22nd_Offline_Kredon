@@ -63,4 +63,15 @@ class User extends Authenticatable
         // tourist_bookmarks テーブルを中間テーブルとして、TouristSpot モデルを結びつける
         return $this->belongsToMany(TouristSpot::class, 'tourist_bookmarks', 'user_id', 'tourist_spot_id')->withTimestamps();
     }
+    public function comments()
+{
+    return $this->hasMany(Comment::class);
+}
+public function joinedEvents()
+{
+    return $this->belongsToMany(
+        Event::class,
+        'event_participants'
+    );
+}
 }

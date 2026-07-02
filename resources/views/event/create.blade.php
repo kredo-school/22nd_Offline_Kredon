@@ -13,6 +13,32 @@
         <h2 class="fw-bold mb-4">
             Create Event
         </h2>
+        @if ($errors->any())
+
+<div class="alert alert-danger">
+
+    <ul class="mb-0">
+
+        @foreach ($errors->all() as $error)
+
+            <li>{{ $error }}</li>
+
+        @endforeach
+
+    </ul>
+
+</div>
+
+@endif
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul class="mb-0">
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 
         <form action="{{ route('event.store') }}" method="POST" enctype="multipart/form-data">
 
@@ -73,16 +99,31 @@
                     name="event_date">
 
             </div>
+            {{-- 画像1 --}}
+            <div class="mb-3">
 
+                <label class="form-label">
+                    Event Image 1
+                </label>
+
+                <input
+                    type="file"
+                    class="form-control"
+                    name="image1">
+
+            </div>
+
+            {{-- 画像2 --}}
             <div class="mb-4">
 
                 <label class="form-label">
-                    Event Image
+                    Event Image 2
                 </label>
 
-                <input type="file"
+                <input
+                    type="file"
                     class="form-control"
-                    name="image">
+                    name="image2">
 
             </div>
 

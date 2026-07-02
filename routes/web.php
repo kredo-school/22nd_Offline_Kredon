@@ -8,7 +8,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GameController;
-
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\EventParticipantController;
+use App\Http\Controllers\GroupChatController;
 
 use App\Http\Controllers\StudyController;
 use App\Http\Controllers\UserController;
@@ -64,7 +66,7 @@ Route::get('/market/create', [MarketplaceController::class, 'create'])->name('ma
 Route::post('/market/store', [MarketplaceController::class, 'store'])->name('marketplace.store');
 Route::get('/market/{item}', [MarketplaceController::class, 'show'])->name('marketplace.show');
 
-
+Route::resource('event', EventController::class);
 Route::get('/event', [EventController::class, 'index'])->name('event.index');
 Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
 Route::post('/event/store', [EventController::class, 'store'])->name('event.store');
@@ -72,10 +74,8 @@ Route::get('/event/{event}', [EventController::class, 'show'])->name('event.show
 
 Route::middleware('auth')->group(function () {
 
-    // ユーザーとのチャット開始
-    Route::get('/chat/user/{user}',
-        [ChatController::class,'index'])
-        ->name('chat.index');
+   
+    
 
     // メッセージ送信
     Route::post('/chat/send',
@@ -132,7 +132,53 @@ Route::get('/game/stage2-1', function () {
 Route::get('/game/stage2-2', function () { return view('game.stage2-2'); })->name('game.stage2-2');
 Route::get('/game/stage2-3', function () { return view('game.stage2-3'); })->name('game.stage2-3');
 Route::get('/game/stage2-boss', function () { return view('game.stage2-boss'); })->name('game.stage2-boss');
- 
+ Route::post('/event/{event}/comment', [CommentController::class, 'store'])
+    ->name('comment.store')
+    ->middleware('auth');
+    Route::delete('/comment/{comment}', [CommentController::class, 'destroy'])
+    ->name('comment.destroy');
+    Route::post(
+    '/event/{event}/join',
+    [EventParticipantController::class,'join']
+)->name('event.join');
+
+Route::delete(
+    '/event/{event}/leave',
+    [EventParticipantController::class,'leave']
+)->name('event.leave');
+    Route::get('/event/{event}/participants',
+    [EventController::class, 'participants'])
+    ->name('event.participants');
+    Route::get('/private-chat/{user}',
+    [ChatController::class,'private'])
+    ->name('chat.private');
+    Route::get('/group-chat/{event}',
+    [ChatController::class,'group'])
+    ->name('chat.group');
+    Route::middleware('auth')->group(function(){
+
+    Route::get(
+        '/group-chat/{event}',
+        [GroupChatController::class,'show']
+    )->name('group.chat');
+
+    Route::post(
+        '/group-chat/{event}/send',
+        [GroupChatController::class,'send']
+    )->name('group.chat.send');
+    Route::get(
+'/group-chat/{event}/fetch',
+[GroupChatController::class,'fetch']
+)->name('group.chat.fetch');
+Route::get(
+'/group-chat/{event}/members',
+[GroupChatController::class,'members']
+)->name('group.chat.members');
+Route::get(
+    '/group-chat/{event}/members',
+    [GroupChatController::class,'members']
+)->name('group.chat.members');
+});
 
 Route::get('/game/stage3-1', function () {
     return view('game.stage3-1');
