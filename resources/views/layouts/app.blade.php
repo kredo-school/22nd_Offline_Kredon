@@ -472,6 +472,8 @@
         </div>
     </div>
 
+    @include('healthcare.partials._loader')
+
     <script>
         // ── ドロワー開閉 ──
         function openDrawer() {

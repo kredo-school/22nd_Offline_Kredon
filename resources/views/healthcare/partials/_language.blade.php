@@ -1,22 +1,21 @@
+@php
+    $currentLocale = app()->getLocale();
+@endphp
+
 <div class="row g-4 mt-4 justify-content-center">
-    {{--日本語--}}
     <div class="col-5 col-md-3">
-
-        <button
-            class="btn w-100 py-3 fw-bold border border-success text-success bg-light rounded-3">
-
-              日本語
-        </button>
-
+        <a href="{{ route('locale.switch', 'ja') }}"
+           class="btn w-100 py-3 fw-bold rounded-3 {{ $currentLocale === 'ja' ? 'btn-success' : 'btn-outline-success' }}"
+           @if($currentLocale === 'ja') aria-current="true" @endif>
+            {{ __('healthcare.language.japanese') }}
+        </a>
     </div>
 
-    {{--英語--}}
     <div class="col-5 col-md-3">
-
-        <button
-            class="btn w-100 py-3 fw-bold border border-success text-success bg-light rounded-3">
-
-            English
-        </button>
+        <a href="{{ route('locale.switch', 'en') }}"
+           class="btn w-100 py-3 fw-bold rounded-3 {{ $currentLocale === 'en' ? 'btn-success' : 'btn-outline-success' }}"
+           @if($currentLocale === 'en') aria-current="true" @endif>
+            {{ __('healthcare.language.english') }}
+        </a>
     </div>
 </div>

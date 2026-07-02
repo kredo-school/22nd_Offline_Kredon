@@ -1,1 +1,24 @@
-{}
+{
+    "healthcare.language.japanese": "Japanese",
+    "healthcare.language.english": "English",
+    "healthcare.badge.jhd": "JHD Supported",
+    "healthcare.badge.clinic": "Clinic",
+    "healthcare.badge.hospital": "Hospital",
+    "healthcare.hours.hospital": "Hospital",
+    "healthcare.hours.jhd": "JHD Support",
+    "healthcare.hours.clinic": "Hours",
+    "healthcare.hours.open_24h": "Open 24 hours",
+    "healthcare.hours.closed": "Closed",
+    "healthcare.travel.grab": "Grab ~:minutes min",
+    "healthcare.travel.walk": "Walk ~:minutes min",
+    "healthcare.action.details": "View details",
+    "healthcare.action.grab": "Go with Grab",
+    "healthcare.action.view_list": "View hospital list",
+    "healthcare.grab.loading": "Opening Grab...",
+    "healthcare.wizard.result_title": "Reference",
+    "healthcare.wizard.result_heading": "Reference Information",
+    "healthcare.wizard.result_subheading": "Facility information based on your answers",
+    "healthcare.wizard.disclaimer": "This page does not provide medical diagnosis. It is for reference only.",
+    "healthcare.wizard.no_result": "No matching facility was found.",
+    "healthcare.wizard.retry": "Start again"
+}

@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\Admin\HospitalController as AdminHospitalController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -15,44 +16,38 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+// healthcare
+Route::get('/locale/{locale}', [LocaleController::class, 'switch'])
+    ->name('locale.switch')
+    ->whereIn('locale', ['ja', 'en']);
 
 Route::get('/healthcare', [HealthcareController::class, 'index'])->name('healthcare.index');
 
 Route::prefix('wizard')->group(function () {
+    Route::get('/', [WizardController::class, 'start'])->name('wizard.start');
 
-    Route::get('/step/{step}',
-    [wizardController::class,'show'])
-    ->name('wizard.step');
+    Route::get('/step/{step}', [WizardController::class, 'show'])
+        ->name('wizard.step');
 
-    Route::post('/step/{step}',
-        [WizardController::class, 'store']);
+    Route::post('/step/{step}', [WizardController::class, 'store'])
+        ->name('wizard.step.store');
 
-    Route::get('/result',
-        [WizardController::class, 'result'])
+    Route::get('/result', [WizardController::class, 'result'])
         ->name('wizard.result');
 });
 
 Route::post('/hospitals/{hospitalId}/images', [ImageController::class, 'store'])->name('images.store');
 
-// Book mark
 Route::post('/bookmarks/{hospital}', [BookmarkController::class, 'store'])->name('bookmarks.store');
 Route::delete('/bookmarks/{hospital}', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
 
-// 管理者用グループルート
 Route::prefix('admin/hospitals')->middleware(['auth'])->group(function () {
-    // 一覧
     Route::get('/', [AdminHospitalController::class, 'index'])->name('admin.hospitals.index');
-    // 作成フォーム
     Route::get('/create', [AdminHospitalController::class, 'create'])->name('admin.hospitals.create');
-    // 保存処理
     Route::post('/', [AdminHospitalController::class, 'store'])->name('admin.hospitals.store');
-    // 編集処理
     Route::get('/{id}/edit', [AdminHospitalController::class, 'edit'])->name('admin.hospitals.edit');
-    // 更新処理
-    Route::patch('/{id}', [AdminHospitalController::class, 'update'])->name('admin.hospitals.update'); 
-    // 消去処理
-    Route::delete('/{id}', [AdminHospitalController::class, 'destroy'])->name('admin.hospitals.destroy'); 
-
+    Route::patch('/{id}', [AdminHospitalController::class, 'update'])->name('admin.hospitals.update');
+    Route::delete('/{id}', [AdminHospitalController::class, 'destroy'])->name('admin.hospitals.destroy');
 });
-

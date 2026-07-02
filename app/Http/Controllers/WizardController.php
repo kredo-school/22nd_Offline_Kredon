@@ -2,58 +2,109 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hospital;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule; 
+use Illuminate\Validation\Rule;
 
 class WizardController extends Controller
 {
-    // 質問データ（キーの間にカンマが必要です）
-    private $wizardData = [
-
-        1 => ['question' => 'キャッシュレスで受診したいですか？', 'options' => ['yes' => 'はい', 'no' => 'いいえ']],
-
-        // 2 => ['question' => '日本語対応が必要ですか？',      'options' => ['yes' => 'はい', 'no' => 'いいえ']],
-        
-        // 3 => ['question' => '現在の状態は？', 'options' => ['重度' => '', 'mactan' => 'マクタン']],
+    private array $wizardData = [
+        1 => [
+            'question' => '海外旅行保険に加入していますか?',
+            'options' => [
+                'yes' => '加入している',
+                'no' => '加入していない',
+                'unknown' => 'わからない',
+            ],
+        ],
+        2 => [
+            'question' => 'JHDサポートを利用しますか?',
+            'options' => [
+                'yes' => '利用する',
+                'no' => '利用しない',
+            ],
+        ],
+        3 => [
+            'question' => '現在の状況を教えてください',
+            'options' => [
+                'mild' => '軽い症状・相談したい',
+                'hospital' => '今日病院へ行きたい',
+                'emergency' => '緊急性がある',
+            ],
+        ],
     ];
 
-    public function start() {
-
+    public function start()
+    {
         session()->forget('wizard_answers');
-        // 最初のステップ用のデータをセット
-        return view('healthcare.wizard.step1', [
-            'step'     => 1,
-            'question' => $this->wizardData[1]['question'],
-            'options'  => $this->wizardData[1]['options']
+
+        return redirect()->route('wizard.step', ['step' => 1]);
+    }
+
+    public function show(int $step)
+    {
+        if (!isset($this->wizardData[$step])) {
+            abort(404);
+        }
+
+        return view('healthcare.wizard._wizard_card', [
+            'step' => $step,
+            'question' => $this->wizardData[$step]['question'],
+            'options' => $this->wizardData[$step]['options'],
         ]);
     }
 
-    public function step(Request $request, $step) {
-
-        // 存在チェック
-        if(!isset($this->wizardData[$step])) { abort(404); }
+    public function store(Request $request, int $step)
+    {
+        if (!isset($this->wizardData[$step])) {
+            abort(404);
+        }
 
         $validOptions = array_keys($this->wizardData[$step]['options']);
 
-        // Rule::in
         $request->validate([
-            'answer' => ['required', Rule::in($validOptions)]
+            'answer' => ['required', Rule::in($validOptions)],
         ]);
 
         session(['wizard_answers.' . $step => $request->answer]);
 
-        $nextStep = (int)$step + 1;
+        $nextStep = $step + 1;
 
-        // 3ステップを超えたら終了
-        if ($nextStep > 3) {
+        if ($nextStep > count($this->wizardData)) {
             return redirect()->route('wizard.result');
         }
 
-        // 次のステップを表示
-        return view('healthcare.wizard.step' . $nextStep, [
-            'step'      => $nextStep,
-            'question'  => $this->wizardData[$nextStep]['question'],
-            'options'   => $this->wizardData[$nextStep]['options']
-        ]);
+        return redirect()->route('wizard.step', ['step' => $nextStep]);
+    }
+
+    public function result()
+    {
+        $answers = session('wizard_answers', []);
+
+        if (empty($answers)) {
+            return redirect()->route('wizard.start');
+        }
+
+        $hospital = $this->resolveReferenceHospital($answers);
+
+        return view('healthcare.wizard.result', compact('answers', 'hospital'));
+    }
+
+    private function resolveReferenceHospital(array $answers): ?Hospital
+    {
+        $useJhd = ($answers[2] ?? null) === 'yes';
+        $situation = $answers[3] ?? null;
+
+        $query = Hospital::with(['images', 'specialties']);
+
+        if ($situation === 'emergency') {
+            return $query->where('is_jhd_supported', true)->orderBy('duration_grab')->first();
+        }
+
+        if ($useJhd && in_array($situation, ['mild', 'hospital'], true)) {
+            return $query->where('is_jhd_supported', true)->orderBy('duration_grab')->first();
+        }
+
+        return $query->where('is_clinic', true)->orderBy('duration_walk')->first();
     }
 }

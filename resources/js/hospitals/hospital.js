@@ -1,33 +1,26 @@
-// _card.blade.php ブックマーク機能
-// DOMが完全に読み込まれてから実行するおまじない
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.btn-bookmark').forEach(button => {
-        button.addEventListener('click', function() {
+    document.querySelectorAll('.hs-btn-bookmark').forEach(button => {
+        button.addEventListener('click', function () {
             const hospitalId = this.dataset.id;
-            const type = this.dataset.type;
-            const buttonElement = this; // クリックされたボタン自身
+            const buttonElement = this;
 
-            // サーバーへPOST送信
-            fetch('/bookmarks', {
+            fetch(`/bookmarks/${hospitalId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // CSRF対策
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
                 },
-                body: JSON.stringify({
-                    id: hospitalId,
-                    type: type
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.bookmarked !== undefined) {
+                        buttonElement.classList.toggle('is-active', data.bookmarked);
+                    }
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('成功:', data);
-                // ここでアイコンの色を変えるなどの処理を追加
-                buttonElement.classList.toggle('is-active');
-            })
-            .catch(error => {
-                console.error('失敗:', error);
-            });
+                .catch(error => {
+                    console.error('ブックマーク操作に失敗:', error);
+                });
         });
     });
 });

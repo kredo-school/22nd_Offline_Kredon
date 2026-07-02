@@ -6,14 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('faq', function (Blueprint $table) {
+        Schema::create('faqs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('faq_category_id')->constrained('faq_categories_test');
+            $table->foreignId('faq_category_id')->constrained('faq_categories');
             $table->text('question');
             $table->text('answer');
             $table->boolean('is_active')->default(true);
@@ -22,11 +19,8 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('faq');
+        Schema::dropIfExists('faqs');
     }
 };

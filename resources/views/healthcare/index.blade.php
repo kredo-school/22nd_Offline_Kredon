@@ -34,11 +34,6 @@
                 @include('healthcare.partials._notes')
             </div>
 
-            {{-- よくある状況 --}}
-            {{-- <div class="mb-4">
-                @include('healthcare.partials._situations')
-            </div>  --}}
-
             {{-- wizard --}}
             {{-- <div class="mb-4">
                 @include('healthcare.wizard._wizard_card')

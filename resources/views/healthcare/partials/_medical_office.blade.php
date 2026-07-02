@@ -21,7 +21,7 @@
         </div>
 
         <p class="text-muted mb-4">
-            看護師が常駐しています。体調不良や健康上の不安がある際は、まず6階医務室に相談してください。
+            看護師の方が常駐しています。ケガや体調不良の際は、まず6階医務室に相談してください。
         </p>
 
         <div class="alert hs-medical-office__alert py-2 px-3 mb-4 small">

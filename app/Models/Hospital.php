@@ -3,44 +3,51 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Hospital extends Model
 {
-    protected $table = 'hospitals_test';
-
-    /* 目的： mass asignment(一括で代入)を許可 */
     protected $guarded = [];
 
-    public function images()
+    protected $casts = [
+        'is_clinic' => 'boolean',
+        'is_jhd_supported' => 'boolean',
+        'is_24_hours' => 'boolean',
+    ];
+
+    public function images(): MorphMany
     {
-        return $this->hasMany(HospitalImage::class, 'hospital_id');
+        return $this->morphMany(Image::class, 'imageable')->orderBy('sort_order');
     }
 
-    // ブックマークとのリレーション
-    public function bookmarks()
+    public function bookmarks(): MorphMany
     {
         return $this->morphMany(Bookmark::class, 'bookmarkable');
     }
 
-    // ブックマークされているか判定するメソッド
-    public function isBookmarkedBy($user)
+    public function specialties(): BelongsToMany
+    {
+        return $this->belongsToMany(Specialty::class, 'hospital_specialty');
+    }
+
+    public function isBookmarkedBy($user): bool
     {
         if (!$user) {
             return false;
         }
-        return $this->bookmarks()->where('user_id', $user->id)->exists;
+
+        return $this->bookmarks()->where('user_id', $user->id)->exists();
     }
 
-    // 営業中かを判定するメソッド
-    public function isCurrentlyOpen()
+    public function guideTips(): string
     {
-        // もし open_at が 00:00:00 なら24時間営業とみなす等のルール
-        if ($this->open_at === '00:00:00' && $this->close_at === '00:00:00') {
-            return true;
+        $locale = app()->getLocale();
+
+        if ($locale === 'en' && $this->guide_tips_en) {
+            return $this->guide_tips_en;
         }
 
-        // それ以外の場合は、現在時間を比較する
-        $now = now()->format('H:i:s');
-        return $this->open_at <= $now && $this->close_at >= $now;
-    } 
+        return $this->guide_tips_ja ?? '';
+    }
 }

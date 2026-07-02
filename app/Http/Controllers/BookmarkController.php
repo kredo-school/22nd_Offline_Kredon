@@ -2,24 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hospital;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class BookmarkController extends Controller
 {
-    public function storte(Request $request)
+    public function store(Request $request, Hospital $hospital)
     {
-        // 実際には Bookmark::create(...) を書く場所
-        // 今はログを出して、リクエストが飛んできたことを確認する
-        Log::info('ブックマーク登録リクエストを受診：', $request->all());
+        $user = auth()->user();
 
-        return response()->json(['message' => '登録完了（仮）']);
+        if (!$user) {
+            return response()->json(['message' => 'ログインが必要です'], 401);
+        }
+
+        $existing = $hospital->bookmarks()->where('user_id', $user->id)->first();
+
+        if ($existing) {
+            $existing->delete();
+            Log::info('ブックマーク解除:', ['hospital_id' => $hospital->id, 'user_id' => $user->id]);
+
+            return response()->json(['message' => '解除完了', 'bookmarked' => false]);
+        }
+
+        $hospital->bookmarks()->create(['user_id' => $user->id]);
+        Log::info('ブックマーク登録:', ['hospital_id' => $hospital->id, 'user_id' => $user->id]);
+
+        return response()->json(['message' => '登録完了', 'bookmarked' => true]);
     }
 
-    public function destroy($id)
+    public function destroy(Hospital $hospital)
     {
-        Log::info('ブックマーク削除リクエストを受診： ID ' . '$id');
+        $user = auth()->user();
 
-        return response()->json(['message' => '解除完了（仮）']);
+        if (!$user) {
+            return response()->json(['message' => 'ログインが必要です'], 401);
+        }
+
+        $hospital->bookmarks()->where('user_id', $user->id)->delete();
+        Log::info('ブックマーク削除:', ['hospital_id' => $hospital->id, 'user_id' => $user->id]);
+
+        return response()->json(['message' => '解除完了', 'bookmarked' => false]);
     }
 }

@@ -65,7 +65,8 @@
                 <a href="https://grab.onelink.me/2695614242/v7889v8a"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="hs-emergency-modal__grab-btn">
+                   class="hs-emergency-modal__grab-btn hs-grab-link"
+                   data-loader-text="Grabを開いています...">
                     <i class="fa-solid fa-car" aria-hidden="true"></i>
                     Grabで病院へ向かう
                 </a>

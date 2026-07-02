@@ -3,16 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Faq;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Faqcategory extends Model
-{   
-    protected $table = 'faq_categories_test'; 
+class FaqCategory extends Model
+{
+    protected $fillable = ['name', 'slug', 'icon_class', 'sort_order'];
 
-    protected $fillable = ['name', 'slug', 'icon_class'];
-
-    public function faqs()
+    public function faqs(): HasMany
     {
-        return $this->hasMany(Faq::class,'faq_category_id');    
+        return $this->hasMany(Faq::class, 'faq_category_id');
     }
 }

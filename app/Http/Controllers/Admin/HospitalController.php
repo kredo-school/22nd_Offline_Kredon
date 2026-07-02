@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\HospitalTest; 
+use App\Models\Hospital;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +11,8 @@ class HospitalController extends Controller
 {
     public function index()
     {
-        $hospitals = HospitalTest::with('images')->latest()->get();
+        $hospitals = Hospital::with('images')->latest()->get();
+
         return view('admin.hospitals.index', compact('hospitals'));
     }
 
@@ -23,12 +24,16 @@ class HospitalController extends Controller
     public function store(Request $request)
     {
         $request->validate(['name' => 'required', 'image' => 'nullable|image']);
-        
-        $hospital = HospitalTest::create(['name' => $request->name]);
+
+        $hospital = Hospital::create(['name' => $request->name]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('hospital', 'public');
-            $hospital->images()->create(['image_path' => $path]);
+            $path = $this->storeHospitalImage($request->file('image'));
+            $hospital->images()->create([
+                'user_id' => auth()->id(),
+                'url' => $path,
+                'sort_order' => 0,
+            ]);
         }
 
         return redirect()->route('admin.hospitals.index')->with('success', '登録しました！');
@@ -36,27 +41,30 @@ class HospitalController extends Controller
 
     public function edit($id)
     {
-        $hospital = HospitalTest::findOrFail($id);
+        $hospital = Hospital::findOrFail($id);
+
         return view('admin.hospitals.edit', compact('hospital'));
     }
 
-    // ここが正しく update メソッドになっています
     public function update(Request $request, $id)
     {
         $request->validate(['name' => 'required', 'image' => 'nullable|image']);
-        
-        $hospital = HospitalTest::findOrFail($id);
+
+        $hospital = Hospital::findOrFail($id);
         $hospital->update(['name' => $request->name]);
 
         if ($request->hasFile('image')) {
-            // 古い画像を削除
             foreach ($hospital->images as $image) {
-                Storage::disk('public')->delete($image->image_path);
+                $this->deleteHospitalImage($image->url);
                 $image->delete();
             }
-            // 新しい画像を保存
-            $path = $request->file('image')->store('hospital', 'public');
-            $hospital->images()->create(['image_path' => $path]);
+
+            $path = $this->storeHospitalImage($request->file('image'));
+            $hospital->images()->create([
+                'user_id' => auth()->id(),
+                'url' => $path,
+                'sort_order' => 0,
+            ]);
         }
 
         return redirect()->route('admin.hospitals.index')->with('success', '更新しました！');
@@ -64,11 +72,36 @@ class HospitalController extends Controller
 
     public function destroy($id)
     {
-        $hospital = HospitalTest::findOrFail($id);
+        $hospital = Hospital::findOrFail($id);
+
         foreach ($hospital->images as $image) {
-            Storage::disk('public')->delete($image->image_path);
+            $this->deleteHospitalImage($image->url);
         }
+
         $hospital->delete();
+
         return redirect()->route('admin.hospitals.index')->with('success', '削除しました');
+    }
+
+    private function storeHospitalImage($file): string
+    {
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('images/hospitals'), $fileName);
+
+        return 'hospitals/' . $fileName;
+    }
+
+    private function deleteHospitalImage(string $url): void
+    {
+        if (str_starts_with($url, 'hospitals/') || str_starts_with($url, 'hospital/')) {
+            $path = public_path('images/' . $url);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+
+            return;
+        }
+
+        Storage::disk('public')->delete($url);
     }
 }

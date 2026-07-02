@@ -34,7 +34,7 @@
                         @if($hospital->images->isNotEmpty())
                             <div class="current-image-wrapper">
                                 <p class="text-muted small">現在の画像:</p>
-                                <img src="{{ asset('storage/' . $hospital->images->first()->image_path) }}" 
+                                <img src="{{ $hospital->images->first()->display_url }}" 
                                      alt="病院画像" style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 4px;">
                             </div>
                         @else

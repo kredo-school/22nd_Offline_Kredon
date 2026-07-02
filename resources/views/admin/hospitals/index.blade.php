@@ -31,7 +31,7 @@
                         <td>{{ $hospital->name }}</td>
                         <td>
                             @if($hospital->images->isNotEmpty())
-                                <img src="{{ asset('storage/' . $hospital->images->first()->image_path) }}" 
+                                <img src="{{ $hospital->images->first()->display_url }}" 
                                      alt="病院画像" style="width: 100px; height: 60px; object-fit: cover;">
                             @else
                                 <span class="text-muted small">画像なし</span>
