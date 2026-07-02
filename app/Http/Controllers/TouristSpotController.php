@@ -301,4 +301,29 @@ class TouristSpotController extends Controller
             return back()->with('success', '❤️ お気に入りに登録しました！');
         }
     }
+    // =========================================================
+    // 🌟 観光スポット：クチコミ保存処理
+    // =========================================================
+    public function storeReview(Request $request, $id)
+    {
+        // ① 入力されたデータのチェック
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        // ② どの観光スポットに対するクチコミかを探す
+        $touristSpot = \App\Models\TouristSpot::findOrFail($id);
+
+        // ③ クチコミをデータベースに保存
+        $touristSpot->reviews()->create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id(),
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        // ④ 元の詳細ページへ戻る
+        return redirect()->route('tourist_spots.show', $id)
+            ->with('success', '✨ クチコミを投稿しました！');
+    }
 }

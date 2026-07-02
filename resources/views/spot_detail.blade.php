@@ -357,7 +357,7 @@
         }
 
         .review-section {
-            margin-top: 40px;
+            margin-top: 25px; /* 写真のすぐ下に来るので少し余白を調整しました */
         }
 
         .review-card-item {
@@ -582,6 +582,10 @@
 
             <div class="detail-card">
                 <div class="spot-layout-wrapper">
+                    
+                    {{-- ===================================== --}}
+                    {{-- 🌟 左カラム（写真＋レビュー）ここから --}}
+                    {{-- ===================================== --}}
                     <div class="spot-left-col">
                         <div class="main-photo-wrapper">
                             @if($spot->photo_path)
@@ -633,8 +637,222 @@
                                 @endif
                             </div>
                         @endif
-                    </div>
 
+                        {{-- 🌟🌟 移動完了！写真の下にレビューを配置 🌟🌟 --}}
+                        <div class="review-section">
+                            <h3
+                                style="font-size: 20px; color: #333; border-bottom: 2px solid #1e8b9b; padding-bottom: 10px; margin-bottom: 20px;">
+                                みんなのリアルな感想（{{ $spot->reviews->count() }}件）
+                            </h3>
+
+                            @if($spot->reviews->isEmpty())
+                                <p
+                                    style="color: #999; text-align: center; padding: 20px 0; background: white; border-radius: 12px; border: 1px dashed #ccc;">
+                                    まだ感想が投稿されていません。最初の発見者になりましょう！</p>
+                            @else
+                                <div style="display: flex; flex-direction: column; gap: 15px;">
+                                    @foreach($spot->reviews()->latest()->get() as $review)
+                                        <div class="review-card-item">
+                                            @if(Auth::check() && Auth::id() === $review->user_id)
+                                                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 10px;">
+                                                    <button
+                                                        onclick="document.getElementById('editReviewModal-{{ $review->id }}').classList.add('is-show')"
+                                                        style="color: #1e8b9b; background: none; border: none; font-size: 13px; cursor: pointer; font-weight: bold;"><i
+                                                            class="fa-solid fa-pen"></i> 編集</button>
+                                                    <form action="{{ route('reviews.destroy', $review->id) }}" method="POST"
+                                                        onsubmit="return confirm('削除しますか？');" style="margin: 0;">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit"
+                                                            style="color: #e53e3e; background: none; border: none; font-size: 13px; cursor: pointer; font-weight: bold;"><i
+                                                                class="fa-regular fa-trash-can"></i> 削除</button>
+                                                    </form>
+                                                </div>
+                                            @endif
+
+                                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                                                @if($review->customer_vibe)
+                                                    <span
+                                                        style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">👥
+                                                        客層 <span
+                                                            style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->customer_vibe }}</span>
+                                                @endif
+                                                @if($review->eye_fatigue_level)
+                                                    <span
+                                                        style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">👁️
+                                                        照明 <span
+                                                            style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->eye_fatigue_level }}</span>
+                                                @endif
+                                                @if($review->chair_comfort)
+                                                    <span
+                                                        style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">🪑
+                                                        イス <span
+                                                            style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->chair_comfort }}</span>
+                                                @endif
+                                                @if($review->desk_stability)
+                                                    <span
+                                                        style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">🏢
+                                                        机 <span
+                                                            style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->desk_stability }}</span>
+                                                @endif
+                                            </div>
+
+                                            @if($review->photo_path)
+                                                <img src="{{ asset('storage/' . $review->photo_path) }}"
+                                                    style="max-width: 100%; max-height: 250px; border-radius: 8px; object-fit: cover; margin-bottom: 15px;">
+                                            @endif
+
+                                            @if($review->comment)
+                                                <div style="color: #333; line-height: 1.6; font-size: 14px; margin-bottom: 15px;">
+                                                    {!! nl2br(e($review->comment)) !!}</div>
+                                            @endif
+
+                                            @if($review->good_point || $review->bad_point)
+                                                <div
+                                                    style="display: flex; gap: 15px; font-size: 12px; background: #fafafa; padding: 10px; border-radius: 6px; border: 1px dashed #eee;">
+                                                    @if($review->good_point)
+                                                        <div style="flex: 1; color: #e53e3e; font-weight: bold;">👍 Good: <span
+                                                                style="font-weight: normal; color: #555;">{{ $review->good_point }}</span></div>
+                                                    @endif
+                                                    @if($review->bad_point)
+                                                        <div style="flex: 1; color: #3182ce; font-weight: bold;">気になる点: <span
+                                                                style="font-weight: normal; color: #555;">{{ $review->bad_point }}</span></div>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        @if(Auth::check() && Auth::id() === $review->user_id)
+                                            <div class="custom-modal" id="editReviewModal-{{ $review->id }}">
+                                                <div class="modal-content" style="padding: 0;">
+                                                    <div
+                                                        style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+                                                        <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">レビューを編集</h2>
+                                                        <button type="button"
+                                                            onclick="document.getElementById('editReviewModal-{{ $review->id }}').classList.remove('is-show')"
+                                                            class="close-btn" style="position: static;">×</button>
+                                                    </div>
+
+                                                    <form action="{{ route('reviews.update', $review->id) }}" method="POST"
+                                                        enctype="multipart/form-data" style="padding: 20px;">
+                                                        @csrf @method('PUT')
+
+                                                        <div style="margin-bottom: 20px;">
+                                                            <label
+                                                                style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸
+                                                                写真を変更（そのままなら未選択でOK）</label>
+                                                            <input type="file" name="photo" accept="image/*" style="width: 100%;">
+                                                        </div>
+
+                                                        <div
+                                                            style="background-color: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
+                                                            <p
+                                                                style="font-size: 12px; font-weight: bold; color: #4a82b3; margin-top: 0; margin-bottom: 15px;">
+                                                                🔍 ニッチな評価をシェア（1〜5で選択）</p>
+
+                                                            <div style="margin-bottom: 20px;">
+                                                                <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👥
+                                                                    客層</label>
+                                                                <div class="rating-group">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <input type="radio" name="customer_vibe" id="vibe_{{ $review->id }}_{{ $i }}"
+                                                                            value="{{ $i }}" class="rating-radio" {{ $review->customer_vibe == $i ? 'checked' : '' }}><label for="vibe_{{ $review->id }}_{{ $i }}"
+                                                                            class="rating-label">{{ $i }}</label>
+                                                                    @endfor
+                                                                </div>
+                                                                <div
+                                                                    style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                                                                    <span>← ワイワイ</span><span>もくもく作業 →</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div style="margin-bottom: 20px;">
+                                                                <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👁️
+                                                                    照明</label>
+                                                                <div class="rating-group">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <input type="radio" name="eye_fatigue_level" id="eye_{{ $review->id }}_{{ $i }}"
+                                                                            value="{{ $i }}" class="rating-radio" {{ $review->eye_fatigue_level == $i ? 'checked' : '' }}><label for="eye_{{ $review->id }}_{{ $i }}"
+                                                                            class="rating-label">{{ $i }}</label>
+                                                                    @endfor
+                                                                </div>
+                                                                <div
+                                                                    style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                                                                    <span>← 暗め（雰囲気重視）</span><span>明るい（読書向き） →</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div style="margin-bottom: 20px;">
+                                                                <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🪑
+                                                                    イス</label>
+                                                                <div class="rating-group">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <input type="radio" name="chair_comfort" id="chair_{{ $review->id }}_{{ $i }}"
+                                                                            value="{{ $i }}" class="rating-radio" {{ $review->chair_comfort == $i ? 'checked' : '' }}><label for="chair_{{ $review->id }}_{{ $i }}"
+                                                                            class="rating-label">{{ $i }}</label>
+                                                                    @endfor
+                                                                </div>
+                                                                <div
+                                                                    style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                                                                    <span>← 硬い（長居キツイ）</span><span>ふかふか（快適） →</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div style="margin-bottom: 0;">
+                                                                <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🏢
+                                                                    机</label>
+                                                                <div class="rating-group">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <input type="radio" name="desk_stability" id="desk_{{ $review->id }}_{{ $i }}"
+                                                                            value="{{ $i }}" class="rating-radio" {{ $review->desk_stability == $i ? 'checked' : '' }}><label for="desk_{{ $review->id }}_{{ $i }}"
+                                                                            class="rating-label">{{ $i }}</label>
+                                                                    @endfor
+                                                                </div>
+                                                                <div
+                                                                    style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                                                                    <span>← 狭い・ガタつく</span><span>広い・安定感バツグン →</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="good-bad-responsive" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                                            <div style="flex: 1;">
+                                                                <label
+                                                                    style="display: block; font-size: 12px; font-weight: bold; color: #e53e3e; margin-bottom: 5px;">👍
+                                                                    Good</label>
+                                                                <input type="text" name="good_point" value="{{ $review->good_point }}"
+                                                                    style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                                                            </div>
+                                                            <div style="flex: 1;">
+                                                                <label
+                                                                    style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">気になる点</label>
+                                                                <input type="text" name="bad_point" value="{{ $review->bad_point }}"
+                                                                    style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                                                            </div>
+                                                        </div>
+                                                        <div style="margin-bottom: 25px;">
+                                                            <label
+                                                                style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📝
+                                                                感想</label>
+                                                            <textarea name="comment" rows="3"
+                                                                style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none;">{{ $review->comment }}</textarea>
+                                                        </div>
+                                                        <div style="text-align: center;">
+                                                            <button type="submit"
+                                                                style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%;">更新する</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div> {{-- 🌟 左カラム ここまで --}}
+
+                    {{-- ===================================== --}}
+                    {{-- 👉 右カラム（基本情報やマップ）ここから --}}
+                    {{-- ===================================== --}}
                     <div class="spot-right-col">
                         <div class="spot-header-top">
                             <div>
@@ -784,222 +1002,13 @@
                                 </div>
                             </div>
                         @endif
-                    </div>
+                    </div> {{-- 👉 右カラム ここまで --}}
                 </div>
-            </div>
-
-            <div class="review-section">
-                <h3
-                    style="font-size: 20px; color: #333; border-bottom: 2px solid #1e8b9b; padding-bottom: 10px; margin-bottom: 20px;">
-                    みんなのリアルな感想（{{ $spot->reviews->count() }}件）
-                </h3>
-
-                @if($spot->reviews->isEmpty())
-                    <p
-                        style="color: #999; text-align: center; padding: 20px 0; background: white; border-radius: 12px; border: 1px dashed #ccc;">
-                        まだ感想が投稿されていません。最初の発見者になりましょう！</p>
-                @else
-                    <div style="display: flex; flex-direction: column; gap: 15px;">
-                        @foreach($spot->reviews()->latest()->get() as $review)
-                            <div class="review-card-item">
-                                @if(Auth::check() && Auth::id() === $review->user_id)
-                                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 10px;">
-                                        <button
-                                            onclick="document.getElementById('editReviewModal-{{ $review->id }}').classList.add('is-show')"
-                                            style="color: #1e8b9b; background: none; border: none; font-size: 13px; cursor: pointer; font-weight: bold;"><i
-                                                class="fa-solid fa-pen"></i> 編集</button>
-                                        <form action="{{ route('reviews.destroy', $review->id) }}" method="POST"
-                                            onsubmit="return confirm('削除しますか？');" style="margin: 0;">
-                                            @csrf @method('DELETE')
-                                            <button type="submit"
-                                                style="color: #e53e3e; background: none; border: none; font-size: 13px; cursor: pointer; font-weight: bold;"><i
-                                                    class="fa-regular fa-trash-can"></i> 削除</button>
-                                        </form>
-                                    </div>
-                                @endif
-
-                                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
-                                    @if($review->customer_vibe)
-                                        <span
-                                            style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">👥
-                                            客層 <span
-                                                style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->customer_vibe }}</span>
-                                    @endif
-                                    @if($review->eye_fatigue_level)
-                                        <span
-                                            style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">👁️
-                                            照明 <span
-                                                style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->eye_fatigue_level }}</span>
-                                    @endif
-                                    @if($review->chair_comfort)
-                                        <span
-                                            style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">🪑
-                                            イス <span
-                                                style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->chair_comfort }}</span>
-                                    @endif
-                                    @if($review->desk_stability)
-                                        <span
-                                            style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">🏢
-                                            机 <span
-                                                style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->desk_stability }}</span>
-                                    @endif
-                                </div>
-
-                                @if($review->photo_path)
-                                    <img src="{{ asset('storage/' . $review->photo_path) }}"
-                                        style="max-width: 100%; max-height: 250px; border-radius: 8px; object-fit: cover; margin-bottom: 15px;">
-                                @endif
-
-                                @if($review->comment)
-                                    <div style="color: #333; line-height: 1.6; font-size: 14px; margin-bottom: 15px;">
-                                        {!! nl2br(e($review->comment)) !!}</div>
-                                @endif
-
-                                @if($review->good_point || $review->bad_point)
-                                    <div
-                                        style="display: flex; gap: 15px; font-size: 12px; background: #fafafa; padding: 10px; border-radius: 6px; border: 1px dashed #eee;">
-                                        @if($review->good_point)
-                                            <div style="flex: 1; color: #e53e3e; font-weight: bold;">👍 Good: <span
-                                                    style="font-weight: normal; color: #555;">{{ $review->good_point }}</span></div>
-                                        @endif
-                                        @if($review->bad_point)
-                                            <div style="flex: 1; color: #3182ce; font-weight: bold;">気になる点: <span
-                                                    style="font-weight: normal; color: #555;">{{ $review->bad_point }}</span></div>
-                                        @endif
-                                    </div>
-                                @endif
-                            </div>
-
-                            @if(Auth::check() && Auth::id() === $review->user_id)
-                                <div class="custom-modal" id="editReviewModal-{{ $review->id }}">
-                                    <div class="modal-content" style="padding: 0;">
-                                        <div
-                                            style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
-                                            <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">レビューを編集</h2>
-                                            <button type="button"
-                                                onclick="document.getElementById('editReviewModal-{{ $review->id }}').classList.remove('is-show')"
-                                                class="close-btn" style="position: static;">×</button>
-                                        </div>
-
-                                        <form action="{{ route('reviews.update', $review->id) }}" method="POST"
-                                            enctype="multipart/form-data" style="padding: 20px;">
-                                            @csrf @method('PUT')
-
-                                            <div style="margin-bottom: 20px;">
-                                                <label
-                                                    style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸
-                                                    写真を変更（そのままなら未選択でOK）</label>
-                                                <input type="file" name="photo" accept="image/*" style="width: 100%;">
-                                            </div>
-
-                                            <div
-                                                style="background-color: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
-                                                <p
-                                                    style="font-size: 12px; font-weight: bold; color: #4a82b3; margin-top: 0; margin-bottom: 15px;">
-                                                    🔍 ニッチな評価をシェア（1〜5で選択）</p>
-
-                                                <div style="margin-bottom: 20px;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👥
-                                                        客層</label>
-                                                    <div class="rating-group">
-                                                        @for($i = 1; $i <= 5; $i++)
-                                                            <input type="radio" name="customer_vibe" id="vibe_{{ $review->id }}_{{ $i }}"
-                                                                value="{{ $i }}" class="rating-radio" {{ $review->customer_vibe == $i ? 'checked' : '' }}><label for="vibe_{{ $review->id }}_{{ $i }}"
-                                                                class="rating-label">{{ $i }}</label>
-                                                        @endfor
-                                                    </div>
-                                                    <div
-                                                        style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
-                                                        <span>← ワイワイ</span><span>もくもく作業 →</span>
-                                                    </div>
-                                                </div>
-
-                                                <div style="margin-bottom: 20px;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👁️
-                                                        照明</label>
-                                                    <div class="rating-group">
-                                                        @for($i = 1; $i <= 5; $i++)
-                                                            <input type="radio" name="eye_fatigue_level" id="eye_{{ $review->id }}_{{ $i }}"
-                                                                value="{{ $i }}" class="rating-radio" {{ $review->eye_fatigue_level == $i ? 'checked' : '' }}><label for="eye_{{ $review->id }}_{{ $i }}"
-                                                                class="rating-label">{{ $i }}</label>
-                                                        @endfor
-                                                    </div>
-                                                    <div
-                                                        style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
-                                                        <span>← 暗め（雰囲気重視）</span><span>明るい（読書向き） →</span>
-                                                    </div>
-                                                </div>
-
-                                                <div style="margin-bottom: 20px;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🪑
-                                                        イス</label>
-                                                    <div class="rating-group">
-                                                        @for($i = 1; $i <= 5; $i++)
-                                                            <input type="radio" name="chair_comfort" id="chair_{{ $review->id }}_{{ $i }}"
-                                                                value="{{ $i }}" class="rating-radio" {{ $review->chair_comfort == $i ? 'checked' : '' }}><label for="chair_{{ $review->id }}_{{ $i }}"
-                                                                class="rating-label">{{ $i }}</label>
-                                                        @endfor
-                                                    </div>
-                                                    <div
-                                                        style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
-                                                        <span>← 硬い（長居キツイ）</span><span>ふかふか（快適） →</span>
-                                                    </div>
-                                                </div>
-
-                                                <div style="margin-bottom: 0;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🏢
-                                                        机</label>
-                                                    <div class="rating-group">
-                                                        @for($i = 1; $i <= 5; $i++)
-                                                            <input type="radio" name="desk_stability" id="desk_{{ $review->id }}_{{ $i }}"
-                                                                value="{{ $i }}" class="rating-radio" {{ $review->desk_stability == $i ? 'checked' : '' }}><label for="desk_{{ $review->id }}_{{ $i }}"
-                                                                class="rating-label">{{ $i }}</label>
-                                                        @endfor
-                                                    </div>
-                                                    <div
-                                                        style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
-                                                        <span>← 狭い・ガタつく</span><span>広い・安定感バツグン →</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="good-bad-responsive" style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                                <div style="flex: 1;">
-                                                    <label
-                                                        style="display: block; font-size: 12px; font-weight: bold; color: #e53e3e; margin-bottom: 5px;">👍
-                                                        Good</label>
-                                                    <input type="text" name="good_point" value="{{ $review->good_point }}"
-                                                        style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
-                                                </div>
-                                                <div style="flex: 1;">
-                                                    <label
-                                                        style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">気になる点</label>
-                                                    <input type="text" name="bad_point" value="{{ $review->bad_point }}"
-                                                        style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
-                                                </div>
-                                            </div>
-                                            <div style="margin-bottom: 25px;">
-                                                <label
-                                                    style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📝
-                                                    感想</label>
-                                                <textarea name="comment" rows="3"
-                                                    style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none;">{{ $review->comment }}</textarea>
-                                            </div>
-                                            <div style="text-align: center;">
-                                                <button type="submit"
-                                                    style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%;">更新する</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-                @endif
             </div>
         </div>
     </div>
 
+    {{-- モーダル各種（レビュー投稿、スポット編集、履歴など）はそのまま配置 --}}
     <div class="custom-modal" id="reviewModal-{{ $spot->id }}">
         <div class="modal-content" style="padding: 0;">
             <div

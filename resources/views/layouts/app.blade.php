@@ -152,9 +152,9 @@
                             <i class="fa-solid fa-chevron-down ms-auto small" id="spotChevron" style="transition: transform 0.2s;"></i>
                         </a>
                         <div id="spotSubmenu" style="display:none;" class="accordion-item">
-                            <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5" style="font-size:0.82rem; color: #6c757d;">Working</a>
-                            <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5" style="font-size:0.82rem; color: #6c757d;">Hospital</a>
-                            <a href="#" class="d-block text-decoration-none text-muted py-2 ps-5" style="font-size:0.82rem; color: #6c757d;">Tourism</a>
+                            <a href="{{ url('/') }}" class="d-block text-decoration-none text-muted py-2 ps-5" style="font-size:0.82rem; color: #6c757d;">Working</a>
+<a href="#" class="d-block text-decoration-none text-muted py-2 ps-5" style="font-size:0.82rem; color: #6c757d;">Hospital</a>
+<a href="{{ url('/tourist') }}" class="d-block text-decoration-none text-muted py-2 ps-5" style="font-size:0.82rem; color: #6c757d;">Tourism</a>
                         </div>
 
                         <script>
