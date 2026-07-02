@@ -7,30 +7,15 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 
-
 class UsersController extends Controller
 {
-    private $user;
+    // コンストラクタでの注入を綺麗さっぱりやめて、シンプルに
 
-    public function __construct(User $user)
+    public function index()
     {
-        $this->user = $user;
-    }
-
-    public function index(){
-        $all_users = $this->user->withTrashed()->paginate(10);
+        // $this->user-> ではなく、User:: を使って直接呼び出す
+        // $all_users = User::withTrashed()->paginate(10);
+        $all_users = User::paginate(10);
         return view('admin.users.index')->with('all_users', $all_users);
-
     }
-
-    //  public function hide($id) {
-    //     $this->post->destroy($id);
-    //     return redirect()->back();
-    // }
-
-    // public function unhide($id) {
-    //     $this->post->onlyTrashed()->findOrFail($id)->restore();
-    //     return redirect()->back();
-    // }
 }
-

@@ -10,9 +10,9 @@ use App\Http\Controllers\Settings\CommentController;
 use App\Http\Controllers\Settings\DisplayController;
 use App\Http\Controllers\Settings\TwoFactorController;
 
-Route::middleware('auth')->prefix('settings')->name('settings.')->group(function () {
+Route::middleware('auth')->prefix('settings')->name  ('settings.')->group(function () {
     Route::get('/',[SettingController::class, 'index'])        ->name('index');
-    
+
     // account
      Route::get('account',[AccountController::class, 'account'])      ->name('account');
      Route::patch('account',      [AccountController::class, 'updateAccount'])      ->name('account.update');

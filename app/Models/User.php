@@ -2,25 +2,21 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\Models\Review;
+use App\Models\Spot;
+use App\Models\TouristSpot;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'username',
@@ -34,21 +30,11 @@ class User extends Authenticatable
         'posts_count',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -96,18 +82,28 @@ class User extends Authenticatable
             : asset('storage/' . ltrim($this->avatar, '/'));
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function appNotifications(): HasMany
     {
-        return $this->hasMany(\App\Models\Notification::class, 'recipient_id');
+        return $this->hasMany(\App\Models\Notification::class);
     }
 
-    public function unreadAppNotifications(): HasMany
+    public function bookmarks()
     {
-        return $this->appNotifications()->where('is_read', false);
+        return $this->belongsToMany(Spot::class, 'bookmarks')->withTimestamps();
     }
 
-    public function notificationSubscriptions(): HasMany
+    public function bookmarkedStudySpots()
     {
-        return $this->hasMany(\App\Models\NotificationSubscription::class);
+        return $this->belongsToMany(Spot::class, 'bookmarks', 'user_id', 'spot_id')->withTimestamps();
+    }
+
+    public function bookmarkedTouristSpots()
+    {
+        return $this->belongsToMany(TouristSpot::class, 'tourist_bookmarks', 'user_id', 'tourist_spot_id')->withTimestamps();
     }
 }

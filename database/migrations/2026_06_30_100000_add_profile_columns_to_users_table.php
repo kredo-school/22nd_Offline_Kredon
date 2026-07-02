@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('username')->nullable()->unique()->after('name');
             $table->text('bio')->nullable()->after('username');
-            $table->string('avatar')->nullable()->after('bio');
+            // avatar は 2026_05_28_071424_add_avater_to_users_table で追加済み
             $table->boolean('two_factor_enabled')->default(false)->after('avatar');
             $table->text('two_factor_secret')->nullable()->after('two_factor_enabled');
             $table->unsignedInteger('posts_count')->default(0)->after('two_factor_secret');
@@ -24,7 +24,6 @@ return new class extends Migration
             $table->dropColumn([
                 'username',
                 'bio',
-                'avatar',
                 'two_factor_enabled',
                 'two_factor_secret',
                 'posts_count',
