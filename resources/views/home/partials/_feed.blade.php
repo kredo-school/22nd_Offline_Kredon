@@ -2,7 +2,7 @@
 
     <section class="hp-section">
 
-        <div class="hp-grid">
+        <div class="hp-grid" id="hp-feed-grid">
 
             @forelse($posts as $item)
 
@@ -19,6 +19,12 @@
             @endforelse
 
         </div>
+
+        @if ($posts instanceof \Illuminate\Contracts\Pagination\Paginator && $posts->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+                {{ $posts->links() }}
+            </div>
+        @endif
 
     </section>
 

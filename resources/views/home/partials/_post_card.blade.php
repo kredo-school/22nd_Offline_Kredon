@@ -1,31 +1,26 @@
 <div class="hp-post-card">
-    {{-- ユーザー情報部分 --}}
     <div class="hp-post-header">
-        <img src="https://ui-avatars.com/api/?name={{ $item->user->name ?? 'User' }}" 
+        <img src="{{ $item->user?->avatarUrl() ?? 'https://ui-avatars.com/api/?name=' . urlencode($item->user?->name ?? 'User') }}"
              class="hp-avatar" alt="avatar">
         <div>
-            <div class="hp-user-name">{{ $item->user->name ?? '匿名' }}</div>
+            <div class="hp-user-name">{{ $item->user?->name ?? '匿名' }}</div>
             <div class="hp-post-date">{{ $item->created_at->diffForHumans() }}</div>
         </div>
     </div>
 
-    {{-- 投稿画像 --}}
-    <div class="hp-post-image-wrap">
-        <img src="https://placehold.co/400x250" class="hp-post-image" alt="post image">
-    </div>
+    <a href="{{ $item->url ?? '#' }}" class="text-decoration-none text-reset">
+        <div class="hp-post-image-wrap">
+            <img src="{{ $item->image_url ?? asset('images/welcome-bg.jpg') }}"
+                 class="hp-post-image" alt="{{ $item->title }}">
+        </div>
 
-    {{-- 本文 --}}
-    <div class="hp-post-body">
-        <h6 class="hp-post-title">{{ $item->title }}</h6>
-        <p class="hp-post-description">
-            {{ $item->description }}
-        </p>
-        <div class="hp-post-tags">#セブライフ #Kredon</div>
-    </div>
+        <div class="hp-post-body">
+            <h6 class="hp-post-title">{{ $item->title }}</h6>
+            <p class="hp-post-description">{{ $item->description }}</p>
+        </div>
+    </a>
 
-    {{-- アクションボタン --}}
     <div class="hp-post-footer">
-        <a href="#" class="hp-comment-link"></a>
-        <span><i class="fa-regular fa-bookmark"></i></span>
+        <a href="{{ $item->url ?? '#' }}" class="hp-comment-link">詳細を見る</a>
     </div>
 </div>

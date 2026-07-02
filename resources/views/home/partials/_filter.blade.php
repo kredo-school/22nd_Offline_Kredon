@@ -1,5 +1,11 @@
 <div class="hp-filter-bar">
 
+    @php
+        $category = request('category', 'market');
+        $sort     = request('sort', 'newest');
+        $isMarket = $category === 'market';
+    @endphp
+
     {{-- カテゴリー --}}
     <div class="hp-filter-section">
 
@@ -9,18 +15,18 @@
 
         <div class="hp-filter-category">
 
-            <a href="{{ route('home', ['category' => 'market']) }}"
-               class="hp-sort-pill {{ request('category','market') === 'market' ? 'is-active' : '' }}">
+            <a href="{{ route('home', ['category' => 'market', 'sort' => $isMarket ? 'newest' : $sort]) }}"
+               class="hp-sort-pill {{ $category === 'market' ? 'is-active' : '' }}">
                 Market
             </a>
 
-            <a href="{{ route('home', ['category' => 'working']) }}"
-               class="hp-sort-pill {{ request('category') === 'working' ? 'is-active' : '' }}">
+            <a href="{{ route('home', ['category' => 'working', 'sort' => $sort]) }}"
+               class="hp-sort-pill {{ $category === 'working' ? 'is-active' : '' }}">
                 Working Spot
             </a>
 
-            <a href="{{ route('home', ['category' => 'tourist']) }}"
-               class="hp-sort-pill {{ request('category') === 'tourist' ? 'is-active' : '' }}">
+            <a href="{{ route('home', ['category' => 'tourist', 'sort' => $sort]) }}"
+               class="hp-sort-pill {{ $category === 'tourist' ? 'is-active' : '' }}">
                 Tourist Spot
             </a>
 
@@ -45,15 +51,19 @@
                     'reviews' => '口コミ',
                 ] as $value => $label)
 
-                    <a href="{{ route('home', [
-                        'category' => request('category', 'market'),
-                        'sort' => $value
-                    ]) }}"
-                       class="hp-sort-pill {{ request('sort','newest') === $value ? 'is-active' : '' }}">
-
-                        {{ $label }}
-
-                    </a>
+                    @if ($isMarket && $value !== 'newest')
+                        <span class="hp-sort-pill is-disabled" title="Marketは新着のみ">
+                            {{ $label }}
+                        </span>
+                    @else
+                        <a href="{{ route('home', [
+                            'category' => $category,
+                            'sort' => $value,
+                        ]) }}"
+                           class="hp-sort-pill {{ $sort === $value ? 'is-active' : '' }}">
+                            {{ $label }}
+                        </a>
+                    @endif
 
                 @endforeach
 
@@ -61,13 +71,13 @@
 
         </div>
 
-        <div class="hp-view-toggle">
+        <div class="hp-view-toggle" role="group" aria-label="表示形式">
 
-            <button class="hp-toggle-btn active">
+            <button type="button" class="hp-toggle-btn active" data-hp-view="grid" aria-label="グリッド表示" aria-pressed="true">
                 <i class="fa-solid fa-grip"></i>
             </button>
 
-            <button class="hp-toggle-btn">
+            <button type="button" class="hp-toggle-btn" data-hp-view="list" aria-label="リスト表示" aria-pressed="false">
                 <i class="fa-solid fa-list"></i>
             </button>
 

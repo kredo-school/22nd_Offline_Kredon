@@ -42,12 +42,17 @@ body {
 }
 
 .hp-layout {
-     display: grid;
+    display: grid;
     grid-template-columns: minmax(0, 1fr) 300px;
     gap: 24px;
+    // バナー + コントロール行の高さ（お知らせカードと揃える）
+    --hp-hero-block-height: calc(clamp(260px, 25vw, 320px) + 112px);
 }
 
 /* _hero.blade.php */
+.hp-hero-wrapper {
+    min-height: var(--hp-hero-block-height);
+}
 .hp-hero-swiper {
     width: 100%;
     min-width: 0;
@@ -273,6 +278,64 @@ body {
     min-width: 0;
 }
 
+// リスト表示
+.hp-grid.hp-grid--list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.hp-grid--list .hp-post-card {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    min-height: auto;
+    height: auto;
+}
+
+.hp-grid--list .hp-post-header {
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+.hp-grid--list .hp-post-card > a {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: row;
+    align-items: stretch;
+    min-width: 0;
+    width: calc(100% - 0px);
+}
+
+.hp-grid--list .hp-post-image-wrap {
+    flex: 0 0 220px;
+    padding: 10px 0 10px 10px;
+}
+
+.hp-grid--list .hp-post-image {
+    width: 100%;
+    height: 140px;
+}
+
+.hp-grid--list .hp-post-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hp-grid--list .hp-post-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.hp-grid--list .hp-post-footer {
+    flex: 0 0 100%;
+    width: 100%;
+}
+
 .hp-filter-bar {
     margin: 24px 0;
 }
@@ -351,6 +414,13 @@ body {
     color: #fff;
 }
 
+.hp-sort-pill.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+    background: #f5f5f5;
+}
+
 /* 表示切替 */
 
 .hp-view-toggle {
@@ -390,11 +460,87 @@ body {
 
 .hp-sticky-container { position: sticky; top: 90px; width: 100%; }
 
-.hp-card { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 16px; height: 280px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 24px; }
+.hp-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+}
 
-.hp-card-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+// お知らせカードのみバナー＋スライダーコントロールと同じ高さに
+.hp-notification-wrapper > .hp-card {
+    height: var(--hp-hero-block-height);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
 
-.hp-scroll-area { height: calc(100% - 40px); overflow-y: auto; }
+.hp-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.hp-section-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.hp-scroll-area { flex: 1; min-height: 0; overflow-y: auto; }
+
+.hp-card-footer {
+    flex-shrink: 0;
+    padding-top: 12px;
+    margin-top: 4px;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+}
+
+.hp-see-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0d6efd;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: #0a58ca;
+        text-decoration: underline;
+    }
+
+    i {
+        font-size: 0.7rem;
+    }
+}
+
+.hp-empty-text {
+    color: #888;
+    font-size: 0.875rem;
+    text-align: center;
+    padding: 8px 0;
+}
+
+.hp-divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 4px 0;
+}
+
+.hp-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
 
 .hp-notification-item { display: flex; align-items: flex-start; padding: 8px 0; }
 
@@ -441,4 +587,47 @@ body {
     .hp-hero-swiper, .hp-banner-box { height: 180px; }
     .hp-hero-swiper { border-radius: 0; }
     .hp-hero-title { font-size: 1.5rem; }
+
+    .hp-hero-controls .swiper-button-prev,
+    .hp-hero-controls .swiper-button-next {
+        display: none;
+    }
+
+    .hp-hero-controls {
+        gap: 0;
+        height: 40px;
+        margin-top: 16px;
+        margin-bottom: 24px;
+    }
+
+    .hp-layout {
+        --hp-hero-block-height: auto;
+    }
+
+    .hp-hero-wrapper {
+        min-height: 0;
+    }
+
+    .hp-notification-wrapper > .hp-card {
+        height: auto;
+        min-height: 200px;
+    }
+
+    .hp-view-toggle {
+        display: none;
+    }
+
+    .hp-grid.hp-grid--list .hp-post-card > a {
+        flex-direction: column;
+    }
+
+    .hp-grid--list .hp-post-image-wrap {
+        flex: none;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .hp-grid--list .hp-post-image {
+        height: 220px;
+    }
 }
