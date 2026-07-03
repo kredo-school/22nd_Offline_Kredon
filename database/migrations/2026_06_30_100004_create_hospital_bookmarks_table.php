@@ -8,18 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('bookmarks', function (Blueprint $table) {
+        Schema::create('hospital_bookmarks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->morphs('bookmarkable');
+            $table->foreignId('hospital_id')->constrained('hospitals')->cascadeOnDelete();
             $table->timestamps();
 
-            $table->unique(['user_id', 'bookmarkable_id', 'bookmarkable_type']);
+            $table->unique(['user_id', 'hospital_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('bookmarks');
+        Schema::dropIfExists('hospital_bookmarks');
     }
 };

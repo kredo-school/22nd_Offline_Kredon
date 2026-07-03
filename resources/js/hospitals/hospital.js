@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const hospitalId = this.dataset.id;
             const buttonElement = this;
 
-            fetch(`/bookmarks/${hospitalId}`, {
+            fetch(`/hospital-bookmarks/${hospitalId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

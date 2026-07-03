@@ -33,6 +33,7 @@ class HospitalController extends Controller
                 'user_id' => auth()->id(),
                 'url' => $path,
                 'sort_order' => 0,
+                'created_at' => now(),
             ]);
         }
 
@@ -64,6 +65,7 @@ class HospitalController extends Controller
                 'user_id' => auth()->id(),
                 'url' => $path,
                 'sort_order' => 0,
+                'created_at' => now(),
             ]);
         }
 

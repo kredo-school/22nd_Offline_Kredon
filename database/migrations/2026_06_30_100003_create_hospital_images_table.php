@@ -8,12 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('hospital_images', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('hospital_id')->constrained('hospitals')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('url');
             $table->string('caption')->nullable();
-            $table->morphs('imageable');
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamp('created_at')->nullable();
         });
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('hospital_images');
     }
 };

@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WizardController;
 use App\Http\Controllers\HealthcareController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\BookmarkController;
+use App\Http\Controllers\HospitalBookmarkController;
 use App\Http\Controllers\Admin\HospitalController as AdminHospitalController;
-use App\Http\Controllers\ImageController;
+use App\Http\Controllers\HospitalImageController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,10 +38,12 @@ Route::prefix('wizard')->group(function () {
         ->name('wizard.result');
 });
 
-Route::post('/hospitals/{hospitalId}/images', [ImageController::class, 'store'])->name('images.store');
+Route::post('/hospitals/{hospitalId}/images', [HospitalImageController::class, 'store'])->name('hospital_images.store');
 
-Route::post('/bookmarks/{hospital}', [BookmarkController::class, 'store'])->name('bookmarks.store');
-Route::delete('/bookmarks/{hospital}', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
+Route::middleware('auth')->group(function () {
+    Route::post('/hospital-bookmarks/{hospital}', [HospitalBookmarkController::class, 'store'])->name('hospital_bookmarks.store');
+    Route::delete('/hospital-bookmarks/{hospital}', [HospitalBookmarkController::class, 'destroy'])->name('hospital_bookmarks.destroy');
+});
 
 Route::prefix('admin/hospitals')->middleware(['auth'])->group(function () {
     Route::get('/', [AdminHospitalController::class, 'index'])->name('admin.hospitals.index');

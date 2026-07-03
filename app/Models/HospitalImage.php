@@ -4,26 +4,38 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Image extends Model
+class HospitalImage extends Model
 {
-    protected $table = 'images';
+    public $timestamps = false;
 
     const UPDATED_AT = null;
 
     protected $fillable = [
+        'hospital_id',
         'user_id',
         'url',
         'caption',
-        'imageable_id',
-        'imageable_type',
         'sort_order',
+        'created_at',
     ];
 
-    public function imageable(): MorphTo
+    protected function casts(): array
     {
-        return $this->morphTo();
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
+
+    public function hospital(): BelongsTo
+    {
+        return $this->belongsTo(Hospital::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     protected function displayUrl(): Attribute
@@ -41,7 +53,6 @@ class Image extends Model
                 return asset('images/' . $this->url);
             }
 
-            // Legacy: public/images/hospital/ or storage/app/public/hospital/
             if (str_starts_with($this->url, 'hospital/')) {
                 if (file_exists(public_path('images/' . $this->url))) {
                     return asset('images/' . $this->url);
