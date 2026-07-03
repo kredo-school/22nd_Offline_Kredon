@@ -7,8 +7,29 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
-// _hospitals
+// Healthcare
 @import 'partials/hospitals';
-
-// loader
 @import 'partials/loader';
+
+// Homepage
+@import 'homepage/home';
+
+// Usersettings
+@import 'usersettings/settings';
+@import 'usersettings/shared';
+@import 'usersettings/accounts';
+@import 'usersettings/notifications';
+@import 'usersettings/comments';
+@import 'usersettings/privacy';
+@import 'usersettings/display';
+@import 'usersettings/app';
+
+@media (min-width: 768px) {
+    .content-body {
+        margin-top: 70px !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        height: auto !important;
+        min-height: calc(100vh - 70px) !important;
+    }
+}

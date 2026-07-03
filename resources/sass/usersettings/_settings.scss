@@ -1,0 +1,179 @@
+// _settings.scss
+// スマホファースト（768px以上でデスクトップレイアウト）
+// prefix: st-
+
+// ページ全体 
+
+.st-wrap {
+    padding: 16px;
+    padding-top: calc(90px + 16px);
+    background: $st-bg;
+    // min-height: 100%;  /* [Step2 変更前] flex 親内で 100% が効かずクリップされる場合あり */
+    min-height: 0;
+    flex: 1 1 auto;
+}
+
+.st-wrap__head {
+    margin-bottom: 16px;
+}
+
+.st-wrap__title {
+    font-size: 20px;
+    font-weight: 700;
+    color: $st-text;
+    margin: 0 0 4px;
+}
+
+.st-wrap__desc {
+    font-size: 12px;
+    color: $st-text-sub;
+    margin: 0;
+    line-height: 1.6;
+}
+
+// モバイル: ナビ → コンテンツの縦積み
+.st-wrap__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.st-wrap__content {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (min-width: 768px) {
+    .st-wrap {
+        // padding: 24px 32px;  /* [Step4 変更前] 上下左右 24/32px 統一 → padding-top 24px になり fixed navbar(70px) に見出しが隠れる */
+        padding-right: 32px;
+        padding-bottom: 24px;
+        padding-left: 32px;
+        // padding-top: 24px;  /* [Step4 変更前] app.blade.php インラインCSSが margin-top:0 を優先するため navbar 分の余白が足りない */
+        padding-top: calc(70px + 24px); // navbar 高さ 70px + 見出し余白 24px
+        max-width: 1280px;
+        margin: 0 auto;
+        // min-height: 100%;  /* [Step2 変更前] */
+        min-height: 0;
+        flex: 1 1 auto;
+    }
+
+    .st-wrap__head   { margin-bottom: 24px; }
+    .st-wrap__title  { font-size: 26px; }
+    .st-wrap__desc   { font-size: 13px; }
+
+    // デスクトップ: 左ナビ + 右コンテンツ
+    .st-wrap__body {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 24px;
+    }
+}
+
+// ─ インナーナビ ─
+
+.st-inner-nav {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.st-inner-nav__list {
+    list-style: none;
+    padding: 6px;
+    margin: 0;
+    background: $st-surface;
+    border: 1px solid $st-border;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+}
+
+.st-inner-nav__link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: $st-text-sub;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.12s, color 0.12s;
+    border-left: 3px solid transparent;
+
+    i {
+        width: 16px;
+        text-align: center;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        background: $st-bg;
+        color: $st-text;
+    }
+
+    // 見本: 左ボーダー + 薄青背景でアクティブ表示
+    &.is-active {
+        background: rgba($st-blue, 0.08);
+        color: $st-blue;
+        font-weight: 600;
+        border-left-color: $st-blue;
+
+        i { color: $st-blue; }
+    }
+}
+
+@media (min-width: 768px) {
+    .st-inner-nav {
+        width: 200px;
+        position: sticky;
+        top: 24px;
+    }
+
+    .st-inner-nav__list {
+        flex-direction: column;
+        overflow-x: visible;
+        padding: 8px;
+        gap: 2px;
+    }
+
+    .st-inner-nav__link {
+        padding: 10px 14px;
+        white-space: normal;
+    }
+}
+
+// ─ フラッシュアラート ─
+
+.st-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 16px;
+
+    &--success {
+        background: rgba($st-green, 0.25);
+        border: 1px solid $st-green-dark;
+        color: darken($st-green-dark, 20%);
+    }
+
+    &--error {
+        background: rgba(#E55353, 0.1);
+        border: 1px solid #E55353;
+        color: #B83232;
+    }
+}
+
+
+
+

@@ -18,6 +18,14 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call([
+            UserSeeder::class,
+            CharacterTempSeeder::class,
+            NgWordSeeder::class,
+            UserSettingSeeder::class,
+            SpotSeeder::class,
+            PostSeeder::class,
+            TouristSpotSeeder::class,
+            NotificationSeeder::class,
             SpecialtySeeder::class,
             HospitalSeeder::class,
             FaqCategorySeeder::class,
