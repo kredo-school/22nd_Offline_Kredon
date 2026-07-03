@@ -3,6 +3,10 @@
 @section('content')
     {{-- 📱 スマホ対応＆プロフェッショナルUIのCSS --}}
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
         /* ホバー時のフワッと浮き上がるアニメーション（プロっぽさの演出） */
         .hover-lift {
             transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
@@ -33,46 +37,46 @@
         }
 
         /* ==========================================
-               🌟 追加：モーダルウィンドウの制御CSS
-            ========================================== */
+                           🌟 追加：モーダルウィンドウの制御CSS
+                        ========================================== */
         .custom-modal {
-            display: none;
-            /* 初期状態は完全に非表示 */
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            /* 背景を暗くして透過 */
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
             z-index: 9999;
-            /* 他の要素より最前面に配置 */
-            align-items: center;
-            justify-content: center;
+            /* 👇 ここがポイント！Flexboxの中央寄せをやめて、全体をスクロール可能に */
+            overflow-y: auto;
+            padding: 40px 15px;
+            box-sizing: border-box;
         }
 
-        /* JavaScriptで .is-show クラスが付与されたら中央揃えで表示 */
         .custom-modal.is-show {
-            display: flex;
+            display: block !important;
+            /* 画面いっぱいの時は flex ではなく block が最強です */
         }
 
-        /* モーダルの内側コンテンツ */
         .modal-content {
-          background: white;
+            background-color: white;
             border-radius: 16px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh; /* 🌟 画面高の90%を最大値に制限 */
-            display: flex;
-            flex-direction: column; /* 🌟 縦並びにしてヘッダーと中身を分割 */
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            animation: modalFadeIn 0.3s ease;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            /* これで左右中央に配置されます */
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            /* もし max-height: 90vh; みたいな記述があれば消してOKです */
         }
-/* 🌟 モーダルのフォーム部分（ここでスクロールさせる） */
+
+        /* 🌟 モーダルのフォーム部分（ここでスクロールさせる） */
         .modal-body {
             overflow-y: auto;
             padding: 20px;
         }
+
         /* 閉じる（×）ボタンのスタイル */
         .close-btn {
             background: none;
@@ -170,6 +174,13 @@
         }
     </style>
 
+    {{-- 🌟 魔法のCSS：クリックした時にスルスル～っと下へスクロールさせる --}}
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+
     <div style="background-color: #f8f9fa; min-height: 100vh; padding-bottom: 50px;">
 
         {{-- 🌟 エラーメッセージ表示 --}}
@@ -201,7 +212,6 @@
                         No Photo
                     </div>
                 @endif
-
                 {{-- 下から上へのグラデーション --}}
                 <div
                     style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%); pointer-events: none;">
@@ -243,10 +253,11 @@
                                 style="font-weight: bold; font-size: 18px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
                                 {{ number_format($tourist_spot->reviews_avg_rating, 1) }}
                             </span>
-                            <span class="rating-text"
-                                style="color: #ddd; font-size: 14px; text-decoration: underline; cursor: pointer;">
+                            {{-- 👇 修正ポイント：spanタグからaタグに変更し、href属性を追加しました！ --}}
+                            <a href="#reviews-section" class="rating-text hover-lift"
+                                style="color: #ddd; font-size: 14px; text-decoration: underline; cursor: pointer; transition: 0.2s;">
                                 ({{ $tourist_spot->reviews_count }}件のクチコミ)
-                            </span>
+                            </a>
                         @else
                             <span
                                 style="font-size: 14px; color: #ddd; background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 20px;">⭐
@@ -317,13 +328,12 @@
                 </h3>
                 <div
                     style="background: white; padding: 25px; border-radius: 16px; border: 1px solid #eee; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-                    <p style="line-height: 1.9; color: #4a5568; font-size: 16px; margin: 0;">
-                        ここにスポットの詳細な説明文が入ります。波も穏やかで、初心者や家族連れでも安心して楽しめます。美しい自然と現地のリアルな空気を存分に味わってください。
-                    </p>
+                    <p style="line-height: 1.9; color: #4a5568; font-size: 16px; margin: 0; white-space: pre-wrap;">
+                        {{ $tourist_spot->description ?? '概要はまだ入力されていません。' }}</p>
                 </div>
 
                 {{-- 💬 3. クチコミ（レビュー）エリア --}}
-                <div style="margin-top: 50px;">
+                <div id="reviews-section" style="margin-top: 50px;">
                     <h3
                         style="font-size: 22px; font-weight: 900; color: #2d3748; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
                         <i class="fa-regular fa-comments"></i> リアルな体験談 ({{ $tourist_spot->reviews_count }}件)
@@ -380,14 +390,16 @@
                                     </div>
                                     <div
                                         style="font-size: 15px; color: #334155; margin-bottom: 20px; line-height: 1.8; white-space: pre-wrap;">
-                                        {{ $review->comment }}</div>
+                                        {{ $review->comment }}
+                                    </div>
 
                                     <div
                                         style="border-top: 1px solid #f1f5f9; padding-top: 15px; font-size: 13px; color: #64748b; display: flex; justify-content: space-between; align-items: center;">
                                         <span style="font-weight: bold;">
                                             <div
                                                 style="width: 24px; height: 24px; background: #e2e8f0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; color: #94a3b8;">
-                                                <i class="fa-solid fa-user"></i></div>
+                                                <i class="fa-solid fa-user"></i>
+                                            </div>
                                             {{ $review->user->name }}
                                         </span>
 
@@ -424,7 +436,8 @@
                             <div>
                                 <div style="font-size: 12px; color: #64748b; margin-bottom: 2px;">予算目安</div>
                                 <div style="font-weight: 900; color: #334155; font-size: 16px;">
-                                    {{ $tourist_spot->budget ?? '情報なし' }}</div>
+                                    {{ $tourist_spot->budget ?? '情報なし' }}
+                                </div>
                             </div>
                         </div>
                         <div
@@ -433,7 +446,8 @@
                             <div>
                                 <div style="font-size: 12px; color: #64748b; margin-bottom: 2px;">営業時間</div>
                                 <div style="font-weight: 900; color: #334155; font-size: 16px;">
-                                    {{ $tourist_spot->hours ?? '未定' }}</div>
+                                    {{ $tourist_spot->hours ?? '未定' }}
+                                </div>
                             </div>
                         </div>
                         <div style="display: flex; gap: 15px; align-items: flex-start;">
@@ -466,21 +480,23 @@
                     <div
                         style="margin-top: 25px; padding: 20px; background: #fff4e6; border-radius: 16px; border: 1px dashed #fbdcb6;">
                         <p style="font-size: 13px; font-weight: bold; color: #f0932b; margin: 0 0 15px 0; text-align: center;">
-                            <i class="fa-solid fa-gear"></i> 管理メニュー</p>
+                            <i class="fa-solid fa-gear"></i> 管理メニュー
+                        </p>
                         <div style="display: flex; flex-direction: column; gap: 10px;">
                             <button onclick="document.getElementById('editTouristSpotModal').classList.add('is-show')" ...>
 
-<button onclick="openEditModal()" class="hover-lift"
-    style="background-color: white; color: #f0932b; border: 2px solid #f0932b; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold;">✏️
-    情報を編集する
-</button>
-                            <form action="{{ route('tourist_spots.destroy', $tourist_spot->id) }}" method="POST"
-                                onsubmit="return confirm('本当に削除しますか？');" style="margin: 0;">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="hover-lift"
-                                    style="width: 100%; background-color: white; color: #ef4444; border: 2px solid #ef4444; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold;">🗑️
-                                    削除する</button>
-                            </form>
+                                <button onclick="document.getElementById('editTouristSpotModal').classList.add('is-show')"
+                                    class="hover-lift"
+                                    style="background-color: white; color: #f0932b; border: 2px solid #f0932b; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold;">✏️
+                                    情報を編集する
+                                </button>
+                                <form action="{{ route('tourist_spots.destroy', $tourist_spot->id) }}" method="POST"
+                                    onsubmit="return confirm('本当に削除しますか？');" style="margin: 0;">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="hover-lift"
+                                        style="width: 100%; background-color: white; color: #ef4444; border: 2px solid #ef4444; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold;">🗑️
+                                        削除する</button>
+                                </form>
                         </div>
                     </div>
                 @endif
@@ -565,15 +581,77 @@
                             style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 6px;"
                             placeholder="例: https://...">
                     </div>
+                    {{-- ✍️ スポットの感想・おすすめポイント（統一のための追加部分） --}}
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px;">📸
-                            写真を変更（任意・複数可）</label>
-                        <input type="file" name="photos[]" multiple accept="image/*" onchange="previewImage(this)"
-                            style="width: 100%; font-size: 13px;">
-                        <div id="imagePreviewContainer" style="display: none; margin-top: 10px;">
-                            <img id="photoPreview" src="" alt="プレビュー"
-                                style="max-width: 100%; height: 150px; object-fit: cover; border-radius: 6px;">
+                        <label
+                            style="font-size: 13px; font-weight: bold; color: #666; display: flex; align-items: center; gap: 5px;">
+                            ✍️ スポットの感想・おすすめポイント（任意）
+                        </label>
+                        <textarea name="description" rows="4"
+                            style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-top: 8px; font-size: 14px; box-sizing: border-box; resize: vertical;"
+                            placeholder="例：夕日が見える席が最高でした！静かで集中できます。">{{ old('description', $tourist_spot->description) }}</textarea>
+                    </div>
+                    {{-- 👑 トップ画像（メイン）の選択 ＆ 削除 --}}
+                    <div style="margin-bottom: 20px;">
+                        <label
+                            style="font-size: 13px; font-weight: bold; color: #666; display: flex; align-items: center; gap: 5px;">
+                            👑 トップ画像（メイン）の選択 & 削除
+                        </label>
+                        <div
+                            style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-top: 8px;">
+                            <div id="photo-container" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
+
+                                {{-- ① 現在のメイン画像 --}}
+                                @if($tourist_spot->photo_path)
+                                    <div class="photo-item"
+                                        style="border: 1px solid #ddd; padding: 10px; border-radius: 8px; background: white; text-align: center; min-width: 100px;">
+                                        <img src="{{ asset('storage/' . $tourist_spot->photo_path) }}"
+                                            style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
+                                        <div>
+                                            <label style="font-size: 12px; cursor: pointer;">
+                                                <input type="radio" name="main_photo" value="current_main" checked> メイン
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label style="font-size: 12px; color: #dc2626; cursor: pointer;">
+                                                <input type="checkbox" name="delete_main_photo" value="1"> 削除
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                {{-- ② ギャラリー画像（追加された複数写真） --}}
+                                @foreach($tourist_spot->photos as $photo)
+                                    <div class="photo-item"
+                                        style="border: 1px solid #ddd; padding: 10px; border-radius: 8px; background: white; text-align: center; min-width: 100px;">
+                                        <img src="{{ asset('storage/' . $photo->photo_path) }}"
+                                            style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
+                                        <div>
+                                            <label style="font-size: 12px; cursor: pointer;">
+                                                <input type="radio" name="main_photo" value="{{ $photo->id }}"> メイン
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label style="font-size: 12px; color: #dc2626; cursor: pointer;">
+                                                <input type="checkbox" name="delete_photos[]" value="{{ $photo->id }}"> 削除
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                            </div>
                         </div>
+                    </div>
+
+                    {{-- 📸 写真をさらに追加する --}}
+                    <div style="margin-bottom: 20px;">
+                        <label
+                            style="font-size: 13px; font-weight: bold; color: #666; display: flex; align-items: center; gap: 5px;">
+                            📸 写真をさらに追加する（複数選択可）
+                        </label>
+                        <input type="file" name="photos[]" multiple
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-top: 8px; background: white;">
+                        <p style="font-size: 11px; color: #888; margin-top: 5px;">※Ctrlキー（MacはCommandキー）を押しながらで複数枚選択できます</p>
                     </div>
 
                     <button type="submit"

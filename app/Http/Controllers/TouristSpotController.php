@@ -161,16 +161,17 @@ class TouristSpotController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+  public function update(Request $request, $id)
     {
-        // ① 入力チェック（予約URLを追加）
+        // ① 入力チェック
         $request->validate([
             'name' => 'required|string|max:255',
             'area' => 'required|string',
             'budget' => 'nullable|string',
-            'booking_url' => 'nullable|url', // 🌟 追加：URL形式チェック
+            'booking_url' => 'nullable|url',
             'hours' => 'nullable|string',
-            'photo' => 'nullable|image|max:10240',
+            'description' => 'nullable|string',
+            'photos.*' => 'nullable|image|max:10240', // 🌟 複数写真用
         ]);
 
         $tourist_spot = TouristSpot::findOrFail($id);
@@ -180,26 +181,87 @@ class TouristSpotController extends Controller
             return redirect()->route('tourist_spots.index')->with('error', '編集権限がありません。');
         }
 
-        // ③ データの更新
+        // ③ テキストデータの更新
         $tourist_spot->name = $request->name;
         $tourist_spot->area = $request->area;
         $tourist_spot->budget = $request->budget;
-        $tourist_spot->booking_url = $request->booking_url; // 🌟 追加：予約URLを更新
+        $tourist_spot->booking_url = $request->booking_url;
         $tourist_spot->hours = $request->hours;
+        $tourist_spot->description = $request->description; 
 
         $tourist_spot->has_activity = $request->has('has_activity');
         $tourist_spot->has_view     = $request->has('has_view');
         $tourist_spot->has_shopping = $request->has('has_shopping');
         $tourist_spot->has_food     = $request->has('has_food');
 
-        if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $filename = uniqid() . '_' . time() . '.' . $photo->getClientOriginalExtension();
-            $path = $photo->storeAs('tourist_spots/' . $tourist_spot->id, $filename, 'public');
-            $tourist_spot->photo_path = $path;
+        // ==========================================
+        // 🗑️ ④ ギャラリー画像の削除処理（チェックされたもの）
+        // ==========================================
+        if ($request->has('delete_photos')) {
+            foreach ($request->delete_photos as $photoId) {
+                $photo = \App\Models\TouristSpotPhoto::find($photoId);
+                if ($photo) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($photo->photo_path);
+                    $photo->delete();
+                }
+            }
         }
 
+        // ==========================================
+        // 🗑️ ⑤ 現在のメイン画像の削除処理
+        // ==========================================
+        if ($request->has('delete_main_photo') && $request->delete_main_photo == '1') {
+            if ($tourist_spot->photo_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($tourist_spot->photo_path);
+                $tourist_spot->photo_path = null; // メイン画像を空にする
+            }
+        }
+
+        // ==========================================
+        // 👑 ⑥ メイン画像の入れ替え処理
+        // ==========================================
+        if ($request->has('main_photo') && $request->main_photo !== 'current_main') {
+            $newMain = \App\Models\TouristSpotPhoto::find($request->main_photo);
+            if ($newMain) {
+                // 元のメイン画像が存在し、かつ「削除」にチェックが入っていなければ、ギャラリーに降格させる
+                if ($tourist_spot->photo_path && !$request->has('delete_main_photo')) {
+                    \App\Models\TouristSpotPhoto::create([
+                        'tourist_spot_id' => $tourist_spot->id,
+                        'photo_path' => $tourist_spot->photo_path
+                    ]);
+                }
+                
+                // 新しいメイン画像をセット
+                $tourist_spot->photo_path = $newMain->photo_path;
+                
+                // メインに昇格した写真はギャラリーから消す（重複防止）
+                $newMain->delete();
+            }
+        }
+
+        // 🌟 ここでテキストデータと、メイン画像の変更をデータベースに保存！
         $tourist_spot->save();
+
+        // ==========================================
+        // 📸 ⑦ 新しく追加された写真（photos[]）の保存処理
+        // ==========================================
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $uploadPhoto) {
+                $filename = uniqid() . '_' . time() . '.' . $uploadPhoto->getClientOriginalExtension();
+                $path = $uploadPhoto->storeAs('tourist_spots/' . $tourist_spot->id . '/gallery', $filename, 'public');
+                
+                // 💡 親切設計：もしメイン画像が空っぽだったら、アップロードした1枚目を自動でメインにする
+                if (empty($tourist_spot->photo_path)) {
+                    $tourist_spot->photo_path = $path;
+                    $tourist_spot->save();
+                } else {
+                    \App\Models\TouristSpotPhoto::create([
+                        'tourist_spot_id' => $tourist_spot->id,
+                        'photo_path' => $path,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('tourist_spots.show', $tourist_spot->id)
             ->with('success', '✨ 観光スポットの情報を更新しました！');
@@ -325,5 +387,29 @@ class TouristSpotController extends Controller
         // ④ 元の詳細ページへ戻る
         return redirect()->route('tourist_spots.show', $id)
             ->with('success', '✨ クチコミを投稿しました！');
+    }
+    // =========================================================
+    // 🌟 観光スポット：クチコミ削除処理
+    // =========================================================
+    public function destroyReview($id)
+    {
+        // ① 削除するクチコミを探す
+        // ※もしモデル名が TouristReview ではなく Review の場合は、\App\Models\Review:: に変更してください
+        $review = \App\Models\TouristReview::findOrFail($id);
+
+        // ② 本人確認（他人のクチコミを勝手に消せないようにブロック）
+        if ($review->user_id !== \Illuminate\Support\Facades\Auth::id()) {
+            abort(403, '他の人のクチコミは削除できません。');
+        }
+
+        // ③ 元の詳細ページに戻るために、観光スポットのIDを覚えておく
+        $spotId = $review->tourist_spot_id;
+
+        // ④ クチコミをデータベースから削除
+        $review->delete();
+
+        // ⑤ 元の詳細ページへ戻る
+        return redirect()->route('tourist_spots.show', $spotId)
+            ->with('success', '🗑️ クチコミを削除しました！');
     }
 }
