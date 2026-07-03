@@ -30,7 +30,7 @@ class HospitalSeeder extends Seeder
                 'phone_number' => '+63-917-571-7436',
                 'guide_tips_ja' => 'キャッシュレス受診を希望する場合、事前にJHDに連絡する必要があります。',
                 'guide_tips_en' => 'For cashless visits, please contact JHD in advance.',
-                'grab_link' => 'https://grab.onelink.me/2695614242/v7889v8a',
+                'grab_link' => null,
                 'specialty_slugs' => $jhdSpecialtySlugs,
                 'images' => [
                     [
@@ -59,7 +59,7 @@ class HospitalSeeder extends Seeder
                 'phone_number' => '+63-917-791-2177',
                 'guide_tips_ja' => 'キャッシュレス受診を希望する場合、事前にJHDに連絡する必要があります。',
                 'guide_tips_en' => 'For cashless visits, please contact JHD in advance.',
-                'grab_link' => 'https://grab.onelink.me/2695614242/v7889v8a',
+                'grab_link' => null,
                 'specialty_slugs' => $jhdSpecialtySlugs,
                 'images' => [
                     [
@@ -90,7 +90,7 @@ class HospitalSeeder extends Seeder
                 'lat' => 10.3277739,
                 'lng' => 123.9063473,
                 'address_en' => 'Skyrise 4, Cebu City, Cebu',
-                'guide_tips_ja' => '支払いは電子決済のみ。比較的18時以降が空いています。',
+                'guide_tips_ja' => '支払いは電子決済のみ。18時以降が比較的空いています。',
                 'guide_tips_en' => 'Electronic payment only. Often less busy after 6 PM.',
                 'specialty_slugs' => $clinicSpecialtySlugs,
                 'images' => [

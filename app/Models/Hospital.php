@@ -50,4 +50,14 @@ class Hospital extends Model
 
         return $this->guide_tips_ja ?? '';
     }
+
+    public function googleMapsUrl(): ?string
+    {
+        if ($this->lat === null || $this->lng === null) {
+            return null;
+        }
+
+        return 'https://www.google.com/maps/search/?api=1&query='
+            . urlencode("{$this->lat},{$this->lng}");
+    }
 }

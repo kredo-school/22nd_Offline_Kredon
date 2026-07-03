@@ -8,7 +8,7 @@
 }
 
 .hs-hero__inner {
-    background-color: #d7ebe6;
+    background-color: $color-hero-bg;
     padding: 24px 16px;  // スマホ: パディング小さめ
 }
 
@@ -59,6 +59,56 @@
     }
 }
 
+// _language.blade.php
+
+.hs-language {
+    max-width: 640px;
+    margin: 1.5rem auto 0;
+}
+
+.hs-language__btn {
+    min-height: 52px;
+    padding: 0.875rem 1rem;
+    border-radius: 16px;
+    border-width: 2px;
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: $shadow-sm;
+    transition: transform 0.15s ease, box-shadow 0.15s ease,
+                background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+    &.btn-outline-success:hover,
+    &.btn-outline-success:focus-visible {
+        background-color: $color-hero-bg;
+        border-color: #198754;
+        color: #198754;
+    }
+
+    &.btn-success:hover,
+    &.btn-success:focus-visible {
+        background-color: $color-hero-bg;
+        border-color: #198754;
+        color: #198754;
+    }
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-language {
+        margin-top: 2rem;
+    }
+
+    .hs-language__btn {
+        min-height: 56px;
+        padding: 1rem 1.25rem;
+        font-size: 1.125rem;
+    }
+}
+
 // _action.blade.php
 .hs-action-grid {
     max-width: 800px;
@@ -84,6 +134,29 @@
     &:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.hs-action-card--emergency {
+    .hs-action-card__icon {
+        background-color: #fde8ea; // 薄い赤背景
+        i {
+            color: #dc3545; // Bootstrap danger
+        }
+    }
+    &:hover {
+        box-shadow: 0 4px 16px rgba(220, 53, 69, 0.25);
+    }
+}
+
+.hs-action-card:not(.hs-action-card--emergency) {
+    .hs-action-card__icon {
+        transition: background-color 0.2s ease;
+    }
+
+    &:hover .hs-action-card__icon,
+    &:focus-visible .hs-action-card__icon {
+        background-color: $color-hero-bg;
     }
 }
 
@@ -121,16 +194,151 @@
     .hs-action-card__label  { font-size: 15px; }
 }
 
+// _wizard.blade.php
+
+.hs-wizard-section {
+    scroll-margin-top: 1rem;
+}
+
+.hs-hospital-detail {
+    background: #fff;
+}
+
+.hs-hospital-detail__documents {
+    padding: 1rem 1.25rem;
+    background-color: #f8f9fa;
+    border-radius: 0.75rem;
+    border: 1px solid #e9ecef;
+}
+
+.hs-hospital-detail__document-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.hs-hospital-detail__document-item {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.hs-wizard-card {
+    background-color: #fff;
+}
+
+.hs-wizard-progress__bar {
+    height: 10px;
+    background-color: #e9ecef;
+}
+
+.hs-wizard-progress__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.hs-wizard-progress__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #dee2e6;
+    transition: background-color 0.2s ease;
+
+    &.is-active {
+        background-color: #198754;
+    }
+
+    &.is-complete {
+        background-color: #75b798;
+    }
+}
+
+.hs-wizard__option {
+    border: 1px solid #d8e6df;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+        border-color: #0ea58a;
+        box-shadow: 0 0 0 0.15rem rgba(14, 165, 138, 0.15);
+    }
+}
+
+.hs-wizard__option--selected {
+    border-color: #198754;
+    background-color: #f1f4f2;
+    box-shadow: 0 0 0 0.15rem rgba(25, 135, 84, 0.12);
+}
+
+.hs-wizard__option--info {
+    border-style: dashed;
+}
+
+.hs-wizard__info-panel {
+    padding: 0 0.25rem 0.25rem;
+}
+
+.hs-wizard__info-question {
+    color: #198754;
+    font-size: 14px;
+}
+
+.hs-wizard-nav__back {
+    font-size: 14px;
+
+    &:hover {
+        color: #157347 !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-wizard-progress__bar {
+        height: 12px;
+    }
+
+    .hs-wizard-nav__back {
+        font-size: 15px;
+    }
+}
+
+/* _section_band.scss */
+
+.hs-section-band {
+    background-color: #F1F4F2;
+    border-left: 6px solid #157347;
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.5rem;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.4;
+    color: #1a1a1a;
+    border-radius: 4px;
+    scroll-margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+    .hs-section-band {
+        font-size: 21px;
+        padding: 1.25rem 1.5rem;
+    }
+}
+
 /* _medical_office.scss */
 
 .hs-medical-office {
-background-color: #F1F4F2;
+background-color: #fff;
 }
 
 /* 看護師常駐バッジ */
 .hs-medical-office__nurse-badge {
 background-color: #d63384;
 color: #fff;
+padding: .5rem .8rem;
+font-weight: 600;
+}
+
+.hs-medical-office__status-badge {
 padding: .5rem .8rem;
 font-weight: 600;
 }
@@ -231,11 +439,11 @@ line-height: 1.7;
 // Mobile First
 
 .hs-notes__title {
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .hs-notes__item {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 // Desktop
@@ -243,10 +451,27 @@ line-height: 1.7;
 @media (min-width: 768px) {
 
     .hs-notes__title {
-        font-size: 15px;
+        font-size: 18px;
     }
 
     .hs-notes__item {
+        font-size: 15px;
+    }
+}
+
+// _hospital_badges.blade.php
+
+.hs-hospital-badges {
+    &__jhd-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #6c757d;
+        margin: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-hospital-badges__jhd-label {
         font-size: 13px;
     }
 }

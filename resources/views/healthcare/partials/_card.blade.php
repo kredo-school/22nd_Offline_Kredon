@@ -1,4 +1,10 @@
-<div id="hospital-list" class="row g-4 mt-4">
+<div class="hs-hospital-list-section mt-4">
+
+    <p id="hospital-list" class="hs-section-band">
+        {{ __('healthcare.hospital_list.section_band') }}
+    </p>
+
+    <div class="row g-4">
     @foreach($hospitals as $hospital)
     <div class="col-12 col-lg-6">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden hs-card-bg hs-card">
@@ -38,13 +44,13 @@
 
                 <div class="d-grid gap-2">
                     <a href="#" class="btn btn-outline-secondary">{{ __('healthcare.action.details') }}</a>
-                    @if(!$hospital->is_clinic && $hospital->grab_link)
-                        <a href="{{ $hospital->grab_link }}"
-                           class="btn btn-success fw-bold hs-grab-link"
-                           data-loader-text="{{ __('healthcare.grab.loading') }}"
+                    @if($hospital->googleMapsUrl())
+                        <a href="{{ $hospital->googleMapsUrl() }}"
+                           class="btn btn-outline-success fw-semibold hs-map-link"
+                           data-loader-text="{{ __('healthcare.map.loading') }}"
                            target="_blank"
                            rel="noopener noreferrer">
-                            <i class="fa-solid fa-location-arrow me-1"></i>{{ __('healthcare.action.grab') }}
+                            <i class="fa-solid fa-map-location-dot me-1" aria-hidden="true"></i>{{ __('healthcare.action.view_map') }}
                         </a>
                     @endif
                 </div>
@@ -52,6 +58,8 @@
         </div>
     </div>
     @endforeach
+    </div>
+
 </div>
 
 @push('scripts')

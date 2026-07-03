@@ -34,10 +34,25 @@
                 @include('healthcare.partials._notes')
             </div>
 
-            {{-- wizard --}}
-            {{-- <div class="mb-4">
-                @include('healthcare.wizard._wizard_card')
-            </div> --}}
+            {{-- ウィザード --}}
+            <div id="search-section" class="mb-4 hs-wizard-section">
+
+                <p class="hs-section-band">
+                    {{ __('healthcare.action.find_hospital') }}
+                </p>
+
+                @if($wizardStep)
+                    @include('healthcare.wizard._wizard_card', [
+                        'step' => $wizardStep['step'],
+                        'totalSteps' => $wizardStep['totalSteps'],
+                        'question' => $wizardStep['question'],
+                        'options' => $wizardStep['options'],
+                        'infoOptions' => $wizardStep['infoOptions'] ?? [],
+                        'selectedAnswer' => $selectedAnswer,
+                        'embedded' => true,
+                    ])
+                @endif
+            </div>
 
             {{--  病院一覧 --}}
             <div class="mb-4">
@@ -60,3 +75,33 @@
 @include('healthcare.partials._emergency')
 
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const hash = window.location.hash;
+        const scroller = document.querySelector('.content-body');
+
+        const scrollToHash = () => {
+            if (!hash || !scroller) {
+                return;
+            }
+
+            const target = document.querySelector(hash);
+
+            if (!target) {
+                return;
+            }
+
+            const top = target.getBoundingClientRect().top
+                - scroller.getBoundingClientRect().top
+                + scroller.scrollTop
+                - 16;
+
+            scroller.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+        };
+
+        scrollToHash();
+    });
+</script>
+@endpush

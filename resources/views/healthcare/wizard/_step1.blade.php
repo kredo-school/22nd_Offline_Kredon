@@ -1,9 +1,9 @@
 @include('healthcare.wizard._wizard_card', [
     'step' => 1,
-    'question' => '海外旅行保険に加入していますか?',
+    'question' => __('healthcare.wizard.step1.question'),
     'options' => [
-        'yes' => '加入している',
-        'no' => '加入していない',
-        'unknown' => 'わからない',
+        'yes' => __('healthcare.wizard.step1.yes'),
+        'no' => __('healthcare.wizard.step1.no'),
+        'unknown' => __('healthcare.wizard.step1.unknown'),
     ],
 ])

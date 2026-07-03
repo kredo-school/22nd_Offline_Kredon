@@ -2,109 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Hospital;
+use App\Services\WizardService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class WizardController extends Controller
 {
-    private array $wizardData = [
-        1 => [
-            'question' => '海外旅行保険に加入していますか?',
-            'options' => [
-                'yes' => '加入している',
-                'no' => '加入していない',
-                'unknown' => 'わからない',
-            ],
-        ],
-        2 => [
-            'question' => 'JHDサポートを利用しますか?',
-            'options' => [
-                'yes' => '利用する',
-                'no' => '利用しない',
-            ],
-        ],
-        3 => [
-            'question' => '現在の状況を教えてください',
-            'options' => [
-                'mild' => '軽い症状・相談したい',
-                'hospital' => '今日病院へ行きたい',
-                'emergency' => '緊急性がある',
-            ],
-        ],
-    ];
+    public function __construct(
+        private readonly WizardService $wizard
+    ) {}
 
     public function start()
     {
-        session()->forget('wizard_answers');
+        $this->wizard->clearWizardSession();
 
-        return redirect()->route('wizard.step', ['step' => 1]);
+        return $this->redirectToHealthcareWizard();
     }
 
     public function show(int $step)
     {
-        if (!isset($this->wizardData[$step])) {
+        if (!$this->wizard->stepExists($step)) {
             abort(404);
         }
 
-        return view('healthcare.wizard._wizard_card', [
-            'step' => $step,
-            'question' => $this->wizardData[$step]['question'],
-            'options' => $this->wizardData[$step]['options'],
-        ]);
+        return $this->redirectToHealthcareWizard();
     }
 
     public function store(Request $request, int $step)
     {
-        if (!isset($this->wizardData[$step])) {
+        $this->wizard->syncSession();
+
+        if (!$this->wizard->stepExists($step)) {
             abort(404);
         }
 
-        $validOptions = array_keys($this->wizardData[$step]['options']);
+        $stepData = $this->wizard->getStepData($step);
 
         $request->validate([
-            'answer' => ['required', Rule::in($validOptions)],
+            'answer' => ['required', Rule::in($stepData['optionKeys'])],
         ]);
 
         session(['wizard_answers.' . $step => $request->answer]);
+        session(['wizard_version' => $this->wizard->configVersion()]);
 
-        $nextStep = $step + 1;
+        $answers = $this->wizard->getAnswers();
 
-        if ($nextStep > count($this->wizardData)) {
+        if ($this->wizard->isEarlyComplete($answers)) {
+            $this->wizard->clearAnswersFromStep(2);
+
             return redirect()->route('wizard.result');
         }
 
-        return redirect()->route('wizard.step', ['step' => $nextStep]);
+        if ($this->wizard->isComplete($answers)) {
+            return redirect()->route('wizard.result');
+        }
+
+        return $this->redirectToHealthcareWizard();
     }
 
     public function result()
     {
-        $answers = session('wizard_answers', []);
+        $this->wizard->syncSession();
 
-        if (empty($answers)) {
-            return redirect()->route('wizard.start');
+        $answers = $this->wizard->getAnswers();
+
+        if (!$this->wizard->isComplete($answers)) {
+            return $this->redirectToHealthcareWizard();
         }
 
-        $hospital = $this->resolveReferenceHospital($answers);
+        $hospital = $this->wizard->resolveReferenceHospital($answers);
+        $recommendationReason = $this->wizard->resolveRecommendationReason($answers);
+        $showJhdDocuments = $this->wizard->shouldShowJhdDocuments($answers, $hospital);
 
-        return view('healthcare.wizard.result', compact('answers', 'hospital'));
+        return view('healthcare.wizard.result', compact(
+            'hospital',
+            'recommendationReason',
+            'showJhdDocuments',
+        ));
     }
 
-    private function resolveReferenceHospital(array $answers): ?Hospital
+    private function redirectToHealthcareWizard()
     {
-        $useJhd = ($answers[2] ?? null) === 'yes';
-        $situation = $answers[3] ?? null;
-
-        $query = Hospital::with(['images', 'specialties']);
-
-        if ($situation === 'emergency') {
-            return $query->where('is_jhd_supported', true)->orderBy('duration_grab')->first();
-        }
-
-        if ($useJhd && in_array($situation, ['mild', 'hospital'], true)) {
-            return $query->where('is_jhd_supported', true)->orderBy('duration_grab')->first();
-        }
-
-        return $query->where('is_clinic', true)->orderBy('duration_walk')->first();
+        return redirect()->to(route('healthcare.index') . '#search-section');
     }
 }
