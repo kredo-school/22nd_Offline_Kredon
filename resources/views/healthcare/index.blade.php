@@ -51,6 +51,15 @@
                         'selectedAnswer' => $selectedAnswer,
                         'embedded' => true,
                     ])
+                @elseif($wizardComplete ?? false)
+                    <div class="card shadow-sm border-0 rounded-4 hs-wizard-card">
+                        <div class="card-body p-4 p-5 text-center">
+                            <p class="text-muted mb-3">{{ __('healthcare.wizard.complete_message') }}</p>
+                            <a href="{{ route('wizard.result') }}" class="btn btn-success">
+                                {{ __('healthcare.wizard.view_result') }}
+                            </a>
+                        </div>
+                    </div>
                 @endif
             </div>
 
@@ -79,10 +88,9 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const hash = window.location.hash;
         const scroller = document.querySelector('.content-body');
 
-        const scrollToHash = () => {
+        const scrollToHash = (hash) => {
             if (!hash || !scroller) {
                 return;
             }
@@ -101,7 +109,31 @@
             scroller.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
         };
 
-        scrollToHash();
+        if (window.location.hash) {
+            scrollToHash(window.location.hash);
+        }
+
+        document.addEventListener('click', (event) => {
+            const link = event.target.closest('a[href^="#"]');
+
+            if (!link) {
+                return;
+            }
+
+            const hash = link.getAttribute('href');
+
+            if (!hash || hash === '#' || !document.querySelector(hash)) {
+                return;
+            }
+
+            if (link.hasAttribute('data-bs-toggle')) {
+                return;
+            }
+
+            event.preventDefault();
+            scrollToHash(hash);
+            history.replaceState(null, '', hash);
+        });
     });
 </script>
 @endpush

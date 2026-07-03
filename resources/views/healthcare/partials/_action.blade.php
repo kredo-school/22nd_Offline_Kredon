@@ -27,7 +27,7 @@
         </div>
 
         <div class="col">
-            <a href="{{ route('healthcare.index') }}#hospital-list" class="hs-action-card">
+            <a href="#hospital-list" class="hs-action-card">
                 <div class="hs-action-card__icon">
                     <i class="fa-solid fa-hospital"></i>
                 </div>

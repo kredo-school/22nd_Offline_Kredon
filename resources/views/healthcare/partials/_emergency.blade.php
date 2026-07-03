@@ -55,8 +55,9 @@
                     </a>
                 </div>
 
-                <a href="{{ route('healthcare.index') }}#hospital-list"
-                   class="hs-emergency-modal__grab-btn">
+                <a href="#hospital-list"
+                   class="hs-emergency-modal__grab-btn"
+                   data-bs-dismiss="modal">
                     <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
                     {{ __('healthcare.action.view_map') }}
                 </a>

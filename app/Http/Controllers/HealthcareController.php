@@ -33,24 +33,29 @@ class HealthcareController extends Controller
         }
 
         $answers = $this->wizard->getAnswers();
+        $wizardComplete = $this->wizard->isComplete($answers);
+        $fromResult = $request->boolean('from_result');
 
-        if ($this->wizard->isComplete($answers) && !$request->boolean('from_result')) {
-            return redirect()->route('wizard.result');
+        $wizardStep = null;
+        $selectedAnswer = null;
+
+        if (!$wizardComplete || $fromResult) {
+            $step = $this->wizard->resolveDisplayStep($answers);
+
+            if ($wizardComplete && $fromResult) {
+                $step = $this->wizard->totalSteps();
+            }
+
+            $wizardStep = $this->wizard->getStepData($step, $answers);
+            $selectedAnswer = $answers[$step] ?? null;
         }
-
-        $step = $this->wizard->resolveDisplayStep($answers);
-        if ($this->wizard->isComplete($answers) && $request->boolean('from_result')) {
-            $step = $this->wizard->totalSteps();
-        }
-
-        $wizardStep = $this->wizard->getStepData($step, $answers);
-        $selectedAnswer = $answers[$step] ?? null;
 
         return view('healthcare.index', compact(
             'hospitals',
             'medicalOfficeStatus',
             'faqCategories',
             'wizardStep',
+            'wizardComplete',
             'selectedAnswer',
         ));
     }
