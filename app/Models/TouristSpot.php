@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class TouristSpot extends Model
 {
+
+    protected $fillable =[
+        'status',
+    ];
+    
 // このスポットがお気に入り登録されているか判定するメソッド
     public function isBookmarkedBy($user)
     {

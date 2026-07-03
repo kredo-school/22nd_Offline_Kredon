@@ -464,7 +464,8 @@
 
                                                         <form method="POST"
                                                             action="{{ route('admin.notifications.destroy', $notification->id) }}"
-                                                            class="notif-delete-form mb-0 d-inline">
+                                                            class="notif-delete-form mb-0 d-inline"
+                                                            onsubmit="return confirm('Are you sure to delete this content?')">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit"
@@ -1002,7 +1003,8 @@
                             <div class="d-flex align-items-center gap-2 notif-card-actions">
                                 <form method="POST"
                                     action="{{ route('admin.notification-templates.destroy', $tpl->id) }}"
-                                    class="notif-delete-form mb-0">
+                                    class="notif-delete-form mb-0"
+                                    onsubmit="return confirm('Are you sure to delete this template?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-outline-danger btn-sm notif-delete-btn"

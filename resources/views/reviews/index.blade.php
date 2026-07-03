@@ -156,7 +156,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link fw-bold px-3 py-2" id="hospital-tab" data-bs-toggle="tab"
                         data-bs-target="#hospital-contents" type="button" role="tab" aria-selected="false">
-                        <i class="fa-solid fa-square-h me-2"></i>【Hospital】
+                        <i class="fa-solid fa-hospital me-2"></i>【Hospital】
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">

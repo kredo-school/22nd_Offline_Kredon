@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Notification;
 use App\Models\NotificationRead;
+use App\Models\NotifSubscriptoin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationsController extends Controller
 {
+    // 💡 解決策: 定数の定義をクラスの最上部に移動（これでエディタが完全に見つけられます）
     private const CATEGORY_LABELS = [
         'system'     => 'System',
         'reply'      => 'Reply',
@@ -30,21 +34,11 @@ class NotificationsController extends Controller
     ];
 
     /**
-     * navbarのベルModal用：ログインユーザー宛ての通知を新着順フラットリストで返す
-     * (View Composerから呼ばれることを想定。Admin側Modalと同じ見た目に合わせ、
-     *  見出しグルーピングではなく各カードにカテゴリピルバッジを表示する形式)
-     *
-     * 対象となる通知:
-     *  - target_type = all          : 全員宛て
-     *  - target_type = subscriber   : role = 3 (premium member) のユーザーのみ
-     *  - target_type = custom       : data.user_ids に自分のIDが含まれる場合のみ
-     *
-     * 既読判定は notification_reads テーブルに自分の行が存在するかどうかで判定する
-     * (Notification.is_read / read_at は使わない、配信設定行は複数人で共有されるため)
+     * navbarのベルModal用
      */
     public static function listForUser(int $userId): array
     {
-        $user = \App\Models\User::find($userId);
+        $user = User::find($userId);
         $isSubscriber = $user && (int) $user->role === 3;
 
         $notifications = Notification::where('status', 'sent')
@@ -63,10 +57,10 @@ class NotificationsController extends Controller
             ->orderByDesc('sent_at')
             ->get();
 
-        // このユーザーが既読済みの notification_id 一覧
         $readIds = NotificationRead::where('user_id', $userId)
             ->pluck('notification_id')
-            ->flip(); // isset()チェックをO(1)にするため
+            ->flip()
+            ->toArray();
 
         $list = [];
 
@@ -76,9 +70,9 @@ class NotificationsController extends Controller
                 'category' => $notif->category ?? 'system',
                 'title'    => $notif->title,
                 'body'     => $notif->body,
-                'url'      => $notif->getUrl(),
+                'url'      => method_exists($notif, 'getUrl') ? $notif->getUrl() : '#',
                 'is_read'  => isset($readIds[$notif->id]),
-                'time'     => optional($notif->sent_at)->diffForHumans(),
+                'time'     => $notif->sent_at ? $notif->sent_at->diffForHumans() : null,
             ];
         }
 
@@ -87,30 +81,29 @@ class NotificationsController extends Controller
 
     public static function unreadCountForUser(int $userId): int
     {
-        $list = self::listForUser($userId);
+        $list = static::listForUser($userId);
 
         return count(array_filter($list, fn ($item) => !$item['is_read']));
     }
 
     public static function categoryLabels(): array
     {
-        return self::CATEGORY_LABELS;
+        return static::CATEGORY_LABELS;
     }
 
     public static function categoryIcons(): array
     {
-        return self::CATEGORY_ICONS;
+        return static::CATEGORY_ICONS;
     }
 
     /**
      * 通知モーダルを開いたタイミングで一括既読化
-     * (自分が対象の通知すべてに対して、notification_reads にレコードを作成)
      */
     public function markAllRead(Request $request)
     {
         $userId = Auth::id();
 
-        $list = self::listForUser($userId);
+        $list = static::listForUser($userId);
 
         foreach ($list as $item) {
             if (!$item['is_read']) {

@@ -253,10 +253,10 @@
                                             <div class="btn-group">
                                                 <button id="currentStatusBtn_{{ $user->id }}" type="button"
                                                     class="btn
-                            @if ($user->status == 'Active') btn-outline-success
-                            @elseif($user->status == 'Inactive') btn-outline-secondary
-                            @else btn-outline-danger @endif btn-sm py-0 px-2 dropdown-toggle"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    @if ($user->status == 'Active') btn-outline-success
+                                                                    @elseif($user->status == 'Inactive') btn-outline-secondary
+                                                                    @else btn-outline-danger @endif btn-sm py-0 px-2 dropdown-toggle"
+                                                                                            data-bs-toggle="dropdown" aria-expanded="false">
                                                     {{ $user->status }}
                                                 </button>
                                                 <ul class="dropdown-menu" id="statusDropdownMenu_{{ $user->id }}"></ul>

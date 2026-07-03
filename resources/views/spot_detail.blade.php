@@ -79,7 +79,8 @@
             display: flex;
             width: 100%;
             height: calc(100vh - 70px);
-            margin-top: 70px;
+            /* margin-top: 70px; */
+            /* このmargin-topはheight: ;と重複しているのでコメントにしました（Aimi） */
         }
 
         .content-section {

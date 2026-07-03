@@ -246,7 +246,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('users', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('users.index');
         Route::patch('users/{id}/role', [App\Http\Controllers\Admin\UsersController::class, 'updateRole'])->name('users.update-role');
         Route::patch('users/{id}/status', [App\Http\Controllers\Admin\UsersController::class, 'updateStatus'])->name('users.update-status');
-        
+
         #Events
         Route::get('events', [App\Http\Controllers\Admin\EventsController::class, 'index'])->name('events.index');
 
@@ -262,12 +262,14 @@ Route::group(['middleware' => 'auth'], function () {
 
         #Spots
         Route::get('spots', [App\Http\Controllers\Admin\SpotsController::class, 'index'])->name('spots.index');
+        Route::patch('/spots/{type}/{id}/status', [\App\Http\Controllers\Admin\SpotsController::class, 'updateStatus'])
+            ->name('spots.updateStatus');
 
         #Notification
-        Route::patch('/notifications/{notification}/status', [NotificationsController::class, 'updateStatus'])
+        Route::patch('/notifications/{notification}/status', [ App\Http\Controllers\Admin\NotificationsController::class, 'updateStatus'])
             ->name('notifications.update-status');
 
-        Route::post('/notifications/mark-all-read', [NotificationsController::class, 'markAllRead'])
+        Route::post('/notifications/mark-all-read', [ App\Http\Controllers\Admin\NotificationsController::class, 'markAllRead'])
             ->name('notifications.mark-all-read');
 
         Route::resource('notifications', \App\Http\Controllers\Admin\NotificationsController::class)
