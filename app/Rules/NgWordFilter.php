@@ -2,37 +2,21 @@
 
 namespace App\Rules;
 
+use App\Models\User;
+use App\Services\NgWordService;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Translation\PotentiallyTranslatedString;
 
 class NgWordFilter implements ValidationRule
 {
-    // クラスのプロパティはここに書くのが正解です
-    protected $moderationList = [
-        'harassment' => ['kill yourself', 'stupid', 'idiot', '死ね', 'バカ'],
-        'spam'       => ['line.me', 'add me on line', 'click here', 'ライン交換']
-    ];
+    public function __construct(protected ?User $user = null) {}
 
-    /**
-     * Run the validation rule.
-     *
-     * @param  Closure(string, ?string=): PotentiallyTranslatedString  $fail
-     */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        // 大文字・小文字を区別しないために小文字へ変換
-        $inputText = mb_strtolower($value);
-
-        foreach ($this->moderationList as $category => $words) {
-            foreach ($words as $word) {
-                
-                // 入力テキストの中にNGワードが含まれているかチェック
-                if (mb_strpos($inputText, mb_strtolower($word)) !== false) {
-                   $fail("不適切な表現が含まれています（{$category}）。");
-                    return;
-                }
-            }
+        if (! is_string($value) || trim($value) === '') {
+            return;
         }
+
+        app(NgWordService::class)->validateText($value, $this->user ?? auth()->user(), $fail);
     }
 }

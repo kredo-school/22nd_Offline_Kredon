@@ -11,7 +11,25 @@ class TouristSpot extends Model
         'status',
     ];
     
-// このスポットがお気に入り登録されているか判定するメソッド
+    protected $fillable = [
+        'user_id',
+        'name',
+        'area',
+        'hours',
+        'budget',
+        'photo_path',
+        'has_activity',
+        'has_view',
+        'has_shopping',
+        'has_food',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // このスポットがお気に入り登録されているか判定するメソッド
     public function isBookmarkedBy($user)
     {
         if (!$user) return false;

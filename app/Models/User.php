@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Review;
 use App\Models\Spot;
@@ -22,11 +23,19 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'status',
         'role',
-        // 'avatar',
-        'email_verified_at',
+        'is_premium',
+        'plan_type',
+        'premium_expired_at',
+        'avatar',
+        'bio',
+        'two_factor_enabled',
+        'two_factor_secret',
+        'posts_count',
     ];
 
     protected $hidden = [
@@ -37,9 +46,12 @@ class User extends Authenticatable
     protected function casts(): array
 {
     return [
-        'email_verified_at' => 'datetime',
+        'email_verified_at'    => 'datetime',
         'last_login_at' => 'datetime',
-        'password' => 'hashed',
+        'password'             => 'hashed',
+            'two_factor_enabled'   => 'boolean',
+            'two_factor_secret'    => 'encrypted',
+            'posts_count'          => 'integer',
     ];
 }
 
@@ -68,16 +80,49 @@ class User extends Authenticatable
         return 'Active'; // デフォルトはActive
     }
 
-    // ユーザーが書いたレビューを引っ張るための電線
-    public function reviews()
+    public function settings(): HasOne
+    {
+        return $this->hasOne(UserSetting::class);
+    }
+
+    public function ngWords(): HasMany
+    {
+        return $this->hasMany(UserNgWord::class);
+    }
+
+    public function blocks(): HasMany
+    {
+        return $this->hasMany(UserBlock::class);
+    }
+
+    public function keywordMutes(): HasMany
+    {
+        return $this->hasMany(UserKeywordMute::class);
+    }
+
+    public function isPremium(): bool
+    {
+        return (int) $this->role === 3;
+    }
+
+    public function avatarUrl(): ?string
+    {
+        if (! $this->avatar) {
+            return null;
+        }
+
+        return str_starts_with($this->avatar, 'http')
+            ? $this->avatar
+            : asset('storage/' . ltrim($this->avatar, '/'));
+    }
+
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
 
-    // 標準の Notifiable::notifications() と名前が衝突するため appNotifications にしています
     public function appNotifications(): HasMany
     {
-        // FIXME: Gitの衝突でAimiさんのコードの中身が消失していたため仮置きしています
         return $this->hasMany(\App\Models\Notification::class);
     }
 
@@ -86,16 +131,14 @@ class User extends Authenticatable
         return $this->belongsToMany(Spot::class, 'bookmarks')->withTimestamps();
     }
 
-    // 🌟 追加：学習スポット（Spot）とのお気に入り（bookmarksテーブル）の繋がり
     public function bookmarkedStudySpots()
     {
         return $this->belongsToMany(Spot::class, 'bookmarks', 'user_id', 'spot_id')->withTimestamps();
     }
 
-    // 🌟 ユーザーが保存した観光スポット一覧を取得
     public function bookmarkedTouristSpots()
     {
-        // tourist_bookmarks テーブルを中間テーブルとして、TouristSpot モデルを結びつける
         return $this->belongsToMany(TouristSpot::class, 'tourist_bookmarks', 'user_id', 'tourist_spot_id')->withTimestamps();
     }
 }
+

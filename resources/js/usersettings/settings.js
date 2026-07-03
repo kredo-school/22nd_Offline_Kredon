@@ -282,7 +282,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewSpots  = document.getElementById('app-preview-spots');
     const statusSaver   = document.getElementById('app-status-data-saver');
     const statusTranslate = document.getElementById('app-status-translate');
-    const statusCache   = document.getElementById('app-status-cache');
     const clearCacheBtn = document.getElementById('app-clear-cache');
 
     const translateLangSelect = form.querySelector('[data-app-preview="translate-lang"]');
@@ -332,8 +331,8 @@ document.addEventListener('DOMContentLoaded', () => {
     translateLangSelect?.addEventListener('change', syncTranslate);
 
     clearCacheBtn?.addEventListener('click', () => {
-        if (statusCache) {
-            statusCache.textContent = '0 MB';
+        if ('caches' in window) {
+            caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key))));
         }
     });
 

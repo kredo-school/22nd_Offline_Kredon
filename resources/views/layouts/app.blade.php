@@ -592,7 +592,7 @@
                             {{-- <a href="#" class="sidebar-link {{ request()->routeIs('mypage.*') ? 'active' : '' }}">
                                 <i class="fa-regular fa-user"></i> MY PAGE
                             </a> --}}
-                            <a href="#" class="sidebar-link {{ request()->routeIs('setting.*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.index') }}" class="sidebar-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                                 <i class="fa-solid fa-gear"></i> SETTING
                             </a>
                             <a href="#" class="sidebar-link"
