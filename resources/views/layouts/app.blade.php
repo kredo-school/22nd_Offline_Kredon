@@ -534,7 +534,7 @@
                 <a href="{{ route('top') }}" class="spot-modal-item">
                     <i class="fa-solid fa-briefcase"></i> Working
                 </a>
-                <a href="#" class="spot-modal-item">
+                <a href="{{ route('healthcare.index') }}" class="spot-modal-item">
                     <i class="fa-solid fa-hospital"></i> Hospital
                 </a>
                 <a href="{{ route('tourist_spots.index') }}" class="spot-modal-item">
@@ -568,7 +568,7 @@
                             </a>
                             <div id="spotSubmenuPC" style="display:none;">
                                 <a href="{{ route('top') }}" class="spot-sub-link">Working</a>
-                                <a href="#" class="spot-sub-link">Hospital</a>
+                                <a href="{{ route('healthcare.index') }}" class="spot-sub-link">Hospital</a>
                                 <a href="{{ route('tourist_spots.index') }}" class="spot-sub-link">Tourism</a>
                                 <a href="{{ route('mypage') }}" class="spot-sub-link">Bookmark</a>
                             </div>
@@ -694,6 +694,8 @@
                 if (e.changedTouches[0].clientY - touchStartY > 60) closeSpotModal();
             });
         </script>
+
+        @include('healthcare.partials._loader')
     </body>
 
     </html>

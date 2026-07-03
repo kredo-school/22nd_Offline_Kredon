@@ -1,0 +1,982 @@
+// _hero.blade.php
+
+.hs-hero {
+    border-radius: $border-radius-card;
+    border: none;
+    overflow: hidden;
+    box-shadow: $shadow-sm;
+}
+
+.hs-hero__inner {
+    background-color: $color-hero-bg;
+    padding: 24px 16px;  // スマホ: パディング小さめ
+}
+
+.hs-hero__title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.hs-hero__desc {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.hs-hero__tags {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.hs-hero__icon {
+    font-size: 60px;
+    color: #0ea58a;
+    text-align: center;
+    margin-top: 20px;
+}
+
+// デスクトップ
+@media (min-width: 768px) {
+    .hs-hero__inner  { padding: 40px; }
+    .hs-hero__title  { font-size: 28px; }
+    .hs-hero__desc   { font-size: 15px; }
+
+    .hs-hero__tags {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .hs-hero__icon {
+        font-size: 80px;
+        margin-top: 0;
+    }
+}
+
+// _language.blade.php
+
+.hs-language {
+    max-width: 640px;
+    margin: 1.5rem auto 0;
+}
+
+.hs-language__btn {
+    min-height: 52px;
+    padding: 0.875rem 1rem;
+    border-radius: 16px;
+    border-width: 2px;
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: $shadow-sm;
+    transition: transform 0.15s ease, box-shadow 0.15s ease,
+                background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+    &.btn-outline-success:hover,
+    &.btn-outline-success:focus-visible {
+        background-color: $color-hero-bg;
+        border-color: #198754;
+        color: #198754;
+    }
+
+    &.btn-success:hover,
+    &.btn-success:focus-visible {
+        background-color: $color-hero-bg;
+        border-color: #198754;
+        color: #198754;
+    }
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-language {
+        margin-top: 2rem;
+    }
+
+    .hs-language__btn {
+        min-height: 56px;
+        padding: 1rem 1.25rem;
+        font-size: 1.125rem;
+    }
+}
+
+// _action.blade.php
+.hs-action-grid {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+// カード共通
+.hs-action-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: $shadow-sm;
+    text-decoration: none;
+    background: $st-surface;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    padding: 0;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.hs-action-card--emergency {
+    .hs-action-card__icon {
+        background-color: #fde8ea; // 薄い赤背景
+        i {
+            color: #dc3545; // Bootstrap danger
+        }
+    }
+    &:hover {
+        box-shadow: 0 4px 16px rgba(220, 53, 69, 0.25);
+    }
+}
+
+.hs-action-card:not(.hs-action-card--emergency) {
+    .hs-action-card__icon {
+        transition: background-color 0.2s ease;
+    }
+
+    &:hover .hs-action-card__icon,
+    &:focus-visible .hs-action-card__icon {
+        background-color: $color-hero-bg;
+    }
+}
+
+// アイコンエリア
+.hs-action-card__icon {
+    background-color: #F1F4F2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 0;
+
+    i {
+        font-size: 36px;  // スマホ: やや小さめ
+        color: #0ea58a;
+    }
+}
+
+// テキストエリア
+.hs-action-card__body {
+    padding: 12px;
+    text-align: center;
+}
+
+.hs-action-card__label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+// デスクトップ
+@media (min-width: 768px) {
+    .hs-action-card__icon i { font-size: 48px; }
+    .hs-action-card__body   { padding: 14px; }
+    .hs-action-card__label  { font-size: 15px; }
+}
+
+// _wizard.blade.php
+
+.hs-wizard-section {
+    scroll-margin-top: 1rem;
+}
+
+.hs-hospital-detail {
+    background: #fff;
+}
+
+.hs-hospital-detail__documents {
+    padding: 1rem 1.25rem;
+    background-color: #f8f9fa;
+    border-radius: 0.75rem;
+    border: 1px solid #e9ecef;
+}
+
+.hs-hospital-detail__document-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.hs-hospital-detail__document-item {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.hs-wizard-card {
+    background-color: #fff;
+}
+
+.hs-wizard-progress__bar {
+    height: 10px;
+    background-color: #e9ecef;
+}
+
+.hs-wizard-progress__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.hs-wizard-progress__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #dee2e6;
+    transition: background-color 0.2s ease;
+
+    &.is-active {
+        background-color: #198754;
+    }
+
+    &.is-complete {
+        background-color: #75b798;
+    }
+}
+
+.hs-wizard__option {
+    border: 1px solid #d8e6df;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+        border-color: #0ea58a;
+        box-shadow: 0 0 0 0.15rem rgba(14, 165, 138, 0.15);
+    }
+}
+
+.hs-wizard__option--selected {
+    border-color: #198754;
+    background-color: #f1f4f2;
+    box-shadow: 0 0 0 0.15rem rgba(25, 135, 84, 0.12);
+}
+
+.hs-wizard__option--info {
+    border-style: dashed;
+}
+
+.hs-wizard__info-panel {
+    padding: 0 0.25rem 0.25rem;
+}
+
+.hs-wizard__info-question {
+    color: #198754;
+    font-size: 14px;
+}
+
+.hs-wizard-nav__back {
+    font-size: 14px;
+
+    &:hover {
+        color: #157347 !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-wizard-progress__bar {
+        height: 12px;
+    }
+
+    .hs-wizard-nav__back {
+        font-size: 15px;
+    }
+}
+
+/* _section_band.scss */
+
+.hs-section-band {
+    background-color: #F1F4F2;
+    border-left: 6px solid #157347;
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.5rem;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.4;
+    color: #1a1a1a;
+    border-radius: 4px;
+    scroll-margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+    .hs-section-band {
+        font-size: 21px;
+        padding: 1.25rem 1.5rem;
+    }
+}
+
+/* _medical_office.scss */
+
+.hs-medical-office {
+background-color: #fff;
+}
+
+/* 看護師常駐バッジ */
+.hs-medical-office__nurse-badge {
+background-color: #d63384;
+color: #fff;
+padding: .5rem .8rem;
+font-weight: 600;
+}
+
+.hs-medical-office__status-badge {
+padding: .5rem .8rem;
+font-weight: 600;
+}
+
+/* 注意事項 */
+.hs-medical-office__alert {
+background-color: #fff3cd;
+border-color: #ffecb5;
+color: #664d03;
+}
+
+/* 情報ボックス */
+.hs-medical-office__box {
+background: #fff;
+border: 1px solid #d1e7dd;
+border-radius: 12px;
+padding: 1rem;
+height: 100%;
+transition: all .2s ease;
+}
+
+/* 医師来訪中 */
+.hs-medical-office__box--active {
+border-color: #198754;
+box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+}
+
+/* 見出し */
+.hs-medical-office__heading {
+font-weight: 700;
+margin-bottom: .75rem;
+padding-bottom: .75rem;
+border-bottom: 1px solid #dee2e6;
+}
+
+/* Mobile First */
+
+.hs-medical-office__heading {
+font-size: 14px;
+}
+
+.hs-medical-office__box {
+font-size: 13px;
+line-height: 1.7;
+}
+
+/* Tablet / Desktop */
+
+@media (min-width: 768px) {
+
+.hs-medical-office__heading {
+    font-size: 16px;
+}
+
+.hs-medical-office__box {
+    font-size: 14px;
+}
+
+}
+
+// _notes.blade.php
+
+.hs-notes {
+    background-color: #F1F4F2;
+}
+
+.hs-notes__title {
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 1rem;
+}
+
+.hs-notes__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.hs-notes__item {
+    color: #6c757d;
+    line-height: 1.8;
+    position: relative;
+    padding-left: 1rem;
+    margin-bottom: .5rem;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &::before {
+        content: "・";
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+
+// Mobile First
+
+.hs-notes__title {
+    font-size: 16px;
+}
+
+.hs-notes__item {
+    font-size: 14px;
+}
+
+// Desktop
+
+@media (min-width: 768px) {
+
+    .hs-notes__title {
+        font-size: 18px;
+    }
+
+    .hs-notes__item {
+        font-size: 15px;
+    }
+}
+
+// _hospital_badges.blade.php
+
+.hs-hospital-badges {
+    &__jhd-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #6c757d;
+        margin: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-hospital-badges__jhd-label {
+        font-size: 13px;
+    }
+}
+
+// _card.blade.php
+// 病院カード全体の設定
+.hs-card {
+    border-radius: $border-radius-card;
+    border: none;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: scale(1.02);
+        box-shadow: $shadow-md;
+    }
+}
+
+// ─ 画像ギャラリー（カルーセル） ─
+
+.hs-image-container--gallery {
+    height: auto;
+    min-height: 200px;
+}
+
+.hs-gallery {
+    position: relative;
+    background: #e9ecef;
+
+    &__inner {
+        border-radius: 0;
+    }
+
+    &__item {
+        position: relative;
+    }
+
+    &__image {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+    }
+
+    &__caption {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        z-index: 2;
+    }
+
+    &__indicators {
+        margin-bottom: 0.5rem;
+
+        [data-bs-target] {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.6);
+            border: none;
+
+            &.active {
+                background-color: #0ea58a;
+            }
+        }
+    }
+
+    &__control {
+        width: 12%;
+        opacity: 1;
+    }
+
+    &__control-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        color: #1a1a1a;
+        box-shadow: $shadow-sm;
+    }
+
+    &__counter {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 3;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.55);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    &--empty {
+        .hs-gallery__image {
+            display: block;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-gallery__image {
+        height: 260px;
+    }
+}
+
+.hs-card__header {
+    border-radius: $border-radius-card $border-radius-card 0 0;
+}
+
+.bg-light-gray {
+    background-color: $color-bg-light;
+}
+
+// ─ 画像コンテナ ─
+
+.hs-image-container {
+    // スマホ: 高さ小さめ
+    height: 130px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hs-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+// デスクトップ: 高さを広げる
+@media (min-width: 768px) {
+    .hs-image-container { height: 180px; }
+}
+
+// ─ ブックマークボタン ─
+
+.hs-btn-bookmark {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    // スマホ: やや小さく（タップしやすいよう最低44px推奨）
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: $color-bookmark-bg;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: $shadow-sm;
+    transition: background 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+        background: $color-bookmark-hover;
+        color: white;
+    }
+
+    &.is-active {
+        background: white !important;
+        color: #ffc107 !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-btn-bookmark {
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+    }
+}
+
+// ─ フォーム ─
+
+.hs-form-control {
+    // スマホ: 文字サイズ16px以上でiOSのズームを防ぐ
+    font-size: 16px;
+
+    &:focus {
+        border-color: $color-focus-blue;
+        box-shadow: 0 0 0 3px rgba($color-focus-blue, 0.2);
+        outline: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-form-control { font-size: 14px; }
+}
+
+// _faq.blade.php
+
+.hs-faq-card {
+    background: white;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: $border-radius-card;
+    overflow: hidden;
+}
+
+.hs-faq-header {
+    background: #f8fafc;
+    border-bottom: 1px solid #e9ecef;
+    // スマホ: パディング小さめ
+    padding: 12px 16px;
+}
+
+@media (min-width: 768px) {
+    .hs-faq-header { padding: 16px 20px; }
+}
+
+.hs-faq-button {
+    width: 100%;
+    text-align: left;
+    background: white;
+    border: 1px solid #f0f0f0;
+    font-weight: 600;
+    // スマホ: タップしやすいよう最低44pxの高さ
+    padding: 12px 16px;
+    min-height: 44px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.12s;
+
+    &:not(.collapsed) {
+        background: #f8faf9;
+        color: #198754;
+        border-bottom: 1px solid #e9ecef;
+    }
+}
+
+@media (min-width: 768px) {
+    .hs-faq-button { padding: 14px 20px; font-size: 15px; }
+}
+
+.hs-faq-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #ececec;
+
+    &:last-child { border-bottom: none; }
+}
+
+.hs-faq-question {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+
+    background: white;
+}
+
+.hs-faq-question:not(.collapsed) {
+    background: #f8faf9;
+    color: #198754;
+}
+
+.hs-faq-answer {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.8;
+
+    padding: 12px 16px;
+
+    background: #fafafa;
+
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+     .hs-faq-question {
+        font-size: 15px;
+    }
+
+    .hs-faq-answer {
+        font-size: 14px;
+        padding: 16px 20px;
+    }
+
+}
+
+// _emergency.scss
+
+// ─ 固定緊急ボタン（右下） ─
+
+.hs-sos-btn {
+    // 位置・サイズ
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+    width: 50px;
+    height: 50px;
+
+    // 見た目
+    border-radius: 50%;
+    border: 3px solid #fff;
+    background-color: rgba(220, 53, 69, 0.85);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+
+    // 内部レイアウト
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+
+    transition: background-color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+        background-color: rgba(220, 53, 69, 1);
+        transform: scale(1.08);
+    }
+
+    &__icon {
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    &__label {
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.03em;
+    }
+}
+
+// デスクトップ: 少し大きく
+@media (min-width: 768px) {
+    .hs-sos-btn {
+        width: 56px;
+        height: 56px;
+        bottom: 28px;
+        right: 28px;
+
+        &__icon { font-size: 20px; }
+        &__label { font-size: 9px; }
+    }
+}
+
+
+// ─ モーダル ─
+
+.hs-emergency-dialog {
+    max-width: 400px;
+}
+
+.hs-emergency-modal {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+}
+
+// ヘッダー
+.hs-emergency-modal__header {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 16px 20px;
+}
+
+.hs-emergency-modal__title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+// ボディ
+.hs-emergency-modal__body {
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+// 救急車ボタン（最優先）
+.hs-emergency-modal__primary-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 20px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+    transition: background-color 0.15s, transform 0.15s;
+    margin-bottom: 16px;
+
+    i { font-size: 28px; }
+
+    &:hover {
+        background-color: darken(#dc3545, 8%);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+}
+
+// サポート電話ボタングループ
+.hs-emergency-modal__contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.hs-emergency-modal__contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.12s;
+
+    // スマホ: タップしやすいよう最低44px
+    min-height: 44px;
+
+    // 学校緊急ダイヤル（青系）
+    &--school {
+        border: 1px solid #0d6efd;
+        color: #0d6efd;
+        background: #fff;
+
+        &:hover { background-color: rgba(13, 110, 253, 0.06); color: #0d6efd; }
+    }
+
+    // JHD系（水色系）
+    &--jhd {
+        border: 1px solid #0dcaf0;
+        color: #0a9ab5;
+        background: #fff;
+
+        &:hover { background-color: rgba(13, 202, 240, 0.06); color: #0a9ab5; }
+    }
+}
+
+// Grabボタン
+.hs-emergency-modal__grab-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    background-color: #198754;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    min-height: 44px;
+    transition: background-color 0.12s;
+    margin-bottom: 8px;
+
+    &:hover { background-color: darken(#198754, 8%); color: #fff; }
+}
+
+// 閉じるボタン
+.hs-emergency-modal__close-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid #adb5bd;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    min-height: 44px;
+    transition: background-color 0.12s;
+
+    &:hover { background-color: #e9ecef; }
+}
+
+// デスクトップ調整
+@media (min-width: 768px) {
+    .hs-emergency-modal__body { padding: 24px; }
+
+    .hs-emergency-modal__primary-btn {
+        font-size: 20px;
+        padding: 24px;
+        i { font-size: 32px; }
+    }
+
+    .hs-emergency-modal__contact-btn { font-size: 14px; }
+    .hs-emergency-modal__grab-btn    { font-size: 14px; }
+    .hs-emergency-modal__close-btn   { font-size: 14px; }
+}
