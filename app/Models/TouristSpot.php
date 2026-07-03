@@ -6,16 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class TouristSpot extends Model
 {
-
-    protected $fillable =[
-        'status',
-    ];
-    
-    protected $fillable = [
-        'user_id',
-        'name',
-        'area',
-        'hours',
+       
+        protected $fillable = [
+            'user_id',
+            'name',
+            'area',
+            'hours',
+            'status',
         'budget',
         'photo_path',
         'has_activity',
