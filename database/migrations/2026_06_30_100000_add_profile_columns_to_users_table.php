@@ -9,12 +9,26 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('username')->nullable()->unique()->after('name');
-            $table->text('bio')->nullable()->after('username');
+            if (! Schema::hasColumn('users', 'username')) {
+                $table->string('username')->nullable()->unique()->after('name');
+            }
+
+            if (! Schema::hasColumn('users', 'bio')) {
+                $table->text('bio')->nullable()->after('username');
+            }
+
             // avatar は 2026_05_28_071424_add_avater_to_users_table で追加済み
-            $table->boolean('two_factor_enabled')->default(false)->after('avatar');
-            $table->text('two_factor_secret')->nullable()->after('two_factor_enabled');
-            $table->unsignedInteger('posts_count')->default(0)->after('two_factor_secret');
+            if (! Schema::hasColumn('users', 'two_factor_enabled')) {
+                $table->boolean('two_factor_enabled')->default(false)->after('avatar');
+            }
+
+            if (! Schema::hasColumn('users', 'two_factor_secret')) {
+                $table->text('two_factor_secret')->nullable()->after('two_factor_enabled');
+            }
+
+            if (! Schema::hasColumn('users', 'posts_count')) {
+                $table->unsignedInteger('posts_count')->default(0)->after('two_factor_secret');
+            }
         });
     }
 

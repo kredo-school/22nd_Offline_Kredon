@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('users', 'role')) {
+            return;
+        }
+
         Schema::table('users', function (Blueprint $table) {
             // avatarはあるので、roleを追加する
             $table->integer('role')->default(2)->after('email'); // 1: admin, 2: user (default), 3: member (Premium)
