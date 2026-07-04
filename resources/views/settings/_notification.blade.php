@@ -99,7 +99,7 @@
                         <button type="button" class="st-phone-preview__mark-read">すべて既読にする</button>
                     </div>
                     <ul class="st-phone-preview__list" role="list">
-                        @foreach ($notification->preview_items as $item)
+                        @forelse ($notification->preview_items as $item)
                             <li class="st-phone-preview__item">
                                 <span class="st-phone-preview__item-icon st-notify-row__icon st-notify-row__icon--{{ $item['color'] }}">
                                     <i class="{{ $item['icon'] }}" aria-hidden="true"></i>
@@ -109,7 +109,11 @@
                                     <p class="st-phone-preview__item-time">{{ $item['time'] }}</p>
                                 </div>
                             </li>
-                        @endforeach
+                        @empty
+                            <li class="st-phone-preview__item st-phone-preview__item--empty">
+                                <p class="st-phone-preview__item-text">通知はまだありません</p>
+                            </li>
+                        @endforelse
                     </ul>
                 </div>
             </div>
@@ -136,9 +140,12 @@
                 </div>
             </dl>
 
-            <button type="button" class="st-btn st-btn--outline-danger st-btn--full st-btn--sm">
-                通知設定をリセット
-            </button>
+            <form action="{{ route('settings.notification.reset') }}" method="POST">
+                @csrf
+                <button type="submit" class="st-btn st-btn--outline-danger st-btn--full st-btn--sm">
+                    通知設定をリセット
+                </button>
+            </form>
         </div>
 
         {{--  トラブルシューティング  --}}

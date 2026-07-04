@@ -16,7 +16,13 @@ class Review extends Model
         'eye_fatigue_level',
         'chair_comfort',
         'desk_stability',
-        'comment'
+        'comment',
+        'dead_spot_rating',
+        'aircon_level',
+        'stay_time_level',
+        'rating',
+        'title',
+        'photo_path',
     ];
     // 💡 どこのお店（Spot）に対するレビューなのかを振り返る電線
     public function spot()

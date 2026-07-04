@@ -3,17 +3,30 @@
 use App\Models\TouristBookmark;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
+#User Controller
+use App\Http\Controllers\NotificationsController as UserNotificationController;
 use App\Http\Controllers\StudyController;
+use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\AllReviewController;
 use App\Http\Controllers\SpotController;
 use App\Http\Controllers\TouristSpotController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\TouristReviewController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\WizardController;
+use App\Http\Controllers\HealthcareController;
+use App\Http\Controllers\HospitalBookmarkController;
+use App\Http\Controllers\HospitalImageController;
+use App\Http\Controllers\LocaleController;
 
-// #Admin Controller
+#Admin Controller
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\EventsController;
@@ -22,49 +35,104 @@ use App\Http\Controllers\Admin\MarketsController;
 use App\Http\Controllers\Admin\AnalysisController;
 use App\Http\Controllers\Admin\NotificationsController as AdminNotificationsController;
 use App\Http\Controllers\Admin\NotificationTemplateController;
-use App\Http\Controllers\Admin\SpotsController as AdminSpotsController;
+use App\Http\Controllers\Admin\SpotsController;
+use App\Http\Controllers\Admin\HospitalController as AdminHospitalController;
 
-/*
-|--------------------------------------------------------------------------
-| 🌐 誰でも見られるページ（ログイン不要）
-|--------------------------------------------------------------------------
-*/
-// --- 1階：学習スポット ---
+require __DIR__.'/setting.php';
+
 Route::get('/', [StudyController::class, 'index'])->name('top');
 Route::get('/spots/{id}', [StudyController::class, 'show'])->name('spots.show');
-
-// --- 2階：観光スポット ---
 Route::get('/tourist', [TouristSpotController::class, 'index'])->name('tourist_spots.index');
 Route::get('/tourist_spots/{id}', [TouristSpotController::class, 'show'])->name('tourist_spots.show');
 
-/*
-|--------------------------------------------------------------------------
-| 🔐 ログイン関連
-|--------------------------------------------------------------------------
-*/
 Auth::routes();
-Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-/*
-|--------------------------------------------------------------------------
-| 🛡️ ログインしている人だけが使える機能
-|--------------------------------------------------------------------------
-*/
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/search', [HomeController::class, 'search'])->name('search');
+
+Route::get('/locale/{locale}', [LocaleController::class, 'switch'])
+    ->name('locale.switch')
+    ->whereIn('locale', ['ja', 'en']);
+
+Route::get('/healthcare', [HealthcareController::class, 'index'])->name('healthcare.index');
+
+Route::prefix('wizard')->group(function () {
+    Route::get('/', [WizardController::class, 'start'])->name('wizard.start');
+    Route::get('/step/{step}', [WizardController::class, 'show'])->name('wizard.step');
+    Route::post('/step/{step}', [WizardController::class, 'store'])->name('wizard.step.store');
+    Route::get('/result', [WizardController::class, 'result'])->name('wizard.result');
+});
+
+Route::post('/hospitals/{hospitalId}/images', [HospitalImageController::class, 'store'])->name('hospital_images.store');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/hospital-bookmarks/{hospital}', [HospitalBookmarkController::class, 'store'])->name('hospital_bookmarks.store');
+    Route::delete('/hospital-bookmarks/{hospital}', [HospitalBookmarkController::class, 'destroy'])->name('hospital_bookmarks.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/review', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::get('/review/create', [ReviewController::class, 'create'])->name('reviews.create');
+    Route::post('/review/{id}/store', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::patch('/review/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/review/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+});
+
+Route::get('/reviews/search-locations', [AllReviewController::class, 'searchLocations'])->name('locations.search');
+
+Route::get('/market', [MarketplaceController::class, 'index'])->name('marketplace.index');
+Route::get('/market/create', [MarketplaceController::class, 'create'])->name('marketplace.create');
+Route::post('/market/store', [MarketplaceController::class, 'store'])->name('marketplace.store');
+Route::get('/market/{item}', [MarketplaceController::class, 'show'])->name('marketplace.show');
+
+Route::get('/event', [EventController::class, 'index'])->name('event.index');
+Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
+Route::post('/event/store', [EventController::class, 'store'])->name('event.store');
+Route::get('/event/{event}', [EventController::class, 'show'])->name('event.show');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/chat/user/{user}', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat/send', [ChatController::class, 'store'])->name('chat.store');
+    Route::get('/chat/room/{chat}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/room/{chat}/send', [ChatController::class, 'send'])->name('chat.send');
+    Route::get('/messages', [ChatController::class, 'list'])->name('chat.list');
+
+    Route::get('/game', [GameController::class, 'home'])->name('game.home');
+    Route::get('/game/select', [GameController::class, 'select'])->name('game.select');
+    Route::get('/game/stage/easy', [GameController::class, 'easy'])->name('game.easy');
+    Route::get('/game/stage/normal', [GameController::class, 'normal'])->name('game.normal');
+    Route::get('/game/stage/hard', [GameController::class, 'hard'])->name('game.hard');
+    Route::get('/game/stage/oni', [GameController::class, 'oni'])->name('game.oni');
+    Route::get('/game/stage1-1', [GameController::class, 'stage11'])->name('game.stage11');
+    Route::get('/battle', [GameController::class, 'battle'])->name('game.battle');
+    Route::get('/game/stage2', fn () => view('game.game2'))->name('game.stage2');
+    Route::get('/game/stage3', fn () => view('game.game3'))->name('game.stage3');
+    Route::get('/game/boss', fn () => view('game.boss'))->name('game.boss');
+    Route::get('/game/stage2-1', fn () => view('game.stage2-1'))->name('game.stage2-1');
+    Route::get('/game/stage2-2', fn () => view('game.stage2-2'))->name('game.stage2-2');
+    Route::get('/game/stage2-3', fn () => view('game.stage2-3'))->name('game.stage2-3');
+    Route::get('/game/stage2-boss', fn () => view('game.stage2-boss'))->name('game.stage2-boss');
+    Route::get('/game/stage3-1', fn () => view('game.stage3-1'))->name('game.stage3-1');
+    Route::get('/game/stage3-2', fn () => view('game.stage3-2'))->name('game.stage3-2');
+    Route::get('/game/stage3-3', fn () => view('game.stage3-3'))->name('game.stage3-3');
+    Route::get('/game/stage3-boss', fn () => view('game.stage3-boss'))->name('game.stage3-boss');
+    Route::get('/game/stageoni', fn () => view('game.stageoni'))->name('game.stageoni');
+    Route::get('/game/result', fn () => view('game.result'))->name('game.result');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
 
-    // 学習スポット
     Route::post('/spots', [SpotController::class, 'store'])->name('spots.store');
     Route::put('/spots/{id}', [SpotController::class, 'update'])->name('spots.update');
     Route::delete('/spots/{id}', [SpotController::class, 'destroy'])->name('spots.destroy');
     Route::post('/spots/photos/reorder', [SpotController::class, 'reorderPhotos'])->name('spots.photos.reorder');
-    Route::post('/spots/{id}/bookmark', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
+    Route::post('/spots/{id}/5', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
     Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     Route::post('/spots/{spot}/coupon', [SpotController::class, 'useCoupon'])->name('spots.coupon.use');
-    
-    // 観光スポット
+
     Route::post('/tourist_spots', [TouristSpotController::class, 'store'])->name('tourist_spots.store');
     Route::put('/tourist_spots/{id}', [TouristSpotController::class, 'update'])->name('tourist_spots.update');
     Route::delete('/tourist_spots/{id}', [TouristSpotController::class, 'destroy'])->name('tourist_spots.destroy');
@@ -73,50 +141,42 @@ Route::middleware('auth')->group(function () {
     Route::put('/tourist_reviews/{review}', [TouristSpotController::class, 'updateReview'])->name('tourist_reviews.update');
     Route::delete('/tourist_reviews/{review}', [TouristSpotController::class, 'destroyReview'])->name('tourist_reviews.destroy');
 
-    // ユーザー通知
-    Route::post('/notifications/mark-all-read', [NotificationsController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    Route::post('/notifications/mark-all-read', [UserNotificationController::class, 'markAllRead'])
+        ->name('notifications.mark-all-read');
 });
 
-// =========================================================================
-// 先生が求めている元のAdminコード（画像と全く同じものをここに追加しました）
-// =========================================================================
-//Admin
+Route::get('/all_reviews', [AllReviewController::class, 'index'])->name('all_reviews.index');
+Route::get('/all_reviews/create', [AllReviewController::class, 'create'])->name('all_reviews.create');
+Route::post('/all_reviews/store', [AllReviewController::class, 'store'])->name('all_reviews.store');
+Route::patch('/all_reviews/{review}/update', [AllReviewController::class, 'update'])->name('all_reviews.update');
+Route::delete('/all_reviews/{review}/delete', [AllReviewController::class, 'destroy'])->name('all_reviews.destroy');
+
+Route::middleware('auth')->prefix('admin/hospitals')->name('admin.hospitals.')->group(function () {
+    Route::get('/', [AdminHospitalController::class, 'index'])->name('index');
+    Route::get('/create', [AdminHospitalController::class, 'create'])->name('create');
+    Route::post('/', [AdminHospitalController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [AdminHospitalController::class, 'edit'])->name('edit');
+    Route::patch('/{id}', [AdminHospitalController::class, 'update'])->name('update');
+    Route::delete('/{id}', [AdminHospitalController::class, 'destroy'])->name('destroy');
+});
+
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
-        
-        #Dashboard
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('users', [UsersController::class, 'index'])->name('users.index');
+        Route::get('events', [EventsController::class, 'index'])->name('events.index');
+        Route::get('reviews', [ReviewsController::class, 'index'])->name('reviews.index');
+        Route::get('markets', [MarketsController::class, 'index'])->name('markets.index');
+        Route::get('markets/show/{id}', [MarketsController::class, 'show'])->name('markets.show');
+        Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis.index');
+        Route::get('spots', [SpotsController::class, 'index'])->name('spots.index');
 
-        #Users
-        Route::get('users', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('users.index');
-
-        #Events
-        Route::get('events', [App\Http\Controllers\Admin\EventsController::class, 'index'])->name('events.index');
-
-        #Reviews
-        Route::get('reviews', [App\Http\Controllers\Admin\ReviewsController::class, 'index'])->name('reviews.index');
-
-        #Markets
-        Route::get('markets', [App\Http\Controllers\Admin\MarketsController::class, 'index'])->name('markets.index');
-        Route::get('markets/show/{id}', [App\Http\Controllers\Admin\MarketsController::class, 'show'])->name('markets.show');
-
-        #Analysis
-        Route::get('analysis', [App\Http\Controllers\Admin\AnalysisController::class, 'index'])->name('analysis.index');
-
-        #Spots
-        Route::get('spots', [App\Http\Controllers\Admin\SpotsController::class, 'index'])->name('spots.index');
-
-        #Notification
-        // 固定パスのルートは resource より前に置く(順序が重要)
         Route::patch('/notifications/{notification}/status', [NotificationsController::class, 'updateStatus'])
             ->name('notifications.update-status');
-
         Route::post('/notifications/mark-all-read', [NotificationsController::class, 'markAllRead'])
             ->name('notifications.mark-all-read');
-
-        Route::resource('notifications', \App\Http\Controllers\Admin\NotificationsController::class)
+        Route::resource('notifications', AdminNotificationsController::class)
             ->only(['index', 'store', 'edit', 'update', 'destroy']);
-
         Route::resource('notification-templates', NotificationTemplateController::class)
             ->only(['store', 'update', 'destroy'])
             ->names('notification-templates');

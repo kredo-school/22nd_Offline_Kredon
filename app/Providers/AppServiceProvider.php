@@ -2,16 +2,13 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\NotificationsController;
 use App\Models\Notification;
 use App\Models\NotificationRead;
-
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-
-// User用の通知
-use App\Http\Controllers\NotificationsController;
-
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +17,12 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    // View Composerは、共通レイアウトがレンダリングされる前に、自動的に変数を注入する
     public function boot(): void
     {
+        View::composer('components.ranking-list', function ($view) {
+            $view->with('totalPlayers', User::count());
+        });
+
         View::composer('layouts.admin', function ($view) {
             $sentNotifications = Notification::where('status', 'sent')
                 ->orderByDesc('sent_at')
@@ -49,7 +49,6 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        // User用
         View::composer('layouts.app', function ($view) {
             if (Auth::check()) {
                 $userId = Auth::id();
