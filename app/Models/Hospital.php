@@ -14,6 +14,7 @@ class Hospital extends Model
         'is_clinic' => 'boolean',
         'is_jhd_supported' => 'boolean',
         'is_24_hours' => 'boolean',
+        'supports_grab' => 'boolean',
     ];
 
     public function images(): HasMany
@@ -58,6 +59,16 @@ class Hospital extends Model
         }
 
         return 'https://www.google.com/maps/search/?api=1&query='
+            . urlencode("{$this->lat},{$this->lng}");
+    }
+
+    public function googleMapsDirectionsUrl(): ?string
+    {
+        if (! $this->supports_grab || $this->lat === null || $this->lng === null) {
+            return null;
+        }
+
+        return 'https://www.google.com/maps/dir/?api=1&destination='
             . urlencode("{$this->lat},{$this->lng}");
     }
 }

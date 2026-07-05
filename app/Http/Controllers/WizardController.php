@@ -50,11 +50,11 @@ class WizardController extends Controller
         if ($this->wizard->isEarlyComplete($answers)) {
             $this->wizard->clearAnswersFromStep(2);
 
-            return redirect()->route('wizard.result');
+            return redirect()->to(route('healthcare.index') . '#wizard-result');
         }
 
         if ($this->wizard->isComplete($answers)) {
-            return redirect()->route('wizard.result');
+            return redirect()->to(route('healthcare.index') . '#wizard-result');
         }
 
         return $this->redirectToHealthcareWizard();
@@ -70,15 +70,7 @@ class WizardController extends Controller
             return $this->redirectToHealthcareWizard();
         }
 
-        $hospital = $this->wizard->resolveReferenceHospital($answers);
-        $recommendationReason = $this->wizard->resolveRecommendationReason($answers);
-        $showJhdDocuments = $this->wizard->shouldShowJhdDocuments($answers, $hospital);
-
-        return view('healthcare.wizard.result', compact(
-            'hospital',
-            'recommendationReason',
-            'showJhdDocuments',
-        ));
+        return redirect()->to(route('healthcare.index') . '#wizard-result');
     }
 
     private function redirectToHealthcareWizard()

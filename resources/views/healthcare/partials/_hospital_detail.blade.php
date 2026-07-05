@@ -24,7 +24,7 @@
             </div>
         @endif
 
-        @if($hospital->phone_number)
+        @if($hospital->phone_number && !$hospital->is_jhd_supported)
             <div class="small text-muted mb-3">
                 <i class="fa-solid fa-phone me-2" aria-hidden="true"></i>
                 <a href="tel:{{ preg_replace('/\s+/', '', $hospital->phone_number) }}" class="text-muted text-decoration-none">
@@ -72,11 +72,10 @@
             </div>
         @endif
 
-        @if($hospital->guideTips())
-            <div class="alert alert-light border small mb-0 mt-4">
-                {{ $hospital->guideTips() }}
-            </div>
-        @endif
+        @include('healthcare.partials._hospital_guide_tips', [
+            'hospital' => $hospital,
+            'boxClass' => 'mb-0 mt-4',
+        ])
 
         @if($hospital->googleMapsUrl() || !empty($backUrl))
             <div class="d-grid gap-2 mt-4">

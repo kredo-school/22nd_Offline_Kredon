@@ -1,19 +1,5 @@
 <div class="hs-action-grid">
-    <div class="row row-cols-2 row-cols-md-4 g-4 mt-2 justify-content-center">
-
-        <div class="col">
-            <button type="button"
-                    class="hs-action-card hs-action-card--emergency"
-                    data-bs-toggle="modal"
-                    data-bs-target="#emergencyModal">
-                <div class="hs-action-card__icon">
-                    <i class="fa-solid fa-truck-medical"></i>
-                </div>
-                <div class="hs-action-card__body">
-                    <p class="hs-action-card__label">{{ __('healthcare.action.emergency') }}</p>
-                </div>
-            </button>
-        </div>
+    <div class="row row-cols-1 row-cols-sm-3 g-4 mt-2 justify-content-center">
 
         <div class="col">
             <a href="#search-section" class="hs-action-card">

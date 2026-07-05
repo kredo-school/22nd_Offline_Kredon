@@ -17,11 +17,14 @@
 
                 <h2 class="accordion-header">
 
-                    <button class="accordion-button collapsed hs-faq-button"
+                    <button @class([
+                        'accordion-button hs-faq-button',
+                        'collapsed' => $category->slug !== 'emergency',
+                    ])
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target="#category{{ $category->id }}"
-                            aria-expanded="false"
+                            aria-expanded="{{ $category->slug === 'emergency' ? 'true' : 'false' }}"
                             aria-controls="category{{ $category->id }}">
 
                         <i class="{{ $category->icon_class }} me-2"></i>
@@ -33,7 +36,10 @@
                 </h2>
 
                 <div id="category{{ $category->id }}"
-                     class="accordion-collapse collapse"
+                     @class([
+                         'accordion-collapse collapse',
+                         'show' => $category->slug === 'emergency',
+                     ])
                      data-bs-parent="#hsSituationAccordion">
 
                     <div class="accordion-body p-0">
@@ -43,15 +49,31 @@
 
                             @foreach($category->faqs as $faq)
 
-                                <div class="accordion-item border-0 hs-faq-item">
+                                @php
+                                    $isEmergencyPhraseFaq = $category->slug === 'emergency' && $faq->sort_order === 1;
+                                @endphp
+
+                                <div @class([
+                                    'accordion-item border-0 hs-faq-item',
+                                    'hs-faq-item--emergency-phrases' => $isEmergencyPhraseFaq,
+                                ])
+                                     @if($isEmergencyPhraseFaq)
+                                         id="hs-emergency-phrases"
+                                         data-hs-category-collapse="#category{{ $category->id }}"
+                                         data-hs-faq-collapse="#faq{{ $faq->id }}"
+                                     @endif
+                                >
 
                                     <h2 class="accordion-header">
 
-                                        <button class="accordion-button collapsed hs-faq-question"
+                                        <button @class([
+                                            'accordion-button hs-faq-question',
+                                            'collapsed' => ! $isEmergencyPhraseFaq,
+                                        ])
                                                 type="button"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#faq{{ $faq->id }}"
-                                                aria-expanded="false"
+                                                aria-expanded="{{ $isEmergencyPhraseFaq ? 'true' : 'false' }}"
                                                 aria-controls="faq{{ $faq->id }}">
 
                                             {{ $faq->displayQuestion() }}
@@ -61,7 +83,10 @@
                                     </h2>
 
                                     <div id="faq{{ $faq->id }}"
-                                         class="accordion-collapse collapse"
+                                         @class([
+                                             'accordion-collapse collapse',
+                                             'show' => $isEmergencyPhraseFaq,
+                                         ])
                                          data-bs-parent="#faqAccordion{{ $category->id }}">
 
                                         <div class="accordion-body hs-faq-answer">

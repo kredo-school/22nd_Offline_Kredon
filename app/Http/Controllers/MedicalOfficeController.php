@@ -8,9 +8,12 @@ class MedicalOfficeController extends Controller
 {
     public function getMedicalOfficeStatus(): array
     {
+        $office = $this->getOfficeBadge();
+
         return [
-            'office' => $this->getOfficeBadge(),
+            'office' => $office,
             'doctor' => $this->getDoctorStatus(),
+            'is_closed' => $office['badge_class'] !== 'bg-success',
         ];
     }
 

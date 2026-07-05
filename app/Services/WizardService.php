@@ -195,11 +195,44 @@ class WizardService
 
     public function resolveRecommendationReason(array $answers): ?string
     {
-        if (($answers[1] ?? null) === 'mild') {
-            return __('healthcare.wizard.reason_maxicare');
+        $reasons = $this->resolveRecommendationReasons($answers, $this->resolveReferenceHospital($answers));
+
+        return $reasons[0] ?? null;
+    }
+
+    public function resolveRecommendationReasons(array $answers, ?Hospital $hospital): array
+    {
+        if (!$hospital) {
+            return [];
         }
 
-        return null;
+        $reasons = [];
+
+        if (($answers[1] ?? null) === 'mild') {
+            $reasons[] = __('healthcare.wizard.reason_medical_office');
+
+            if ($hospital->duration_walk) {
+                $reasons[] = __('healthcare.wizard.reason_walk', ['minutes' => $hospital->duration_walk]);
+            }
+
+            return $reasons;
+        }
+
+        if ($hospital->is_jhd_supported && ($answers[3] ?? null) === 'yes') {
+            $reasons[] = __('healthcare.wizard.reason_jhd');
+            $reasons[] = __('healthcare.wizard.reason_cashless');
+            $reasons[] = __('healthcare.wizard.reason_japanese_support');
+        }
+
+        if ($hospital->is_24_hours) {
+            $reasons[] = __('healthcare.wizard.reason_open_hours');
+        }
+
+        if ($hospital->duration_grab) {
+            $reasons[] = __('healthcare.wizard.reason_grab', ['minutes' => $hospital->duration_grab]);
+        }
+
+        return $reasons;
     }
 
     public function shouldShowJhdDocuments(array $answers, ?Hospital $hospital): bool
