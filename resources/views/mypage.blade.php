@@ -4,7 +4,27 @@
     <style>
         .mypage-wrapper { padding: 0 15px 80px 15px; max-width: 1200px; margin: 0 auto; }
         .top-dashboard { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 50px; }
-        .user-profile-box { flex: 1; min-width: 300px; background: linear-gradient(135deg, #1e8b9b, #3b9db0); color: white; padding: 30px; border-radius: 12px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); box-sizing: border-box; }
+        
+        /* 🌟 ここを変更：アースカラーの背景と文字色 */
+        .user-profile-box { 
+            flex: 1; 
+            min-width: 300px; 
+            /* 淡く温かみのあるサンドベージュのグラデーション */
+            background: linear-gradient(135deg, #F9F7F3 0%, #EBE5D9 100%); 
+            /* 白文字をやめて、馴染みの良いチャコールブラウン（焦げ茶）に */
+            color: #4A433A; 
+            padding: 30px; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+            /* 影もほんのり柔らかく調整 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04); 
+            /* 輪郭を少しだけ引き締める淡い枠線を追加 */
+            border: 1px solid #E2DCD0;
+            box-sizing: border-box; 
+        }
+        
         .pickup-box { flex: 1; min-width: 300px; background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; perspective: 1000px; /* 3D空間を作成 */ }
         
         /* 🌟 ゾクゾクする3Dフリップのアニメーション設定 */
@@ -38,13 +58,14 @@
 
         <div class="top-dashboard">
             <div class="user-profile-box">
-                <div class="user-avatar" style="font-size: 40px; background: rgba(255,255,255,0.2); width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; border-radius: 50%; flex-shrink: 0;">👤</div>
+                <!-- 🌟 ここを変更：アイコン背景を真っ白にして清潔感を出しつつ、少しだけ影をつける -->
+                <div class="user-avatar" style="font-size: 40px; background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; border-radius: 50%; flex-shrink: 0;">👤</div>
                 <div>
                     <h1 class="user-name" style="margin: 0 0 5px 0; font-size: 24px; font-weight: bold;">{{ Auth::user()->name }} さん</h1>
-                    <div class="user-date" style="font-size: 14px; opacity: 0.9;">登録日: {{ Auth::user()->created_at->format('Y/m/d') }}</div>
+                    <!-- 🌟 ここを変更：登録日の文字色も、真っ黒ではなく少し透け感のあるアースブラウンに -->
+                    <div class="user-date" style="font-size: 14px; color: #8A8178; font-weight: 500;">登録日: {{ Auth::user()->created_at->format('Y/m/d') }}</div>
                 </div>
             </div>
-
             <div class="pickup-box">
                 <h3 style="font-size: 14px; font-weight: bold; color: #f0932b; margin: 0 0 15px 0; display: flex; justify-content: space-between; align-items: center;">
                     <span>💡 今週のおすすめスポット</span>
