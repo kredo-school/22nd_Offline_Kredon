@@ -28,9 +28,8 @@ class TwoFactorController extends Controller
             $secret
         );
 
-        $qrCode = QrCode::create($qrCodeUrl);
         $writer = new SvgWriter();
-        $result = $writer->write($qrCode);
+        $result = $writer->write(new QrCode(data: $qrCodeUrl));
 
         return view('settings.two-factor-setup', [
             'qrCodeSvg' => $result->getString(),

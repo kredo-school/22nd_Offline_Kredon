@@ -18,41 +18,44 @@
                 </p>
             </div>
 
-            <div class="st-section-block">
-                <div class="st-2fa-qr" style="text-align:center; margin-bottom:24px;">
-                    {!! $qrCodeSvg !!}
+            <div class="st-2fa-setup">
+                <div class="st-2fa-setup__qr">
+                    <div class="st-2fa-setup__qr-inner">
+                        {!! $qrCodeSvg !!}
+                    </div>
                 </div>
 
-                <p class="st-setting-item__desc" style="margin-bottom:8px;">
-                    手動入力用シークレットキー
-                </p>
-                <p class="st-setting-item__value" style="font-family:monospace; word-break:break-all;">
-                    {{ $secret }}
-                </p>
+                <div class="st-2fa-setup__panel">
+                    <div class="st-2fa-setup__secret">
+                        <p class="st-2fa-setup__secret-label">手動入力用シークレットキー</p>
+                        <p class="st-2fa-setup__secret-value">{{ trim(chunk_split($secret, 4, ' ')) }}</p>
+                    </div>
+
+                    <form action="{{ route('settings.two-factor.confirm') }}" method="POST" class="st-2fa-setup__form">
+                        @csrf
+
+                        <label for="code" class="st-form-label">認証アプリの6桁コード</label>
+                        <input type="text"
+                               id="code"
+                               name="code"
+                               class="st-input st-2fa-setup__code"
+                               placeholder="000000"
+                               inputmode="numeric"
+                               pattern="[0-9]{6}"
+                               maxlength="6"
+                               autocomplete="one-time-code"
+                               required>
+
+                        @error('code')
+                            <p class="st-form-error" role="alert">{{ $message }}</p>
+                        @enderror
+
+                        <div class="st-form-actions">
+                            <button type="submit" class="st-btn st-btn--primary">有効化する</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <form action="{{ route('settings.two-factor.confirm') }}" method="POST" class="st-section-block">
-                @csrf
-
-                <label for="code" class="st-form-label">認証アプリの6桁コード</label>
-                <input type="text"
-                       id="code"
-                       name="code"
-                       class="st-input"
-                       inputmode="numeric"
-                       pattern="[0-9]{6}"
-                       maxlength="6"
-                       autocomplete="one-time-code"
-                       required>
-
-                @error('code')
-                    <p class="st-form-error" role="alert">{{ $message }}</p>
-                @enderror
-
-                <div class="st-form-actions" style="margin-top:16px;">
-                    <button type="submit" class="st-btn st-btn--primary">有効化する</button>
-                </div>
-            </form>
         </section>
     </div>
 </div>
