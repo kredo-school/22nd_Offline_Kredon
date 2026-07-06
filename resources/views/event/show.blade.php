@@ -395,13 +395,17 @@ Description
                     {{ $event->user->name }}
 
                 </h5>
-                 <a
-                href="{{ route('chat.private',$event->user) }}"
-                class="btn btn-primary">
+                @if($event->user->id != auth()->id())
 
-                Message
+<a
+href="{{ route('chat.private',$event->user) }}"
+class="btn btn-primary  w-100 mb-4">
 
-                </a>
+Message
+
+</a>
+
+@endif
 
 @if($joined)
 

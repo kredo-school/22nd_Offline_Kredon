@@ -66,15 +66,10 @@ class ChatController extends Controller
     public function show(Chat $chat)
 {
     // デバッグ
-    dd([
-        'login_user' => auth()->id(),
-        'chat_id'    => $chat->id,
-        'user_one'   => $chat->user_one_id,
-        'user_two'   => $chat->user_two_id,
-    ]);
+  
 
     abort_unless(
-        in_array(auth()->id(), [
+        in_array(auth()->id(),[
             $chat->user_one_id,
             $chat->user_two_id
         ]),
