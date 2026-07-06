@@ -4,10 +4,6 @@
 
 @section('content')
 
-<h1>
-    EVENT PAGE
-</h1>
-
 <div class="container-fluid px-4">
     {{-- EVENT BANNER --}}
     <div class="mb-4">
@@ -52,17 +48,13 @@
                 <div style="flex: 0 0 20%; max-width: 20%; padding: 5px;">
                     <a href="{{ route('event.show', $event->id) }}" class="text-decoration-none text-dark">
                         <div class="card shadow-sm border-0 h-100" style="border-radius:8px; overflow:hidden;">
+                        @if($event->image1)
+    <img src="{{ asset('storage/'.$event->image1) }}"
+         class="card-img-top"
+           style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;">
+@endif  
                             
-                            @if($event->image)
-                                <img src="{{ asset('storage/' . $event->image) }}" 
-                                     class="card-img-top" 
-                                     style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;">
-                            @else
-                                <div class="bg-light d-flex align-items-center justify-content-center" 
-                                     style="width: 100%; aspect-ratio: 16 / 9;">
-                                    <span class="text-muted small">No Image</span>
-                                </div>
-                            @endif
+                           
 
                             <div class="card-body p-2">
                                 <h6 class="fw-bold mb-1" style="font-size:0.85rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">

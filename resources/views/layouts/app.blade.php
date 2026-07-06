@@ -468,7 +468,7 @@
                     .catch(err => console.error('Mark as read failed:', err));});
         }
 
-        // ── PC SPOTサブメニュー ──
+       
         function toggleSpotPC(e) {
             e.preventDefault();
             const menu = document.getElementById('spotSubmenuPC');
