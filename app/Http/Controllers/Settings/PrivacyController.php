@@ -1,33 +1,42 @@
 <?php
 
 namespace App\Http\Controllers\Settings;
+
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Support\Dummy\SettingDummyData;
+use App\Http\Requests\Settings\UpdatePrivacyRequest;
+use App\Services\UserSettingsService;
+
 class PrivacyController extends Controller
 {
-    protected $user;
-    
-    public function __construct()
-    {
-        // ユーザー情報を初期化
-        $this->user = SettingDummyData::user();
-    }
+    public function __construct(protected UserSettingsService $settingsService) {}
 
     public function privacy()
     {
+        $user = auth()->user();
+
         return view('settings._privacy', [
-            'user'    => $this->user,
-            'privacy' => SettingDummyData::privacySettings(),
+            'user'    => $this->settingsService->accountViewData($user),
+            'privacy' => $this->settingsService->privacySettings($user),
         ]);
     }
 
     public function privacyGuide()
     {
         return view('settings._privacy_guide', [
-            'user'  => $this->user,
-            'guide' => SettingDummyData::privacyGuide(),
+            'user'  => $this->settingsService->accountViewData(auth()->user()),
+            'guide' => $this->settingsService->privacyGuide(),
         ]);
     }
 
+    public function updatePrivacy(UpdatePrivacyRequest $request)
+    {
+        $user     = auth()->user();
+        $settings = $this->settingsService->ensureSettings($user);
+
+        $settings->update([
+            'privacy_settings' => $this->settingsService->mergePrivacySettings($request->all()),
+        ]);
+
+        return back()->with('success', 'プライバシー設定を保存しました');
+    }
 }

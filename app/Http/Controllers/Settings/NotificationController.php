@@ -1,24 +1,41 @@
 <?php
 
 namespace App\Http\Controllers\Settings;
+
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Support\Dummy\SettingDummyData;
+use App\Http\Requests\Settings\UpdateNotificationRequest;
+use App\Services\UserSettingsService;
+
 class NotificationController extends Controller
 {
-    protected $user;
-    public function __construct()
-    {
-        // ユーザー情報を初期化
-        $this->user = SettingDummyData::user();
-    }
+    public function __construct(protected UserSettingsService $settingsService) {}
 
     public function notification()
     {
+        $user = auth()->user();
+
         return view('settings._notification', [
-            'user'         => $this->user,
-            'notification' => SettingDummyData::notificationSettings(),
+            'user'         => $this->settingsService->accountViewData($user),
+            'notification' => $this->settingsService->notificationSettings($user),
         ]);
     }
 
+    public function updateNotification(UpdateNotificationRequest $request)
+    {
+        $user     = auth()->user();
+        $settings = $this->settingsService->ensureSettings($user);
+
+        $settings->update([
+            'notification_settings' => $this->settingsService->mergeNotificationSettings($request->all()),
+        ]);
+
+        return back()->with('success', '通知設定を保存しました');
+    }
+
+    public function resetNotification()
+    {
+        $this->settingsService->resetNotificationSettings(auth()->user());
+
+        return back()->with('success', '通知設定を初期値にリセットしました');
+    }
 }

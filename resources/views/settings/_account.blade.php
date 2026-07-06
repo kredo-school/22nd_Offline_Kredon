@@ -196,26 +196,22 @@
             </h3>
             <p class="st-widget__sub">あなたのプロフィールはこのように表示されます</p>
 
-            {{-- テーマ名 + 変更ボタン --}}
+            {{-- テーマ名 + 変更リンク --}}
             <div class="st-preview__theme-row">
                 <span class="st-preview__theme">
                     <i class="fa-solid fa-palette" aria-hidden="true"></i> {{ $user->theme }}
                 </span>
-                <button type="button" class="st-btn st-btn--ghost st-btn--xs">変更</button>
-            </div>
-
-            {{-- バナー + イベント情報（見本の投稿プレビュー風） --}}
-            <div class="st-preview__banner">
-                <div class="st-preview__event">
-                    <p class="st-preview__event-title">{{ $user->preview_event['title'] }}</p>
-                    <p class="st-preview__event-date">{{ $user->preview_event['date'] }}</p>
-                </div>
+                <a href="{{ route('settings.display') }}" class="st-btn st-btn--ghost st-btn--xs">変更</a>
             </div>
 
             {{-- ミニプロフィールカード --}}
             <div class="st-preview__card">
                 <div class="st-preview__avatar" id="preview-avatar">
-                    {{ mb_substr($user->name, 0, 1) }}
+                    @if ($user->avatar)
+                        <img src="{{ $user->avatar }}" alt="{{ $user->name }}">
+                    @else
+                        {{ mb_substr($user->name, 0, 1) }}
+                    @endif
                 </div>
                 @if ($user->plan === 'premium')
                     <span class="st-preview__premium-tag">PREMIUM</span>
@@ -272,17 +268,21 @@
                 <i class="fa-regular fa-bell" aria-hidden="true"></i> 通知プレビュー
             </h3>
             <ul class="st-notif-list" role="list">
-                @foreach ($user->notifications as $notif)
+                @forelse ($user->notifications as $notif)
                     <li class="st-notif-list__item">
                         <span class="st-notif-list__icon st-notif-list__icon--{{ $notif['color'] }}" aria-hidden="true">
-                            <i class="fa-solid {{ $notif['icon'] }}"></i>
+                            <i class="{{ $notif['icon'] }}"></i>
                         </span>
                         <div class="st-notif-list__body">
                             <p class="st-notif-list__text">{{ $notif['text'] }}</p>
                             <p class="st-notif-list__time">{{ $notif['time'] }}</p>
                         </div>
                     </li>
-                @endforeach
+                @empty
+                    <li class="st-notif-list__item st-notif-list__item--empty">
+                        <p class="st-notif-list__text">通知はまだありません</p>
+                    </li>
+                @endforelse
             </ul>
             <a href="{{ route('settings.notification') }}" class="st-notif-list__more">
                 すべての通知を表示
@@ -431,17 +431,24 @@
         </h3>
         <p class="st-modal__desc">
             この操作は取り消せません。アカウントに紐づくすべての投稿・データが削除されます。
+            確認のため、現在のパスワードを入力してください。
         </p>
-        <div class="st-modal__footer">
-            <button type="button" class="st-btn st-btn--ghost"
-                    onclick="document.getElementById('delete-modal').close()">キャンセル</button>
-            {{-- TODO: route('settings.account.destroy') を本番で実装 --}}
-            <form action="#" method="POST">
-                @csrf
-                @method('DELETE')
+        <form action="{{ route('settings.account.destroy') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="st-field">
+                <label class="st-field__label" for="delete_password">パスワード</label>
+                <input type="password" id="delete_password" name="password" class="st-input" autocomplete="current-password" required>
+                @error('password')
+                    <p class="st-form-error" role="alert">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="st-modal__footer">
+                <button type="button" class="st-btn st-btn--ghost"
+                        onclick="document.getElementById('delete-modal').close()">キャンセル</button>
                 <button type="submit" class="st-btn st-btn--danger">削除する</button>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </dialog>
 @endsection

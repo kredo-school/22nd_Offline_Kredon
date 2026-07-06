@@ -139,7 +139,7 @@
             overflow: hidden;
             border: 1px solid #eee;
             display: block;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
         }
 
         .main-photo-wrapper img {
@@ -174,7 +174,7 @@
         .stack-front {
             z-index: 2;
         }
-        
+
         .stack-back-left {
             z-index: 1;
             transform: scale(0.93) translate(14px, 12px) rotate(4.5deg);
@@ -191,13 +191,15 @@
         @media (min-width: 769px) {
             .hover-stack:hover .stack-front {
                 transform: scale(0.98) translateY(-4px);
-                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             }
+
             .hover-stack:hover .stack-back-left {
                 transform: scale(1.02) translate(35px, 15px) rotate(8deg);
                 filter: brightness(1);
                 z-index: 3;
             }
+
             .hover-stack:hover .stack-back-right {
                 transform: scale(1.02) translate(-35px, 15px) rotate(-8deg);
                 filter: brightness(1);
@@ -299,9 +301,9 @@
         }
 
         .benefit-card.active-facility {
-            border: 2px solid #4a82b3 !important; /* 編集ボタンと同色の極太枠線 */
-            background-color: #ffffff !important; /* 背景を純白にして浮き立たせる */
-            box-shadow: 0 4px 12px rgba(74, 130, 179, 0.1); /* 高級感のある微細シャドウ */
+            border: 2px solid #4a82b3 !important;
+            background-color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(74, 130, 179, 0.1);
         }
 
         .benefit-card.active-facility:hover {
@@ -354,53 +356,8 @@
             transform: translateY(-2px);
         }
 
-        .coupon-container {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e8b);
-            border-radius: 14px;
-            padding: 18px;
-            color: white;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border: 2px dashed rgba(255, 255, 255, 0.4);
-            animation: pulseMotion 2.5s infinite;
-        }
-
-        @keyframes pulseMotion {
-            0’% { transform: scale(1); }
-            50% { transform: scale(1.02); box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4); }
-            100% { transform: scale(1); }
-        }
-
-        .activate-coupon-btn {
-            background: white;
-            color: #ff6b6b;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 14px;
-            width: 100%;
-            cursor: pointer;
-            transition: background 0.2s;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
-        }
-
-        .activate-coupon-btn:hover {
-            background: #fff0f0;
-        }
-
-        .activate-coupon-btn:disabled {
-            background: #e0e0e0 !important;
-            color: #a0a0a0 !important;
-            cursor: not-allowed;
-            box-shadow: none !important;
-        }
-
         .review-section {
-            margin-top: 40px;
+            margin-top: 25px; /* 写真のすぐ下に来るので少し余白を調整しました */
         }
 
         .review-card-item {
@@ -545,17 +502,22 @@
             .main-photo-wrapper {
                 border-radius: 12px;
             }
-            
+
             .main-photo-wrapper img {
-                height: 260px; /* スマホ時の適切なアスペクト比維持 */
+                height: 260px;
             }
 
             .hover-stack {
-                height: 100px; /* スマホ時のスタックエリア縮小調整 */
+                height: 100px;
             }
-            
-            .stack-back-left { transform: scale(0.91) translate(10px, 10px) rotate(5deg); }
-            .stack-back-right { transform: scale(0.91) translate(-10px, 10px) rotate(-5deg); }
+
+            .stack-back-left {
+                transform: scale(0.91) translate(10px, 10px) rotate(5deg);
+            }
+
+            .stack-back-right {
+                transform: scale(0.91) translate(-10px, 10px) rotate(-5deg);
+            }
 
             .benefit-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -596,15 +558,6 @@
                 flex-direction: column;
                 gap: 10px;
             }
-
-            .activate-coupon-btn {
-                display: block;
-            }
-
-            /* 🌟 完璧なUX：スマホ画面の時は、邪魔なPC用警告アナウンスを跡形もなく消し去る */
-            .pc-coupon-notice {
-                display: none !important;
-            }
         }
     </style>
 
@@ -613,7 +566,8 @@
             <div class="spot-detail-header"
                 style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; width: 100%; border-bottom: 2px solid #f4f8fb; padding-bottom: 12px;">
                 <div style="flex: 1; padding-right: 15px;">
-                    <div style="font-size: 11px; font-weight: bold; color: #1e8b9b; letter-spacing: 1px; margin-bottom: 6px; display: inline-block; background: #e6f2f4; padding: 4px 10px; border-radius: 6px;">
+                    <div
+                        style="font-size: 11px; font-weight: bold; color: #1e8b9b; letter-spacing: 1px; margin-bottom: 6px; display: inline-block; background: #e6f2f4; padding: 4px 10px; border-radius: 6px;">
                         <i class="fa-solid fa-book-open-reader"></i> 学習スポット詳細
                     </div>
                     <h1 class="spot-title-top"
@@ -628,14 +582,22 @@
 
             <div class="detail-card">
                 <div class="spot-layout-wrapper">
+                    
+                    {{-- ===================================== --}}
+                    {{-- 🌟 左カラム（写真＋レビュー）ここから --}}
+                    {{-- ===================================== --}}
                     <div class="spot-left-col">
                         <div class="main-photo-wrapper">
                             @if($spot->photo_path)
-                                <img id="mainGalleryImage" src="{{ asset('storage/' . $spot->photo_path) }}" alt="{{ $spot->name }}">
+                                <img id="mainGalleryImage" src="{{ asset('storage/' . $spot->photo_path) }}"
+                                    alt="{{ $spot->name }}">
                             @elseif($spot->photos->count() > 0)
-                                <img id="mainGalleryImage" src="{{ asset('storage/' . $spot->photos->sortBy('sort_order')->first()->photo_path) }}" alt="{{ $spot->name }}">
+                                <img id="mainGalleryImage"
+                                    src="{{ asset('storage/' . $spot->photos->sortBy('sort_order')->first()->photo_path) }}"
+                                    alt="{{ $spot->name }}">
                             @else
-                                <img id="mainGalleryImage" src="https://placehold.co/800x600/e6f0f9/4a82b3?text=No+Photo" alt="写真なし">
+                                <img id="mainGalleryImage" src="https://placehold.co/800x600/e6f0f9/4a82b3?text=No+Photo"
+                                    alt="写真なし">
                             @endif
                         </div>
 
@@ -649,10 +611,14 @@
                                 {{-- 左カラム（2枚目を前面、4枚目があれば背面に配置） --}}
                                 <div class="hover-stack">
                                     @if(isset($subPhotos[2]))
-                                        <img src="{{ asset('storage/' . $subPhotos[2]->photo_path) }}" onclick="changeMainImage(this, '{{ asset('storage/' . $subPhotos[2]->photo_path) }}')" class="stack-img stack-back-left">
+                                        <img src="{{ asset('storage/' . $subPhotos[2]->photo_path) }}"
+                                            onclick="changeMainImage(this, '{{ asset('storage/' . $subPhotos[2]->photo_path) }}')"
+                                            class="stack-img stack-back-left">
                                     @endif
                                     @if(isset($subPhotos[0]))
-                                        <img src="{{ asset('storage/' . $subPhotos[0]->photo_path) }}" onclick="changeMainImage(this, '{{ asset('storage/' . $subPhotos[0]->photo_path) }}')" class="stack-img stack-front">
+                                        <img src="{{ asset('storage/' . $subPhotos[0]->photo_path) }}"
+                                            onclick="changeMainImage(this, '{{ asset('storage/' . $subPhotos[0]->photo_path) }}')"
+                                            class="stack-img stack-front">
                                     @endif
                                 </div>
 
@@ -660,23 +626,243 @@
                                 @if(isset($subPhotos[1]))
                                     <div class="hover-stack">
                                         @if(isset($subPhotos[3]))
-                                            <img src="{{ asset('storage/' . $subPhotos[3]->photo_path) }}" onclick="changeMainImage(this, '{{ asset('storage/' . $subPhotos[3]->photo_path) }}')" class="stack-img stack-back-right">
+                                            <img src="{{ asset('storage/' . $subPhotos[3]->photo_path) }}"
+                                                onclick="changeMainImage(this, '{{ asset('storage/' . $subPhotos[3]->photo_path) }}')"
+                                                class="stack-img stack-back-right">
                                         @endif
-                                        <img src="{{ asset('storage/' . $subPhotos[1]->photo_path) }}" onclick="changeMainImage(this, '{{ asset('storage/' . $subPhotos[1]->photo_path) }}')" class="stack-img stack-front">
+                                        <img src="{{ asset('storage/' . $subPhotos[1]->photo_path) }}"
+                                            onclick="changeMainImage(this, '{{ asset('storage/' . $subPhotos[1]->photo_path) }}')"
+                                            class="stack-img stack-front">
                                     </div>
                                 @endif
                             </div>
                         @endif
-                    </div>
 
+                        {{-- 🌟🌟 移動完了！写真の下にレビューを配置 🌟🌟 --}}
+                        <div class="review-section">
+                            <h3
+                                style="font-size: 20px; color: #333; border-bottom: 2px solid #1e8b9b; padding-bottom: 10px; margin-bottom: 20px;">
+                                みんなのリアルな感想（{{ $spot->reviews->count() }}件）
+                            </h3>
+
+                            @if($spot->reviews->isEmpty())
+                                <p
+                                    style="color: #999; text-align: center; padding: 20px 0; background: white; border-radius: 12px; border: 1px dashed #ccc;">
+                                    まだ感想が投稿されていません。最初の発見者になりましょう！</p>
+                            @else
+                                <div style="display: flex; flex-direction: column; gap: 15px;">
+                                    @foreach($spot->reviews()->latest()->get() as $review)
+                                        <div class="review-card-item">
+                                            @if(Auth::check() && Auth::id() === $review->user_id)
+                                                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 10px;">
+                                                    <button
+                                                        onclick="document.getElementById('editReviewModal-{{ $review->id }}').classList.add('is-show')"
+                                                        style="color: #1e8b9b; background: none; border: none; font-size: 13px; cursor: pointer; font-weight: bold;"><i
+                                                            class="fa-solid fa-pen"></i> 編集</button>
+                                                    <form action="{{ route('reviews.destroy', $review->id) }}" method="POST"
+                                                        onsubmit="return confirm('削除しますか？');" style="margin: 0;">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit"
+                                                            style="color: #e53e3e; background: none; border: none; font-size: 13px; cursor: pointer; font-weight: bold;"><i
+                                                                class="fa-regular fa-trash-can"></i> 削除</button>
+                                                    </form>
+                                                </div>
+                                            @endif
+
+                                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                                                @if($review->customer_vibe)
+                                                    <span
+                                                        style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">👥
+                                                        客層 <span
+                                                            style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->customer_vibe }}</span>
+                                                @endif
+                                                @if($review->eye_fatigue_level)
+                                                    <span
+                                                        style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">👁️
+                                                        照明 <span
+                                                            style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->eye_fatigue_level }}</span>
+                                                @endif
+                                                @if($review->chair_comfort)
+                                                    <span
+                                                        style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">🪑
+                                                        イス <span
+                                                            style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->chair_comfort }}</span>
+                                                @endif
+                                                @if($review->desk_stability)
+                                                    <span
+                                                        style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">🏢
+                                                        机 <span
+                                                            style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->desk_stability }}</span>
+                                                @endif
+                                            </div>
+
+                                            @if($review->photo_path)
+                                                <img src="{{ asset('storage/' . $review->photo_path) }}"
+                                                    style="max-width: 100%; max-height: 250px; border-radius: 8px; object-fit: cover; margin-bottom: 15px;">
+                                            @endif
+
+                                            @if($review->comment)
+                                                <div style="color: #333; line-height: 1.6; font-size: 14px; margin-bottom: 15px;">
+                                                    {!! nl2br(e($review->comment)) !!}</div>
+                                            @endif
+
+                                            @if($review->good_point || $review->bad_point)
+                                                <div
+                                                    style="display: flex; gap: 15px; font-size: 12px; background: #fafafa; padding: 10px; border-radius: 6px; border: 1px dashed #eee;">
+                                                    @if($review->good_point)
+                                                        <div style="flex: 1; color: #e53e3e; font-weight: bold;">👍 Good: <span
+                                                                style="font-weight: normal; color: #555;">{{ $review->good_point }}</span></div>
+                                                    @endif
+                                                    @if($review->bad_point)
+                                                        <div style="flex: 1; color: #3182ce; font-weight: bold;">気になる点: <span
+                                                                style="font-weight: normal; color: #555;">{{ $review->bad_point }}</span></div>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        @if(Auth::check() && Auth::id() === $review->user_id)
+                                            <div class="custom-modal" id="editReviewModal-{{ $review->id }}">
+                                                <div class="modal-content" style="padding: 0;">
+                                                    <div
+                                                        style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+                                                        <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">レビューを編集</h2>
+                                                        <button type="button"
+                                                            onclick="document.getElementById('editReviewModal-{{ $review->id }}').classList.remove('is-show')"
+                                                            class="close-btn" style="position: static;">×</button>
+                                                    </div>
+
+                                                    <form action="{{ route('reviews.update', $review->id) }}" method="POST"
+                                                        enctype="multipart/form-data" style="padding: 20px;">
+                                                        @csrf @method('PUT')
+
+                                                        <div style="margin-bottom: 20px;">
+                                                            <label
+                                                                style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸
+                                                                写真を変更（そのままなら未選択でOK）</label>
+                                                            <input type="file" name="photo" accept="image/*" style="width: 100%;">
+                                                        </div>
+
+                                                        <div
+                                                            style="background-color: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
+                                                            <p
+                                                                style="font-size: 12px; font-weight: bold; color: #4a82b3; margin-top: 0; margin-bottom: 15px;">
+                                                                🔍 ニッチな評価をシェア（1〜5で選択）</p>
+
+                                                            <div style="margin-bottom: 20px;">
+                                                                <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👥
+                                                                    客層</label>
+                                                                <div class="rating-group">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <input type="radio" name="customer_vibe" id="vibe_{{ $review->id }}_{{ $i }}"
+                                                                            value="{{ $i }}" class="rating-radio" {{ $review->customer_vibe == $i ? 'checked' : '' }}><label for="vibe_{{ $review->id }}_{{ $i }}"
+                                                                            class="rating-label">{{ $i }}</label>
+                                                                    @endfor
+                                                                </div>
+                                                                <div
+                                                                    style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                                                                    <span>← ワイワイ</span><span>もくもく作業 →</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div style="margin-bottom: 20px;">
+                                                                <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👁️
+                                                                    照明</label>
+                                                                <div class="rating-group">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <input type="radio" name="eye_fatigue_level" id="eye_{{ $review->id }}_{{ $i }}"
+                                                                            value="{{ $i }}" class="rating-radio" {{ $review->eye_fatigue_level == $i ? 'checked' : '' }}><label for="eye_{{ $review->id }}_{{ $i }}"
+                                                                            class="rating-label">{{ $i }}</label>
+                                                                    @endfor
+                                                                </div>
+                                                                <div
+                                                                    style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                                                                    <span>← 暗め（雰囲気重視）</span><span>明るい（読書向き） →</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div style="margin-bottom: 20px;">
+                                                                <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🪑
+                                                                    イス</label>
+                                                                <div class="rating-group">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <input type="radio" name="chair_comfort" id="chair_{{ $review->id }}_{{ $i }}"
+                                                                            value="{{ $i }}" class="rating-radio" {{ $review->chair_comfort == $i ? 'checked' : '' }}><label for="chair_{{ $review->id }}_{{ $i }}"
+                                                                            class="rating-label">{{ $i }}</label>
+                                                                    @endfor
+                                                                </div>
+                                                                <div
+                                                                    style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                                                                    <span>← 硬い（長居キツイ）</span><span>ふかふか（快適） →</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div style="margin-bottom: 0;">
+                                                                <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🏢
+                                                                    机</label>
+                                                                <div class="rating-group">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <input type="radio" name="desk_stability" id="desk_{{ $review->id }}_{{ $i }}"
+                                                                            value="{{ $i }}" class="rating-radio" {{ $review->desk_stability == $i ? 'checked' : '' }}><label for="desk_{{ $review->id }}_{{ $i }}"
+                                                                            class="rating-label">{{ $i }}</label>
+                                                                    @endfor
+                                                                </div>
+                                                                <div
+                                                                    style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                                                                    <span>← 狭い・ガタつく</span><span>広い・安定感バツグン →</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="good-bad-responsive" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                                            <div style="flex: 1;">
+                                                                <label
+                                                                    style="display: block; font-size: 12px; font-weight: bold; color: #e53e3e; margin-bottom: 5px;">👍
+                                                                    Good</label>
+                                                                <input type="text" name="good_point" value="{{ $review->good_point }}"
+                                                                    style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                                                            </div>
+                                                            <div style="flex: 1;">
+                                                                <label
+                                                                    style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">気になる点</label>
+                                                                <input type="text" name="bad_point" value="{{ $review->bad_point }}"
+                                                                    style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                                                            </div>
+                                                        </div>
+                                                        <div style="margin-bottom: 25px;">
+                                                            <label
+                                                                style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📝
+                                                                感想</label>
+                                                            <textarea name="comment" rows="3"
+                                                                style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none;">{{ $review->comment }}</textarea>
+                                                        </div>
+                                                        <div style="text-align: center;">
+                                                            <button type="submit"
+                                                                style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%;">更新する</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div> {{-- 🌟 左カラム ここまで --}}
+
+                    {{-- ===================================== --}}
+                    {{-- 👉 右カラム（基本情報やマップ）ここから --}}
+                    {{-- ===================================== --}}
                     <div class="spot-right-col">
                         <div class="spot-header-top">
                             <div>
-                                <div class="spot-rating" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <div class="spot-rating"
+                                    style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                                     <div style="display: flex; align-items: center; gap: 4px;">
                                         <i class="fa-solid fa-star"></i>
                                         {{ $spot->reviews->count() > 0 ? number_format($spot->reviews->avg('customer_vibe') ?? 4.6, 1) : '-.-' }}
-                                        <span style="color: #999; font-size: 13px; font-weight: normal;">/ {{ $spot->reviews->count() }}件</span>
+                                        <span style="color: #999; font-size: 13px; font-weight: normal;">/
+                                            {{ $spot->reviews->count() }}件</span>
                                     </div>
                                 </div>
                             </div>
@@ -688,33 +874,42 @@
                                 </span>
                                 <form action="{{ route('bookmarks.toggle', $spot->id) }}" method="POST" style="margin: 0;">
                                     @csrf
-                                    <button type="submit" class="bookmark-btn {{ Auth::check() && $spot->isBookmarkedBy(Auth::user()) ? 'active' : '' }}" title="お気に入りに追加 / 解除">
+                                    <button type="submit"
+                                        class="bookmark-btn {{ Auth::check() && $spot->isBookmarkedBy(Auth::user()) ? 'active' : '' }}"
+                                        title="お気に入りに追加 / 解除">
                                         <i class="fa-solid fa-heart"></i>
                                     </button>
                                 </form>
                             </div>
                         </div>
 
-                       <div class="benefit-grid">
+                        <div class="benefit-grid">
                             {{-- 1つ目：高速Wi-Fiカード --}}
-                            <div class="benefit-card {{ $spot->has_wifi ? 'active-facility' : '' }}" style="{{ $spot->has_wifi ? '' : 'opacity: 0.4; background: #f9f9f9;' }}">
+                            <div class="benefit-card {{ $spot->has_wifi ? 'active-facility' : '' }}"
+                                style="{{ $spot->has_wifi ? '' : 'opacity: 0.4; background: #f9f9f9;' }}">
                                 <i class="fa-solid fa-wifi" style="color: {{ $spot->has_wifi ? '#1e8b9b' : '#999' }};"></i>
                                 <div>
-                                    <div class="benefit-title" style="color: {{ $spot->has_wifi ? '#333' : '#888' }};">高速Wi-Fi</div>
-                                    <div class="benefit-desc" style="color: {{ $spot->has_wifi ? '#1e8b9b' : '#999' }}; font-weight: {{ $spot->has_wifi ? 'bold' : 'normal' }};">{{ $spot->has_wifi ? '独自wi-fiあり' : '設備なし' }}</div>
+                                    <div class="benefit-title" style="color: {{ $spot->has_wifi ? '#333' : '#888' }};">
+                                        高速Wi-Fi</div>
+                                    <div class="benefit-desc"
+                                        style="color: {{ $spot->has_wifi ? '#1e8b9b' : '#999' }}; font-weight: {{ $spot->has_wifi ? 'bold' : 'normal' }};">
+                                        {{ $spot->has_wifi ? '独自wi-fiあり' : '設備なし' }}</div>
                                 </div>
                             </div>
 
                             {{-- 2つ目：電源完備カード --}}
-                            <div class="benefit-card {{ $spot->has_power ? 'active-facility' : '' }}" style="{{ $spot->has_power ? '' : 'opacity: 0.4; background: #f9f9f9;' }}">
+                            <div class="benefit-card {{ $spot->has_power ? 'active-facility' : '' }}"
+                                style="{{ $spot->has_power ? '' : 'opacity: 0.4; background: #f9f9f9;' }}">
                                 <i class="fa-solid fa-plug" style="color: {{ $spot->has_power ? '#1e8b9b' : '#999' }};"></i>
                                 <div>
-                                    <div class="benefit-title" style="color: {{ $spot->has_power ? '#333' : '#888' }};">電源完備</div>
-                                    <div class="benefit-desc" style="color: {{ $spot->has_power ? '#1e8b9b' : '#999' }}; font-weight: {{ $spot->has_power ? 'bold' : 'normal' }};">{{ $spot->has_power ? '設備あり' : '設備なし' }}</div>
+                                    <div class="benefit-title" style="color: {{ $spot->has_power ? '#333' : '#888' }};">電源完備
+                                    </div>
+                                    <div class="benefit-desc"
+                                        style="color: {{ $spot->has_power ? '#1e8b9b' : '#999' }}; font-weight: {{ $spot->has_power ? 'bold' : 'normal' }};">
+                                        {{ $spot->has_power ? '設備あり' : '設備なし' }}</div>
                                 </div>
                             </div>
 
-                            {{-- 🌟 犯人はこれです！ここが消えていたので復活させました！ --}}
                             @php
                                 $reviewCount = $spot->reviews->count();
                                 $focusScore = $reviewCount > 0 ? ($spot->reviews->avg('customer_vibe') + $spot->reviews->avg('eye_fatigue_level')) / 2 : 0;
@@ -724,22 +919,28 @@
                             @endphp
 
                             {{-- 3つ目：ノイズレスカード --}}
-                            <div class="benefit-card {{ $isFocus ? 'active-facility' : '' }}" style="{{ $isFocus ? '' : 'opacity: 0.4; background: #f9f9f9;' }}">
+                            <div class="benefit-card {{ $isFocus ? 'active-facility' : '' }}"
+                                style="{{ $isFocus ? '' : 'opacity: 0.4; background: #f9f9f9;' }}">
                                 <i class="fa-solid fa-user-ninja" style="color: {{ $isFocus ? '#1e8b9b' : '#999' }};"></i>
                                 <div>
-                                    <div class="benefit-title" style="color: {{ $isFocus ? '#333' : '#888' }};">ノイズレス環境</div>
-                                    <div class="benefit-desc" style="color: {{ $isFocus ? '#1e8b9b' : '#999' }}; font-weight: {{ $isFocus ? 'bold' : 'normal' }};">
+                                    <div class="benefit-title" style="color: {{ $isFocus ? '#333' : '#888' }};">ノイズレス環境
+                                    </div>
+                                    <div class="benefit-desc"
+                                        style="color: {{ $isFocus ? '#1e8b9b' : '#999' }}; font-weight: {{ $isFocus ? 'bold' : 'normal' }};">
                                         @if($reviewCount == 0) クチコミ待ち @elseif($isFocus) 集中作業◎ @else 少し賑やかかも @endif
                                     </div>
                                 </div>
                             </div>
 
                             {{-- 4つ目：快適な机・椅子カード --}}
-                            <div class="benefit-card {{ $isComfort ? 'active-facility' : '' }}" style="{{ $isComfort ? '' : 'opacity: 0.4; background: #f9f9f9;' }}">
+                            <div class="benefit-card {{ $isComfort ? 'active-facility' : '' }}"
+                                style="{{ $isComfort ? '' : 'opacity: 0.4; background: #f9f9f9;' }}">
                                 <i class="fa-solid fa-chair" style="color: {{ $isComfort ? '#1e8b9b' : '#999' }};"></i>
                                 <div>
-                                    <div class="benefit-title" style="color: {{ $isComfort ? '#333' : '#888' }};">快適なイス・机</div>
-                                    <div class="benefit-desc" style="color: {{ $isComfort ? '#1e8b9b' : '#999' }}; font-weight: {{ $isComfort ? 'bold' : 'normal' }};">
+                                    <div class="benefit-title" style="color: {{ $isComfort ? '#333' : '#888' }};">快適なイス・机
+                                    </div>
+                                    <div class="benefit-desc"
+                                        style="color: {{ $isComfort ? '#1e8b9b' : '#999' }}; font-weight: {{ $isComfort ? 'bold' : 'normal' }};">
                                         @if($reviewCount == 0) クチコミ待ち @elseif($isComfort) 長時間の作業◎ @else 長時間はキツイかも @endif
                                     </div>
                                 </div>
@@ -747,220 +948,82 @@
                         </div>
 
                         <div class="mini-map">
-                            <iframe width="100%" height="100%" style="border:0;" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q={{ urlencode($spot->name . ' ' . $spot->area . ' Cebu') }}&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
+                            <iframe width="100%" height="100%" style="border:0;" loading="lazy" allowfullscreen
+                                src="https://maps.google.com/maps?q={{ urlencode($spot->name . ' ' . $spot->area . ' Cebu') }}&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
                         </div>
 
-                        <div style="background-color: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 5px;">
-                            <div style="font-size: 14px; font-weight: bold; color: #475569; margin-bottom: 6px;">📍 エリア：<span style="color: #333; font-size: 15px;">{{ $spot->area }}</span></div>
-                            <div style="font-size: 14px; font-weight: bold; color: #475569;">🕒 営業時間：<span style="color: #333; font-size: 15px;">{{ $spot->hours ?? '未設定' }}</span></div>
+                        <div
+                            style="background-color: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 5px;">
+                            <div style="font-size: 14px; font-weight: bold; color: #475569; margin-bottom: 6px;">📍
+                                エリア：<span style="color: #333; font-size: 15px;">{{ $spot->area }}</span></div>
+                            <div style="font-size: 14px; font-weight: bold; color: #475569;">🕒 営業時間：<span
+                                    style="color: #333; font-size: 15px;">{{ $spot->hours ?? '未設定' }}</span></div>
                         </div>
 
-                        <div class="coupon-container">
-                            <div style="font-size: 11px; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.5px;">💎 KREDONユーザー限定特典</div>
-                            <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px;">お店で提示すると <span style="font-size: 22px; color: #ffeaa7; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">10% OFF</span></div>
-                            <div style="font-size: 11px; opacity: 0.9; margin-bottom: 10px;">※ご注文時にこの画面をスタッフにご提示ください</div>
-                            @php $isCouponUsed = Auth::check() && method_exists($spot, 'isCouponUsedByMonth') ? $spot->isCouponUsedByMonth(Auth::user()) : false; @endphp
-                            @if(!Auth::check())
-                                <button type="button" onclick="alert('クーポンの利用にはログインが必要です。')" class="activate-coupon-btn mobile-only-btn">ログインしてクーポンを使う</button>
-                            @elseif($isCouponUsed)
-                                <button type="button" disabled class="activate-coupon-btn mobile-only-btn">✅ 今月は使用済み</button>
-                            @else
-                                <button type="button" onclick="handleCouponActivation()" id="activeCouponBtn" class="activate-coupon-btn mobile-only-btn">スタッフの前でタップして使う</button>
-                            @endif
-                            <div class="pc-coupon-notice" style="font-size: 11px; font-weight: bold; opacity: 0.9;">※クーポンはスマートフォンからご利用ください📱</div>
+                        @if($spot->description)
+                        <div style="background-color: #ffffff; padding: 18px 15px; border-radius: 12px; border: 2px solid #e6f2f4; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                            <h3 style="font-size: 14px; font-weight: bold; color: #1e8b9b; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-circle-info"></i> スポットの詳細・ニッチ情報
+                            </h3>
+                            <div style="font-size: 13.5px; color: #444; line-height: 1.8; letter-spacing: 0.3px;">
+                                {!! nl2br(e($spot->description)) !!}
+                            </div>
                         </div>
+                        @endif
 
-                        <button onclick="document.getElementById('reviewModal-{{ $spot->id }}').classList.add('is-show')" class="primary-btn" style="margin-bottom: 12px;">レビューを書く</button>
+                        <button onclick="document.getElementById('reviewModal-{{ $spot->id }}').classList.add('is-show')"
+                            class="primary-btn" style="margin-bottom: 12px; margin-top: 15px;">レビューを書く</button>
 
                         @if(Auth::check())
-                            <button onclick="document.getElementById('editSpotModal').classList.add('is-show')" style="background-color: white; color: #4a82b3; border: 1px solid #4a82b3; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s; width: 100%; margin-bottom: 15px;">
+                            <button onclick="document.getElementById('editSpotModal').classList.add('is-show')"
+                                style="background-color: white; color: #4a82b3; border: 1px solid #4a82b3; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s; width: 100%; margin-bottom: 15px;">
                                 <i class="fa-solid fa-pen"></i> スポット情報を編集（Wiki）
                             </button>
                             @if(Auth::id() === $spot->user_id)
-                                <form action="{{ route('spots.destroy', $spot->id) }}" method="POST" onsubmit="return confirm('【警告】本当にこのスポットを削除しますか？\n※投稿されたレビューや写真もすべて消去されます。');" style="margin-bottom: 15px;">
+                                <form action="{{ route('spots.destroy', $spot->id) }}" method="POST"
+                                    onsubmit="return confirm('【警告】本当にこのスポットを削除しますか？\n※投稿されたレビューや写真もすべて消去されます。');"
+                                    style="margin-bottom: 15px;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" style="background-color: white; color: #e53e3e; border: 1px solid #e53e3e; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s; width: 100%;">
+                                    <button type="submit"
+                                        style="background-color: white; color: #e53e3e; border: 1px solid #e53e3e; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s; width: 100%;">
                                         <i class="fa-solid fa-trash-can"></i> このスポットを削除する
                                     </button>
                                 </form>
                             @endif
 
-                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div
+                                style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                                 <div style="font-size: 11px; color: #64748b; display: flex; align-items: center; gap: 4px;">
                                     <i class="fa-solid fa-clock-rotate-left" style="color: #1e8b9b;"></i>
                                     最終更新: <strong>{{ $spot->lastEditor->name ?? $spot->user->name ?? '不明' }}</strong>さん
-                                    <button type="button" onclick="document.getElementById('historyModal-{{ $spot->id }}').classList.add('is-show')" style="background: none; border: none; color: #4a82b3; text-decoration: underline; cursor: pointer; font-size: 11px; margin-left: 2px; padding: 0;">(履歴)</button>
+                                    <button type="button"
+                                        onclick="document.getElementById('historyModal-{{ $spot->id }}').classList.add('is-show')"
+                                        style="background: none; border: none; color: #4a82b3; text-decoration: underline; cursor: pointer; font-size: 11px; margin-left: 2px; padding: 0;">(履歴)</button>
                                 </div>
                             </div>
                         @endif
-                    </div>
+                    </div> {{-- 👉 右カラム ここまで --}}
                 </div>
-            </div>
-
-            <div class="review-section">
-                <h3 style="font-size: 20px; color: #333; border-bottom: 2px solid #1e8b9b; padding-bottom: 10px; margin-bottom: 20px;">
-                    みんなのリアルな感想（{{ $spot->reviews->count() }}件）
-                </h3>
-
-                @if($spot->reviews->isEmpty())
-                    <p style="color: #999; text-align: center; padding: 20px 0; background: white; border-radius: 12px; border: 1px dashed #ccc;">まだ感想が投稿されていません。最初の発見者になりましょう！</p>
-                @else
-                    <div style="display: flex; flex-direction: column; gap: 15px;">
-                        @foreach($spot->reviews()->latest()->get() as $review)
-                            <div class="review-card-item">
-                                @if(Auth::check() && Auth::id() === $review->user_id)
-                                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 10px;">
-                                        <button onclick="document.getElementById('editReviewModal-{{ $review->id }}').classList.add('is-show')" style="color: #1e8b9b; background: none; border: none; font-size: 13px; cursor: pointer; font-weight: bold;"><i class="fa-solid fa-pen"></i> 編集</button>
-                                        <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" onsubmit="return confirm('削除しますか？');" style="margin: 0;">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" style="color: #e53e3e; background: none; border: none; font-size: 13px; cursor: pointer; font-weight: bold;"><i class="fa-regular fa-trash-can"></i> 削除</button>
-                                        </form>
-                                    </div>
-                                @endif
-
-                                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
-                                    @if($review->customer_vibe)
-                                        <span style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">👥 客層 <span style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->customer_vibe }}</span>
-                                    @endif
-                                    @if($review->eye_fatigue_level)
-                                        <span style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">👁️ 照明 <span style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->eye_fatigue_level }}</span>
-                                    @endif
-                                    @if($review->chair_comfort)
-                                        <span style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">🪑 イス <span style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->chair_comfort }}</span>
-                                    @endif
-                                    @if($review->desk_stability)
-                                        <span style="background: #f0f7fa; border: 1px solid #c9e2e8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #1e8b9b;">🏢 机 <span style="color: #f0932b; margin-left: 2px;">★</span>{{ $review->desk_stability }}</span>
-                                    @endif
-                                </div>
-
-                                @if($review->photo_path)
-                                    <img src="{{ asset('storage/' . $review->photo_path) }}" style="max-width: 100%; max-height: 250px; border-radius: 8px; object-fit: cover; margin-bottom: 15px;">
-                                @endif
-
-                                @if($review->comment)
-                                    {{-- 🌟 プロのバグ潰し：改行位置をHTMLの直下に結合し、インデントスペース事故を根絶 --}}
-                                    <div style="color: #333; line-height: 1.6; font-size: 14px; margin-bottom: 15px;">{!! nl2br(e($review->comment)) !!}</div>
-                                @endif
-
-                                @if($review->good_point || $review->bad_point)
-                                    <div style="display: flex; gap: 15px; font-size: 12px; background: #fafafa; padding: 10px; border-radius: 6px; border: 1px dashed #eee;">
-                                        @if($review->good_point)
-                                            <div style="flex: 1; color: #e53e3e; font-weight: bold;">👍 Good: <span style="font-weight: normal; color: #555;">{{ $review->good_point }}</span></div>
-                                        @endif
-                                        @if($review->bad_point)
-                                            <div style="flex: 1; color: #3182ce; font-weight: bold;">気になる点: <span style="font-weight: normal; color: #555;">{{ $review->bad_point }}</span></div>
-                                        @endif
-                                    </div>
-                                @endif
-                            </div>
-
-                            @if(Auth::check() && Auth::id() === $review->user_id)
-                                <div class="custom-modal" id="editReviewModal-{{ $review->id }}">
-                                    <div class="modal-content" style="padding: 0;">
-                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
-                                            <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">レビューを編集</h2>
-                                            <button type="button" onclick="document.getElementById('editReviewModal-{{ $review->id }}').classList.remove('is-show')" class="close-btn" style="position: static;">×</button>
-                                        </div>
-
-                                        <form action="{{ route('reviews.update', $review->id) }}" method="POST" enctype="multipart/form-data" style="padding: 20px;">
-                                            @csrf @method('PUT')
-
-                                            <div style="margin-bottom: 20px;">
-                                                <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸 写真を変更（そのままなら未選択でOK）</label>
-                                                <input type="file" name="photo" accept="image/*" style="width: 100%;">
-                                            </div>
-
-                                            <div style="background-color: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
-                                                <p style="font-size: 12px; font-weight: bold; color: #4a82b3; margin-top: 0; margin-bottom: 15px;">🔍 ニッチな評価をシェア（1〜5で選択）</p>
-
-                                                <div style="margin-bottom: 20px;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👥 客層</label>
-                                                    <div class="rating-group">
-                                                        @for($i = 1; $i <= 5; $i++)
-                                                            <input type="radio" name="customer_vibe" id="vibe_{{ $review->id }}_{{ $i }}" value="{{ $i }}" class="rating-radio" {{ $review->customer_vibe == $i ? 'checked' : '' }}><label for="vibe_{{ $review->id }}_{{ $i }}" class="rating-label">{{ $i }}</label>
-                                                        @endfor
-                                                    </div>
-                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
-                                                        <span>← ワイワイ</span><span>もくもく作業 →</span>
-                                                    </div>
-                                                </div>
-
-                                                <div style="margin-bottom: 20px;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👁️ 照明</label>
-                                                    <div class="rating-group">
-                                                        @for($i = 1; $i <= 5; $i++)
-                                                            <input type="radio" name="eye_fatigue_level" id="eye_{{ $review->id }}_{{ $i }}" value="{{ $i }}" class="rating-radio" {{ $review->eye_fatigue_level == $i ? 'checked' : '' }}><label for="eye_{{ $review->id }}_{{ $i }}" class="rating-label">{{ $i }}</label>
-                                                        @endfor
-                                                    </div>
-                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
-                                                        <span>← 暗め（雰囲気重視）</span><span>明るい（読書向き） →</span>
-                                                    </div>
-                                                </div>
-
-                                                <div style="margin-bottom: 20px;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🪑 イス</label>
-                                                    <div class="rating-group">
-                                                        @for($i = 1; $i <= 5; $i++)
-                                                            <input type="radio" name="chair_comfort" id="chair_{{ $review->id }}_{{ $i }}" value="{{ $i }}" class="rating-radio" {{ $review->chair_comfort == $i ? 'checked' : '' }}><label for="chair_{{ $review->id }}_{{ $i }}" class="rating-label">{{ $i }}</label>
-                                                        @endfor
-                                                    </div>
-                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
-                                                        <span>← 硬い（長居キツイ）</span><span>ふかふか（快適） →</span>
-                                                    </div>
-                                                </div>
-
-                                                <div style="margin-bottom: 0;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🏢 机</label>
-                                                    <div class="rating-group">
-                                                        @for($i = 1; $i <= 5; $i++)
-                                                            <input type="radio" name="desk_stability" id="desk_{{ $review->id }}_{{ $i }}" value="{{ $i }}" class="rating-radio" {{ $review->desk_stability == $i ? 'checked' : '' }}><label for="desk_{{ $review->id }}_{{ $i }}" class="rating-label">{{ $i }}</label>
-                                                        @endfor
-                                                    </div>
-                                                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
-                                                        <span>← 狭い・ガタつく</span><span>広い・安定感バツグン →</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="good-bad-responsive" style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                                <div style="flex: 1;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #e53e3e; margin-bottom: 5px;">👍 Good</label>
-                                                    <input type="text" name="good_point" value="{{ $review->good_point }}" style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
-                                                </div>
-                                                <div style="flex: 1;">
-                                                    <label style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">気になる点</label>
-                                                    <input type="text" name="bad_point" value="{{ $review->bad_point }}" style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
-                                                </div>
-                                            </div>
-                                            <div style="margin-bottom: 25px;">
-                                                <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📝 感想</label>
-                                                <textarea name="comment" rows="3" style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none;">{{ $review->comment }}</textarea>
-                                            </div>
-                                            <div style="text-align: center;">
-                                                <button type="submit" style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%;">更新する</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-                @endif
             </div>
         </div>
     </div>
 
+    {{-- モーダル各種（レビュー投稿、スポット編集、履歴など）はそのまま配置 --}}
     <div class="custom-modal" id="reviewModal-{{ $spot->id }}">
         <div class="modal-content" style="padding: 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
                 <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">レビュー・最新情報を投稿</h2>
-                <button onclick="document.getElementById('reviewModal-{{ $spot->id }}').classList.remove('is-show')" class="close-btn" style="position: static;">×</button>
+                <button onclick="document.getElementById('reviewModal-{{ $spot->id }}').classList.remove('is-show')"
+                    class="close-btn" style="position: static;">×</button>
             </div>
 
-            <form action="{{ route('reviews.store', $spot->id) }}" method="POST" enctype="multipart/form-data" style="padding: 20px;">
+            <form action="{{ route('reviews.store', $spot->id) }}" method="POST" enctype="multipart/form-data"
+                style="padding: 20px;">
                 @csrf
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸 席の様子やメニューの写真（任意）</label>
+                    <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸
+                        席の様子やメニューの写真（任意）</label>
                     <div class="file-upload-wrapper">
                         <div class="file-upload-btn">
                             <i class="fa-solid fa-camera" style="font-size: 24px; margin-bottom: 5px; display: block;"></i>
@@ -970,17 +1033,22 @@
                     </div>
                 </div>
 
-                <div style="background-color: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
-                    <p style="font-size: 12px; font-weight: bold; color: #4a82b3; margin-top: 0; margin-bottom: 15px;">🔍 ニッチな評価をシェア（1〜5で選択）</p>
+                <div
+                    style="background-color: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
+                    <p style="font-size: 12px; font-weight: bold; color: #4a82b3; margin-top: 0; margin-bottom: 15px;">🔍
+                        ニッチな評価をシェア（1〜5で選択）</p>
 
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👥 客層</label>
                         <div class="rating-group">
                             @for($i = 1; $i <= 5; $i++)
-                                <input type="radio" name="customer_vibe" id="new_vibe_{{ $spot->id }}_{{ $i }}" value="{{ $i }}" class="rating-radio"><label factory for="new_vibe_{{ $spot->id }}_{{ $i }}" class="rating-label">{{ $i }}</label>
+                                <input type="radio" name="customer_vibe" id="new_vibe_{{ $spot->id }}_{{ $i }}" value="{{ $i }}"
+                                    class="rating-radio"><label for="new_vibe_{{ $spot->id }}_{{ $i }}"
+                                    class="rating-label">{{ $i }}</label>
                             @endfor
                         </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                        <div
+                            style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
                             <span>← ワイワイ</span><span>もくもく作業 →</span>
                         </div>
                     </div>
@@ -989,10 +1057,13 @@
                         <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👁️ 照明</label>
                         <div class="rating-group">
                             @for($i = 1; $i <= 5; $i++)
-                                <input type="radio" name="eye_fatigue_level" id="new_eye_{{ $spot->id }}_{{ $i }}" value="{{ $i }}" class="rating-radio"><label for="new_eye_{{ $spot->id }}_{{ $i }}" class="rating-label">{{ $i }}</label>
+                                <input type="radio" name="eye_fatigue_level" id="new_eye_{{ $spot->id }}_{{ $i }}"
+                                    value="{{ $i }}" class="rating-radio"><label for="new_eye_{{ $spot->id }}_{{ $i }}"
+                                    class="rating-label">{{ $i }}</label>
                             @endfor
                         </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                        <div
+                            style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
                             <span>← 暗め（雰囲気重視）</span><span>明るい（読書向き） →</span>
                         </div>
                     </div>
@@ -1001,10 +1072,13 @@
                         <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🪑 イス</label>
                         <div class="rating-group">
                             @for($i = 1; $i <= 5; $i++)
-                                <input type="radio" name="chair_comfort" id="new_chair_{{ $spot->id }}_{{ $i }}" value="{{ $i }}" class="rating-radio"><label for="new_chair_{{ $spot->id }}_{{ $i }}" class="rating-label">{{ $i }}</label>
+                                <input type="radio" name="chair_comfort" id="new_chair_{{ $spot->id }}_{{ $i }}"
+                                    value="{{ $i }}" class="rating-radio"><label for="new_chair_{{ $spot->id }}_{{ $i }}"
+                                    class="rating-label">{{ $i }}</label>
                             @endfor
                         </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                        <div
+                            style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
                             <span>← 硬い（長居キツイ）</span><span>ふかふか（快適） →</span>
                         </div>
                     </div>
@@ -1013,10 +1087,13 @@
                         <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🏢 机</label>
                         <div class="rating-group">
                             @for($i = 1; $i <= 5; $i++)
-                                <input type="radio" name="desk_stability" id="new_desk_{{ $spot->id }}_{{ $i }}" value="{{ $i }}" class="rating-radio"><label for="new_desk_{{ $spot->id }}_{{ $i }}" class="rating-label">{{ $i }}</label>
+                                <input type="radio" name="desk_stability" id="new_desk_{{ $spot->id }}_{{ $i }}"
+                                    value="{{ $i }}" class="rating-radio"><label for="new_desk_{{ $spot->id }}_{{ $i }}"
+                                    class="rating-label">{{ $i }}</label>
                             @endfor
                         </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
+                        <div
+                            style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;">
                             <span>← 狭い・ガタつく</span><span>広い・安定感バツグン →</span>
                         </div>
                     </div>
@@ -1024,20 +1101,28 @@
 
                 <div class="good-bad-responsive" style="display: flex; gap: 10px; margin-bottom: 15px;">
                     <div style="flex: 1;">
-                        <label style="display: block; font-size: 12px; font-weight: bold; color: #e53e3e; margin-bottom: 5px;">👍 Goodポイント</label>
-                        <input type="text" name="good_point" style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                        <label
+                            style="display: block; font-size: 12px; font-weight: bold; color: #e53e3e; margin-bottom: 5px;">👍
+                            Goodポイント</label>
+                        <input type="text" name="good_point"
+                            style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
                     </div>
                     <div style="flex: 1;">
-                        <label style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">気になるポイント</label>
-                        <input type="text" name="bad_point" style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                        <label
+                            style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">気になるポイント</label>
+                        <input type="text" name="bad_point"
+                            style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
                     </div>
                 </div>
                 <div style="margin-bottom: 25px;">
-                    <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📝 リアルな感想・最新状況</label>
-                    <textarea name="comment" rows="3" style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; resize: none;"></textarea>
+                    <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📝
+                        リアルな感想・最新状況</label>
+                    <textarea name="comment" rows="3"
+                        style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; resize: none;"></textarea>
                 </div>
                 <div style="text-align: center;">
-                    <button type="submit" style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%;">シェアする</button>
+                    <button type="submit"
+                        style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%;">シェアする</button>
                 </div>
             </form>
         </div>
@@ -1046,57 +1131,87 @@
     @if(Auth::check() && Auth::id() === $spot->user_id)
         <div class="custom-modal" id="editSpotModal">
             <div class="modal-content" style="padding: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
                     <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">スポット情報を更新</h2>
-                    <button type="button" onclick="document.getElementById('editSpotModal').classList.remove('is-show')" class="close-btn" style="position: static;">×</button>
+                    <button type="button" onclick="document.getElementById('editSpotModal').classList.remove('is-show')"
+                        class="close-btn" style="position: static;">×</button>
                 </div>
 
-                <form action="{{ route('spots.update', $spot->id) }}" method="POST" enctype="multipart/form-data" style="padding: 20px;">
+                <form action="{{ route('spots.update', $spot->id) }}" method="POST" enctype="multipart/form-data"
+                    style="padding: 20px;">
                     @csrf @method('PUT')
 
                     <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px;">🏢 スポット名</label>
-                        <input type="text" name="name" value="{{ $spot->name }}" required style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px;">
+                        <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px;">🏢
+                            スポット名</label>
+                        <input type="text" name="name" value="{{ $spot->name }}" required
+                            style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px;">
                     </div>
 
-                    <div style="margin-bottom: 15px; display: flex; gap: 20px; background-color: #f4f8fb; padding: 15px; border-radius: 8px; border: 1px solid #c9d8e4; justify-content: center;">
-                        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; color: #333; font-size: 15px;">
-                            <input type="checkbox" name="has_power" value="1" {{ $spot->has_power ? 'checked' : '' }} style="transform: scale(1.3);"> 🔌 コンセントあり
+                    <div
+                        style="margin-bottom: 15px; display: flex; gap: 20px; background-color: #f4f8fb; padding: 15px; border-radius: 8px; border: 1px solid #c9d8e4; justify-content: center;">
+                        <label
+                            style="cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; color: #333; font-size: 15px;">
+                            <input type="checkbox" name="has_power" value="1" {{ $spot->has_power ? 'checked' : '' }}
+                                style="transform: scale(1.3);"> 🔌 コンセントあり
                         </label>
-                        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; color: #333; font-size: 15px;">
-                            <input type="checkbox" name="has_wifi" value="1" {{ $spot->has_wifi ? 'checked' : '' }} style="transform: scale(1.3);"> 📶 Wi-Fiあり
+                        <label
+                            style="cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; color: #333; font-size: 15px;">
+                            <input type="checkbox" name="has_wifi" value="1" {{ $spot->has_wifi ? 'checked' : '' }}
+                                style="transform: scale(1.3);"> 📶 Wi-Fiあり
                         </label>
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px;">📍 エリア</label>
-                        <select name="area" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; background-color: white;">
+                        <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px;">📍
+                            エリア</label>
+                        <select name="area" required
+                            style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; background-color: white;">
                             <option value="ITパーク" {{ $spot->area == 'ITパーク' ? 'selected' : '' }}>ITパーク</option>
                             <option value="アヤラ" {{ $spot->area == 'アヤラ' ? 'selected' : '' }}>アヤラ</option>
                             <option value="その他（タクシー圏内）" {{ $spot->area == 'その他（タクシー圏内）' ? 'selected' : '' }}>その他（タクシー圏内）</option>
                         </select>
                     </div>
 
-                    <div style="margin-bottom: 15px; background-color: #fafafa; padding: 10px; border-radius: 6px; border: 1px solid #eee;">
-                        <span style="color: #666; font-size: 13px; font-weight: bold; display: block; margin-bottom: 8px;">🕒 営業時間 (現在: {{ $spot->hours ?: '未設定' }})</span>
+                    <div
+                        style="margin-bottom: 15px; background-color: #fafafa; padding: 10px; border-radius: 6px; border: 1px solid #eee;">
+                        <span style="color: #666; font-size: 13px; font-weight: bold; display: block; margin-bottom: 8px;">🕒
+                            営業時間 (現在: {{ $spot->hours ?: '未設定' }})</span>
                         <div class="time-row-responsive" style="display: flex; align-items: center; gap: 10px;">
-                            <input type="time" name="open_time" step="1800" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <input type="time" name="open_time" step="1800"
+                                style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                             <span style="color: #999;">〜</span>
-                            <input type="time" name="close_time" step="1800" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <input type="time" name="close_time" step="1800"
+                                style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                         </div>
                     </div>
-
+                    {{-- 🌟 追加：公式・ニッチ情報の入力欄 --}}
+                    <div
+                        style="margin-bottom: 15px; background-color: #fafafa; padding: 10px; border-radius: 6px; border: 1px solid #eee;">
+                        <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">
+                            💡 スポットの詳細・ニッチ情報（公式）
+                        </label>
+                        <textarea name="description" rows="4" placeholder="例：ほぼ全てのテーブルにコンセント完備。2階は雰囲気最高でパソコン作業に最適です。"
+                            style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none; font-size: 14px;">{{ $spot->description }}</textarea>
+                    </div>
                     @if($spot->photos->count() > 0)
-                        <div style="margin-bottom: 15px; background-color: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                            <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px;">👑 トップ画像（メイン）の選択 ＆ 削除 (掴んで並び替え可能 🤝)</label>
+                        <div
+                            style="margin-bottom: 15px; background-color: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px;">👑
+                                トップ画像（メイン）の選択 ＆ 削除 (掴んで並び替え可能 🤝)</label>
                             <div id="sortable-photos" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px;">
                                 @foreach($spot->photos->sortBy('sort_order') as $photo)
-                                    <div class="sortable-item" data-id="{{ $photo->id }}" style="flex-shrink: 0; text-align: center; width: 75px; cursor: grab; background: white; padding: 4px; border-radius: 8px; border: 1px solid #eee;">
-                                        <img src="{{ asset('storage/' . $photo->photo_path) }}" style="width: 65px; height: 65px; object-fit: cover; border-radius: 6px; margin-bottom: 4px; user-select: none; -webkit-user-drag: none;">
-                                        <label style="display: block; font-size: 11px; cursor: pointer; color: #333; font-weight: bold;">
+                                    <div class="sortable-item" data-id="{{ $photo->id }}"
+                                        style="flex-shrink: 0; text-align: center; width: 75px; cursor: grab; background: white; padding: 4px; border-radius: 8px; border: 1px solid #eee;">
+                                        <img src="{{ asset('storage/' . $photo->photo_path) }}"
+                                            style="width: 65px; height: 65px; object-fit: cover; border-radius: 6px; margin-bottom: 4px; user-select: none; -webkit-user-drag: none;">
+                                        <label
+                                            style="display: block; font-size: 11px; cursor: pointer; color: #333; font-weight: bold;">
                                             <input type="radio" name="main_photo_id" value="{{ $photo->id }}" {{ $loop->first ? 'checked' : '' }}> メイン
                                         </label>
-                                        <label style="display: block; font-size: 11px; cursor: pointer; color: #e53e3e; margin-top: 4px;">
+                                        <label
+                                            style="display: block; font-size: 11px; cursor: pointer; color: #e53e3e; margin-top: 4px;">
                                             <input type="checkbox" name="delete_photo_ids[]" value="{{ $photo->id }}"> 削除
                                         </label>
                                     </div>
@@ -1106,13 +1221,15 @@
                     @endif
 
                     <div style="margin-bottom: 25px;">
-                        <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸 写真をさらに追加する（複数選択可）</label>
+                        <label style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📸
+                            写真をさらに追加する（複数選択可）</label>
                         <input type="file" name="photos[]" multiple accept="image/*" style="width: 100%; font-size: 14px;">
                         <div style="font-size: 11px; color: #888; margin-top: 5px;">※Ctrlキー（MacはCommandキー）を押しながらで複数枚選択できます</div>
                     </div>
 
                     <div style="text-align: center;">
-                        <button type="submit" style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%;">最新情報に上書きする</button>
+                        <button type="submit"
+                            style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%;">最新情報に上書きする</button>
                     </div>
                 </form>
             </div>
@@ -1127,39 +1244,6 @@
 
             document.querySelectorAll('.thumbnail-item').forEach(el => el.classList.remove('active'));
             if (thumbElement) thumbElement.classList.add('active');
-        }
-
-        function handleCouponActivation() {
-            const btn = document.getElementById('activeCouponBtn');
-            const isConfirmed = confirm("【確認】\n必ず店員さんの目の前でボタンを押してください。\nこのクーポンを使用済みにしますか？");
-
-            if (isConfirmed) {
-                fetch('{{ route('spots.coupon.use', ['spot' => $spot->id]) }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message + "\nお会計時に店員さんに見せてください。");
-                        btn.innerHTML = "✅ 今月は使用済み";
-                        btn.style.backgroundColor = "#e0e0e0";
-                        btn.style.color = "#a0a0a0";
-                        btn.style.boxShadow = "none";
-                        btn.disabled = true;
-                    } else {
-                        alert("エラー: " + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("通信エラーが発生しました。");
-                });
-            }
         }
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -1196,17 +1280,17 @@
                             },
                             body: JSON.stringify({ ids: orderedIds })
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                console.log('並び順をリアルタイム自動保存しました！');
-                                const firstRadio = sortableEl.querySelector('.sortable-item:first-child input[type="radio"]');
-                                if (firstRadio) firstRadio.checked = true;
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    console.log('並び順をリアルタイム自動保存しました！');
+                                    const firstRadio = sortableEl.querySelector('.sortable-item:first-child input[type="radio"]');
+                                    if (firstRadio) firstRadio.checked = true;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
                     }
                 });
             }
@@ -1215,16 +1299,20 @@
 
     <div class="custom-modal" id="historyModal-{{ $spot->id }}">
         <div class="modal-content" style="padding: 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
                 <h2 style="margin: 0; font-size: 18px; color: #333; font-weight: bold;">📝 編集・更新履歴</h2>
-                <button type="button" onclick="document.getElementById('historyModal-{{ $spot->id }}').classList.remove('is-show')" class="close-btn" style="position: static;">×</button>
+                <button type="button"
+                    onclick="document.getElementById('historyModal-{{ $spot->id }}').classList.remove('is-show')"
+                    class="close-btn" style="position: static;">×</button>
             </div>
             <div style="padding: 20px; max-height: 350px; overflow-y: auto;">
                 @if($spot->editHistories && $spot->editHistories->count() > 0)
                     <ul style="list-style: none; padding: 0; margin: 0;">
                         @foreach($spot->editHistories as $history)
                             <li style="border-bottom: 1px dashed #eee; padding: 12px 0; font-size: 13px; color: #333;">
-                                <div style="color: #888; font-size: 11px; margin-bottom: 4px;">{{ $history->created_at->format('Y年m月d日 H:i') }}</div>
+                                <div style="color: #888; font-size: 11px; margin-bottom: 4px;">
+                                    {{ $history->created_at->format('Y年m月d日 H:i') }}</div>
                                 <strong>{{ $history->user->name ?? '退会したユーザー' }}</strong> さんが情報を更新しました
                             </li>
                         @endforeach
@@ -1233,8 +1321,10 @@
                     <p style="text-align: center; color: #999; font-size: 13px; margin-bottom: 0;">まだ情報の更新履歴はありません。</p>
                 @endif
 
-                <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #f4f8fb; font-size: 13px; color: #333;">
-                    <div style="color: #888; font-size: 11px; margin-bottom: 4px;">{{ $spot->created_at->format('Y年m月d日 H:i') }}</div>
+                <div
+                    style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #f4f8fb; font-size: 13px; color: #333;">
+                    <div style="color: #888; font-size: 11px; margin-bottom: 4px;">
+                        {{ $spot->created_at->format('Y年m月d日 H:i') }}</div>
                     <strong>{{ $spot->user->name ?? '不明' }}</strong> さんがスポットを新規登録しました
                 </div>
             </div>
