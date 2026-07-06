@@ -6,10 +6,7 @@
 
 {{-- ナビゲーションメニュー --}}
 <div class="admin-nav ms-2">
-    {{-- <div class="admin-nav-section">
-        <span class="admin-nav-section-label">Main Menu</span>
-    </div> --}}
-
+   
     {{-- ダッシュボード --}}
     <a href="{{ route('admin.dashboard') }}" class="admin-nav-link mt-2">
         <i class="fa-solid fa-chart-pie"></i> Dashboard

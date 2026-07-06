@@ -13,26 +13,30 @@ class UsersController extends Controller
     {
         $query = User::withTrashed();
 
+        // 1. ステータスによるフィルタリングの修正
         if ($request->filled('status')) {
-            match ($request->status) {
+            $query = match ($request->status) {
                 'Active'   => $query->whereNull('deleted_at')->whereNull('email_verified_at'),
                 'Inactive' => $query->whereNull('deleted_at')->whereNotNull('email_verified_at'),
                 'Banned'   => $query->whereNotNull('deleted_at'),
-                default    => null,
+                default    => $query, // 該当しない場合は元のクエリをそのまま保持
             };
         }
 
+        // 2. ロールによるフィルタリング
         $roleMap = ['Admin' => 1, 'Member' => 2, 'Premium-Member' => 3];
         if ($request->filled('role') && isset($roleMap[$request->role])) {
             $query->where('role', $roleMap[$request->role]);
         }
 
+        // データ取得とペジネーション
         $all_users = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
 
+        // 統計データの取得
         $totalUsers = User::withTrashed()->count();
         $newUsers7d = User::where('created_at', '>=', now()->subDays(7))->count();
 
-        // 反転：email_verified_atに値がある = 手動でInactive化された、とみなす
+        // 反転ロジックに基づいた集計
         $bannedOrDeactivated = User::onlyTrashed()->count()
             + User::whereNull('deleted_at')->whereNotNull('email_verified_at')->count();
 

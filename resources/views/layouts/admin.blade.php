@@ -201,18 +201,24 @@
 
         /* Logo Area */
         .admin-logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
             margin: 0;
             margin-bottom: 0;
             border-bottom: 1px solid var(--admin-divider);
             flex-shrink: 0;
         }
 
-        .admin-logo-area img {
-            height: 70px;
+        .admin-logo-area img.admin-logo {
+            height: 40px;
             width: auto;
             filter: brightness(0) invert(1);
             opacity: 0.9;
-            margin: 0 auto;
+            margin: 0;
+            transform: scale(2.5);
+            transform-origin: center;
         }
 
         .admin-logo-area .admin-badge {
@@ -221,13 +227,13 @@
             font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            background: var(--admin-accent);
             background-color: #185b7a;
             color: #fff;
-            padding: 5px 5px;
+            padding: 5px 6px;
             border-radius: 4px;
-            margin-left: 6px;
+            margin-left: 8px;
             vertical-align: middle;
+            flex-shrink: 0;
         }
 
         /* Nav */
@@ -407,10 +413,11 @@
         }
 
         .admin-mobile-topbar img {
-            height: 120px;
+            height: 70px;
             width: auto;
             filter: brightness(0) invert(1);
             opacity: 0.9;
+            transform: scale(1.5);
         }
 
         .admin-mobile-topbar .hamburger-btn {
@@ -730,7 +737,7 @@
                                     'reply' => [
                                         'bg' => '#EAF3DE',
                                         'color' => '#3B6D11',
-                                        'icon' => 'fa-reply',#3B6D11
+                                        'icon' => 'fa-reply', #3B6D11
                                         'label' => 'Reply',
                                     ],
                                     'like' => [

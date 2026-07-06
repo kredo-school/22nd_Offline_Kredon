@@ -386,12 +386,13 @@
             {{-- ============ TAB 3: HOSPITAL ============ --}}
             <div class="tab-pane fade" id="tab-hospital" role="tabpanel">
 
+                {{-- Metric cards --}}
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-3">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
                                 <p class="text-muted mb-1" style="font-size:0.8rem;">Total Spots</p>
-                                <h4 class="fw-bold mb-0">76</h4>
+                                <h4 class="fw-bold mb-0">{{ $hospitals->count() }}</h4>
                             </div>
                         </div>
                     </div>
@@ -399,8 +400,7 @@
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
                                 <p class="text-muted mb-1" style="font-size:0.8rem;">Published</p>
-                                <h4 class="fw-bold mb-0">70</h4>
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">92%</p>
+                                <h4 class="fw-bold mb-0">{{ $hospitals->where('status', 'published')->count() }}</h4>
                             </div>
                         </div>
                     </div>
@@ -408,8 +408,7 @@
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
                                 <p class="text-muted mb-1" style="font-size:0.8rem;">Draft</p>
-                                <h4 class="fw-bold mb-0">4</h4>
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">Pending review</p>
+                                <h4 class="fw-bold mb-0">{{ $hospitals->where('status', 'draft')->count() }}</h4>
                             </div>
                         </div>
                     </div>
@@ -417,7 +416,7 @@
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
                                 <p class="text-muted mb-1" style="font-size:0.8rem;">Unpublished</p>
-                                <h4 class="fw-bold mb-0">2</h4>
+                                <h4 class="fw-bold mb-0">{{ $hospitals->where('status', 'unpublished')->count() }}</h4>
                             </div>
                         </div>
                     </div>
@@ -427,113 +426,103 @@
                     <div class="card-body p-4">
 
                         <div class="d-flex gap-2 mb-3 flex-wrap">
-                            <select class="form-select form-select-sm" style="width:auto;">
-                                <option>All Status</option>
-                                <option>Published</option>
-                                <option>Draft</option>
-                                <option>Unpublished</option>
-                            </select>
-                            <select class="form-select form-select-sm" style="width:auto;">
-                                <option>All Departments</option>
-                                <option>Internal Medicine</option>
-                                <option>Surgery</option>
-                                <option>Pediatrics</option>
-                                <option>Emergency</option>
-                            </select>
-                            <input type="text" class="form-control form-control-sm flex-grow-1"
-                                placeholder="Search by spot name..." style="min-width:200px;">
+                            <input type="text" id="hospital-search" class="form-control form-control-sm flex-grow-1"
+                                placeholder="Search by spot name or area..." style="min-width:200px;">
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table align-middle">
+                            <table class="table align-middle" id="hospital-table">
                                 <thead>
                                     <tr class="text-muted" style="font-size:0.75rem;">
                                         <th>Spot Name</th>
-                                        <th>Department</th>
                                         <th>Area</th>
-                                        <th>Evaluation</th>
-                                        <th>Status</th>
+                                        <th>Specialty</th>
+                                        <th>Hours</th>
+                                        <th>Support</th>
                                         <th>Updated</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody style="font-size:0.875rem;">
-                                    @php
-                                        $dummyHospitalSpots = [
-                                            [
-                                                'name' => "Cebu Doctors' University Hospital",
-                                                'department' => 'Emergency / Internal Medicine',
-                                                'area' => 'Osmeña Blvd',
-                                                'rating' => 4.4,
-                                                'status' => 'published',
-                                                'updated' => '2026/06/11',
-                                            ],
-                                            [
-                                                'name' => 'Chong Hua Hospital',
-                                                'department' => 'Surgery / Pediatrics',
-                                                'area' => 'Cebu City',
-                                                'rating' => 4.6,
-                                                'status' => 'published',
-                                                'updated' => '2026/06/08',
-                                            ],
-                                            [
-                                                'name' => 'Mandaue City Hospital',
-                                                'department' => 'Internal Medicine',
-                                                'area' => 'Mandaue',
-                                                'rating' => null,
-                                                'status' => 'draft',
-                                                'updated' => '2026/06/16',
-                                            ],
-                                        ];
-                                    @endphp
-
-                                    @foreach ($dummyHospitalSpots as $spot)
-                                        <tr>
+                                    @forelse ($hospitals as $spot)
+                                        <tr data-name="{{ strtolower($spot->name . ' ' . $spot->address_en) }}">
                                             <td class="fw-semibold">
                                                 <div class="d-flex align-items-center gap-2">
                                                     <span
                                                         class="d-inline-flex align-items-center justify-content-center bg-light rounded"
                                                         style="width:32px;height:32px;color:#adb5bd;">
-                                                        <i class="fa-solid fa-image"></i>
+                                                        <i class="fa-solid fa-hospital"></i>
                                                     </span>
-                                                    {{ $spot['name'] }}
+                                                    {{ $spot->name }}
                                                 </div>
                                             </td>
-                                            <td class="text-muted">{{ $spot['department'] }}</td>
-                                            <td class="text-muted">{{ $spot['area'] }}</td>
-                                            <td>
-                                                @if ($spot['rating'])
-                                                    <span style="color:#854F0B; font-size:0.8rem;"><i
-                                                            class="fa-solid fa-star"></i> {{ $spot['rating'] }}</span>
-                                                @else
-                                                    <span class="text-muted">—</span>
-                                                @endif
+                                            <td class="text-muted">{{ $spot->address_en ?? '—' }}</td>
+                                            <td class="text-muted" style="font-size:0.8rem;">
+                                                {{ $spot->specialties->pluck('name')->join(', ') ?: '—' }}
+                                            </td>
+                                            <td class="text-muted" style="font-size:0.8rem;">
+                                                {{ $spot->is_24_hours ? '24 Hours' : $spot->business_hours ?? '—' }}
                                             </td>
                                             <td>
-                                                @if ($spot['status'] === 'published')
-                                                    <span class="badge rounded-pill"
-                                                        style="background-color:#EAF3DE; color:#27500A; font-weight:500;">Published</span>
-                                                @elseif ($spot['status'] === 'draft')
-                                                    <span class="badge rounded-pill"
-                                                        style="background-color:#F1EFE8; color:#444441; font-weight:500;">Draft</span>
-                                                @else
-                                                    <span class="badge rounded-pill"
-                                                        style="background-color:#FCEBEB; color:#791F1F; font-weight:500;">Unpublished</span>
-                                                @endif
+                                                <div class="d-flex gap-1">
+                                                    @if ($spot->is_clinic)
+                                                        <span class="badge rounded-pill"
+                                                            style="background-color:#EAF3DE; color:#27500A;">Clinic</span>
+                                                    @endif
+                                                    @if ($spot->is_jhd_supported)
+                                                        <span class="badge rounded-pill"
+                                                            style="background-color:#E6F1FB; color:#0C447C;">JHD</span>
+                                                    @endif
+                                                    @if (!$spot->is_clinic && !$spot->is_jhd_supported)
+                                                        <span class="text-muted">—</span>
+                                                    @endif
+                                                </div>
                                             </td>
-                                            <td class="text-muted" style="font-size:0.8rem;">{{ $spot['updated'] }}</td>
+                                            <td class="text-muted" style="font-size:0.8rem;">
+                                                {{ optional($spot->updated_at)->format('Y/m/d') ?? '—' }}
+                                            </td>
+                                            <td>
+                                                @php
+                                                    $statusColor = match ($spot->status) {
+                                                        'published' => 'success',
+                                                        'draft' => 'secondary',
+                                                        'unpublished' => 'danger',
+                                                        default => 'secondary',
+                                                    };
+                                                    $statusLabel = ucfirst($spot->status ?? 'published');
+                                                @endphp
+                                                <div class="dropdown">
+                                                    <button
+                                                        class="btn btn-sm btn-outline-{{ $statusColor }} dropdown-toggle py-0 px-2"
+                                                        style="font-size:0.72rem;" type="button"
+                                                        id="currentStatusBtn_hospital_{{ $spot->id }}"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                        {{ $statusLabel }}
+                                                    </button>
+                                                    <ul class="dropdown-menu"
+                                                        id="statusDropdownMenu_hospital_{{ $spot->id }}"></ul>
+                                                </div>
+                                            </td>
                                             <td>
                                                 <div class="d-flex gap-1">
                                                     <a href="#" class="btn btn-outline-secondary btn-sm py-0 px-2"
                                                         style="font-size:0.72rem;">Detail</a>
-                                                    <button class="btn btn-outline-secondary btn-sm py-0 px-2"
-                                                        style="font-size:0.72rem;">Edit</button>
-                                                    <button class="btn btn-outline-danger btn-sm py-0 px-2"
+                                                    <a href="#" class="btn btn-outline-secondary btn-sm py-0 px-2"
+                                                        style="font-size:0.72rem;">Edit</a>
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger btn-sm py-0 px-2 js-delete-spot"
+                                                        data-id="{{ $spot->id }}"
                                                         style="font-size:0.72rem;">Delete</button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="8" class="text-center text-muted py-4">No hospital spots
+                                                found.</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

@@ -38,7 +38,7 @@ use App\Http\Controllers\Admin\NotificationTemplateController;
 use App\Http\Controllers\Admin\SpotsController;
 use App\Http\Controllers\Admin\HospitalController as AdminHospitalController;
 
-require __DIR__.'/setting.php';
+require __DIR__ . '/setting.php';
 
 Route::get('/', [StudyController::class, 'index'])->name('top');
 Route::get('/spots/{id}', [StudyController::class, 'show'])->name('spots.show');
@@ -107,19 +107,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/game/stage/oni', [GameController::class, 'oni'])->name('game.oni');
     Route::get('/game/stage1-1', [GameController::class, 'stage11'])->name('game.stage11');
     Route::get('/battle', [GameController::class, 'battle'])->name('game.battle');
-    Route::get('/game/stage2', fn () => view('game.game2'))->name('game.stage2');
-    Route::get('/game/stage3', fn () => view('game.game3'))->name('game.stage3');
-    Route::get('/game/boss', fn () => view('game.boss'))->name('game.boss');
-    Route::get('/game/stage2-1', fn () => view('game.stage2-1'))->name('game.stage2-1');
-    Route::get('/game/stage2-2', fn () => view('game.stage2-2'))->name('game.stage2-2');
-    Route::get('/game/stage2-3', fn () => view('game.stage2-3'))->name('game.stage2-3');
-    Route::get('/game/stage2-boss', fn () => view('game.stage2-boss'))->name('game.stage2-boss');
-    Route::get('/game/stage3-1', fn () => view('game.stage3-1'))->name('game.stage3-1');
-    Route::get('/game/stage3-2', fn () => view('game.stage3-2'))->name('game.stage3-2');
-    Route::get('/game/stage3-3', fn () => view('game.stage3-3'))->name('game.stage3-3');
-    Route::get('/game/stage3-boss', fn () => view('game.stage3-boss'))->name('game.stage3-boss');
-    Route::get('/game/stageoni', fn () => view('game.stageoni'))->name('game.stageoni');
-    Route::get('/game/result', fn () => view('game.result'))->name('game.result');
+    Route::get('/game/stage2', fn() => view('game.game2'))->name('game.stage2');
+    Route::get('/game/stage3', fn() => view('game.game3'))->name('game.stage3');
+    Route::get('/game/boss', fn() => view('game.boss'))->name('game.boss');
+    Route::get('/game/stage2-1', fn() => view('game.stage2-1'))->name('game.stage2-1');
+    Route::get('/game/stage2-2', fn() => view('game.stage2-2'))->name('game.stage2-2');
+    Route::get('/game/stage2-3', fn() => view('game.stage2-3'))->name('game.stage2-3');
+    Route::get('/game/stage2-boss', fn() => view('game.stage2-boss'))->name('game.stage2-boss');
+    Route::get('/game/stage3-1', fn() => view('game.stage3-1'))->name('game.stage3-1');
+    Route::get('/game/stage3-2', fn() => view('game.stage3-2'))->name('game.stage3-2');
+    Route::get('/game/stage3-3', fn() => view('game.stage3-3'))->name('game.stage3-3');
+    Route::get('/game/stage3-boss', fn() => view('game.stage3-boss'))->name('game.stage3-boss');
+    Route::get('/game/stageoni', fn() => view('game.stageoni'))->name('game.stageoni');
+    Route::get('/game/result', fn() => view('game.result'))->name('game.result');
 });
 
 Route::middleware('auth')->group(function () {
@@ -165,10 +165,16 @@ Route::middleware('auth')->prefix('admin/hospitals')->name('admin.hospitals.')->
     Route::delete('/{id}', [AdminHospitalController::class, 'destroy'])->name('destroy');
 });
 
+// Admin Controller
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        #User
         Route::get('users', [UsersController::class, 'index'])->name('users.index');
+        Route::patch('users/{id}/role', [UsersController::class, 'updateRole'])->name('users.update-role');
+        Route::patch('users/{id}/status', [UsersController::class, 'updateStatus'])->name('users.update-status');
+
+
         Route::get('events', [EventsController::class, 'index'])->name('events.index');
         Route::get('reviews', [ReviewsController::class, 'index'])->name('reviews.index');
         Route::get('markets', [MarketsController::class, 'index'])->name('markets.index');
@@ -177,15 +183,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('spots', [SpotsController::class, 'index'])->name('spots.index');
 
         #Notification
-        Route::patch('/notifications/{notification}/status', [ App\Http\Controllers\Admin\NotificationsController::class, 'updateStatus'])
+        Route::patch('/notifications/{notification}/status', [App\Http\Controllers\Admin\NotificationsController::class, 'updateStatus'])
             ->name('notifications.update-status');
-
-        Route::post('/notifications/mark-all-read', [ App\Http\Controllers\Admin\NotificationsController::class, 'markAllRead'])
+        Route::post('/notifications/mark-all-read', [App\Http\Controllers\Admin\NotificationsController::class, 'markAllRead'])
             ->name('notifications.mark-all-read');
-
         Route::resource('notifications', \App\Http\Controllers\Admin\NotificationsController::class)
             ->only(['index', 'store', 'edit', 'update', 'destroy']);
-
         Route::resource('notification-templates', NotificationTemplateController::class)
             ->only(['store', 'update', 'destroy'])
             ->names('notification-templates');
