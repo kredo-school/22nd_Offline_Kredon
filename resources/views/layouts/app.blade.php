@@ -1,17 +1,17 @@
 <!doctype html>
-    <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ config('app.name') }} | @yield('title')</title>
-        <link rel="dns-prefetch" href="//fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-            integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name') }} | @yield('title')</title>
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
         <style>
             /* ── mainブランチのレイアウトスタイル ── */
@@ -572,7 +572,7 @@
                     onclick="openSpotModal(event)">
                     <i class="fa-solid fa-map-location-dot"></i><span>Spot</span>
                 </a>
-                <a href="#" class="bottom-nav-item {{ request()->routeIs('event.*') ? 'active' : '' }}">
+                <a href="{{ route('event.index') }}" class="bottom-nav-item {{ request()->routeIs('event.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-calendar-days"></i><span>Event</span>
                 </a>
                 <a href="{{ route('marketplace.index') }}"
@@ -616,6 +616,7 @@
 
                         <hr class="mx-3 my-2 text-muted">
 
+                    
                         <div class="command">
                             <a href="#" class="sidebar-link {{ request()->routeIs('spot.*') ? 'active' : '' }}"
                                 onclick="toggleSpotPC(event)">
@@ -630,7 +631,7 @@
                                 <a href="{{ route('mypage') }}" class="spot-sub-link">Bookmark</a>
                             </div>
 
-                            <a href="#" class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}">
+                            <a href="{{ route('event.index') }}" class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}">
                                 <i class="fa-solid fa-calendar-days"></i> EVENT
                             </a>
                             <a href="{{ route('marketplace.index') }}"
@@ -713,29 +714,29 @@
                 });
             }
 
-            // ── PC SPOTサブメニュー ──
-            function toggleSpotPC(e) {
-                e.preventDefault();
-                const menu = document.getElementById('spotSubmenuPC');
-                const chevron = document.getElementById('spotChevronPC');
-                const isOpen = menu.style.display === 'block';
-                menu.style.display = isOpen ? 'none' : 'block';
-                chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-            }
+       
+        function toggleSpotPC(e) {
+            e.preventDefault();
+            const menu = document.getElementById('spotSubmenuPC');
+            const chevron = document.getElementById('spotChevronPC');
+            const isOpen = menu.style.display === 'block';
+            menu.style.display = isOpen ? 'none' : 'block';
+            chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
 
-            // ── スマホ SPOTモーダル ──
-            function openSpotModal(e) {
-                e.preventDefault();
-                document.getElementById('spotModal').classList.add('open');
-                document.getElementById('spotModalOverlay').classList.add('open');
-                document.body.style.overflow = 'hidden';
-            }
+        // ── スマホ SPOTモーダル ──
+        function openSpotModal(e) {
+            e.preventDefault();
+            document.getElementById('spotModal').classList.add('open');
+            document.getElementById('spotModalOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
 
-            function closeSpotModal() {
-                document.getElementById('spotModal').classList.remove('open');
-                document.getElementById('spotModalOverlay').classList.remove('open');
-                document.body.style.overflow = '';
-            }
+        function closeSpotModal() {
+            document.getElementById('spotModal').classList.remove('open');
+            document.getElementById('spotModalOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
 
             // スワイプ下げで閉じる
             let touchStartY = 0;
