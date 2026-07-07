@@ -24,8 +24,8 @@
                     <div class="st-setting-item__profile">
                         {{-- アバター: 画像がなければ名前の頭文字を表示 --}}
                         <div class="st-avatar st-avatar--lg">
-                            @if ($user->avatar)
-                                <img src="{{ $user->avatar }}" alt="{{ $user->name }}のアバター">
+                            @if ($user->avatarUrl())
+                                <img src="{{ $user->avatarUrl() }}" alt="{{ $user->name }}のアバター">
                             @else
                                 <span class="st-avatar__placeholder" id="row-avatar-char">
                                     {{ mb_substr($user->name, 0, 1) }}
@@ -207,8 +207,8 @@
             {{-- ミニプロフィールカード --}}
             <div class="st-preview__card">
                 <div class="st-preview__avatar" id="preview-avatar">
-                    @if ($user->avatar)
-                        <img src="{{ $user->avatar }}" alt="{{ $user->name }}">
+                    @if ($user->avatarUrl())
+                        <img src="{{ $user->avatarUrl() }}" alt="{{ $user->name }}">
                     @else
                         {{ mb_substr($user->name, 0, 1) }}
                     @endif
@@ -308,8 +308,8 @@
             @method('PATCH')
             <div class="st-avatar-row">
                 <div class="st-avatar st-avatar--lg">
-                    @if ($user->avatar)
-                        <img src="{{ $user->avatar }}" alt="アバター">
+                    @if ($user->avatarUrl())
+                        <img src="{{ $user->avatarUrl() }}" alt="アバター">
                     @else
                         <span class="st-avatar__placeholder">{{ mb_substr($user->name, 0, 1) }}</span>
                     @endif

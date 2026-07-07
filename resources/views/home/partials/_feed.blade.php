@@ -14,7 +14,7 @@
 
             @empty
 
-                <p>投稿はありません。</p>
+                <p>No post</p>
 
             @endforelse
 

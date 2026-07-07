@@ -17,17 +17,17 @@
 
             <a href="{{ route('home', ['category' => 'market', 'sort' => $isMarket ? 'newest' : $sort]) }}"
                class="hp-sort-pill {{ $category === 'market' ? 'is-active' : '' }}">
-                Market
+               <i class="fa-solid fa-store"></i> Market
             </a>
 
             <a href="{{ route('home', ['category' => 'working', 'sort' => $sort]) }}"
                class="hp-sort-pill {{ $category === 'working' ? 'is-active' : '' }}">
-                Working Spot
+               <i class="fa-solid fa-briefcase me-1"></i>   Working Spot
             </a>
 
             <a href="{{ route('home', ['category' => 'tourist', 'sort' => $sort]) }}"
                class="hp-sort-pill {{ $category === 'tourist' ? 'is-active' : '' }}">
-                Tourist Spot
+               <i class="fa-solid fa-map-pin me-1"></i>Tourist Spot
             </a>
 
         </div>
@@ -46,9 +46,9 @@
             <div class="hp-sort-pills">
 
                 @foreach([
-                    'newest'  => '新着',
-                    'ranking' => '人気',
-                    'reviews' => '口コミ',
+                    'newest'  => 'New',
+                    'ranking' => 'Trend',
+                    // 'reviews' => '口コミ',
                 ] as $value => $label)
 
                     @if ($isMarket && $value !== 'newest')

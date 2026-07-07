@@ -7,7 +7,7 @@
     </a>
 
     <a href="{{ route('marketplace.index') }}" class="hp-menu-btn hp-market">
-        <i class="fa-solid fa-gift"></i>
+       <i class="fa-solid fa-store"></i>
         <span class="hp-menu-title">Market</span>
         <span class="hp-menu-subtitle">Free Exchange</span>
     </a>
