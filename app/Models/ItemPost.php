@@ -26,4 +26,5 @@ public function images()
     {
         return $this->belongsTo(User::class);
     }
+    
 }

@@ -102,6 +102,13 @@
                                 style="max-width:450px;border-radius:18px 18px 18px 0;">
 
                                 {{ $message->message }}
+                                <form action="{{ route('report.group',$message) }}" method="POST">
+    @csrf
+    <button class="btn btn-link text-danger p-0"
+            style="font-size:12px">
+        🚨 Report
+    </button>
+</form>
 
                                 <div
                                     class="text-end text-muted mt-1"
