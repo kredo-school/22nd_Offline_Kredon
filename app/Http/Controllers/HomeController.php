@@ -214,36 +214,37 @@ class HomeController extends Controller
     }
 
     private function fetchAnnouncements()
-    {
-        $user = Auth::user();
-        $isSubscriber = $user && (int) $user->role === 3;
+{
+    $user = Auth::user();
+    $isSubscriber = $user && (int) $user->role === 3;
 
-        return Notification::query()
-            ->where('status', 'sent')
-            ->where(function ($q) use ($isSubscriber, $user) {
-                $q->where('target_type', 'all');
+    return Notification::query()
+        ->where('status', 'sent')
+        ->where(function ($q) use ($isSubscriber, $user) {
+            $q->where('target_type', 'all');
 
-                if ($isSubscriber) {
-                    $q->orWhere('target_type', 'subscriber');
-                }
+            if ($isSubscriber) {
+                $q->orWhere('target_type', 'subscriber');
+            }
 
-                if ($user) {
-                    $q->orWhere(function ($sub) use ($user) {
-                        $sub->where('target_type', 'custom')
-                            ->whereJsonContains('data->user_ids', $user->id);
-                    });
-                }
-            })
-            ->orderByDesc('sent_at')
-            ->limit(10)
-            ->get()
-            ->map(fn(Notification $notification) => (object) [
-                'title'      => $notification->title,
-                'created_at' => $notification->sent_at ?? $notification->created_at,
-                'image_url'  => $notification->data['image_url'] ?? null,
-                'url'        => $notification->getUrl(),
-            ]);
-    }
+            if ($user) {
+                $q->orWhere(function ($sub) use ($user) {
+                    $sub->where('target_type', 'custom')
+                        ->whereJsonContains('data->user_ids', $user->id);
+                });
+            }
+        })
+        ->orderByDesc('sent_at')
+        ->limit(10)
+        ->get()
+        ->map(fn (Notification $notification) => (object) [
+            'title'      => $notification->title,
+            'category'   => $notification->category, // 追加
+            'created_at' => $notification->sent_at ?? $notification->created_at,
+            'image_url'  => $notification->data['image_url'] ?? null,
+            'url'        => $notification->getUrl(),
+        ]);
+}
 
     private function fetchHeroBanners(): array
     {
