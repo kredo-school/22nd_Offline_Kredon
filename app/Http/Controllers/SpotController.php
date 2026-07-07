@@ -163,6 +163,7 @@ class SpotController extends Controller
             'hours_type'      => 'nullable|in:specified,24h,unknown',
             'open_time'       => 'nullable|string',
             'close_time'      => 'nullable|string',
+            'description'     => 'nullable|string', // 🌟 修正1：説明文の受け取りを許可する！
             'photos'          => 'nullable|array|max:10',
             'photos.*'        => 'file|mimes:jpg,jpeg,png,gif,webp,avif|max:10240',
             'delete_photo_ids' => 'nullable|array',
@@ -189,7 +190,7 @@ class SpotController extends Controller
             }
         }
 
-        // ✅ 修正2: update でも hours_type に対応
+        // ✅ 営業時間ロジック
         $hours = $spot->hours;
         if ($request->filled('hours_type')) {
             if ($request->hours_type === '24h') {
@@ -207,10 +208,12 @@ class SpotController extends Controller
             $hours = $open . ' - ' . $close;
         }
 
+        // 🌟 修正2：ここで確実にデータベースに保存する！
         $spot->update([
             'name'          => $request->name,
             'area'          => $request->area,
             'hours'         => $hours,
+            'description'   => $request->description, // 👈 これが抜けていた最大の原因です！
             'has_wifi'      => $request->has('has_wifi'),
             'has_power'     => $request->has('has_power'),
             'last_edited_by' => Auth::id(),
@@ -239,7 +242,6 @@ class SpotController extends Controller
         return redirect()->route('spots.show', $spot->id)
             ->with('success', '✨ スポット情報を最新に更新しました！');
     }
-
     public function destroy($id)
     {
         $spot = Spot::findOrFail($id);
