@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TouristSpot;
+use App\Models\TouristReview;
 use App\Models\Review;
-use App\Models\TouristBookmark; // 🌟 欠落していたインポートを追加
+use App\Models\TouristBookmark;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class TouristSpotController extends Controller
 {
-  public function store(Request $request)
+    public function store(Request $request)
     {
         // 🌟 観光スポット用のバリデーション（最大10枚・複数画像・AVIF対応）
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -161,7 +162,7 @@ class TouristSpotController extends Controller
         }
     }
 
-  public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         // ① 入力チェック
         $request->validate([
@@ -174,6 +175,7 @@ class TouristSpotController extends Controller
             'photos.*' => 'nullable|image|max:10240', // 🌟 複数写真用
         ]);
 
+        // モデルの取得（変数名を $tourist_spot に統一してバグを防止！）
         $tourist_spot = TouristSpot::findOrFail($id);
 
         // ② セキュリティ
@@ -363,6 +365,7 @@ class TouristSpotController extends Controller
             return back()->with('success', '❤️ お気に入りに登録しました！');
         }
     }
+
     // =========================================================
     // 🌟 観光スポット：クチコミ保存処理
     // =========================================================
@@ -388,6 +391,7 @@ class TouristSpotController extends Controller
         return redirect()->route('tourist_spots.show', $id)
             ->with('success', '✨ クチコミを投稿しました！');
     }
+
     // =========================================================
     // 🌟 観光スポット：クチコミ削除処理
     // =========================================================
