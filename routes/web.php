@@ -28,7 +28,7 @@ use App\Http\Controllers\HealthcareController;
 use App\Http\Controllers\HospitalBookmarkController;
 use App\Http\Controllers\HospitalImageController;
 use App\Http\Controllers\LocaleController;
-
+use App\Http\Controllers\ReportController;
 #Admin Controller
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
@@ -206,6 +206,15 @@ Route::get(
     [GroupChatController::class,'members']
 )->name('group.chat.members');
 });
+Route::post(
+'/report/message/{message}',
+[ReportController::class,'reportMessage']
+)->name('report.message');
+
+Route::post(
+'/report/group/{message}',
+[ReportController::class,'reportGroup']
+)->name('report.group');
 
 Route::get('/game/stage3-1', function () {
     return view('game.stage3-1');
