@@ -1,19 +1,19 @@
-    <!doctype html>
-    <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ config('app.name') }} | @yield('title')</title>
-        <link rel="dns-prefetch" href="//fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-            integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name') }} | @yield('title')</title>
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-        <style>
+    <style>
         /* ── mainブランチのレイアウトスタイル ── */
         html, body, #app {
             background-color: #f8f9fa;
@@ -185,13 +185,11 @@
 
 <body>
     <div id="app">
-
         {{-- ══════════════════════════════════
             PC用 Navbar（md以上）
         ══════════════════════════════════ --}}
         <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom navbar-top shadow-sm d-none d-md-flex">
             <div class="container-fluid px-4">
-                
                 {{-- 🌟 検索バー（Taka-san追加分） --}}
                 <form class="mx-auto" style="width: 40%;">
                     <div class="input-group">
@@ -205,109 +203,111 @@
                         <a class="nav-link" href="{{ url('/home') }}"><i class="fa-solid fa-house-chimney fa-lg"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link position-relative" href="#" data-bs-toggle="modal"
-                            data-bs-target="#userNotificationsModal" id="notifBellBtnPC">
+                        <a class="nav-link position-relative" href="#" data-bs-toggle="modal" data-bs-target="#userNotificationsModal" id="notifBellBtnPC">
                             <i class="fa-solid fa-bell fa-lg"></i>
                             @if (($unreadNotificationsCount ?? 0) > 0)
-                                <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger"
-                                    id="notifBadgePC">{{ $unreadNotificationsCount }}</span>
-                                @endif
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa-regular fa-envelope fa-lg"></i></a>
-                        </li>
-{{-- ══════════════════════════════════
-                スマホ用 Topbar（md未満）
-            ══════════════════════════════════ --}}
-            <nav class="navbar-top bg-white border-bottom shadow-sm d-flex d-md-none">
-                <div class="mobile-topbar w-100">
-                    <a href="{{ url('/home') }}">
-                        <img src="{{ asset('images/kredon.png') }}" alt="Kredon" class="logo-img">
-                    </a>
-                    <div class="mobile-topbar-icons">
-                        <a href="#" class="position-relative" data-bs-toggle="modal" data-bs-target="#userNotificationsModal" id="notifBellBtnMobile">
-                            <i class="fa-solid fa-bell"></i>
-                            @if (($unreadNotificationsCount ?? 0) > 0)
-                                <span class="position-absolute badge rounded-pill bg-danger" style="font-size:0.55rem;padding:2px 4px;top:-4px;right:-6px;" id="notifBadgeMobile">{{ $unreadNotificationsCount }}</span>
+                                <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger" id="notifBadgePC">{{ $unreadNotificationsCount }}</span>
                             @endif
                         </a>
-                        <a href="#"><i class="fa-regular fa-envelope"></i></a>
-                        @auth
-                            <div class="dropdown">
-                                <a href="#" class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @if (Auth::user()->avatar)
-                                        <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="avatar" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
-                                    @else
-                                        <span style="display:inline-flex;align-items:center;justify-content:center; width:30px;height:30px;border-radius:50%;background:#212529; color:#fff;font-size:0.75rem;font-weight:bold;">
-                                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                        </span>
-                                    @endif
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="#"><i class="fa-solid fa-gear me-2"></i>Setting</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    @if (Auth::user()->role === 1)
-                                        <li><a class="dropdown-item fw-bold" href="{{ route('admin.dashboard') }}" style="color: darkcyan;"><i class="fa-solid fa-shield-halved me-2"></i>Admin Page</a></li>
-                                    @endif
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item fw-bold" href="#" style="color: darkcyan;"><i class="fa-solid fa-crown me-2" style="color:gold;"></i>Premium Member</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Logout</a></li>
-                                </ul>
-                            </div>
-                            <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
-                        @endauth
-                    </div>
-                </div>
-            </nav>
-
-            {{-- ══════════════════════════════════
-                スマホ用 ボトムナビ（md未満）
-            ══════════════════════════════════ --}}
-            <nav class="bottom-nav">
-                <a href="{{ url('/home') }}" class="bottom-nav-item {{ request()->is('home') ? 'active' : '' }}">
-                    <i class="fa-solid fa-house"></i><span>Home</span>
-                </a>
-                <a href="#" class="bottom-nav-item {{ request()->routeIs('spot.*') ? 'active' : '' }}" onclick="openSpotModal(event)">
-                    <i class="fa-solid fa-map-location-dot"></i><span>Spot</span>
-                </a>
-                <a href="#" class="bottom-nav-item {{ request()->routeIs('event.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-calendar-days"></i><span>Event</span>
-                </a>
-                <a href="{{ route('marketplace.index') }}" class="bottom-nav-item {{ request()->routeIs('market.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-store"></i><span>Market</span>
-                </a>
-                <a href="{{ route('all_reviews.index') }}" class="bottom-nav-item {{ request()->routeIs('review.*') ? 'active' : '' }}">
-                    <i class="fa-regular fa-star"></i><span>Review</span>
-                </a>
-            </nav>
-
-            {{-- ══════════════════════════════════
-                スマホ用 SPOTモーダル
-            ══════════════════════════════════ --}}
-            <div class="spot-modal-overlay" id="spotModalOverlay" onclick="closeSpotModal()"></div>
-            <div class="spot-modal" id="spotModal">
-                <div class="spot-modal-handle"></div>
-                <p class="spot-modal-title">SPOT</p>
-                <a href="{{ route('top') }}" class="spot-modal-item"><i class="fa-solid fa-briefcase"></i> Working</a>
-                <a href="{{ route('healthcare.index') }}" class="spot-modal-item"><i class="fa-solid fa-hospital"></i> Hospital</a>
-                <a href="{{ route('tourist_spots.index') }}" class="spot-modal-item"><i class="fa-solid fa-camera"></i> Tourism</a>
-                <a href="{{ route('mypage') }}" class="spot-modal-item"><i class="fa-regular fa-bookmark"></i> Bookmark</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fa-regular fa-envelope fa-lg"></i></a>
+                    </li>
+                </ul>
             </div>
+        </nav>
 
-            {{-- ══════════════════════════════════
-                PC用 左サイドバー（md以上）
-            ══════════════════════════════════ --}}
-            <div class="main-wrapper">
-                <aside class="sidebar-left d-none d-md-block">
-                    <div class="py-2">
-                        <a class="d-block text-center" href="{{ url('/home') }}">
-                            <img src="{{ asset('images/kredon.png') }}" alt="Logo" style="height:130px;width:auto;object-fit:contain; margin-bottom: -30px; margin-top: -20px;">
-                        </a>
+        {{-- ══════════════════════════════════
+            スマホ用 Topbar（md未満）
+        ══════════════════════════════════ --}}
+        <nav class="navbar-top bg-white border-bottom shadow-sm d-flex d-md-none">
+            <div class="mobile-topbar w-100">
+                <a href="{{ url('/home') }}">
+                    <img src="{{ asset('images/kredon.png') }}" alt="Kredon" class="logo-img">
+                </a>
+                <div class="mobile-topbar-icons">
+                    <a href="#" class="position-relative" data-bs-toggle="modal" data-bs-target="#userNotificationsModal" id="notifBellBtnMobile">
+                        <i class="fa-solid fa-bell"></i>
+                        @if (($unreadNotificationsCount ?? 0) > 0)
+                            <span class="position-absolute badge rounded-pill bg-danger" style="font-size:0.55rem;padding:2px 4px;top:-4px;right:-6px;" id="notifBadgeMobile">{{ $unreadNotificationsCount }}</span>
+                        @endif
+                    </a>
+                    <a href="#"><i class="fa-regular fa-envelope"></i></a>
+                    @auth
+                        <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                                @if (Auth::user()->avatar)
+                                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="avatar" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
+                                @else
+                                    <span style="display:inline-flex;align-items:center;justify-content:center; width:30px;height:30px;border-radius:50%;background:#212529; color:#fff;font-size:0.75rem;font-weight:bold;">
+                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                    </span>
+                                @endif
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-gear me-2"></i>Setting</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                @if (Auth::user()->role === 1)
+                                    <li><a class="dropdown-item fw-bold" href="{{ route('admin.dashboard') }}" style="color: darkcyan;"><i class="fa-solid fa-shield-halved me-2"></i>Admin Page</a></li>
+                                @endif
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item fw-bold" href="#" style="color: darkcyan;"><i class="fa-solid fa-crown me-2" style="color:gold;"></i>Premium Member</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                        <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                    @endauth
+                </div>
+            </div>
+        </nav>
 
-                        <hr class="mx-3 my-2 text-muted">
+        {{-- ══════════════════════════════════
+            スマホ用 ボトムナビ（md未満）
+        ══════════════════════════════════ --}}
+        <nav class="bottom-nav">
+            <a href="{{ url('/home') }}" class="bottom-nav-item {{ request()->is('home') ? 'active' : '' }}">
+                <i class="fa-solid fa-house"></i><span>Home</span>
+            </a>
+            <a href="#" class="bottom-nav-item {{ request()->routeIs('spot.*') ? 'active' : '' }}" onclick="openSpotModal(event)">
+                <i class="fa-solid fa-map-location-dot"></i><span>Spot</span>
+            </a>
+            <a href="#" class="bottom-nav-item {{ request()->routeIs('event.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-calendar-days"></i><span>Event</span>
+            </a>
+            <a href="{{ route('marketplace.index') }}" class="bottom-nav-item {{ request()->routeIs('market.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-store"></i><span>Market</span>
+            </a>
+            <a href="{{ route('all_reviews.index') }}" class="bottom-nav-item {{ request()->routeIs('review.*') ? 'active' : '' }}">
+                <i class="fa-regular fa-star"></i><span>Review</span>
+            </a>
+        </nav>
 
+        {{-- ══════════════════════════════════
+            スマホ用 SPOTモーダル
+        ══════════════════════════════════ --}}
+        <div class="spot-modal-overlay" id="spotModalOverlay" onclick="closeSpotModal()"></div>
+        <div class="spot-modal" id="spotModal">
+            <div class="spot-modal-handle"></div>
+            <p class="spot-modal-title">SPOT</p>
+            <a href="{{ route('top') }}" class="spot-modal-item"><i class="fa-solid fa-briefcase"></i> Working</a>
+            <a href="{{ route('healthcare.index') }}" class="spot-modal-item"><i class="fa-solid fa-hospital"></i> Hospital</a>
+            <a href="{{ route('tourist_spots.index') }}" class="spot-modal-item"><i class="fa-solid fa-camera"></i> Tourism</a>
+            <a href="{{ route('mypage') }}" class="spot-modal-item"><i class="fa-regular fa-bookmark"></i> Bookmark</a>
+        </div>
+
+        {{-- ══════════════════════════════════
+            PC用 左サイドバーとメインコンテンツ（md以上）
+        ══════════════════════════════════ --}}
+        <div class="main-wrapper">
+            <aside class="sidebar-left d-none d-md-block">
+                <div class="py-2">
+                    <a class="d-block text-center" href="{{ url('/home') }}">
+                        <img src="{{ asset('images/kredon.png') }}" alt="Logo" style="height:130px;width:auto;object-fit:contain; margin-bottom: -30px; margin-top: -20px;">
+                    </a>
+                    <hr class="mx-3 my-2 text-muted">
+
+                    @auth
                         <div class="command">
                             <a href="#" class="sidebar-link {{ request()->routeIs('spot.*') ? 'active' : '' }}" onclick="toggleSpotPC(event)">
                                 <i class="fa-solid fa-map-location-dot"></i> SPOT
@@ -336,136 +336,67 @@
                                 <i class="fa-solid fa-gear"></i> SETTING
                             </a>
                             <a href="#" class="sidebar-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i> LOGOUT
+                               <i class="fa-solid fa-arrow-right-from-bracket"></i> LOGOUT
                             </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
-                        @endauth
+                        </div>
+                    @endauth
+
+                    {{-- Kredon Premium --}}
+                    <hr class="mx-3 my-2 text-muted">
+                    <div class="px-3 mt-4">
+                        <div class="card shadow-sm" style="background-color:rgb(218,238,246);border-radius:12px;">
+                            <div class="card-body p-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fa-solid fa-crown" style="color:gold;"></i>
+                                    <h6 class="card-title fw-bold m-0 ms-1" style="color:darkcyan; font-size: 0.75rem;">KREDON PREMIUM</h6>
+                                </div>
+                                <p class="card-text text-muted mb-3" style="font-size:0.8rem;line-height:1.4;">
+                                    Update to Premium to enjoy exclusive events, advanced filters, and unlimited gameplay!
+                                </p>
+                                <a href="#" class="btn btn-light btn-sm w-100" style="color:darkcyan;">Details</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </nav>
-{{-- Kredon Premium --}}
-                        <hr class="mx-3 my-2 text-muted">
-                        <div class="px-3 mt-4">
-                            <div class="card shadow-sm" style="background-color:rgb(218,238,246);border-radius:12px;">
-                                <div class="card-body p-3">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fa-solid fa-crown" style="color:gold;"></i>
-                                        <h6 class="card-title fw-bold m-0 ms-1"
-                                            style="color:darkcyan; font-size: 0.75rem;">KREDON PREMIUM</h6>
-                                    </div>
-                                    <p class="card-text text-muted mb-3" style="font-size:0.8rem;line-height:1.4;">
-                                        Update to Premium to enjoy exclusive events, advanced filters, and unlimited
-                                        gameplay!
-                                    </p>
-                                    <a href="#" class="btn btn-light btn-sm w-100"
-                                        style="color:darkcyan;">Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
+            </aside>
 
-                <main class="content-body">
-                    @yield('content')
-                    @stack('scripts')
-                </main>
+            <main class="content-body">
+                @yield('content')
+                @stack('scripts')
+            </main>
 
-                @include('layouts.notif-modal')
-            </div>
+            @include('layouts.notif-modal')
         </div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
+    </div>
 
-                <main class="content-body">
-                    @yield('content')
-                    @stack('scripts')
-                </main>
-
-                @include('layouts.notif-modal')
-            </div>
-        </div>
-<script>
-            // ── ユーザー通知モーダル：開いたら一括既読化 ──
-            const userNotifModalEl = document.getElementById('userNotificationsModal');
-            if (userNotifModalEl) {
-                userNotifModalEl.addEventListener('shown.bs.modal', function () {
-                    fetch('{{ route("notifications.mark-all-read") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json',
-                        },
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            document.getElementById('notifBadgePC')?.remove();
-                            document.getElementById('notifBadgeMobile')?.remove();
-                            document.querySelectorAll('.notif-item.unread').forEach(el => {
-                                el.classList.remove('unread');
-                            });
-                        }
-                    })
-                    .catch(err => console.error('Mark as read failed:', err));
-                });
-            }
-
-            // ── PC SPOTサブメニュー ──
-            function toggleSpotPC(e) {
-                e.preventDefault();
-                const menu = document.getElementById('spotSubmenuPC');
-                const chevron = document.getElementById('spotChevronPC');
-                const isOpen = menu.style.display === 'block';
-                menu.style.display = isOpen ? 'none' : 'block';
-                chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-            }
-
-            // ── スマホ SPOTモーダル ──
-            function openSpotModal(e) {
-                e.preventDefault();
-                document.getElementById('spotModal').classList.add('open');
-                document.getElementById('spotModalOverlay').classList.add('open');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeSpotModal() {
-                document.getElementById('spotModal').classList.remove('open');
-                document.getElementById('spotModalOverlay').classList.remove('open');
-                document.body.style.overflow = '';
-            }
-
-            // スワイプ下げで閉じる
-            let touchStartY = 0;
-            const spotModalEl = document.getElementById('spotModal');
-            if (spotModalEl) {
-                spotModalEl.addEventListener('touchstart', e => {
-                    touchStartY = e.touches[0].clientY;
-                });
-                spotModalEl.addEventListener('touchend', e => {
-                    if (e.changedTouches[0].clientY - touchStartY > 60) closeSpotModal();
-                });
-            }
-        </script>
-
-        @include('healthcare.partials._loader')
-    </body>
-</html>
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            document.getElementById('notifBadgePC')?.remove();
-                            document.getElementById('notifBadgeMobile')?.remove();
-                            document.querySelectorAll('.notif-item.unread').forEach(el => {
-                                el.classList.remove('unread');
-                            });
-                        }
-                    })
-                    .catch(err => console.error('Mark as read failed:', err));});
+    <script>
+        // ── ユーザー通知モーダル：開いたら一括既読化 ──
+        const userNotifModalEl = document.getElementById('userNotificationsModal');
+        if (userNotifModalEl) {
+            userNotifModalEl.addEventListener('shown.bs.modal', function () {
+                fetch('{{ route("notifications.mark-all-read") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('notifBadgePC')?.remove();
+                        document.getElementById('notifBadgeMobile')?.remove();
+                        document.querySelectorAll('.notif-item.unread').forEach(el => {
+                            el.classList.remove('unread');
+                        });
+                    }
+                })
+                .catch(err => console.error('Mark as read failed:', err));
+            });
         }
 
        
@@ -494,12 +425,15 @@
 
         // スワイプ下げで閉じる
         let touchStartY = 0;
-        document.getElementById('spotModal').addEventListener('touchstart', e => {
-            touchStartY = e.touches[0].clientY;
-        });
-        document.getElementById('spotModal').addEventListener('touchend', e => {
-            if (e.changedTouches[0].clientY - touchStartY > 60) closeSpotModal();
-        });
+        const spotModalEl = document.getElementById('spotModal');
+        if (spotModalEl) {
+            spotModalEl.addEventListener('touchstart', e => {
+                touchStartY = e.touches[0].clientY;
+            });
+            spotModalEl.addEventListener('touchend', e => {
+                if (e.changedTouches[0].clientY - touchStartY > 60) closeSpotModal();
+            });
+        }
     </script>
 
     @include('healthcare.partials._loader')
