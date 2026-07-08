@@ -6,15 +6,15 @@
     <div class="st-page__main">
 
         <a href="{{ route('settings.account') }}" class="st-guide__back">
-            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> アカウント設定に戻る
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Account Settings
         </a>
 
         <section class="st-card st-card--account" aria-labelledby="two-factor-heading">
             <div class="st-card__head">
-                <h2 id="two-factor-heading" class="st-card__heading">二段階認証 (2FA) の設定</h2>
+                <h2 id="two-factor-heading" class="st-card__heading">Two-Factor Authentication (2FA) Setup</h2>
                 <p class="st-card__lead">
-                    認証アプリ（Google Authenticator など）で QR コードを読み取るか、
-                    シークレットキーを手入力してください。
+                    Scan the QR code with an authenticator app (such as Google Authenticator),
+                    or enter the secret key manually.
                 </p>
             </div>
 
@@ -27,14 +27,14 @@
 
                 <div class="st-2fa-setup__panel">
                     <div class="st-2fa-setup__secret">
-                        <p class="st-2fa-setup__secret-label">手動入力用シークレットキー</p>
+                        <p class="st-2fa-setup__secret-label">Manual entry secret key</p>
                         <p class="st-2fa-setup__secret-value">{{ trim(chunk_split($secret, 4, ' ')) }}</p>
                     </div>
 
                     <form action="{{ route('settings.two-factor.confirm') }}" method="POST" class="st-2fa-setup__form">
                         @csrf
 
-                        <label for="code" class="st-form-label">認証アプリの6桁コード</label>
+                        <label for="code" class="st-form-label">6-digit code from authenticator app</label>
                         <input type="text"
                                id="code"
                                name="code"
@@ -51,7 +51,7 @@
                         @enderror
 
                         <div class="st-form-actions">
-                            <button type="submit" class="st-btn st-btn--primary">有効化する</button>
+                            <button type="submit" class="st-btn st-btn--primary">Enable</button>
                         </div>
                     </form>
                 </div>

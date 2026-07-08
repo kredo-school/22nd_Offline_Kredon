@@ -28,31 +28,33 @@
 
     <div class="hs-wizard-result__content" hidden>
 
-        <header class="hs-wizard-result__header mb-3">
+        <header class="hs-wizard-result__header mb-4">
             <h3 class="fw-bold mb-2">{{ __('healthcare.wizard.recommend_title') }}</h3>
             <p class="text-muted mb-1">{{ __('healthcare.wizard.recommend_lead') }}</p>
             <p class="small text-muted mb-0">{{ __('healthcare.wizard.disclaimer') }}</p>
         </header>
 
-        @if(!empty($reasons))
-            <div class="hs-wizard-result__reasons mb-4">
-                <p class="fw-semibold small mb-2">{{ __('healthcare.wizard.reasons_heading') }}</p>
-                <ul class="list-unstyled mb-0 hs-wizard-result__reason-list">
-                    @foreach($reasons as $reason)
-                        <li>{{ $reason }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        @if($hospital)
-            <div class="hs-wizard-result__highlight position-relative">
-                <span class="badge hs-wizard-result__badge">{{ __('healthcare.wizard.recommended_badge') }}</span>
-                @include('healthcare.wizard._wizard_result_card', ['hospital' => $hospital])
+        @if(!empty($resultItems))
+            <div class="hs-wizard-result__compare-list">
+                @foreach($resultItems as $item)
+                    @include('healthcare.wizard._wizard_result_compare_card', [
+                        'hospital' => $item['hospital'],
+                        'pros' => $item['pros'] ?? [],
+                        'notes' => $item['notes'] ?? [],
+                    ])
+                @endforeach
             </div>
         @else
             <p class="text-muted mb-0">{{ __('healthcare.wizard.no_result') }}</p>
         @endif
+
+        <div class="hs-wizard-nav mt-4 pt-2">
+            <a href="{{ route('wizard.start') }}"
+               class="btn btn-link text-muted text-decoration-none px-0 hs-wizard-nav__back">
+                <i class="fa-solid fa-arrow-left me-1" aria-hidden="true"></i>
+                {{ __('healthcare.wizard.back_to_step1') }}
+            </a>
+        </div>
 
     </div>
 

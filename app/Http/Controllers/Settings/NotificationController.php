@@ -29,13 +29,13 @@ class NotificationController extends Controller
             'notification_settings' => $this->settingsService->mergeNotificationSettings($request->all()),
         ]);
 
-        return back()->with('success', '通知設定を保存しました');
+        return back()->with('success', 'Notification settings saved');
     }
 
     public function resetNotification()
     {
         $this->settingsService->resetNotificationSettings(auth()->user());
 
-        return back()->with('success', '通知設定を初期値にリセットしました');
+        return back()->with('success', 'Notification settings reset to defaults');
     }
 }

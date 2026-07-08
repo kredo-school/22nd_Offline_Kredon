@@ -1,7 +1,5 @@
 @php
-    $notesDate = app()->getLocale() === 'en'
-        ? \Carbon\Carbon::now()->format('F Y')
-        : \Carbon\Carbon::now()->format('Y年n月');
+    $notesDate = \Carbon\Carbon::now()->format('F Y');
 @endphp
 
 <div class="card border-0 shadow-sm mt-4 hs-notes">

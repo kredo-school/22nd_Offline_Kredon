@@ -41,12 +41,10 @@ class HealthcareController extends Controller
 
         $wizardStep = null;
         $selectedAnswer = null;
-        $wizardHospital = null;
-        $wizardReasons = [];
+        $wizardResultItems = [];
 
         if ($wizardComplete && !$fromResult) {
-            $wizardHospital = $this->wizard->resolveReferenceHospital($answers);
-            $wizardReasons = $this->wizard->resolveRecommendationReasons($answers, $wizardHospital);
+            $wizardResultItems = $this->wizard->resolveResultItems($answers);
         }
 
         if (!$wizardComplete || $fromResult) {
@@ -68,8 +66,7 @@ class HealthcareController extends Controller
             'wizardStep',
             'wizardComplete',
             'selectedAnswer',
-            'wizardHospital',
-            'wizardReasons',
+            'wizardResultItems',
         ));
     }
 }

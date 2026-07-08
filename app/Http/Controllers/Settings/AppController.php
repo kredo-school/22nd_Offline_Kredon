@@ -29,13 +29,13 @@ class AppController extends Controller
             'app_settings' => $this->settingsService->mergeAppSettings($request->all()),
         ]);
 
-        return back()->with('success', 'アプリ設定を保存しました');
+        return back()->with('success', 'App settings saved');
     }
 
     public function resetApp()
     {
         $this->settingsService->resetAppSettings(auth()->user());
 
-        return back()->with('success', 'アプリ設定を初期値にリセットしました');
+        return back()->with('success', 'App settings reset to defaults');
     }
 }

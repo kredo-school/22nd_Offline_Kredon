@@ -6,17 +6,17 @@
 
     {{-- 戻るリンク --}}
     <a href="{{ route('settings.privacy') }}" class="st-guide__back">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> プライバシー設定に戻る
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Privacy Settings
     </a>
 
     <header class="st-guide__head">
         <div class="st-guide__head-icon" aria-hidden="true">
             <i class="fa-solid fa-shield-halved"></i>
         </div>
-        <h2 class="st-guide__title">KREDON Cebu プライバシーガイド</h2>
+        <h2 class="st-guide__title">KREDON Cebu Privacy Guide</h2>
         <p class="st-guide__lead">
-            セブ島で留学中の日本人学生のためのポータルサイトです。マーケット取引・病院検索・
-            勉強・観光スポットの利用時に、あなたの個人情報を安全に守るためのガイドです。
+            A portal for Japanese students studying in Cebu. This guide helps you protect your personal
+            information when using marketplace, hospital search, study spots, and tourism features.
         </p>
     </header>
 
@@ -48,7 +48,7 @@
             <span class="st-guide__section-icon st-notify-row__icon st-notify-row__icon--blue">
                 <i class="fa-solid fa-user-lock" aria-hidden="true"></i>
             </span>
-            あなたの権利
+            Your Rights
         </h3>
         <ul class="st-guide__tips" role="list">
             @foreach ($guide->rights as $right)
@@ -61,9 +61,9 @@
     </section>
 
     <div class="st-guide__footer">
-        <p class="st-guide__updated">最終更新: {{ $guide->updated_at }}</p>
+        <p class="st-guide__updated">Last updated: {{ $guide->updated_at }}</p>
         <a href="{{ route('settings.privacy') }}" class="st-btn st-btn--primary">
-            プライバシー設定を開く
+            Open Privacy Settings
         </a>
     </div>
 

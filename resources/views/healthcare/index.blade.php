@@ -36,6 +36,7 @@
                         'step' => $wizardStep['step'],
                         'totalSteps' => $wizardStep['totalSteps'],
                         'question' => $wizardStep['question'],
+                        'subtitle' => $wizardStep['subtitle'] ?? null,
                         'options' => $wizardStep['options'],
                         'infoOptions' => $wizardStep['infoOptions'] ?? [],
                         'selectedAnswer' => $selectedAnswer,
@@ -46,8 +47,7 @@
 
             @if(($wizardComplete ?? false) && !request()->boolean('from_result'))
                 @include('healthcare.wizard._wizard_result', [
-                    'hospital' => $wizardHospital,
-                    'reasons' => $wizardReasons ?? [],
+                    'resultItems' => $wizardResultItems ?? [],
                 ])
             @endif
 
@@ -84,8 +84,13 @@
         const scroller = document.querySelector('.content-body');
         const emergencyModal = document.getElementById('emergencyModal');
 
+        const scrollOffset = () => {
+            const navbar = document.querySelector('.navbar-top');
+            return (navbar?.offsetHeight ?? 70) + 16;
+        };
+
         const scrollToHash = (hash) => {
-            if (!hash || !scroller) {
+            if (!hash) {
                 return;
             }
 
@@ -95,12 +100,21 @@
                 return;
             }
 
-            const top = target.getBoundingClientRect().top
-                - scroller.getBoundingClientRect().top
-                + scroller.scrollTop
-                - 16;
+            const offset = scrollOffset();
+            const desktopScroller = window.matchMedia('(min-width: 768px)').matches && scroller;
 
-            scroller.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+            if (desktopScroller && getComputedStyle(scroller).overflowY !== 'visible') {
+                const top = target.getBoundingClientRect().top
+                    - scroller.getBoundingClientRect().top
+                    + scroller.scrollTop
+                    - 16;
+
+                scroller.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+                return;
+            }
+
+            const top = window.scrollY + target.getBoundingClientRect().top - offset;
+            window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
         };
 
         const showCollapse = (element) => {
@@ -130,7 +144,7 @@
                 .then(() => showCollapse(faqEl))
                 .then(() => {
                     scrollToHash('#hs-emergency-phrases');
-                    history.replaceState(null, '', '#hs-emergency-phrases');
+                    history.replaceState(null, '', '#hs-faq-section');
                 });
         };
 

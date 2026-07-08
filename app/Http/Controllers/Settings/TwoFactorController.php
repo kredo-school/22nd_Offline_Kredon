@@ -46,14 +46,14 @@ class TwoFactorController extends Controller
         $secret = session('2fa_secret');
 
         if (! $secret) {
-            return back()->withErrors(['code' => 'セッションの有効期限が切れました。最初からやり直してください。']);
+            return back()->withErrors(['code' => 'Session expired. Please start over.']);
         }
 
         $google2fa = new Google2FA();
         $valid     = $google2fa->verifyKey($secret, $request->code);
 
         if (! $valid) {
-            return back()->withErrors(['code' => '認証コードが正しくありません']);
+            return back()->withErrors(['code' => 'Invalid authentication code']);
         }
 
         auth()->user()->update([
@@ -63,7 +63,7 @@ class TwoFactorController extends Controller
 
         session()->forget('2fa_secret');
 
-        return redirect()->route('settings.account')->with('success', '2段階認証を有効にしました');
+        return redirect()->route('settings.account')->with('success', 'Two-factor authentication enabled');
     }
 
     public function disable(Request $request)
@@ -73,6 +73,6 @@ class TwoFactorController extends Controller
             'two_factor_enabled' => false,
         ]);
 
-        return back()->with('success', '2段階認証を無効にしました');
+        return back()->with('success', 'Two-factor authentication disabled');
     }
 }

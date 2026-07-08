@@ -41,6 +41,11 @@ class Hospital extends Model
         return $this->bookmarks()->where('user_id', $user->id)->exists();
     }
 
+    public function isPartnerHospital(): bool
+    {
+        return in_array($this->short_name, ['Cebu Doc', 'Chong Hua Mandaue'], true);
+    }
+
     public function guideTips(): string
     {
         $locale = app()->getLocale();
@@ -50,6 +55,40 @@ class Hospital extends Model
         }
 
         return $this->guide_tips_ja ?? '';
+    }
+
+    public function displayClosedDays(): ?string
+    {
+        return $this->localizeDayLabel($this->closed_days);
+    }
+
+    public function displayJhdClosedDays(): ?string
+    {
+        return $this->localizeDayLabel($this->jhd_closed_days);
+    }
+
+    private function localizeDayLabel(?string $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return $value;
+        }
+
+        if (app()->getLocale() !== 'en') {
+            return $value;
+        }
+
+        $map = [
+            'なし' => 'None',
+            '日曜' => 'Sunday',
+            '月曜' => 'Monday',
+            '火曜' => 'Tuesday',
+            '水曜' => 'Wednesday',
+            '木曜' => 'Thursday',
+            '金曜' => 'Friday',
+            '土曜' => 'Saturday',
+        ];
+
+        return $map[$value] ?? $value;
     }
 
     public function googleMapsUrl(): ?string

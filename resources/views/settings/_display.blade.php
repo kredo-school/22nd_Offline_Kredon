@@ -14,9 +14,9 @@
         <section class="st-card st-card--account" aria-labelledby="display-heading">
 
             <div class="st-card__head">
-                <h2 id="display-heading" class="st-card__heading">表示設定</h2>
+                <h2 id="display-heading" class="st-card__heading">Display Settings</h2>
                 <p class="st-card__lead">
-                    外観モードやログイン画面のキャラクターなど、サイトの見た目をカスタマイズできます。
+                    Customize the site appearance, including color mode and login screen characters.
                 </p>
             </div>
 
@@ -27,14 +27,14 @@
                 {{-- 外観モード（ダークモード） --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
-                        <i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i> 外観モード
+                        <i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i> Appearance Mode
                     </h3>
 
                     <p class="st-display-note">
-                        サイト全体の配色を選べます。ダークモードは夜間の閲覧や目の負担軽減に便利です。
+                        Choose the color scheme for the entire site. Dark mode is helpful for nighttime browsing and reducing eye strain.
                     </p>
 
-                    <div class="st-color-mode" role="radiogroup" aria-label="外観モード">
+                    <div class="st-color-mode" role="radiogroup" aria-label="Appearance mode">
                         @foreach ($display->color_modes as $mode)
                             <label class="st-color-mode__option {{ $display->color_mode === $mode['value'] ? 'is-active' : '' }}">
                                 <input type="radio"
@@ -57,14 +57,14 @@
                 {{-- キャラクター選択 --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
-                        <i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> キャラクター
+                        <i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> Character
                     </h3>
 
                     <p class="st-display-note">
-                        ログイン画面・新規登録画面に表示されるキャラクターを選べます。ITパーク留学生限定サイトの案内役です。
+                        Choose the character shown on the login and registration screens. They serve as guides for this IT Park student-only site.
                     </p>
 
-                    <div class="st-char-picker" role="radiogroup" aria-label="キャラクター選択">
+                    <div class="st-char-picker" role="radiogroup" aria-label="Character selection">
                         @foreach ($display->characters as $character)
                             <label class="st-char-picker__item {{ $display->character_id === $character['id'] ? 'is-selected' : '' }}"
                                    data-char-name="{{ $character['name'] }}"
@@ -90,7 +90,7 @@
                                 <span class="st-char-picker__name">{{ $character['name'] }}</span>
                                 <span class="st-char-picker__desc">{{ $character['desc'] }}</span>
                                 @if ($character['id'] === 'kuredon')
-                                    <span class="st-badge st-badge--recommend">おすすめ</span>
+                                    <span class="st-badge st-badge--recommend">Recommended</span>
                                 @endif
                             </label>
                         @endforeach
@@ -101,7 +101,7 @@
 
             <div class="st-card__footer-bar">
                 <button type="submit" form="display-settings-form" class="st-btn st-btn--primary">
-                    設定を保存
+                    Save Settings
                 </button>
             </div>
 
@@ -111,33 +111,33 @@
 
 
     {{-- 右サイドバー: ライブプレビュー --}}
-    <aside class="st-page__aside" aria-label="表示プレビュー">
+    <aside class="st-page__aside" aria-label="Display preview">
 
         <div class="st-widget">
             <h3 class="st-widget__title">
-                <i class="fa-regular fa-eye" aria-hidden="true"></i> ライブプレビュー
+                <i class="fa-regular fa-eye" aria-hidden="true"></i> Live Preview
             </h3>
-            <p class="st-widget__sub">ログイン・新規登録画面とサイトUIのイメージ</p>
+            <p class="st-widget__sub">Preview of login, registration, and site UI</p>
 
             <div class="st-display-preview st-display-preview--{{ $display->color_mode }}"
                  id="display-preview-root"
                  data-color-mode="{{ $display->color_mode }}">
 
                 {{-- 認証画面プレビュー（ログイン / 新規登録） --}}
-                <div class="st-display-preview__tabs" role="tablist" aria-label="認証画面プレビュー">
+                <div class="st-display-preview__tabs" role="tablist" aria-label="Auth screen preview">
                     <button type="button"
                             class="st-display-preview__tab is-active"
                             role="tab"
                             aria-selected="true"
                             data-auth-tab="login">
-                        ログイン
+                        Log In
                     </button>
                     <button type="button"
                             class="st-display-preview__tab"
                             role="tab"
                             aria-selected="false"
                             data-auth-tab="register">
-                        新規登録
+                        Sign Up
                     </button>
                 </div>
 
@@ -150,12 +150,12 @@
                         <p class="st-display-preview__auth-title" id="display-preview-login-title">
                             {{ $display->preview['login_title'] }}
                         </p>
-                        <p class="st-display-preview__auth-sub">ITパーク内 日本人留学生限定</p>
+                        <p class="st-display-preview__auth-sub">IT Park — Japanese students only</p>
                         <div class="st-display-preview__auth-fields">
                             <span></span>
                             <span></span>
                         </div>
-                        <span class="st-display-preview__auth-btn">ログイン</span>
+                        <span class="st-display-preview__auth-btn">Log In</span>
                     </div>
                 </div>
 
@@ -168,13 +168,13 @@
                         <p class="st-display-preview__auth-title" id="display-preview-register-title">
                             {{ $display->preview['register_title'] }}
                         </p>
-                        <p class="st-display-preview__auth-sub">キャラクターと一緒にアカウントを作成</p>
+                        <p class="st-display-preview__auth-sub">Create an account with your character</p>
                         <div class="st-display-preview__auth-fields">
                             <span></span>
                             <span></span>
                             <span></span>
                         </div>
-                        <span class="st-display-preview__auth-btn">登録する</span>
+                        <span class="st-display-preview__auth-btn">Sign Up</span>
                     </div>
                 </div>
 
@@ -198,26 +198,26 @@
         {{-- 表示ステータス --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
-                <i class="fa-solid fa-circle-info" aria-hidden="true"></i> 表示ステータス
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i> Display Status
             </h3>
 
             <dl class="st-status-list">
                 <div class="st-status-list__row">
-                    <dt>外観モード</dt>
+                    <dt>Appearance Mode</dt>
                     <dd id="display-status-mode">{{ $display->status_summary['color_mode'] }}</dd>
                 </div>
                 <div class="st-status-list__row">
-                    <dt>キャラクター</dt>
+                    <dt>Character</dt>
                     <dd id="display-status-character">{{ $display->status_summary['character'] }}</dd>
                 </div>
                 <div class="st-status-list__row">
-                    <dt>反映画面</dt>
+                    <dt>Applied Screens</dt>
                     <dd>{{ $display->status_summary['auth_screens'] }}</dd>
                 </div>
             </dl>
 
             <button type="button" class="st-btn st-btn--ghost st-btn--full st-btn--sm" id="display-preview-reset">
-                プレビューを更新
+                Refresh Preview
             </button>
         </div>
 

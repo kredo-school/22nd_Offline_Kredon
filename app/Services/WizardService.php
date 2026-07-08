@@ -93,14 +93,25 @@ class WizardService
         }
 
         $options = [];
-        foreach ($stepConfig['options'] as $value => $labelKey) {
-            $options[$value] = __($labelKey);
+        foreach ($stepConfig['options'] as $value => $optionConfig) {
+            if (is_string($optionConfig)) {
+                $options[$value] = [
+                    'label' => __($optionConfig),
+                    'subtitle' => null,
+                ];
+            } else {
+                $options[$value] = [
+                    'label' => __($optionConfig['label']),
+                    'subtitle' => isset($optionConfig['subtitle']) ? __($optionConfig['subtitle']) : null,
+                ];
+            }
         }
 
         return [
             'step' => $step,
             'totalSteps' => $this->totalSteps(),
             'question' => __($stepConfig['question']),
+            'subtitle' => isset($stepConfig['subtitle']) ? __($stepConfig['subtitle']) : null,
             'options' => $options,
             'optionKeys' => array_keys($stepConfig['options']),
             'infoOptions' => $this->resolveInfoOptions($stepConfig['info_options'] ?? [], $answers),
@@ -133,6 +144,9 @@ class WizardService
             $infoOptions[] = [
                 'key' => $key,
                 'label' => __($infoConfig['label']),
+                'hint' => isset($infoConfig['hint'])
+                    ? __($infoConfig['hint'])
+                    : __('healthcare.wizard.info_hint'),
                 'question' => $faq->displayQuestion(),
                 'answer' => $faq->displayAnswer(),
             ];
@@ -184,13 +198,95 @@ class WizardService
 
     public function resolveReferenceHospital(array $answers): ?Hospital
     {
-        $query = Hospital::with(['images', 'specialties']);
+        $items = $this->resolveResultItems($answers);
 
-        if (($answers[1] ?? null) === 'mild') {
-            return $query->where('short_name', 'Maxicare')->first();
+        return $items[0]['hospital'] ?? null;
+    }
+
+    public function resolveResultItems(array $answers): array
+    {
+        if ($this->isEarlyComplete($answers)) {
+            $hospital = Hospital::with(['images', 'specialties'])
+                ->where('short_name', 'Maxicare')
+                ->first();
+
+            if (!$hospital) {
+                return [];
+            }
+
+            return [[
+                'hospital' => $hospital,
+                'pros' => $this->resolveRecommendationReasons($answers, $hospital),
+                'notes' => [],
+            ]];
         }
 
-        return $query->where('short_name', 'Cebu Doc')->first();
+        $order = ['Cebu Doc', 'Chong Hua Mandaue'];
+
+        return Hospital::with(['images', 'specialties'])
+            ->whereIn('short_name', $order)
+            ->get()
+            ->sortBy(fn (Hospital $hospital) => array_search($hospital->short_name, $order, true))
+            ->map(fn (Hospital $hospital) => [
+                'hospital' => $hospital,
+                'pros' => $this->resolveHospitalPros($hospital, $answers),
+                'notes' => $this->resolveHospitalNotes($hospital),
+            ])
+            ->values()
+            ->all();
+    }
+
+    public function usesPartnerComparison(array $answers): bool
+    {
+        return !$this->isEarlyComplete($answers);
+    }
+
+    private function resolveHospitalPros(Hospital $hospital, array $answers): array
+    {
+        $keys = $this->comparisonContentKeys($hospital->short_name)['pros'] ?? [];
+
+        if (($answers[3] ?? null) === 'no') {
+            $keys = array_values(array_filter(
+                $keys,
+                fn (string $key) => !str_contains($key, '.pros.jhd') && !str_contains($key, '.pros.cashless')
+            ));
+        }
+
+        return array_map(fn (string $key) => __($key), $keys);
+    }
+
+    private function resolveHospitalNotes(Hospital $hospital): array
+    {
+        $keys = $this->comparisonContentKeys($hospital->short_name)['notes'] ?? [];
+
+        return array_map(fn (string $key) => __($key), $keys);
+    }
+
+    private function comparisonContentKeys(string $shortName): array
+    {
+        $partnerPros = [
+            'healthcare.wizard.compare.pros.medical_office',
+            'healthcare.wizard.compare.cebu_doc.pros.jhd',
+            'healthcare.wizard.compare.cebu_doc.pros.japanese',
+            'healthcare.wizard.compare.cebu_doc.pros.cashless',
+        ];
+
+        return match ($shortName) {
+            'Cebu Doc' => [
+                'pros' => $partnerPros,
+                'notes' => [
+                    'healthcare.wizard.compare.cebu_doc.notes.traffic',
+                    'healthcare.wizard.compare.cebu_doc.notes.building',
+                ],
+            ],
+            'Chong Hua Mandaue' => [
+                'pros' => $partnerPros,
+                'notes' => [
+                    'healthcare.wizard.compare.chong_hua.notes.jhd_floor',
+                ],
+            ],
+            default => ['pros' => [], 'notes' => []],
+        };
     }
 
     public function resolveRecommendationReason(array $answers): ?string
@@ -208,7 +304,7 @@ class WizardService
 
         $reasons = [];
 
-        if (($answers[1] ?? null) === 'mild') {
+        if ($this->isEarlyComplete($answers)) {
             $reasons[] = __('healthcare.wizard.reason_medical_office');
 
             if ($hospital->duration_walk) {

@@ -31,4 +31,44 @@ class Faq extends Model
 
         return $this->answer;
     }
+
+    /**
+     * @return array<int, array{type: string, text?: string, ja?: string, en?: string}>
+     */
+    public function emergencyPhraseItems(): array
+    {
+        $items = [];
+        $phraseNumber = 0;
+
+        foreach (preg_split('/\r\n|\n/', $this->answer) as $line) {
+            $line = trim($line);
+
+            if ($line === '') {
+                continue;
+            }
+
+            if (preg_match('/^【.+】$/u', $line)) {
+                $items[] = ['type' => 'heading', 'text' => $line];
+                continue;
+            }
+
+            if (! str_contains($line, '⇔')) {
+                continue;
+            }
+
+            [$ja, $en] = array_map('trim', explode('⇔', $line, 2));
+            $ja = trim(preg_replace('/^\d+\./u', '', $ja) ?? $ja);
+
+            $phraseNumber++;
+
+            $items[] = [
+                'type'   => 'phrase',
+                'number' => $phraseNumber,
+                'ja'     => $ja,
+                'en'     => $en,
+            ];
+        }
+
+        return $items;
+    }
 }

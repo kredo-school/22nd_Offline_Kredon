@@ -221,13 +221,61 @@
     line-height: 1.5;
 }
 
+.hs-hospital-detail__section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+
+    &:first-of-type {
+        margin-top: 1rem;
+        padding-top: 0;
+        border-top: none;
+    }
+}
+
+.hs-hospital-detail__steps {
+    display: grid;
+    gap: 0.5rem;
+    margin-bottom: 0;
+}
+
 .hs-wizard-card {
     background-color: #fff;
 }
 
 .hs-wizard-progress__bar {
-    height: 10px;
+    height: 6px;
     background-color: #e9ecef;
+
+    .progress-bar {
+        width: 0;
+    }
+
+    &--step-1 .progress-bar {
+        width: 33.333%;
+    }
+
+    &--step-2 .progress-bar {
+        width: 66.666%;
+    }
+
+    &--step-3 .progress-bar {
+        width: 100%;
+    }
+}
+
+.hs-wizard__options--step1 {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+.hs-wizard__option-sub {
+    line-height: 1.5;
+}
+
+.hs-wizard__option-sub--bullets {
+    line-height: 1.6;
 }
 
 .hs-wizard-progress__dots {
@@ -294,7 +342,11 @@
 
 @media (min-width: 768px) {
     .hs-wizard-progress__bar {
-        height: 12px;
+        height: 8px;
+    }
+
+    .hs-wizard__options--step1 {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .hs-wizard-nav__back {
@@ -334,6 +386,45 @@
     }
 }
 
+.hs-wizard-result__compare-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.hs-wizard-result__compare-card {
+    border: 1px solid #e9ecef;
+}
+
+.hs-wizard-result__section-heading {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.hs-wizard-result__point-list li {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #374151;
+
+    &::before {
+        content: '・';
+    }
+}
+
+.hs-wizard-result__pros {
+    background-color: #f8fafc;
+    border-radius: 0.75rem;
+    padding: 0.875rem 1rem;
+}
+
+.hs-wizard-result__notes {
+    background-color: #fffbeb;
+    border-radius: 0.75rem;
+    padding: 0.875rem 1rem;
+}
+
 .hs-wizard-result__highlight {
     background-color: #f0fdf4;
     border-left: 4px solid #198754;
@@ -344,13 +435,19 @@
 
 .hs-wizard-result__badge {
     position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    z-index: 2;
+    top: 10px;
+    left: max(50px, calc(12% + 8px));
+    z-index: 4;
     background-color: #d1e7dd;
     color: #0f5132;
     font-weight: 600;
     padding: 0.35rem 0.65rem;
+}
+
+@media (min-width: 768px) {
+    .hs-wizard-result__badge {
+        top: 12px;
+    }
 }
 
 .hs-wizard-result__highlight .hs-card {
@@ -399,6 +496,43 @@ padding: .5rem .8rem;
 font-weight: 600;
 }
 
+.hs-medical-office__availability {
+    background: #f8fafc;
+    border: 1px solid #e9ecef;
+}
+
+.hs-medical-office__availability-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+
+    & + & {
+        border-top: 1px solid #e9ecef;
+        margin-top: 0.25rem;
+        padding-top: 0.75rem;
+    }
+}
+
+.hs-medical-office__availability-dot {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 0.35rem;
+
+    &--success { background-color: #198754; }
+    &--warning { background-color: #ffc107; }
+    &--danger  { background-color: #dc3545; }
+}
+
+.hs-medical-office__status-message--warning {
+    color: #997404;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
 /* 注意事項 */
 .hs-medical-office__alert {
 background-color: #fff3cd;
@@ -436,6 +570,13 @@ margin-top: 1.25rem;
 
 .hs-medical-office__hours-value {
 line-height: 1.7;
+}
+
+.hs-medical-office__services {
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
 }
 
 .hs-medical-office__box-row {
@@ -734,7 +875,7 @@ line-height: 1.7;
 
 .hs-image-container--gallery {
     height: auto;
-    min-height: 200px;
+    overflow: hidden;
 }
 
 .hs-gallery {
@@ -750,9 +891,12 @@ line-height: 1.7;
     }
 
     &__image {
+        display: block;
         width: 100%;
-        height: 220px;
-        object-fit: cover;
+        height: 260px;
+        object-fit: contain;
+        object-position: center center;
+        background: #e9ecef;
     }
 
     &__caption {
@@ -817,7 +961,7 @@ line-height: 1.7;
 
 @media (min-width: 768px) {
     .hs-gallery__image {
-        height: 260px;
+        height: 300px;
     }
 }
 
@@ -832,10 +976,13 @@ line-height: 1.7;
 // ─ 画像コンテナ ─
 
 .hs-image-container {
-    // スマホ: 高さ小さめ
-    height: 130px;
     position: relative;
     overflow: hidden;
+
+    &:not(.hs-image-container--gallery) {
+        // スマホ: 高さ小さめ（ギャラリー以外）
+        height: 130px;
+    }
 }
 
 .hs-image {
@@ -844,9 +991,11 @@ line-height: 1.7;
     object-fit: cover;
 }
 
-// デスクトップ: 高さを広げる
+// デスクトップ: 高さを広げる（ギャラリー以外）
 @media (min-width: 768px) {
-    .hs-image-container { height: 180px; }
+    .hs-image-container:not(.hs-image-container--gallery) {
+        height: 180px;
+    }
 }
 
 // ─ ブックマークボタン ─
@@ -854,7 +1003,7 @@ line-height: 1.7;
 .hs-btn-bookmark {
     position: absolute;
     top: 10px;
-    right: 10px;
+    left: 10px;
     z-index: 10;
     // スマホ: やや小さく（タップしやすいよう最低44px推奨）
     width: 40px;
@@ -884,7 +1033,7 @@ line-height: 1.7;
 @media (min-width: 768px) {
     .hs-btn-bookmark {
         top: 12px;
-        right: 12px;
+        left: 12px;
         width: 36px;
         height: 36px;
     }
@@ -908,6 +1057,10 @@ line-height: 1.7;
 }
 
 // _faq.blade.php
+
+#hs-faq-section {
+    scroll-margin-top: 86px;
+}
 
 .hs-faq-card {
     background: white;
@@ -982,6 +1135,47 @@ line-height: 1.7;
     background: #fafafa;
 
     margin: 0;
+}
+
+.hs-emergency-phrases__heading {
+    margin: 0 0 12px;
+    font-weight: 700;
+    color: #333;
+
+    &:not(:first-child) {
+        margin-top: 4px;
+    }
+}
+
+.hs-emergency-phrase {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e9ecef;
+
+    &:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+}
+
+.hs-emergency-phrase__ja {
+    margin: 0 0 4px;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.5;
+}
+
+.hs-emergency-phrase__number {
+    margin-right: 0.25rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.hs-emergency-phrase__en {
+    margin: 0;
+    color: #666;
+    line-height: 1.5;
 }
 
 @media (min-width: 768px) {
