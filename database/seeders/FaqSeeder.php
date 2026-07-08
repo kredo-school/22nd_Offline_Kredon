@@ -25,7 +25,7 @@ class FaqSeeder extends Seeder
                 'question' => '緊急時に使えるフレーズが知りたい',
                 'question_en' => 'Phrases for emergency situations',
                 'answer' => "【現在地・状態】\nITパークのSkyrise 4 ⇔ I am at IT Park, Skyrise4.\n救急車を呼びたい ⇔ Please send an ambulance.\n意識が朦朧とする ⇔ I feel drowsy.\n足を骨折したかもしれない ⇔ I might have broken my leg.\n大量に出血しており、今すぐ助けが必要 ⇔ There is heavy bleeding. I need help immediately.\n呼吸ができない ⇔ I cannot breathe.\n意識がない ⇔ I am unconscious.\n体の一部が動かせない ⇔ I cannot move part of my body.",
-                'answer_en' => "【Location & Condition】\n1. I am at IT Park, Skyrise 4\n\n【Emergency Phrases】\n2. I am bleeding heavily.\n3. The bleeding won't stop.\n4. Please send an ambulance.",
+                'answer_en' => "【Location & Condition】\n1. I am at IT Park, Skyrise 4\n2. Please send an ambulance.\n3. I feel drowsy.\n4. I might have broken my leg.\n5. There is heavy bleeding. I need help immediately.\n6. I cannot breathe.\n7. I am unconscious.\n8. I cannot move part of my body.",
                 'is_active' => true,
                 'sort_order' => 1,
             ],

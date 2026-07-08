@@ -80,13 +80,16 @@
                                         <div class="accordion-body hs-faq-answer">
 
                                             @if($isEmergencyPhraseFaq)
-                                                @if(app()->getLocale() === 'en')
-                                                    {!! nl2br(e($faq->displayAnswer())) !!}
-                                                @else
                                                 <div class="hs-emergency-phrases">
                                                     @foreach($faq->emergencyPhraseItems() as $item)
                                                         @if($item['type'] === 'heading')
-                                                            <p class="hs-emergency-phrases__heading">{{ $item['text'] }}</p>
+                                                            <p class="hs-emergency-phrases__heading">{{ $faq->displayEmergencyHeading($item['text']) }}</p>
+                                                        @elseif(app()->getLocale() === 'en')
+                                                            <div class="hs-emergency-phrase">
+                                                                <p class="hs-emergency-phrase__en fw-semibold text-dark mb-0">
+                                                                    <span class="hs-emergency-phrase__number">{{ $item['number'] }}.</span>{{ $item['en'] }}
+                                                                </p>
+                                                            </div>
                                                         @else
                                                             <div class="hs-emergency-phrase">
                                                                 <p class="hs-emergency-phrase__ja">
@@ -97,7 +100,6 @@
                                                         @endif
                                                     @endforeach
                                                 </div>
-                                                @endif
                                             @else
                                                 {!! nl2br(e($faq->displayAnswer())) !!}
                                             @endif

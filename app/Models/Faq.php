@@ -33,7 +33,7 @@ class Faq extends Model
     }
 
     /**
-     * @return array<int, array{type: string, text?: string, ja?: string, en?: string}>
+     * @return array<int, array{type: string, text?: string, number?: int, ja?: string, en?: string}>
      */
     public function emergencyPhraseItems(): array
     {
@@ -70,5 +70,18 @@ class Faq extends Model
         }
 
         return $items;
+    }
+
+    public function displayEmergencyHeading(string $text): string
+    {
+        if (app()->getLocale() !== 'en') {
+            return $text;
+        }
+
+        $map = [
+            '【現在地・状態】' => 'Location & Condition',
+        ];
+
+        return $map[$text] ?? $text;
     }
 }
