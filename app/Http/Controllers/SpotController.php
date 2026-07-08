@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Validator;
 
 class SpotController extends Controller
 {
-    public function store(Request $request)
+   public function store(Request $request)
     {
+        // 🌟 修正1：プロ目線の優しいエラーメッセージを第3引数に追加！
         $validator = Validator::make($request->all(), [
             'name'             => 'required|string|max:255',
             'area'             => 'required|string',
@@ -28,9 +29,16 @@ class SpotController extends Controller
             'chair_comfort'    => 'required|integer|between:1,5',
             'desk_stability'   => 'required|integer|between:1,5',
             'comment'          => 'nullable|string',
+        ], [
+            // 👇 ここがカスタムメッセージです
+            'name.required'              => '🏷️ スポット名を入力してくださいね。',
+            'area.required'              => '📍 エリアを選択してくださいね。',
+            'customer_vibe.required'     => '🌱 すみません！「客層」の評価をポチッと選んでいただけますか？',
+            'eye_fatigue_level.required' => '💡 もう一息！「照明」の評価も教えてもらえると嬉しいです！',
+            'chair_comfort.required'     => '🪑 あと少し！「イス」の座り心地も選択をお願いします！',
+            'desk_stability.required'    => '🏢 最後に！「机」の広さもポチッとお願いします！',
         ]);
 
-        // ✅ 修正1: バリデーション失敗時に必ずリダイレクトで返す
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -147,7 +155,9 @@ class SpotController extends Controller
 
         } catch (\Throwable $e) {
             DB::rollback();
-            // ✅ 本番ではddではなくエラーレスポンスを返す
+            // 🌟 修正2：プロ目線の「エラーログ記録」！これがないと本番でバグが追えません
+            \Illuminate\Support\Facades\Log::error('スポット登録エラー: ' . $e->getMessage());
+            
             return redirect()->back()
                 ->with('error', '登録中にエラーが発生しました。もう一度お試しください。')
                 ->withInput();
@@ -161,7 +171,8 @@ class SpotController extends Controller
         $request->validate([
             'name'            => 'required|string|max:255',
             'area'            => 'required|string',
-            'hours_type'      => 'nullable|in:specified,24h,unknown',
+            // 🌟 hours_typeをnullableからrequiredに変更（必ずラジオボタンが飛んでくるため）
+            'hours_type'      => 'required|in:specified,24h,unknown',
             'open_time'       => 'nullable|string',
             'close_time'      => 'nullable|string',
             'description'     => 'nullable|string', // 🌟 修正1：説明文の受け取りを許可する！
@@ -189,29 +200,29 @@ class SpotController extends Controller
             }
         }
 
-        // ✅ 営業時間ロジック
-        $hours = $spot->hours;
-        if ($request->filled('hours_type')) {
-            if ($request->hours_type === '24h') {
-                $hours = '24時間営業';
-            } elseif ($request->hours_type === 'unknown') {
-                $hours = '不明';
+        // ✅ 営業時間ロジック（新規登録と完全に統一！）
+        $hours = null;
+        if ($request->hours_type === '24h') {
+            $hours = '24時間営業';
+        } elseif ($request->hours_type === 'unknown') {
+            $hours = '不明';
+        } else {
+            if ($request->filled('open_time') && $request->filled('close_time')) {
+                $hours = $request->open_time . ' - ' . $request->close_time;
+            } elseif ($request->filled('open_time')) {
+                $hours = $request->open_time . ' - 未定';
+            } elseif ($request->filled('close_time')) {
+                $hours = '未定 - ' . $request->close_time;
             } else {
-                $open  = $request->filled('open_time')  ? $request->open_time  : '未定';
-                $close = $request->filled('close_time') ? $request->close_time : '未定';
-                $hours = $open . ' - ' . $close;
+                $hours = '未定';
             }
-        } elseif ($request->filled('open_time') || $request->filled('close_time')) {
-            $open  = $request->filled('open_time')  ? $request->open_time  : '未定';
-            $close = $request->filled('close_time') ? $request->close_time : '未定';
-            $hours = $open . ' - ' . $close;
         }
 
         // 🌟 修正2：ここで確実にデータベースに保存する！
         $spot->update([
             'name'          => $request->name,
             'area'          => $request->area,
-            'hours'         => $hours,
+            'hours'         => $hours, // 👈 統一した営業時間文字列を保存！
             'description'   => $request->description, // 👈 これが抜けていた最大の原因です！
             'has_wifi'      => $request->has('has_wifi'),
             'has_power'     => $request->has('has_power'),
@@ -241,6 +252,7 @@ class SpotController extends Controller
         return redirect()->route('spots.show', $spot->id)
             ->with('success', '✨ スポット情報を最新に更新しました！');
     }
+    
     public function destroy($id)
     {
         $spot = Spot::findOrFail($id);
@@ -327,6 +339,7 @@ class SpotController extends Controller
 
         return response()->json(['success' => true, 'message' => 'クーポンを適用しました！']);
     }
+    
     // 🌟 追加：写真のドラッグ＆ドロップ並び替え処理
     public function reorderPhotos(Request $request)
     {

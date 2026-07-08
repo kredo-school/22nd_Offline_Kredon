@@ -706,19 +706,7 @@
                                                     {!! nl2br(e($review->comment)) !!}</div>
                                             @endif
 
-                                            @if($review->good_point || $review->bad_point)
-                                                <div
-                                                    style="display: flex; gap: 15px; font-size: 12px; background: #fafafa; padding: 10px; border-radius: 6px; border: 1px dashed #eee;">
-                                                    @if($review->good_point)
-                                                        <div style="flex: 1; color: #e53e3e; font-weight: bold;">👍 Good: <span
-                                                                style="font-weight: normal; color: #555;">{{ $review->good_point }}</span></div>
-                                                    @endif
-                                                    @if($review->bad_point)
-                                                        <div style="flex: 1; color: #3182ce; font-weight: bold;">気になる点: <span
-                                                                style="font-weight: normal; color: #555;">{{ $review->bad_point }}</span></div>
-                                                    @endif
-                                                </div>
-                                            @endif
+                                           
                                         </div>
 
                                         @if(Auth::check() && Auth::id() === $review->user_id)
@@ -734,7 +722,7 @@
 
                                                     <form action="{{ route('reviews.update', $review->id) }}" method="POST"
                                                         enctype="multipart/form-data" style="padding: 20px;">
-                                                        @csrf @method('PUT')
+                                                        @csrf @method('PATCH')
 
                                                         <div style="margin-bottom: 20px;">
                                                             <label
@@ -814,21 +802,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="good-bad-responsive" style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                                            <div style="flex: 1;">
-                                                                <label
-                                                                    style="display: block; font-size: 12px; font-weight: bold; color: #e53e3e; margin-bottom: 5px;">👍
-                                                                    Good</label>
-                                                                <input type="text" name="good_point" value="{{ $review->good_point }}"
-                                                                    style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
-                                                            </div>
-                                                            <div style="flex: 1;">
-                                                                <label
-                                                                    style="display: block; font-size: 12px; font-weight: bold; color: #3182ce; margin-bottom: 5px;">気になる点</label>
-                                                                <input type="text" name="bad_point" value="{{ $review->bad_point }}"
-                                                                    style="width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
-                                                            </div>
-                                                        </div>
+                                                        
                                                         <div style="margin-bottom: 25px;">
                                                             <label
                                                                 style="display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 8px;">📝
@@ -1174,16 +1148,49 @@
                         </select>
                     </div>
 
-                    <div
-                        style="margin-bottom: 15px; background-color: #fafafa; padding: 10px; border-radius: 6px; border: 1px solid #eee;">
-                        <span style="color: #666; font-size: 13px; font-weight: bold; display: block; margin-bottom: 8px;">🕒
-                            営業時間 (現在: {{ $spot->hours ?: '未設定' }})</span>
+                    {{-- 🌟 営業時間：既存データの分解とUIのアップグレード --}}
+                    @php
+                        $hType = 'specified';
+                        $oTime = '';
+                        $cTime = '';
+                        $currentHours = $spot->hours;
+
+                        if ($currentHours === '24時間営業') {
+                            $hType = '24h';
+                        } elseif ($currentHours === '不明' || empty($currentHours)) {
+                            $hType = 'unknown';
+                        } elseif (str_contains($currentHours, ' - ')) {
+                            $parts = explode(' - ', $currentHours);
+                            $oTime = isset($parts[0]) && $parts[0] !== '未定' ? trim($parts[0]) : '';
+                            $cTime = isset($parts[1]) && $parts[1] !== '未定' ? trim($parts[1]) : '';
+                        }
+                    @endphp
+
+                    <div style="margin-bottom: 15px; background-color: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
+                        <span style="color: #555; font-size: 13px; font-weight: bold; display: block; margin-bottom: 10px;">
+                            🕒 営業時間
+                        </span>
+                        
+                        {{-- ラジオボタン --}}
+                        <div style="display: flex; gap: 15px; margin-bottom: 10px; font-size: 13px; color: #333;">
+                            <label style="cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                <input type="radio" name="hours_type" value="specified" {{ $hType === 'specified' ? 'checked' : '' }}> 時間指定
+                            </label>
+                            <label style="cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                <input type="radio" name="hours_type" value="24h" {{ $hType === '24h' ? 'checked' : '' }}> 24時間営業
+                            </label>
+                            <label style="cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                <input type="radio" name="hours_type" value="unknown" {{ $hType === 'unknown' ? 'checked' : '' }}> 不明
+                            </label>
+                        </div>
+
+                        {{-- 時間入力 --}}
                         <div class="time-row-responsive" style="display: flex; align-items: center; gap: 10px;">
-                            <input type="time" name="open_time" step="1800"
-                                style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                            <span style="color: #999;">〜</span>
-                            <input type="time" name="close_time" step="1800"
-                                style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <input type="time" name="open_time" value="{{ $oTime }}" step="1800"
+                                style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                            <span style="color: #999; font-weight: bold;">〜</span>
+                            <input type="time" name="close_time" value="{{ $cTime }}" step="1800"
+                                style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
                         </div>
                     </div>
                     {{-- 🌟 追加：公式・ニッチ情報の入力欄 --}}
@@ -1332,6 +1339,25 @@
     </div>
 
     <script>
+        // 🌟 1. フォーム送信時の未入力チェック（今回追加した部分）
+        function validateSpotForm(event) {
+            // 4つのニッチな情報が選択されているかチェック
+            const vibe = document.querySelector('input[name="customer_vibe"]:checked');
+            const eye = document.querySelector('input[name="eye_fatigue_level"]:checked');
+            const chair = document.querySelector('input[name="chair_comfort"]:checked');
+            const desk = document.querySelector('input[name="desk_stability"]:checked');
+
+            // どれか1つでも選ばれていなかったらストップ！
+            if (!vibe || !eye || !chair || !desk) {
+                alert('ニッチな情報の入力をお願いします（※必須）');
+                event.preventDefault(); 
+                return false;
+            }
+            
+            return true;
+        }
+
+        // 🌟 2. Enterキーで次の入力欄へ移動する処理（Taka-sanの既存コード）
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
                 const activeElement = document.activeElement;
