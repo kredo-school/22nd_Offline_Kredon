@@ -48,7 +48,7 @@
             </script>
         @endif
 
-        <form action="{{ route('spots.store') }}" method="POST" enctype="multipart/form-data" style="padding: 20px;">
+        <form action="{{ route('spots.store') }}" method="POST" enctype="multipart/form-data"onsubmit="return validateSpotForm(event)" style="padding: 20px;">
             @csrf
 
             <div style="margin-bottom: 15px;">
@@ -103,39 +103,36 @@
 
             <div style="background-color: #f4f8fb; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c9d8e4;">
                 <p style="font-size: 12px; font-weight: bold; color: #1e8b9b; margin-top: 0; margin-bottom: 15px;">🔍 ニッチな評価をシェア（1〜5で選択・<span style="color: #e53e3e;">※必須</span>）</p>
-
-                <div style="margin-bottom: 20px;">
+<div style="margin-bottom: 20px;">
                     <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👥 客層 <span style="color: #e53e3e;">*</span></label>
-                    <div class="rating-group">@for($i = 1; $i <= 5; $i++)<input type="radio" name="customer_vibe" id="new_spot_vibe_{{ $i }}" value="{{ $i }}" class="rating-radio" required {{ old('customer_vibe') == $i ? 'checked' : '' }}><label for="new_spot_vibe_{{ $i }}" class="rating-label">{{ $i }}</label>@endfor</div>
+                    <div class="rating-group">@for($i = 1; $i <= 5; $i++)<input type="radio" name="customer_vibe" id="new_spot_vibe_{{ $i }}" value="{{ $i }}" class="rating-radio" {{ old('customer_vibe') == $i ? 'checked' : '' }}><label for="new_spot_vibe_{{ $i }}" class="rating-label">{{ $i }}</label>@endfor</div>
                     <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;"><span>← ワイワイ</span><span>もくもく作業 →</span></div>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">👁️ 照明 <span style="color: #e53e3e;">*</span></label>
-                    <div class="rating-group">@for($i = 1; $i <= 5; $i++)<input type="radio" name="eye_fatigue_level" id="new_spot_eye_{{ $i }}" value="{{ $i }}" class="rating-radio" required {{ old('eye_fatigue_level') == $i ? 'checked' : '' }}><label for="new_spot_eye_{{ $i }}" class="rating-label">{{ $i }}</label>@endfor</div>
+                    <div class="rating-group">@for($i = 1; $i <= 5; $i++)<input type="radio" name="eye_fatigue_level" id="new_spot_eye_{{ $i }}" value="{{ $i }}" class="rating-radio" {{ old('eye_fatigue_level') == $i ? 'checked' : '' }}><label for="new_spot_eye_{{ $i }}" class="rating-label">{{ $i }}</label>@endfor</div>
                     <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;"><span>← 暗め</span><span>明るい →</span></div>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🪑 イス <span style="color: #e53e3e;">*</span></label>
-                    <div class="rating-group">@for($i = 1; $i <= 5; $i++)<input type="radio" name="chair_comfort" id="new_spot_chair_{{ $i }}" value="{{ $i }}" class="rating-radio" required {{ old('chair_comfort') == $i ? 'checked' : '' }}><label for="new_spot_chair_{{ $i }}" class="rating-label">{{ $i }}</label>@endfor</div>
+                    <div class="rating-group">@for($i = 1; $i <= 5; $i++)<input type="radio" name="chair_comfort" id="new_spot_chair_{{ $i }}" value="{{ $i }}" class="rating-radio" {{ old('chair_comfort') == $i ? 'checked' : '' }}><label for="new_spot_chair_{{ $i }}" class="rating-label">{{ $i }}</label>@endfor</div>
                     <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;"><span>← 硬い</span><span>ふかふか →</span></div>
                 </div>
 
                 <div style="margin-bottom: 0;">
                     <label style="display: block; font-size: 12px; font-weight: bold; color: #555;">🏢 机 <span style="color: #e53e3e;">*</span></label>
-                    <div class="rating-group">@for($i = 1; $i <= 5; $i++)<input type="radio" name="desk_stability" id="new_spot_desk_{{ $i }}" value="{{ $i }}" class="rating-radio" required {{ old('desk_stability') == $i ? 'checked' : '' }}><label for="new_spot_desk_{{ $i }}" class="rating-label">{{ $i }}</label>@endfor</div>
+                    <div class="rating-group">@for($i = 1; $i <= 5; $i++)<input type="radio" name="desk_stability" id="new_spot_desk_{{ $i }}" value="{{ $i }}" class="rating-radio" {{ old('desk_stability') == $i ? 'checked' : '' }}><label for="new_spot_desk_{{ $i }}" class="rating-label">{{ $i }}</label>@endfor</div>
                     <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 4px;"><span>← 狭い</span><span>広い →</span></div>
                 </div>
-            </div>
-
             <div style="margin-bottom: 25px;">
                 <label style="display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px;">📝 最初のクチコミ（任意）</label>
-                <textarea name="comment" rows="3" placeholder="お店の雰囲気やおすすめポイントなど..." style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none; background-color: #fafafa;">{{ old('comment') }}</textarea>
+               <textarea name="comment" id="spot_comment_box" rows="3" placeholder="お店の雰囲気やおすすめポイントなど..." style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none; background-color: #fafafa;">{{ old('comment') }}</textarea>
             </div>
 
             <div style="text-align: center;">
-                <button type="submit" style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%;">
+                <button type="submit" onclick="return validateSpotForm(event)" style="background-color: #1e8b9b; color: white; border: none; padding: 14px 30px; border-radius: 25px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%;">
                     スポットを登録する
                 </button>
             </div>
@@ -160,6 +157,7 @@
 </div>
 
 <script>
+    // 🕒 1. 営業時間入力の切り替え
     function toggleTimeInput() {
         const type = document.querySelector('input[name="hours_type"]:checked').value;
         const timeInputArea = document.getElementById('timeInputArea');
@@ -179,9 +177,7 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', toggleTimeInput);
-
-    // 🌟 HEIC対応・非同期版のプレビュー関数
+    // 📸 2. HEIC対応・非同期版のプレビュー関数
     async function previewSpotPhotos(event) {
         const container = document.getElementById('photoPreviewContainer');
         const newSpotLabel = document.getElementById('newSpotFileBtn');
@@ -204,7 +200,6 @@
         for (let i = 0; i < files.length; i++) {
             let file = files[i];
             
-            // 💡 HEICの場合はJPGに変換
             if (file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
                 try {
                     const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg" });
@@ -250,19 +245,76 @@
         label.style.backgroundColor = '#f4f8fb';
     }
 
+    // 🛡️ 3. フォーム送信時の未入力チェック
+    function validateSpotForm(event) {
+        const vibe = document.querySelector('input[name="customer_vibe"]:checked');
+        const eye = document.querySelector('input[name="eye_fatigue_level"]:checked');
+        const chair = document.querySelector('input[name="chair_comfort"]:checked');
+        const desk = document.querySelector('input[name="desk_stability"]:checked');
+
+        if (!vibe || !eye || !chair || !desk) {
+            alert('ニッチな情報の入力をお願いします（※必須）');
+            event.preventDefault(); 
+            return false;
+        }
+        return true;
+    }
+
+    // ⌨️ 4. Enterキーで次の入力欄へ移動
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            const activeElement = document.activeElement;
+            if (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'BUTTON' || activeElement.type === 'submit') {
+                return;
+            }
+            e.preventDefault();
+            const form = activeElement.closest('form');
+            if (!form) return;
+            const focusableElements = Array.from(
+                form.querySelectorAll('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button[type="submit"]')
+            );
+            const currentIndex = focusableElements.indexOf(activeElement);
+            if (currentIndex > -1 && currentIndex < focusableElements.length - 1) {
+                focusableElements[currentIndex + 1].focus();
+            }
+        }
+    });
+
+    // 🚀 5. ページ読み込み完了時の処理（ガチャ＆下書き自動保存）
     document.addEventListener('DOMContentLoaded', function () {
-        @if(session('success') && session('reward_tip_title'))
-            const tipContent = document.getElementById('rewardTipContent');
-            
-            tipContent.innerHTML = `
-                <div style="font-weight: bold; color: #1e8b9b; margin-bottom: 8px;">{{ session('reward_tip_title') }}</div>
-                <div style="color: #333; line-height: 1.6; font-size: 13px;">{{ session('reward_tip_text') }}</div>
-            `;
-            
-            const flashMsg = document.getElementById('flash-message');
-            if(flashMsg) flashMsg.style.display = 'none';
-            
-            setTimeout(() => { document.getElementById('rewardModal').classList.add('is-show'); }, 100);
+        // 営業時間の初期表示
+        toggleTimeInput();
+
+        // 🌟 感想の「絶対消えない下書き」処理
+        const commentBox = document.getElementById('spot_comment_box');
+        if (commentBox) {
+            // old()にデータがない時だけ、ブラウザの記憶を復元
+            if (!commentBox.value) {
+                commentBox.value = localStorage.getItem('draft_spot_comment') || '';
+            }
+            // 文字を打つたびに自動保存
+            commentBox.addEventListener('input', function() {
+                localStorage.setItem('draft_spot_comment', this.value);
+            });
+        }
+
+        // 🌟 登録成功時のガチャ表示＆下書きデータのリセット
+        @if(session('success'))
+            // 成功したら下書きを綺麗に掃除！
+            localStorage.removeItem('draft_spot_comment');
+
+            @if(session('reward_tip_title'))
+                const tipContent = document.getElementById('rewardTipContent');
+                tipContent.innerHTML = `
+                    <div style="font-weight: bold; color: #1e8b9b; margin-bottom: 8px;">{{ session('reward_tip_title') }}</div>
+                    <div style="color: #333; line-height: 1.6; font-size: 13px;">{{ session('reward_tip_text') }}</div>
+                `;
+                
+                const flashMsg = document.getElementById('flash-message');
+                if(flashMsg) flashMsg.style.display = 'none';
+                
+                setTimeout(() => { document.getElementById('rewardModal').classList.add('is-show'); }, 100);
+            @endif
         @endif
     });
 </script>
