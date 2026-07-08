@@ -9,16 +9,20 @@
         <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
             <div>
                 <h4 class="fw-bold mb-1">Events Management</h4>
-                <p class="text-muted mb-0" style="font-size:0.85rem;">イベントの作成・管理・分析を行います</p>
+                <p class="text-muted mb-0" style="font-size:0.85rem;">We create, manage and analyze events</p>
             </div>
             <div class="d-flex gap-2 align-items-center flex-wrap">
-                <div class="btn-group">
-                    <button class="btn btn-dark btn-sm px-3 active">すべてのイベント</button>
-                    <button class="btn btn-outline-secondary btn-sm px-3">期間限定</button>
-                    <button class="btn btn-outline-secondary btn-sm px-3">レギュラー</button>
-                </div>
+                {{-- <div class="btn-group">
+                    <button class="btn btn-dark btn-sm px-3 active">All Events</button>
+                    <button class="btn btn-outline-secondary btn-sm px-3">Limited-time event</button>
+                    <button class="btn btn-outline-secondary btn-sm px-3">Regular events</button>
+                </div> --}}
                 <button class="btn btn-outline-secondary btn-sm">
                     <i class="fa-regular fa-calendar"></i>
+                </button>
+                <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal"
+                    data-bs-target="#createEventModal">
+                    <i class="fa-solid fa-plus me-1"></i>Create Event
                 </button>
             </div>
         </div>
@@ -28,24 +32,24 @@
             <div class="col-6 col-md-3">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
-                        <p class="text-muted mb-1" style="font-size:0.78rem;">総イベント数</p>
-                        <h4 class="fw-bold mb-0">128</h4>
+                        <p class="text-muted mb-1" style="font-size:0.78rem;">All events</p>
+                        <h4 class="fw-bold mb-0">{{ $allEventsCount }}</h4>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
-                        <p class="text-muted mb-1" style="font-size:0.78rem;">今月のイベント</p>
-                        <h4 class="fw-bold mb-0">18 <span class="text-success fs-6">↑12%</span></h4>
+                        <p class="text-muted mb-1" style="font-size:0.78rem;">Now on</p>
+                        <h4 class="fw-bold mb-0">{{ $nowOnCount }}</h4>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
-                        <p class="text-muted mb-1" style="font-size:0.78rem;">総参加者数</p>
-                        <h4 class="fw-bold mb-0">5,842</h4>
+                        <p class="text-muted mb-1" style="font-size:0.78rem;">Upcoming events</p>
+                        <h4 class="fw-bold mb-0">{{ $upcomingEventsCount }}</h4>
                     </div>
                 </div>
             </div>
@@ -53,7 +57,12 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
                         <p class="text-muted mb-1" style="font-size:0.78rem;">今月の参加者</p>
-                        <h4 class="fw-bold mb-0">1,027 <span class="text-success fs-6">↑18%</span></h4>
+                        <h4 class="fw-bold mb-0">
+                            {{ number_format($thisMonthParticipants) }}
+                            <span class="{{ $participantsGrowth >= 0 ? 'text-success' : 'text-danger' }} fs-6">
+                                {{ $participantsGrowth >= 0 ? '↑' : '↓' }}{{ abs($participantsGrowth) }}%
+                            </span>
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -67,75 +76,26 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold mb-0">イベントカレンダー</h6>
+                            <h6 class="fw-bold mb-0">Event Calender</h6>
                         </div>
-                        {{-- Calendar Header --}}
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <button class="btn btn-sm btn-light px-2 py-1">‹</button>
-                            <span class="fw-semibold" style="font-size:0.9rem;">2025年5月</span>
-                            <button class="btn btn-sm btn-light px-2 py-1">›</button>
-                            <button class="btn btn-sm btn-outline-secondary px-2 py-1 ms-2"
-                                style="font-size:0.75rem;">今日</button>
+                            <a href="{{ route('admin.events.index', ['month' => $month - 1 < 1 ? 12 : $month - 1, 'year' => $month - 1 < 1 ? $year - 1 : $year]) }}"
+                                class="btn btn-sm btn-light px-2 py-1">‹</a>
+                            <span class="fw-semibold" style="font-size:0.9rem;">{{ $calendarLabel }}</span>
+                            <a href="{{ route('admin.events.index', ['month' => $month + 1 > 12 ? 1 : $month + 1, 'year' => $month + 1 > 12 ? $year + 1 : $year]) }}"
+                                class="btn btn-sm btn-light px-2 py-1">›</a>
+                            <a href="{{ route('admin.events.index') }}"
+                                class="btn btn-sm btn-outline-secondary px-2 py-1 ms-2" style="font-size:0.75rem;">Today</a>
                         </div>
-                        {{-- Calendar Grid --}}
                         <table class="w-100 text-center" style="font-size:0.78rem;">
                             <thead>
                                 <tr>
-                                    @foreach (['日', '月', '火', '水', '木', '金', '土'] as $d)
+                                    @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $d)
                                         <th class="pb-2 text-muted fw-normal">{{ $d }}</th>
                                     @endforeach
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $weeks = [
-                                        [
-                                            ['d' => 27, 'o' => true],
-                                            ['d' => 28, 'o' => true],
-                                            ['d' => 29, 'o' => true],
-                                            ['d' => 30, 'o' => true],
-                                            ['d' => 1, 'dot' => 'primary'],
-                                            ['d' => 2, 'dot' => 'primary'],
-                                            ['d' => 3],
-                                        ],
-                                        [
-                                            ['d' => 4],
-                                            ['d' => 5, 'dot' => 'primary'],
-                                            ['d' => 6, 'dot' => 'primary'],
-                                            ['d' => 7],
-                                            ['d' => 8],
-                                            ['d' => 9],
-                                            ['d' => 10],
-                                        ],
-                                        [
-                                            ['d' => 11],
-                                            ['d' => 12],
-                                            ['d' => 13],
-                                            ['d' => 14, 'dot' => 'success'],
-                                            ['d' => 15],
-                                            ['d' => 16, 'dot' => 'primary'],
-                                            ['d' => 17],
-                                        ],
-                                        [
-                                            ['d' => 18],
-                                            ['d' => 19, 'dot' => 'primary'],
-                                            ['d' => 20],
-                                            ['d' => 21],
-                                            ['d' => 22],
-                                            ['d' => 23, 'today' => true],
-                                            ['d' => 24, 'dot' => 'primary'],
-                                        ],
-                                        [
-                                            ['d' => 25],
-                                            ['d' => 26],
-                                            ['d' => 27],
-                                            ['d' => 28],
-                                            ['d' => 29],
-                                            ['d' => 30, 'dot' => 'warning'],
-                                            ['d' => 31],
-                                        ],
-                                    ];
-                                @endphp
                                 @foreach ($weeks as $week)
                                     <tr>
                                         @foreach ($week as $day)
@@ -157,14 +117,13 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {{-- Legend --}}
                         <div class="d-flex gap-3 mt-3 justify-content-center" style="font-size:0.72rem;">
                             <span><span class="rounded-circle bg-primary d-inline-block me-1"
-                                    style="width:8px;height:8px;"></span>期間限定イベント</span>
+                                    style="width:8px;height:8px;"></span>Limited-time</span>
                             <span><span class="rounded-circle bg-success d-inline-block me-1"
-                                    style="width:8px;height:8px;"></span>レギュラーイベント</span>
+                                    style="width:8px;height:8px;"></span>Regular</span>
                             <span><span class="rounded-circle bg-warning d-inline-block me-1"
-                                    style="width:8px;height:8px;"></span>その他</span>
+                                    style="width:8px;height:8px;"></span>Others</span>
                         </div>
                     </div>
                 </div>
@@ -175,103 +134,85 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold mb-0">期間限定イベント</h6>
-                            <a href="#" class="text-decoration-none"
-                                style="font-size:0.78rem;color:darkcyan;">すべて見る</a>
+                            <h6 class="fw-bold mb-0">Limited-time event</h6>
+                            <a href="#" class="text-decoration-none" style="font-size:0.78rem;color:darkcyan;">View
+                                all</a>
                         </div>
-                        @php
-                            $limitedEvents = [
-                                [
-                                    'img' => null,
-                                    'name' => 'CEBU FOOD FEST 2025',
-                                    'date' => '2025-05-25 〜 2025-05-28',
-                                    'place' => 'IT Park, Cebu City',
-                                    'attendees' => 245,
-                                    'status' => '開催中',
-                                    'statusColor' => 'success',
-                                ],
-                                [
-                                    'img' => null,
-                                    'name' => 'SUMMER BEACH CLEANUP',
-                                    'date' => '2025-06-01 〜 2025-06-01',
-                                    'place' => 'Mactan Beach',
-                                    'attendees' => 120,
-                                    'status' => '予定',
-                                    'statusColor' => 'info',
-                                ],
-                                [
-                                    'img' => null,
-                                    'name' => 'CEBU NIGHT MARKET',
-                                    'date' => '2025-06-15 〜 2025-06-18',
-                                    'place' => 'Sugbo Mercado',
-                                    'attendees' => 310,
-                                    'status' => '予定',
-                                    'statusColor' => 'info',
-                                ],
-                                [
-                                    'img' => null,
-                                    'name' => 'KREDON ANNIVERSARY',
-                                    'date' => '2025-07-01 〜 2025-07-02',
-                                    'place' => 'Ayala Center Cebu',
-                                    'attendees' => 80,
-                                    'status' => '申込受付前',
-                                    'statusColor' => 'secondary',
-                                ],
-                            ];
-                        @endphp
                         <div class="d-flex flex-column gap-3">
-                            @foreach ($limitedEvents as $ev)
+                            @forelse ($limitedEvents as $ev)
                                 <div class="d-flex gap-2 align-items-start">
-                                    <div class="rounded flex-shrink-0 bg-secondary" style="width:60px;height:48px;"></div>
-                                    <div class="flex-grow-1" style="font-size:0.78rem;">
-                                        <div class="fw-semibold">{{ $ev['name'] }}</div>
-                                        <div class="text-muted"><i
-                                                class="fa-regular fa-calendar fa-xs me-1"></i>{{ $ev['date'] }}</div>
-                                        <div class="text-muted"><i
-                                                class="fa-solid fa-location-dot fa-xs me-1"></i>{{ $ev['place'] }}</div>
-                                        <div class="text-muted">参加者：{{ $ev['attendees'] }}人</div>
+                                    <div class="rounded flex-shrink-0" style="width:60px;height:48px;">
+                                        @if ($ev->image1)
+                                            <img src="{{ Storage::url($ev->image1) }}" class="rounded w-100 h-100"
+                                                style="object-fit:cover;">
+                                        @else
+                                            <div class="bg-secondary w-100 h-100 rounded"></div>
+                                        @endif
                                     </div>
-                                    <span class="badge bg-{{ $ev['statusColor'] }} flex-shrink-0"
-                                        style="font-size:0.68rem;">{{ $ev['status'] }}</span>
+                                    <div class="flex-grow-1" style="font-size:0.78rem;">
+                                        <div class="fw-semibold">{{ $ev->title }}</div>
+                                        <div class="text-muted">
+                                            <i class="fa-regular fa-calendar fa-xs me-1"></i>
+                                            {{ $ev->start_date->format('Y-m-d') }} 〜
+                                            {{ $ev->end_date->format('Y-m-d') }}
+                                        </div>
+                                        <div class="text-muted"><i
+                                                class="fa-solid fa-location-dot fa-xs me-1"></i>{{ $ev->location }}
+                                        </div>
+                                        <div class="text-muted">Participants：{{ $ev->participants_count }} per</div>
+                                    </div>
+                                    @php
+                                        $statusColor = match ($ev->status_label) {
+                                            'Now on' => 'success',
+                                            'Upcoming' => 'info',
+                                            'Before applications open' => 'secondary',
+                                            default => 'light',
+                                        };
+                                    @endphp
+                                    <span class="badge bg-{{ $statusColor }} flex-shrink-0" style="font-size:0.68rem;">
+                                        {{ $ev->status_label }}
+                                    </span>
                                 </div>
-                            @endforeach
+                            @empty
+                                <p class="text-muted mb-0" style="font-size:0.82rem;">No Event yet.</p>
+                            @endforelse
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- レギュラーイベント --}}
+            {{-- レギュラーイベント（今回スコープ外・ダミーのまま） --}}
             <div class="col-12 col-lg-4">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold mb-0">レギュラーイベント</h6>
-                            <a href="#" class="text-decoration-none"
-                                style="font-size:0.78rem;color:darkcyan;">すべて見る</a>
+                            <h6 class="fw-bold mb-0">Regular event</h6>
+                            <a href="#" class="text-decoration-none" style="font-size:0.78rem;color:darkcyan;">View
+                                all</a>
                         </div>
                         @php
                             $regularEvents = [
                                 [
                                     'name' => 'WEEKLY RUN CLUB',
-                                    'schedule' => '毎週 土曜日 06:00',
+                                    'schedule' => 'every Sat 06:00',
                                     'place' => 'IT Park',
                                     'attendees' => 156,
                                 ],
                                 [
                                     'name' => 'LANGUAGE EXCHANGE',
-                                    'schedule' => '毎週 金曜日 19:00',
+                                    'schedule' => 'every Sun 19:00',
                                     'place' => 'KREDON Community Hub',
                                     'attendees' => 89,
                                 ],
                                 [
                                     'name' => 'YOGA CLASS',
-                                    'schedule' => '毎週 日曜日 07:00',
+                                    'schedule' => 'every Mon 07:00',
                                     'place' => 'Ayala Center',
                                     'attendees' => 67,
                                 ],
                                 [
                                     'name' => 'COFFEE MEETUP',
-                                    'schedule' => '毎週 水曜日 18:30',
+                                    'schedule' => 'every Sun 18:30',
                                     'place' => "Bo's Coffee, IT Park",
                                     'attendees' => 134,
                                 ],
@@ -287,9 +228,10 @@
                                                 class="fa-regular fa-clock fa-xs me-1"></i>{{ $ev['schedule'] }}</div>
                                         <div class="text-muted"><i
                                                 class="fa-solid fa-location-dot fa-xs me-1"></i>{{ $ev['place'] }}</div>
-                                        <div class="text-muted">参加者：{{ $ev['attendees'] }}人</div>
+                                        <div class="text-muted">Participants：{{ $ev['attendees'] }}人</div>
                                     </div>
-                                    <span class="badge bg-success flex-shrink-0" style="font-size:0.68rem;">定期開催中</span>
+                                    <span class="badge bg-success flex-shrink-0" style="font-size:0.68rem;">Held
+                                        regularly</span>
                                 </div>
                             @endforeach
                         </div>
@@ -306,61 +248,22 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold mb-0">参加者リスト（直近のイベント）</h6>
-                            <a href="#" class="text-decoration-none"
-                                style="font-size:0.78rem;color:darkcyan;">すべて見る</a>
+                            <h6 class="fw-bold mb-0">Participants list</h6>
+                            <a href="#" class="text-decoration-none" style="font-size:0.78rem;color:darkcyan;">View
+                                all</a>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0" style="font-size:0.82rem;">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>参加者名</th>
-                                        <th>イベント名</th>
-                                        <th>参加日</th>
-                                        <th>ステータス</th>
+                                        <th>Owner</th>
+                                        <th>Event title</th>
+                                        <th>Day</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @php
-                                        $attendees = [
-                                            [
-                                                'name' => 'John D.',
-                                                'event' => 'CEBU FOOD FEST 2025',
-                                                'date' => '2025-05-23 18:30',
-                                                'status' => '参加済み',
-                                                'color' => 'success',
-                                            ],
-                                            [
-                                                'name' => 'Maria S.',
-                                                'event' => 'SUMMER BEACH CLEANUP',
-                                                'date' => '2025-05-23 17:45',
-                                                'status' => '参加確定',
-                                                'color' => 'primary',
-                                            ],
-                                            [
-                                                'name' => 'David L.',
-                                                'event' => 'CEBU NIGHT MARKET',
-                                                'date' => '2025-05-23 16:20',
-                                                'status' => '参加済み',
-                                                'color' => 'success',
-                                            ],
-                                            [
-                                                'name' => 'Sarah K.',
-                                                'event' => 'WEEKLY RUN CLUB',
-                                                'date' => '2025-05-23 06:00',
-                                                'status' => '参加済み',
-                                                'color' => 'success',
-                                            ],
-                                            [
-                                                'name' => 'Michael T.',
-                                                'event' => 'LANGUAGE EXCHANGE',
-                                                'date' => '2025-05-22 19:00',
-                                                'status' => '参加済み',
-                                                'color' => 'success',
-                                            ],
-                                        ];
-                                    @endphp
-                                    @foreach ($attendees as $a)
+                                    @forelse ($recentParticipants as $p)
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center gap-2">
@@ -368,17 +271,22 @@
                                                         style="display:inline-flex;align-items:center;justify-content:center;
                                                          width:30px;height:30px;border-radius:50%;background:#dee2e6;
                                                          font-size:0.72rem;font-weight:bold;color:#495057;">
-                                                        {{ strtoupper(substr($a['name'], 0, 1)) }}
+                                                        {{ strtoupper(substr($p->user->name ?? '?', 0, 1)) }}
                                                     </span>
-                                                    {{ $a['name'] }}
+                                                    {{ $p->user->name ?? '不明' }}
                                                 </div>
                                             </td>
-                                            <td>{{ $a['event'] }}</td>
-                                            <td class="text-nowrap">{{ $a['date'] }}</td>
-                                            <td><span class="badge bg-{{ $a['color'] }}"
-                                                    style="font-size:0.72rem;">{{ $a['status'] }}</span></td>
+                                            <td>{{ $p->event->title ?? 'Deleted event' }}</td>
+                                            <td class="text-nowrap">{{ $p->created_at?->format('Y-m-d H:i') ?? '-' }}</td>
+                                            <td><span class="badge bg-success" style="font-size:0.72rem;">Already
+                                                    Participated</span></td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="4" class="text-muted text-center py-3">No participants yet.
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -386,44 +294,42 @@
                 </div>
             </div>
 
-            {{-- イベント統計 --}}
+            {{-- イベント統計（今回スコープ外・ダミーのまま） --}}
             <div class="col-12 col-lg-5">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold mb-0">イベント統計</h6>
+                            <h6 class="fw-bold mb-0">Event Statics</h6>
                             <select class="form-select form-select-sm" style="width:auto;font-size:0.78rem;">
-                                <option>過去30日間</option>
+                                <option>Past 30 days</option>
                                 <option>過去7日間</option>
                                 <option>過去90日間</option>
                             </select>
                         </div>
-                        {{-- Stats --}}
                         <div class="row g-2 mb-3">
                             <div class="col-6">
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">総参加者数</p>
+                                <p class="text-muted mb-0" style="font-size:0.75rem;">Total number of participants</p>
                                 <div class="fw-bold">1,823 <span class="text-success"
                                         style="font-size:0.75rem;">↑18.2%</span></div>
                             </div>
                             <div class="col-6">
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">新規参加者</p>
+                                <p class="text-muted mb-0" style="font-size:0.75rem;">Number of new participants</p>
                                 <div class="fw-bold">342 <span class="text-success"
                                         style="font-size:0.75rem;">↑12.5%</span></div>
                             </div>
                             <div class="col-6">
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">イベント開催数</p>
+                                <p class="text-muted mb-0" style="font-size:0.75rem;">Number of events held</p>
                                 <div class="fw-bold">24 <span class="text-success"
                                         style="font-size:0.75rem;">↑20.0%</span></div>
                             </div>
                             <div class="col-6">
-                                <p class="text-muted mb-0" style="font-size:0.75rem;">キャンセル数</p>
+                                <p class="text-muted mb-0" style="font-size:0.75rem;">Number of cancellations</p>
                                 <div class="fw-bold">87 <span class="text-danger" style="font-size:0.75rem;">↓5.3%</span>
                                 </div>
                             </div>
                         </div>
-                        {{-- Chart placeholder --}}
                         <div>
-                            <p class="text-muted mb-1" style="font-size:0.75rem;">参加者推移</p>
+                            <p class="text-muted mb-1" style="font-size:0.75rem;">Trends in Participant Numbers</p>
                             <canvas id="attendeesChart" height="120"></canvas>
                         </div>
                     </div>
@@ -432,6 +338,9 @@
         </div>
 
     </div>
+
+    {{-- Create Eventモーダル（別blade） --}}
+    @include('admin.events.create-modal')
 @endsection
 
 @push('scripts')

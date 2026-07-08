@@ -341,8 +341,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::patch('users/{id}/role', [UsersController::class, 'updateRole'])->name('users.update-role');
         Route::patch('users/{id}/status', [UsersController::class, 'updateStatus'])->name('users.update-status');
 
-
+        #Event
         Route::get('events', [EventsController::class, 'index'])->name('events.index');
+        Route::post('/events', [\App\Http\Controllers\Admin\EventsController::class, 'store'])->name('events.store');
+
         Route::get('reviews', [ReviewsController::class, 'index'])->name('reviews.index');
         Route::get('markets', [MarketsController::class, 'index'])->name('markets.index');
         Route::get('markets/show/{id}', [MarketsController::class, 'show'])->name('markets.show');

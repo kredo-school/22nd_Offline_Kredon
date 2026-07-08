@@ -251,7 +251,7 @@ class HomeController extends Controller
         $banners = [];
 
         $events = Event::query()
-            ->orderByDesc('event_date')
+            ->orderByDesc('start_date')
             ->limit(5)
             ->get();
 

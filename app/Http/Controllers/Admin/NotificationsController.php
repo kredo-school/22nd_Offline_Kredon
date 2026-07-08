@@ -111,6 +111,15 @@ class NotificationsController extends Controller
 
         $notification->update($updateData);
 
+        // イベント通知がsentになったら、紐づくイベントを公開する
+        if ($newStatus === 'sent' && $notification->category === 'event') {
+            $eventId = $notification->data['event_id'] ?? null;
+            if ($eventId) {
+                \App\Models\Event::where('id', $eventId)
+                    ->update(['is_published' => true]);
+            }
+        }
+
         return response()->json([
             'success' => true,
             'status'  => $notification->status,
@@ -217,6 +226,4 @@ class NotificationsController extends Controller
 
         return response()->json(['success' => true]);
     }
-
-    
 }
