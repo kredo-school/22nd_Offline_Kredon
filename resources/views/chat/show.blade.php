@@ -190,6 +190,7 @@ html, body{
                     <div class="my-bubble">
 
                         {{ $message->message }}
+                        
 
                         <div class="chat-time">
 
@@ -222,6 +223,15 @@ html, body{
                         <br>
 
                         {{ $message->message }}
+                        <p>{{ $message->message }}</p>
+
+<form action="{{ route('report.message',$message) }}" method="POST">
+    @csrf
+    <button class="btn btn-link text-danger p-0"
+            style="font-size:12px">
+        🚨 Report
+    </button>
+</form>
 
                         <div class="chat-time text-muted">
 

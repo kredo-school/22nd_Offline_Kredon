@@ -67,8 +67,12 @@ class MarketplaceController extends Controller
     }
             public function show(ItemPost $item)
         {
-            $item->load('images');
+           $item->load([
+        'images',
+        'user',
+    ]);
 
-            return view('marketplace.show', compact('item'));
-        }
+    return view('marketplace.show', compact('item'));
+}
+        
 }
