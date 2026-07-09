@@ -108,29 +108,13 @@
             </div>
         @endif
 
-        @if($step > 1 || !($embedded ?? false))
+        @if($step > 1)
             <div class="hs-wizard-nav mt-4 pt-2">
-                @if($step > 1)
-                    @if($embedded ?? false)
-                        <a href="{{ route('healthcare.index', ['wizard_back' => $step - 1]) }}#search-section"
-                           class="btn btn-link text-muted text-decoration-none px-0 hs-wizard-nav__back">
-                            <i class="fa-solid fa-arrow-left me-1" aria-hidden="true"></i>
-                            {{ __('healthcare.wizard.back') }}
-                        </a>
-                    @else
-                        <a href="{{ route('wizard.step', ['step' => $step - 1]) }}"
-                           class="btn btn-link text-muted text-decoration-none px-0 hs-wizard-nav__back">
-                            <i class="fa-solid fa-arrow-left me-1" aria-hidden="true"></i>
-                            {{ __('healthcare.wizard.back') }}
-                        </a>
-                    @endif
-                @else
-                    <a href="{{ route('healthcare.index') }}"
-                       class="btn btn-link text-muted text-decoration-none px-0 hs-wizard-nav__back">
-                        <i class="fa-solid fa-arrow-left me-1" aria-hidden="true"></i>
-                        {{ __('healthcare.wizard.back_to_healthcare') }}
-                    </a>
-                @endif
+                <a href="{{ route('healthcare.index', ['wizard_back' => $step - 1]) }}#search-section"
+                   class="btn btn-link text-muted text-decoration-none px-0 hs-wizard-nav__back">
+                    <i class="fa-solid fa-arrow-left me-1" aria-hidden="true"></i>
+                    {{ __('healthcare.wizard.back') }}
+                </a>
             </div>
         @endif
 
