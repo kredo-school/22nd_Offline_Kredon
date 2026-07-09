@@ -4,38 +4,28 @@
 
 @section('content')
 
-<div class="container py-5 mt-5">
+<div class="container py-4 mt4 hs-page">
     <div class="row g-4">
-        
+
         {{-- メインエリア --}}
         <div class="col-12 col-md-8">
             {{-- Hero --}}
-            <div class="mb-4">
+            <div class="mb-4 hs-section">
                 @include('healthcare.partials._hero')
             </div>
 
-            {{-- 言語選択 --}}
-            <div class="mb-4">
-                @include('healthcare.partials._language')
-            </div>
-
-            {{-- アクションボタン --}}
-            <div class="mb-4">
-                @include('healthcare.partials._action')
-            </div>
-
             {{-- 医務室 --}}
-            <div class="mb-4">
+            <div class="mb-4 hs-section">
                 @include('healthcare.partials._medical_office')
             </div>
 
-             {{-- 注意 --}}
-            <div class="mb-4">
-                @include('healthcare.partials._notes')
+            {{-- アクションボタン --}}
+            <div class="mb-4 hs-section">
+                @include('healthcare.partials._action')
             </div>
 
             {{-- ウィザード --}}
-            <div id="search-section" class="mb-4 hs-wizard-section">
+            <div id="search-section" class="mb-4 hs-section hs-wizard-section">
 
                 <p class="hs-section-band">
                     {{ __('healthcare.action.find_hospital') }}
@@ -46,35 +36,38 @@
                         'step' => $wizardStep['step'],
                         'totalSteps' => $wizardStep['totalSteps'],
                         'question' => $wizardStep['question'],
+                        'subtitle' => $wizardStep['subtitle'] ?? null,
                         'options' => $wizardStep['options'],
                         'infoOptions' => $wizardStep['infoOptions'] ?? [],
                         'selectedAnswer' => $selectedAnswer,
                         'embedded' => true,
                     ])
-                @elseif($wizardComplete ?? false)
-                    <div class="card shadow-sm border-0 rounded-4 hs-wizard-card">
-                        <div class="card-body p-4 p-5 text-center">
-                            <p class="text-muted mb-3">{{ __('healthcare.wizard.complete_message') }}</p>
-                            <a href="{{ route('wizard.result') }}" class="btn btn-success">
-                                {{ __('healthcare.wizard.view_result') }}
-                            </a>
-                        </div>
-                    </div>
                 @endif
             </div>
 
+            @if(($wizardComplete ?? false) && !request()->boolean('from_result'))
+                @include('healthcare.wizard._wizard_result', [
+                    'resultItems' => $wizardResultItems ?? [],
+                ])
+            @endif
+
             {{--  病院一覧 --}}
-            <div class="mb-4">
+            <div class="mb-4 hs-section">
                 @include('healthcare.partials._card')
             </div>
-            
+
         </div>
-        
+
         {{-- サイドバー --}}
         <div class="col-12 col-md-4">
             <div class="sticky-top" style="top: 20px;">
                 @include('healthcare.partials._faq', ['faqCategories' => $faqCategories])
             </div>
+        </div>
+
+        {{-- 注意 --}}
+        <div class="col-12 mb-4 hs-section">
+            @include('healthcare.partials._notes')
         </div>
 
     </div>
@@ -89,9 +82,15 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const scroller = document.querySelector('.content-body');
+        const emergencyModal = document.getElementById('emergencyModal');
+
+        const scrollOffset = () => {
+            const navbar = document.querySelector('.navbar-top');
+            return (navbar?.offsetHeight ?? 70) + 16;
+        };
 
         const scrollToHash = (hash) => {
-            if (!hash || !scroller) {
+            if (!hash) {
                 return;
             }
 
@@ -101,22 +100,85 @@
                 return;
             }
 
-            const top = target.getBoundingClientRect().top
-                - scroller.getBoundingClientRect().top
-                + scroller.scrollTop
-                - 16;
+            const offset = scrollOffset();
+            const desktopScroller = window.matchMedia('(min-width: 768px)').matches && scroller;
 
-            scroller.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+            if (desktopScroller && getComputedStyle(scroller).overflowY !== 'visible') {
+                const top = target.getBoundingClientRect().top
+                    - scroller.getBoundingClientRect().top
+                    + scroller.scrollTop
+                    - 16;
+
+                scroller.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+                return;
+            }
+
+            const top = window.scrollY + target.getBoundingClientRect().top - offset;
+            window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
         };
 
+        const showCollapse = (element) => {
+            if (!element || element.classList.contains('show')) {
+                return Promise.resolve();
+            }
+
+            const instance = bootstrap.Collapse.getOrCreateInstance(element, { toggle: false });
+
+            return new Promise((resolve) => {
+                element.addEventListener('shown.bs.collapse', resolve, { once: true });
+                instance.show();
+            });
+        };
+
+        const openEmergencyPhrasesAndScroll = () => {
+            const anchor = document.getElementById('hs-emergency-phrases');
+
+            if (!anchor) {
+                return;
+            }
+
+            const categoryEl = document.querySelector(anchor.dataset.hsCategoryCollapse || '');
+            const faqEl = document.querySelector(anchor.dataset.hsFaqCollapse || '');
+
+            showCollapse(categoryEl)
+                .then(() => showCollapse(faqEl))
+                .then(() => {
+                    scrollToHash('#hs-emergency-phrases');
+                    history.replaceState(null, '', '#hs-faq-section');
+                });
+        };
+
+        document.querySelector('.hs-emergency-modal__phrases-link')?.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            if (!emergencyModal) {
+                openEmergencyPhrasesAndScroll();
+                return;
+            }
+
+            const modalInstance = bootstrap.Modal.getInstance(emergencyModal)
+                || bootstrap.Modal.getOrCreateInstance(emergencyModal);
+
+            emergencyModal.addEventListener('hidden.bs.modal', openEmergencyPhrasesAndScroll, { once: true });
+            modalInstance.hide();
+        });
+
         if (window.location.hash) {
-            scrollToHash(window.location.hash);
+            if (window.location.hash === '#hs-emergency-phrases') {
+                openEmergencyPhrasesAndScroll();
+            } else if (window.location.hash !== '#wizard-result') {
+                scrollToHash(window.location.hash);
+            }
         }
 
         document.addEventListener('click', (event) => {
             const link = event.target.closest('a[href^="#"]');
 
             if (!link) {
+                return;
+            }
+
+            if (link.classList.contains('hs-emergency-modal__phrases-link')) {
                 return;
             }
 

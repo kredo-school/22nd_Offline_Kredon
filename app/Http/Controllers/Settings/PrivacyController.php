@@ -37,6 +37,6 @@ class PrivacyController extends Controller
             'privacy_settings' => $this->settingsService->mergePrivacySettings($request->all()),
         ]);
 
-        return back()->with('success', 'プライバシー設定を保存しました');
+        return back()->with('success', 'Privacy settings saved');
     }
 }

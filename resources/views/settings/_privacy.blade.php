@@ -9,8 +9,8 @@
         <section class="st-card st-card--account" aria-labelledby="privacy-heading">
 
             <div class="st-card__head">
-                <h2 id="privacy-heading" class="st-card__heading">プライバシー設定</h2>
-                <p class="st-card__lead">あなたの情報やアクティビティの公開範囲を管理できます。</p>
+                <h2 id="privacy-heading" class="st-card__heading">Privacy Settings</h2>
+                <p class="st-card__lead">Manage who can see your information and activity.</p>
             </div>
 
             <form action="{{ route('settings.privacy.update') }}" method="POST" id="privacy-settings-form">
@@ -20,7 +20,7 @@
                 {{--  1. アカウントのプライバシー  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
-                        <i class="fa-solid fa-user-shield" aria-hidden="true"></i> アカウントのプライバシー
+                        <i class="fa-solid fa-user-shield" aria-hidden="true"></i> Account Privacy
                     </h3>
 
                     @foreach ($privacy->account as $item)
@@ -45,7 +45,7 @@
                 {{--  2. 投稿・アクティビティの公開範囲  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
-                        <i class="fa-regular fa-eye" aria-hidden="true"></i> 投稿・アクティビティの公開範囲
+                        <i class="fa-regular fa-eye" aria-hidden="true"></i> Post & Activity Visibility
                     </h3>
 
                     @foreach ($privacy->activity as $item)
@@ -86,7 +86,7 @@
                 {{--  3. 位置情報・ロケーション  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
-                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i> 位置情報・ロケーション
+                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i> Location
                     </h3>
 
                     @foreach ($privacy->location as $item)
@@ -127,7 +127,7 @@
                 {{--  4. メッセージ・検索のプライバシー  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
-                        <i class="fa-regular fa-envelope" aria-hidden="true"></i> メッセージ・検索のプライバシー
+                        <i class="fa-regular fa-envelope" aria-hidden="true"></i> Messages & Search Privacy
                     </h3>
 
                     @foreach ($privacy->message as $item)
@@ -169,12 +169,12 @@
 
             <p class="st-privacy-note">
                 <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
-                プライバシー設定はいつでも変更できます。保存後すぐに反映されます。
+                Privacy settings can be changed at any time. Changes take effect immediately after saving.
             </p>
 
             <div class="st-card__footer-bar">
                 <button type="submit" form="privacy-settings-form" class="st-btn st-btn--primary">
-                    設定を保存
+                    Save Settings
                 </button>
             </div>
 
@@ -184,14 +184,14 @@
 
 
     {{-- 右サイドバー --}}
-    <aside class="st-page__aside" aria-label="プライバシープレビュー">
+    <aside class="st-page__aside" aria-label="Privacy preview">
 
         {{-- ライブプレビュー --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
-                <i class="fa-regular fa-eye" aria-hidden="true"></i> ライブプレビュー
+                <i class="fa-regular fa-eye" aria-hidden="true"></i> Live Preview
             </h3>
-            <p class="st-widget__sub">他のユーザーから見えるプロフィールのイメージ</p>
+            <p class="st-widget__sub">How your profile appears to other users</p>
 
             <div class="st-privacy-preview">
                 <div class="st-privacy-preview__banner"></div>
@@ -213,21 +213,21 @@
                         </li>
                     @endforeach
                 </ul>
-                <button type="button" class="st-btn st-btn--ghost st-btn--full st-btn--sm">プレビューを更新</button>
+                <button type="button" class="st-btn st-btn--ghost st-btn--full st-btn--sm">Refresh Preview</button>
             </div>
         </div>
 
         {{-- プライバシーステータス --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
-                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> プライバシーステータス
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Privacy Status
             </h3>
 
             <div class="st-safety-status">
                 <div class="st-safety-status__icon" aria-hidden="true">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
-                <p class="st-safety-status__label">プライバシー保護レベル</p>
+                <p class="st-safety-status__label">Privacy Protection Level</p>
                 <p class="st-safety-status__value">{{ $privacy->protection_level }}</p>
             </div>
 
@@ -246,12 +246,12 @@
             <div class="st-privacy-guide-card__icon" aria-hidden="true">
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
-            <h3 class="st-privacy-guide-card__title">プライバシーガイド</h3>
+            <h3 class="st-privacy-guide-card__title">Privacy Guide</h3>
             <p class="st-privacy-guide-card__desc">
-                マーケット・病院検索・スポット投稿など、KREDON Cebu での個人情報の取り扱いについて学べます。
+                Learn how your personal information is handled on KREDON Cebu — marketplace, hospital search, spot posts, and more.
             </p>
             <a href="{{ route('settings.privacy.guide') }}" class="st-btn st-btn--primary st-btn--full st-btn--sm">
-                ガイドを見る
+                View Guide
                 <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
             </a>
         </div>

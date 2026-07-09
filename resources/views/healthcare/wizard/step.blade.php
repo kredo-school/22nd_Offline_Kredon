@@ -10,6 +10,7 @@
                 'step' => $step,
                 'totalSteps' => $totalSteps,
                 'question' => $question,
+                'subtitle' => $subtitle ?? null,
                 'options' => $options,
                 'infoOptions' => $infoOptions ?? [],
                 'selectedAnswer' => $selectedAnswer ?? null,

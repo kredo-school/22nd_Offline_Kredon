@@ -345,9 +345,20 @@
     border-radius: 16px;
     padding: 0;
     width: min(480px, 90vw);
+    max-height: 90vh;
+    overflow: auto;
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
 
     &::backdrop { background: rgba(0, 0, 0, 0.4); }
+}
+
+.st-modal:modal {
+    position: fixed;
+    inset: 0;
+    width: min(480px, 90vw);
+    height: fit-content;
+    max-height: 90vh;
+    margin: auto;
 }
 
 .st-modal__inner {

@@ -15,7 +15,7 @@
                 <span class="fw-semibold">{{ __('healthcare.hours.jhd') }}:</span>
                 {{ $hospital->jhd_hours }}
                 @if($hospital->jhd_closed_days)
-                    <span class="text-muted">({{ __('healthcare.hours.closed') }}: {{ $hospital->jhd_closed_days }})</span>
+                    <span class="text-muted">({{ __('healthcare.hours.closed') }}: {{ $hospital->displayJhdClosedDays() }})</span>
                 @endif
             </div>
         @endif
@@ -29,7 +29,7 @@
             <div class="mb-3">
                 <i class="fa-solid fa-calendar-xmark me-2"></i>
                 <span class="fw-semibold">{{ __('healthcare.hours.closed') }}:</span>
-                {{ $hospital->closed_days }}
+                {{ $hospital->displayClosedDays() }}
             </div>
         @endif
     @endif

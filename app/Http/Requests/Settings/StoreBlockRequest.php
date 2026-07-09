@@ -27,7 +27,7 @@ class StoreBlockRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'username.exists' => '指定されたユーザーが見つかりません。',
+            'username.exists' => 'The specified user was not found.',
         ];
     }
 }

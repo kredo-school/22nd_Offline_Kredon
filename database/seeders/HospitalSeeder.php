@@ -21,9 +21,10 @@ class HospitalSeeder extends Seeder
                 'is_jhd_supported' => true,
                 'is_24_hours' => true,
                 'jhd_hours' => '08:00 - 17:00',
-                'jhd_closed_days' => 'Sun',
+                'jhd_closed_days' => 'Sunday',
                 'duration_grab' => 20,
                 'duration_walk' => null,
+                'supports_grab' => true,
                 'lat' => 10.313400,
                 'lng' => 123.894500,
                 'address_en' => 'Osmena Blvd., Cebu City, Cebu',
@@ -35,11 +36,11 @@ class HospitalSeeder extends Seeder
                 'images' => [
                     [
                         'url' => 'hospitals/cebudoc-ext.jpg',
-                        'caption' => '外観', 'sort_order' => 0
+                        'caption' => 'Exterior', 'sort_order' => 0
                     ],
                     [
                         'url' => 'hospitals/cebudoc.jpg',
-                        'caption' => '入口', 'sort_order' => 1
+                        'caption' => 'Entrance', 'sort_order' => 1
                     ],
                 ],
             ],
@@ -50,26 +51,28 @@ class HospitalSeeder extends Seeder
                 'is_jhd_supported' => true,
                 'is_24_hours' => true,
                 'jhd_hours' => '08:00 - 17:00',
-                'jhd_closed_days' => 'Sun',
+                'jhd_closed_days' => 'Sunday',
                 'duration_grab' => 22,
                 'duration_walk' => null,
+                'supports_grab' => true,
                 'lat' => 10.32289991,
                 'lng' => 123.9309904,
                 'address_en' => 'Medical Arts Building, 8F, Unit 809',
                 'phone_number' => '+63-917-791-2177',
-                'guide_tips_ja' => 'キャッシュレス受診を希望する場合、事前にJHDに連絡する必要があります。',
-                'guide_tips_en' => 'For cashless visits, please contact JHD in advance.',
+                'guide_tips_ja' => 'キャッシュレス受診を希望する場合、事前にJHDに連絡する必要があります。
+                JHDは8階の809号室にあります。',
+                'guide_tips_en' => 'For cashless visits, please contact JHD in advance. JHD is located on the 8th floor, Room 809.',
                 'grab_link' => null,
                 'specialty_slugs' => $jhdSpecialtySlugs,
                 'images' => [
                     [
                         'url' => 'hospitals/chonghua-ext.jpg',
-                        'caption' => '外観', 'sort_order' => 0
+                        'caption' => 'Exterior', 'sort_order' => 0
                     ],
                     
                     [
                         'url' => 'hospitals/chonhua-ent.jpg',
-                        'caption' => '入口', 'sort_order' => 1
+                        'caption' => 'Entrance', 'sort_order' => 1
                     ],
                     [
                         'url' => 'hospitals/chonghua-jhd.jpg',
@@ -96,11 +99,11 @@ class HospitalSeeder extends Seeder
                 'images' => [
                     [
                         'url' => 'hospitals/maxicare-ext.jpg',
-                        'caption' => '外観', 'sort_order' => 0
+                        'caption' => 'Exterior', 'sort_order' => 0
                     ],
                     [
                         'url' => 'hospitals/maxicare-int.jpg',
-                        'caption' => '内観', 'sort_order' => 1
+                        'caption' => 'Interior', 'sort_order' => 1
                     ],
                 ],
             ],
@@ -111,7 +114,7 @@ class HospitalSeeder extends Seeder
                 'is_jhd_supported' => false,
                 'is_24_hours' => false,
                 'business_hours' => '07:00 - 17:00',
-                'closed_days' => 'Sun',
+                'closed_days' => 'Sunday',
                 'duration_grab' => null,
                 'duration_walk' => 6,
                 'lat' => 10.329754,
@@ -123,7 +126,7 @@ class HospitalSeeder extends Seeder
                 'images' => [
                     [
                         'url' => 'hospitals/aventus.jpg',
-                        'caption' => '外観', 'sort_order' => 0
+                        'caption' => 'Exterior', 'sort_order' => 0
                     ],
                 ],
             ],

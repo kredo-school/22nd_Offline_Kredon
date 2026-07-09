@@ -9,8 +9,8 @@
         <section class="st-card st-card--account" aria-labelledby="notification-heading">
 
             <div class="st-card__head">
-                <h2 id="notification-heading" class="st-card__heading">通知設定</h2>
-                <p class="st-card__lead">受け取りたい通知をカスタマイズできます。</p>
+                <h2 id="notification-heading" class="st-card__heading">Notification Settings</h2>
+                <p class="st-card__lead">Choose which notifications you want to receive.</p>
             </div>
 
             <form action="{{ route('settings.notification.update') }}" method="POST" id="notification-settings-form">
@@ -20,7 +20,7 @@
                 {{-- 通知の種類  --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
-                        <i class="fa-regular fa-bell" aria-hidden="true"></i> 通知の種類
+                        <i class="fa-regular fa-bell" aria-hidden="true"></i> Notification Types
                     </h3>
 
                     @foreach ($notification->types as $type)
@@ -46,7 +46,7 @@
                 {{-- 通知の受け取り方法 --}}
                 <div class="st-section-block">
                     <h3 class="st-section-block__title">
-                        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> 通知の受け取り方法
+                        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Delivery Methods
                     </h3>
 
                     @foreach ($notification->channels as $channel)
@@ -73,7 +73,7 @@
 
             <div class="st-card__footer-bar">
                 <button type="submit" form="notification-settings-form" class="st-btn st-btn--primary">
-                    設定を保存
+                    Save Settings
                 </button>
             </div>
 
@@ -83,20 +83,20 @@
 
 
     {{-- 右サイドバー: プレビュー & ステータス --}}
-    <aside class="st-page__aside" aria-label="通知プレビュー">
+    <aside class="st-page__aside" aria-label="Notification preview">
 
         {{--  ライブプレビュー（スマホモック）  --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
-                <i class="fa-regular fa-eye" aria-hidden="true"></i> ライブプレビュー
+                <i class="fa-regular fa-eye" aria-hidden="true"></i> Live Preview
             </h3>
-            <p class="st-widget__sub">実際の通知のイメージを確認できます</p>
+            <p class="st-widget__sub">See what your notifications will look like</p>
 
             <div class="st-phone-preview">
                 <div class="st-phone-preview__frame">
                     <div class="st-phone-preview__header">
-                        <span class="st-phone-preview__title">通知</span>
-                        <button type="button" class="st-phone-preview__mark-read">すべて既読にする</button>
+                        <span class="st-phone-preview__title">Notifications</span>
+                        <button type="button" class="st-phone-preview__mark-read">Mark all as read</button>
                     </div>
                     <ul class="st-phone-preview__list" role="list">
                         @forelse ($notification->preview_items as $item)
@@ -111,7 +111,7 @@
                             </li>
                         @empty
                             <li class="st-phone-preview__item st-phone-preview__item--empty">
-                                <p class="st-phone-preview__item-text">通知はまだありません</p>
+                                <p class="st-phone-preview__item-text">No notifications yet</p>
                             </li>
                         @endforelse
                     </ul>
@@ -122,20 +122,20 @@
         {{--  通知ステータス  --}}
         <div class="st-widget">
             <h3 class="st-widget__title">
-                <i class="fa-solid fa-circle-info" aria-hidden="true"></i> 通知ステータス
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i> Notification Status
             </h3>
 
             <dl class="st-status-list">
                 <div class="st-status-list__row">
-                    <dt>全体設定</dt>
+                    <dt>Overall</dt>
                     <dd><span class="st-badge st-badge--active">{{ $notification->status_summary['general'] }}</span></dd>
                 </div>
                 <div class="st-status-list__row">
-                    <dt>プッシュ通知</dt>
+                    <dt>Push Notifications</dt>
                     <dd>{{ $notification->status_summary['push'] }}</dd>
                 </div>
                 <div class="st-status-list__row">
-                    <dt>メール通知</dt>
+                    <dt>Email Notifications</dt>
                     <dd>{{ $notification->status_summary['email'] }}</dd>
                 </div>
             </dl>
@@ -143,7 +143,7 @@
             <form action="{{ route('settings.notification.reset') }}" method="POST">
                 @csrf
                 <button type="submit" class="st-btn st-btn--outline-danger st-btn--full st-btn--sm">
-                    通知設定をリセット
+                    Reset Notification Settings
                 </button>
             </form>
         </div>
@@ -151,7 +151,7 @@
         {{--  トラブルシューティング  --}}
         <a href="#" class="st-notify-help">
             <i class="fa-solid fa-life-ring" aria-hidden="true"></i>
-            <span>通知が届かない場合</span>
+            <span>Not receiving notifications?</span>
             <i class="fa-solid fa-chevron-right st-notify-help__chevron" aria-hidden="true"></i>
         </a>
 

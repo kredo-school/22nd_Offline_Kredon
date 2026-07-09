@@ -153,12 +153,12 @@
                         <i class="fa-solid fa-briefcase me-2"></i>【Working Place】
                     </button>
                 </li>
-                <li class="nav-item" role="presentation">
+                {{-- <li class="nav-item" role="presentation">
                     <button class="nav-link fw-bold px-3 py-2" id="hospital-tab" data-bs-toggle="tab"
                         data-bs-target="#hospital-contents" type="button" role="tab" aria-selected="false">
                         <i class="fa-solid fa-hospital me-2"></i>【Hospital】
                     </button>
-                </li>
+                </li> --}}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link fw-bold px-3 py-2" id="tourism-tab" data-bs-toggle="tab"
                         data-bs-target="#tourism-contents" type="button" role="tab" aria-selected="false">
@@ -195,7 +195,7 @@
                 </div>
 
                 {{-- 3. Hospital タブ --}}
-                <div class="tab-pane fade" id="hospital-contents" role="tabpanel" aria-labelledby="hospital-tab">
+                {{-- <div class="tab-pane fade" id="hospital-contents" role="tabpanel" aria-labelledby="hospital-tab">
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                         @foreach ($hospital_reviews->filter(fn($r) => \Str::contains($r->title . $r->comment, ['Hospital', 'Clinic', 'Medical'])) as $review)
                             @include('reviews.partials.review-card', [
@@ -204,7 +204,7 @@
                             ])
                         @endforeach
                     </div>
-                </div>
+                </div> --}}
 
                 {{-- 4. Tourism タブ --}}
                 <div class="tab-pane fade" id="tourism-contents" role="tabpanel" aria-labelledby="tourism-tab">
