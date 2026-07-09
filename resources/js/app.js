@@ -3,6 +3,8 @@ import './bootstrap';
 import './hospitals/hospital';
 import { initGrabLoading } from './hospitals/grab';
 import { initWizardResult } from './hospitals/wizard-result';
+import { initHospitalGallery } from './hospitals/gallery';
+import { initHealthcarePage } from './hospitals/healthcare-page';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -18,6 +20,8 @@ window.AOS = AOS;
 document.addEventListener('DOMContentLoaded', () => {
     initGrabLoading();
     initWizardResult();
+    initHospitalGallery();
+    initHealthcarePage();
     AOS.init({
         duration: 800,
         once: true,

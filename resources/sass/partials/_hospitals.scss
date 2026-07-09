@@ -59,56 +59,6 @@
     }
 }
 
-// _language.blade.php
-
-.hs-language {
-    max-width: 640px;
-    margin: 1.5rem auto 0;
-}
-
-.hs-language__btn {
-    min-height: 52px;
-    padding: 0.875rem 1rem;
-    border-radius: 16px;
-    border-width: 2px;
-    font-size: 1rem;
-    font-weight: 700;
-    box-shadow: $shadow-sm;
-    transition: transform 0.15s ease, box-shadow 0.15s ease,
-                background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-
-    &.btn-outline-success:hover,
-    &.btn-outline-success:focus-visible {
-        background-color: $color-hero-bg;
-        border-color: #198754;
-        color: #198754;
-    }
-
-    &.btn-success:hover,
-    &.btn-success:focus-visible {
-        background-color: $color-hero-bg;
-        border-color: #198754;
-        color: #198754;
-    }
-
-    &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-}
-
-@media (min-width: 768px) {
-    .hs-language {
-        margin-top: 2rem;
-    }
-
-    .hs-language__btn {
-        min-height: 56px;
-        padding: 1rem 1.25rem;
-        font-size: 1.125rem;
-    }
-}
-
 // _action.blade.php
 .hs-action-grid {
     max-width: 800px;
@@ -198,45 +148,6 @@
 
 .hs-wizard-section {
     scroll-margin-top: 1rem;
-}
-
-.hs-hospital-detail {
-    background: #fff;
-}
-
-.hs-hospital-detail__documents {
-    padding: 1rem 1.25rem;
-    background-color: #f8f9fa;
-    border-radius: 0.75rem;
-    border: 1px solid #e9ecef;
-}
-
-.hs-hospital-detail__document-list {
-    display: grid;
-    gap: 0.75rem;
-}
-
-.hs-hospital-detail__document-item {
-    font-size: 0.875rem;
-    line-height: 1.5;
-}
-
-.hs-hospital-detail__section {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e9ecef;
-
-    &:first-of-type {
-        margin-top: 1rem;
-        padding-top: 0;
-        border-top: none;
-    }
-}
-
-.hs-hospital-detail__steps {
-    display: grid;
-    gap: 0.5rem;
-    margin-bottom: 0;
 }
 
 .hs-wizard-card {
