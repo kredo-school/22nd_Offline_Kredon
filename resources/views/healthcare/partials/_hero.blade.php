@@ -5,7 +5,7 @@
 
             <div class="col-12 col-md-8">
                 <h1 class="hs-hero__title">
-                    Kredon Student Healthcare Support
+                    {{ __('healthcare.hero.title') }}
                 </h1>
 
                 <p class="hs-hero__desc">
@@ -13,10 +13,9 @@
                 </p>
 
                 <div class="hs-hero__tags">
-                    <span class="text-dark">{{ __('healthcare.hero.tag.search') }}</span>
-                    <span class="badge bg-success fs-6">{{ __('healthcare.hero.tag.insurance') }}</span>
-                    <span class="badge bg-success fs-6">{{ __('healthcare.hero.tag.jhd') }}</span>
-                    <span class="badge bg-success fs-6">{{ __('healthcare.hero.tag.emergency') }}</span>
+                    <span class="badge bg-success fs-6">{{ __('healthcare.hero.tag.search') }}</span>
+                    <span class="badge bg-success fs-6">{{ __('healthcare.hero.tag.cashless') }}</span>
+                    <span class="badge bg-success fs-6">{{ __('healthcare.hero.tag.japanese_support') }}</span>
                 </div>
             </div>
 

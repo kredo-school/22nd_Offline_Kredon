@@ -370,6 +370,8 @@
 
             @include('layouts.notif-modal')
         </div>
+
+        @stack('modals')
     </div>
 
     <script>

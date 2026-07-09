@@ -16,12 +16,12 @@
      * （本番では ViewComposer や Config へ移すのがより望ましい）
      */
     $settingsNav = [
-        ['route' => 'settings.account',      'icon' => 'fa-regular fa-user',           'label' => 'アカウント'],
-        ['route' => 'settings.display',      'icon' => 'fa-regular fa-eye',            'label' => '表示設定'],
-        ['route' => 'settings.notification', 'icon' => 'fa-regular fa-bell',           'label' => '通知'],
-        ['route' => 'settings.comment',      'icon' => 'fa-regular fa-comment',        'label' => 'コメント・安全'],
-        ['route' => 'settings.privacy',      'icon' => 'fa-solid fa-shield-halved',    'label' => 'プライバシー'],
-        ['route' => 'settings.app',          'icon' => 'fa-solid fa-mobile-screen',    'label' => 'アプリ設定'],
+        ['route' => 'settings.account',      'icon' => 'fa-regular fa-user',           'label' => 'Account'],
+        ['route' => 'settings.display',      'icon' => 'fa-regular fa-eye',            'label' => 'Display'],
+        ['route' => 'settings.notification', 'icon' => 'fa-regular fa-bell',           'label' => 'Notifications'],
+        ['route' => 'settings.comment',      'icon' => 'fa-regular fa-comment',        'label' => 'Comments & Safety'],
+        ['route' => 'settings.privacy',      'icon' => 'fa-solid fa-shield-halved',    'label' => 'Privacy'],
+        ['route' => 'settings.app',          'icon' => 'fa-solid fa-mobile-screen',    'label' => 'App Settings'],
     ];
 @endphp
 
@@ -31,8 +31,8 @@
 
     {{-- ページ見出し（全タブ共通） --}}
     <header class="st-wrap__head">
-        <h1 class="st-wrap__title">設定</h1>
-        <p class="st-wrap__desc">アカウントや表示、プライバシーなど各種設定をカスタマイズできます。</p>
+        <h1 class="st-wrap__title">Settings</h1>
+        <p class="st-wrap__desc">Customize your account, display, privacy, and other preferences.</p>
     </header>
 
     {{-- 768px以上: 左ナビ + 右エリア / 未満: 縦積み --}}
@@ -43,7 +43,7 @@
             request()->routeIs() で現在のルートと照合し is-active を付与。
             aria-current="page" でスクリーンリーダーにも現在位置を伝える。
         --}}
-        <nav class="st-inner-nav" aria-label="設定メニュー">
+        <nav class="st-inner-nav" aria-label="Settings menu">
             <ul class="st-inner-nav__list" role="list">
                 @foreach ($settingsNav as $item)
                     @php $isActive = request()->routeIs($item['route']); @endphp

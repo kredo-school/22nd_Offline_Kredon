@@ -13,7 +13,7 @@
 
                 <button type="button"
                         class="hs-btn-bookmark {{ $hospital->isBookmarkedBy(auth()->user()) ? 'is-active' : '' }}"
-                        aria-label="ブックマーク"
+                        aria-label="{{ __('healthcare.action.bookmark') }}"
                         data-id="{{ $hospital->id }}"
                         data-type="App\Models\Hospital">
                     <i class="fa-solid fa-bookmark"></i>
@@ -36,24 +36,9 @@
 
                 @include('healthcare.partials._hospital_hours', ['hospital' => $hospital])
 
-                @if($hospital->guideTips())
-                    <div class="alert alert-light border small mb-3 mt-3">
-                        {{ $hospital->guideTips() }}
-                    </div>
-                @endif
+                @include('healthcare.partials._hospital_guide_tips', ['hospital' => $hospital])
 
-                <div class="d-grid gap-2">
-                    <a href="#" class="btn btn-outline-secondary">{{ __('healthcare.action.details') }}</a>
-                    @if($hospital->googleMapsUrl())
-                        <a href="{{ $hospital->googleMapsUrl() }}"
-                           class="btn btn-outline-success fw-semibold hs-map-link"
-                           data-loader-text="{{ __('healthcare.map.loading') }}"
-                           target="_blank"
-                           rel="noopener noreferrer">
-                            <i class="fa-solid fa-map-location-dot me-1" aria-hidden="true"></i>{{ __('healthcare.action.view_map') }}
-                        </a>
-                    @endif
-                </div>
+                @include('healthcare.partials._hospital_card_actions', ['hospital' => $hospital])
             </div>
         </div>
     </div>
@@ -61,6 +46,9 @@
     </div>
 
 </div>
+
+{{-- 病院詳細モーダル（一時停止） --}}
+{{-- @include('healthcare.partials._hospital_detail_modal') --}}
 
 @push('scripts')
 <script>

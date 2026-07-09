@@ -33,6 +33,6 @@ class DisplayController extends Controller
             'character_temp_id' => $character->id,
         ]);
 
-        return back()->with('success', '表示設定を保存しました');
+        return back()->with('success', 'Display settings saved');
     }
 }

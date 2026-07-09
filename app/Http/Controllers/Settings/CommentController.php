@@ -42,7 +42,7 @@ class CommentController extends Controller
             'ai_moderation'    => ! empty($input['ai_moderation']),
         ]);
 
-        return back()->with('success', 'コメント・安全設定を保存しました');
+        return back()->with('success', 'Comment and safety settings saved');
     }
 
     public function storeBlock(StoreBlockRequest $request)
@@ -54,7 +54,7 @@ class CommentController extends Controller
             'blocked_user_id' => $blockedUser->id,
         ]);
 
-        return back()->with('success', '@' . $blockedUser->username . ' をブロックしました');
+        return back()->with('success', 'Blocked @' . $blockedUser->username);
     }
 
     public function destroyBlock(UserBlock $block)
@@ -63,7 +63,7 @@ class CommentController extends Controller
 
         $block->delete();
 
-        return back()->with('success', 'ブロックを解除しました');
+        return back()->with('success', 'Block removed');
     }
 
     public function storeKeywordMute(StoreKeywordMuteRequest $request)
@@ -73,7 +73,7 @@ class CommentController extends Controller
             'keyword' => $request->validated('keyword'),
         ]);
 
-        return back()->with('success', 'キーワードをミュートしました');
+        return back()->with('success', 'Keyword muted');
     }
 
     public function destroyKeywordMute(UserKeywordMute $keywordMute)
@@ -82,7 +82,7 @@ class CommentController extends Controller
 
         $keywordMute->delete();
 
-        return back()->with('success', 'キーワードミュートを解除しました');
+        return back()->with('success', 'Keyword mute removed');
     }
 
     public function storeNgWord(StoreUserNgWordRequest $request)
@@ -92,7 +92,7 @@ class CommentController extends Controller
             'word'    => $request->validated('word'),
         ]);
 
-        return back()->with('success', 'カスタムNGワードを追加しました');
+        return back()->with('success', 'Custom NG word added');
     }
 
     public function destroyNgWord(UserNgWord $ngWord)
@@ -101,6 +101,6 @@ class CommentController extends Controller
 
         $ngWord->delete();
 
-        return back()->with('success', 'カスタムNGワードを削除しました');
+        return back()->with('success', 'Custom NG word deleted');
     }
 }

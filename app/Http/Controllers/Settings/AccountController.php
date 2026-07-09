@@ -44,7 +44,7 @@ class AccountController extends Controller
         $user->fill($data);
         $user->save();
 
-        return back()->with('success', 'アカウント情報を保存しました');
+        return back()->with('success', 'Account information saved');
     }
 
     public function destroyAccount(DestroyAccountRequest $request)
@@ -62,6 +62,6 @@ class AccountController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'アカウントを削除しました');
+        return redirect('/')->with('success', 'Account deleted');
     }
 }
