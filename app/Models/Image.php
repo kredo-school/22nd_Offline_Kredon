@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Image extends Model
 {
-    // 画像パスを保存できるように設定
-    protected $fillable = ['path'];
+    protected $fillable = [
+        'item_post_id',
+        'path',
+    ];
 
-    // どの投稿(ItemPost)に属しているかのリレーション
     public function itemPost()
     {
-        return $this->belongsTo(ItemPost::class);
+        return $this->belongsTo(ItemPost::class, 'item_post_id');
     }
 }

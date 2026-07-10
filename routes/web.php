@@ -22,6 +22,8 @@ use App\Http\Controllers\SpotController;
 use App\Http\Controllers\TouristSpotController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\TouristReviewController;
+use App\Http\Controllers\MarketCommentController;
+
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\WizardController;
 use App\Http\Controllers\HealthcareController;
@@ -29,6 +31,7 @@ use App\Http\Controllers\HospitalBookmarkController;
 use App\Http\Controllers\HospitalImageController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\InterestedController;
 #Admin Controller
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
@@ -88,6 +91,14 @@ Route::get('/market/create', [MarketplaceController::class, 'create'])->name('ma
 Route::post('/market/store', [MarketplaceController::class, 'store'])->name('marketplace.store');
 Route::get('/market/{item}', [MarketplaceController::class, 'show'])->name('marketplace.show');
 
+
+Route::post('/market/{item}/available', [MarketplaceController::class,'available'])
+    ->name('market.available')
+    ->middleware('auth');
+
+Route::post('/market/{item}/sold', [MarketplaceController::class,'sold'])
+    ->name('market.sold')
+    ->middleware('auth');
 Route::resource('event', EventController::class);
 Route::get('/event', [EventController::class, 'index'])->name('event.index');
 Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
@@ -102,7 +113,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/messages', [ChatController::class, 'list'])->name('chat.list');
 
    
-    
+    Route::post(
+    '/market/{item}/comment',
+    [MarketCommentController::class, 'store']
+)->name('market.comment.store');
+
+Route::delete(
+    '/market/comment/{comment}',
+    [MarketCommentController::class, 'destroy']
+)->name('market.comment.destroy');
+Route::post('/report/item/{item}',
+    [ReportController::class,'reportItem'])
+    ->name('report.market.item');
+
+Route::post('/report/comment/{comment}',
+    [ReportController::class,'reportMarketComment'])
+    ->name('report.market.comment');
+    Route::get('/market/{item}/edit', [MarketplaceController::class, 'edit'])
+    ->name('marketplace.edit');
+
+Route::put('/market/{item}', [MarketplaceController::class, 'update'])
+    ->name('marketplace.update');
 
     // メッセージ送信
     Route::post('/chat/send',
@@ -215,7 +246,9 @@ Route::post(
 '/report/group/{message}',
 [ReportController::class,'reportGroup']
 )->name('report.group');
-
+Route::post('/market/{item}/interested', [InterestedController::class, 'toggle'])
+    ->name('market.interested')
+    ->middleware('auth');
 Route::get('/game/stage3-1', function () {
     return view('game.stage3-1');
 })->name('game.stage3-1');

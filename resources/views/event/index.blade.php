@@ -20,7 +20,7 @@
         <a href="{{ route('event.index',['category'=>'Events']) }}" class="nav-link px-3"> Events </a> 
         <a href="{{ route('event.index',['category'=>'Recruitment']) }}" class="nav-link px-3"> Recruitment </a> 
         <a href="{{ route('event.index',['category'=>'Share Info']) }}" class="nav-link px-3"> Share Info </a> 
-        <a href="{{ route('event.index',['category'=>'Chat']) }}" class="nav-link px-3"> Chat </a> 
+        <a href="{{ route('event.index',['category'=>'Sports']) }}" class="nav-link px-3"> Sports</a> 
         <a href="{{ route('event.index',['category'=>'Others']) }}" class="nav-link px-3"> Others </a>
     </div>
 
