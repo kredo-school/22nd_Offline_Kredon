@@ -11,16 +11,16 @@
                 style="display:block; width:100%; height:auto;">
         </div>
 
-        {{-- NAVIGATION --}}
-        <div class="d-flex flex-wrap mb-4 border-bottom">
-            <a href="{{ route('event.index') }}" class="nav-link px-3"> All </a>
-            <a href="{{ route('event.index', ['category' => 'Questions']) }}" class="nav-link px-3"> Questions </a>
-            <a href="{{ route('event.index', ['category' => 'Events']) }}" class="nav-link px-3"> Events </a>
-            <a href="{{ route('event.index', ['category' => 'Recruitment']) }}" class="nav-link px-3"> Recruitment </a>
-            <a href="{{ route('event.index', ['category' => 'Share Info']) }}" class="nav-link px-3"> Share Info </a>
-            <a href="{{ route('event.index', ['category' => 'Chat']) }}" class="nav-link px-3"> Chat </a>
-            <a href="{{ route('event.index', ['category' => 'Others']) }}" class="nav-link px-3"> Others </a>
-        </div>
+    {{-- NAVIGATION --}}
+    <div class="d-flex flex-wrap mb-4 border-bottom">
+        <a href="{{ route('event.index') }}" class="nav-link px-3"> All </a> 
+        <a href="{{ route('event.index',['category'=>'Questions']) }}" class="nav-link px-3"> Questions </a> 
+        <a href="{{ route('event.index',['category'=>'Events']) }}" class="nav-link px-3"> Events </a> 
+        <a href="{{ route('event.index',['category'=>'Recruitment']) }}" class="nav-link px-3"> Recruitment </a> 
+        <a href="{{ route('event.index',['category'=>'Share Info']) }}" class="nav-link px-3"> Share Info </a> 
+        <a href="{{ route('event.index',['category'=>'Sports']) }}" class="nav-link px-3"> Sports</a> 
+        <a href="{{ route('event.index',['category'=>'Others']) }}" class="nav-link px-3"> Others </a>
+    </div>
 
         <div class="row">
 

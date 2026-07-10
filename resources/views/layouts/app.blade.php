@@ -423,6 +423,16 @@
         .modal {
             z-index: 1075 !important;
         }
+
+        .game-card {
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, .2) !important;
+        }
     </style>
 </head>
 
@@ -578,10 +588,7 @@
                 class="bottom-nav-item {{ request()->routeIs('market.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-store"></i><span>Market</span>
             </a>
-            {{-- <a href="{{ route('all_reviews.index') }}"
-                class="bottom-nav-item {{ request()->routeIs('review.*') ? 'active' : '' }}">
-                <i class="fa-solid fa-comments"></i><span>Review</span>
-            </a> --}}
+
         </nav>
 
         {{-- ══════════════════════════════════
@@ -644,10 +651,7 @@
                             class="sidebar-link {{ request()->routeIs('market.*') ? 'active' : '' }}">
                             <i class="fa-solid fa-store"></i> MARKET
                         </a>
-                        {{-- <a href="{{ route('all_reviews.index') }}"
-                            class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}">
-                            <i class="fa-solid fa-comments"></i> REVIEW
-                        </a> --}}
+
 
                         <hr class="mx-3 my-2 text-muted">
 
@@ -664,26 +668,40 @@
                     </div>
                 </div>
 
-                {{-- Kredon Premium --}}
+                {{-- Kredon Game --}}
                 <hr class="mx-3 my-2 text-muted">
+
                 <div class="px-3 mt-4">
-                    <div class="card shadow-sm" style="background-color:rgb(218,238,246);border-radius:12px;">
-                        <div class="card-body p-3">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fa-solid fa-crown" style="color:gold;"></i>
-                                <h6 class="card-title fw-bold m-0 ms-1" style="color:darkcyan; font-size: 0.75rem;">
-                                    KREDON PREMIUM</h6>
+                    <h5 class="fw-bold mb-3" style="color:#0b6b7a;">
+                        GAME
+                    </h5>
+                    <div class="card shadow-sm game-card"
+                        style="background:#d9eef7;border-radius:15px;overflow:hidden;">
+
+                        {{-- Details以外全部クリック可能 --}}
+                        <a href="{{ route('game.home') }}" class="text-decoration-none text-dark d-block">
+
+                            <div class="card-body p-2 text-center">
+
+                                <img src="{{ asset('images/game-banner.png') }}" class="rounded"
+                                    alt="KREMITI Adventure" style="width:95%; height:auto; border-radius:12px;">
                             </div>
-                            <p class="card-text text-muted mb-3" style="font-size:0.8rem;line-height:1.4;">
-                                Update to Premium to enjoy exclusive events, advanced filters, and unlimited
-                                gameplay!
-                            </p>
-                            <a href="#" class="btn btn-light btn-sm w-100" style="color:darkcyan;">Details</a>
+                        </a>
+
+                        {{-- Detailsボタン --}}
+                        <div class="px-3 pb-3">
+
+                            <a href="{{ route('game.home') }}" class="btn btn-light w-100 fw-bold"
+                                style="color:darkcyan;">
+                                Begin
+                            </a>
                         </div>
+
+                        @stack('modals')
                     </div>
                 </div>
-            </aside>
 
+            </aside>
             <main class="content-body">
                 @yield('content')
             </main>

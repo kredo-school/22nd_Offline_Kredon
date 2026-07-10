@@ -5,7 +5,11 @@
 @section('content')
 
 <div class="container">
-
+    <hr>
+  <a href="{{ route('event.index') }}"
+       class="btn btn-outline-secondary mb-4">
+        ← Back to event
+    </a>
 <div class="card shadow-sm border-0">
 
     <div class="card-body">
@@ -68,7 +72,7 @@
                     <option value="Events">Events</option>
                     <option value="Recruitment">Recruitment</option>
                     <option value="Share Info">Share Info</option>
-                    <option value="Chat">Chat</option>
+                    <option value="Sports">Sports</option>
                     <option value="Others">Others</option>
 
                 </select>

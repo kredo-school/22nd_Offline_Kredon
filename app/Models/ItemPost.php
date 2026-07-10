@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class ItemPost extends Model
 {
     protected $fillable = [
-        'user_id',
-        'title',
-        'location_name',
-        'description',
-        'category',
-        'status',
+       'user_id',
+    'title',
+    'location_name',
+    'description',
+    'category',
+    'status',
+
+    'market_status',
+    'reserved_by',
     ];
 
 
@@ -26,7 +29,21 @@ public function images()
     {
         return $this->belongsTo(User::class);
     }
+    public function interestedUsers()
+{
+    return $this->belongsToMany(
+        User::class,
+        'interesteds'
+    );
+}
 
-    
-    
+public function reservedUser()
+{
+    return $this->belongsTo(User::class,'reserved_by');
+}
+
+public function comments()
+{
+    return $this->hasMany(MarketComment::class);
+}
 }

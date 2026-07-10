@@ -46,21 +46,3 @@
     </div>
 
 </div>
-
-{{-- 病院詳細モーダル（一時停止） --}}
-{{-- @include('healthcare.partials._hospital_detail_modal') --}}
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.hs-gallery.carousel').forEach((carouselEl) => {
-            carouselEl.addEventListener('slid.bs.carousel', (event) => {
-                const counter = carouselEl.querySelector('.hs-gallery__counter-current');
-                if (counter) {
-                    counter.textContent = event.to + 1;
-                }
-            });
-        });
-    });
-</script>
-@endpush

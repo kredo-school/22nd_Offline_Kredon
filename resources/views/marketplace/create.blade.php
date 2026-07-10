@@ -6,7 +6,11 @@
 
 <div class="container"
      style="max-width: 650px;">
-
+     <hr>
+ <a href="{{ route('marketplace.index') }}"
+       class="btn btn-outline-secondary mb-4">
+        ← Back to Marketplace
+    </a>
     <div class="card border-0 shadow-sm rounded-4">
 
         <div class="card-body p-4">
@@ -82,7 +86,7 @@
                     <input type="text"
                            name="title"
                            class="form-control rounded-3"
-                           placeholder="アイテム名（例：スキンケアセット、Tシャツなど）"
+                           placeholder="Item name (e.g., skincare set, T-shirt, etc.)"
                            required>
 
                 </div>
@@ -119,31 +123,31 @@
                                     required>
 
                                 <option value="">
-                                    カテゴリー選択
+                                    Select Category
                                 </option>
 
-                                <option value="ファッション">
-                                    ファッション
+                                <option value="Fashion">
+                                    Fashion
                                 </option>
 
-                                <option value="スキンケア">
-                                    スキンケア
+                                <option value="Skincare">
+                                    Skincare
                                 </option>
 
-                                <option value="日用品">
-                                    日用品
+                                <option value="Household Items">
+                                    Household Items
                                 </option>
 
-                                <option value="文房具">
-                                    文房具
+                                <option value="Stationery">
+                                    Stationery
                                 </option>
 
-                                <option value="薬">
-                                    薬
+                                <option value="Medicine">
+                                    Medicine
                                 </option>
 
-                                <option value="その他">
-                                    その他
+                                <option value="Other">
+                                    Other
                                 </option>
 
                             </select>
@@ -160,19 +164,19 @@
                                     required>
 
                                 <option value="">
-                                    受け渡し場所
+                                    Select Place
                                 </option>
 
-                                <option value="ドミトリー">
-                                    ドミトリー
+                                <option value="Dormitory">
+                                    Dormitory
                                 </option>
 
-                                <option value="カフェテリア">
-                                    カフェテリア
+                                <option value="Cafeteria">
+                                    Cafeteria
                                 </option>
 
-                                <option value="その他">
-                                    その他
+                                <option value="Other">
+                                    Other
                                 </option>
 
                             </select>
@@ -188,7 +192,7 @@
                         <input type="text"
                                name="other_location"
                                class="form-control rounded-3"
-                               placeholder="その他の受け渡し場所">
+                               placeholder="Other Place">
 
                     </div>
 
@@ -205,12 +209,12 @@
                             class="form-select rounded-3"
                             required>
 
-                        <option value="新品/未使用">
-                            新品/未使用
+                        <option value="New/Unused">
+                            New/Unused
                         </option>
 
-                        <option value="使用品">
-                            使用品
+                        <option value="Used">
+                            Used
                         </option>
 
                     </select>
@@ -221,7 +225,7 @@
                 <button type="submit"
                         class="btn btn-success w-100 py-3 rounded-4 fw-bold">
 
-                    KREDONで出品する
+                    List on KREDON
 
                 </button>
 
@@ -264,7 +268,7 @@
         const select = document.getElementById('placeSelect');
         const box = document.getElementById('otherPlaceBox');
 
-        if(select.value === 'その他')
+        if(select.value === 'Other')
         {
             box.classList.remove('d-none');
         }

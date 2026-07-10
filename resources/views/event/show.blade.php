@@ -3,6 +3,10 @@
 @section('content')
 
 <div class="container py-4">
+    <a href="{{ route('event.index') }}"
+       class="btn btn-outline-secondary mb-4">
+        ← Back to event
+    </a>
 
 <div class="row">
 

@@ -151,5 +151,12 @@ public function joinedEvents()
         'event_participants'
     );
 }
+public function interestedItems()
+{
+    return $this->belongsToMany(
+        ItemPost::class,
+        'interesteds'
+    );
+}
 }
 

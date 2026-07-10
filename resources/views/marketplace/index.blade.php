@@ -19,9 +19,10 @@
 
 {{-- カテゴリ --}}
 <div class="mb-4">
-     <a href="{{ route('marketplace.create') }}" class="btn btn-primary">
+
+    <a href="{{ route('marketplace.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i> Post Item
-     </a>
+    </a>
 
     <div class="row text-center py-3">
 
@@ -30,77 +31,77 @@
                class="text-decoration-none text-dark">
 
                 <div class="fs-3">📦</div>
-                <small>すべて</small>
+                <small>All</small>
 
             </a>
         </div>
 
         <div class="col">
-            <a href="{{ route('marketplace.index',['category'=>'服']) }}"
+            <a href="{{ route('marketplace.index',['category'=>'Clothes']) }}"
                class="text-decoration-none text-dark">
 
                 <div class="fs-3">👕</div>
-                <small>服・ファッション</small>
+                <small>Clothes</small>
 
             </a>
         </div>
 
         <div class="col">
-            <a href="{{ route('marketplace.index',['category'=>'タオル']) }}"
+            <a href="{{ route('marketplace.index',['category'=>'Towels']) }}"
                class="text-decoration-none text-dark">
 
                 <div class="fs-3">🧻</div>
-                <small>タオル</small>
+                <small>Towels</small>
 
             </a>
         </div>
 
         <div class="col">
-            <a href="{{ route('marketplace.index',['category'=>'薬']) }}"
+            <a href="{{ route('marketplace.index',['category'=>'Medicine']) }}"
                class="text-decoration-none text-dark">
 
                 <div class="fs-3">💊</div>
-                <small>薬・サプリ</small>
+                <small>Medicine</small>
 
             </a>
         </div>
 
         <div class="col">
-            <a href="{{ route('marketplace.index',['category'=>'スキンケア']) }}"
+            <a href="{{ route('marketplace.index',['category'=>'Skincare']) }}"
                class="text-decoration-none text-dark">
 
                 <div class="fs-3">🧴</div>
-                <small>スキンケア</small>
+                <small>Skincare</small>
 
             </a>
         </div>
 
         <div class="col">
-            <a href="{{ route('marketplace.index',['category'=>'日用品']) }}"
+            <a href="{{ route('marketplace.index',['category'=>'Household Items']) }}"
                class="text-decoration-none text-dark">
 
                 <div class="fs-3">🧼</div>
-                <small>日用品</small>
+                <small>Household</small>
 
             </a>
         </div>
 
         <div class="col">
-            <a href="{{ route('marketplace.index',['category'=>'文房具']) }}"
+            <a href="{{ route('marketplace.index',['category'=>'Stationery']) }}"
                class="text-decoration-none text-dark">
 
                 <div class="fs-3">✏️</div>
-                <small>文房具</small>
+                <small>Stationery</small>
 
             </a>
         </div>
 
         <div class="col">
-            <a href="{{ route('marketplace.index',['category'=>'その他']) }}"
+            <a href="{{ route('marketplace.index',['category'=>'Other']) }}"
                class="text-decoration-none text-dark">
 
                 <div class="fs-3">⋯</div>
-                <small>その他</small>
+                <small>Other</small>
 
             </a>
         </div>
@@ -110,7 +111,7 @@
 </div>
 
 <h3 class="h5 fw-bold my-4">
-    注目のアイテム
+    Featured Items
 </h3>
 
 {{-- アイテム一覧 --}}
@@ -123,43 +124,76 @@
         <a href="{{ route('marketplace.show', $item->id) }}"
            class="text-decoration-none text-dark">
 
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 shadow-sm border-0 {{ $item->market_status=='sold' ? 'opacity-75' : '' }}">
 
-                {{-- 画像 --}}
-                @if($item->images->count())
+                <div class="position-relative">
 
-                    <div class="bg-white d-flex align-items-center justify-content-center"
-                         style="height:120px;">
+                    {{-- 商品画像 --}}
+                    @if($item->images->count())
 
-                        <img src="{{ asset('storage/'.$item->images->first()->path) }}"
-                             alt="{{ $item->title }}"
-                             style="
-                                max-width:100%;
-                                max-height:100%;
-                                object-fit:contain;
-                             ">
+                        <div class="bg-white d-flex align-items-center justify-content-center"
+                             style="height:120px;">
 
-                    </div>
+                            <img src="{{ asset('storage/'.$item->images->first()->path) }}"
+                                 alt="{{ $item->title }}"
+                                 style="
+                                    max-width:100%;
+                                    max-height:100%;
+                                    object-fit:contain;
+                                 ">
 
-                @else
+                        </div>
 
-                    <div class="bg-light d-flex align-items-center justify-content-center"
-                         style="height:120px; font-size:40px;">
-                        📦
-                    </div>
+                    @else
 
-                @endif
+                        <div class="bg-light d-flex align-items-center justify-content-center"
+                             style="height:120px;font-size:40px;">
+
+                            📦
+
+                        </div>
+
+                    @endif
+
+                    {{-- SOLD OUT --}}
+                    @if($item->market_status=="sold")
+
+                        <div class="position-absolute top-0 start-0 w-100 h-100
+                                    d-flex align-items-center justify-content-center"
+                             style="background:rgba(255,255,255,.65);">
+
+                            <img src="{{ asset('images/soldout.png') }}"
+                                 style="width:90px;">
+
+                        </div>
+
+                    @endif
+
+                </div>
 
                 <div class="card-body p-2">
 
-                    <h6 class="fw-bold text-center mb-2">
+                    <h6 class="fw-bold text-center mb-2
+                        {{ $item->market_status=='sold' ? 'text-muted' : '' }}">
+
                         {{ $item->title }}
+
                     </h6>
 
                     <p class="text-muted text-center mb-2"
                        style="font-size:12px;">
+
                         {{ $item->location_name ?? '受渡し場所未設定' }}
+
                     </p>
+
+                    @if($item->market_status=="sold")
+
+                        <span class="badge bg-dark w-100">
+                            SOLD OUT
+                        </span>
+
+                    @endif
 
                 </div>
 
@@ -174,7 +208,7 @@
         <div class="col-12">
 
             <div class="alert alert-light">
-                現在、注目のアイテムはありません。
+                No featured Items now
             </div>
 
         </div>
