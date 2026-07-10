@@ -56,7 +56,7 @@
             <div class="col-6 col-md-3">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-3">
-                        <p class="text-muted mb-1" style="font-size:0.78rem;">今月の参加者</p>
+                        <p class="text-muted mb-1" style="font-size:0.78rem;">This Month’s Participants</p>
                         <h4 class="fw-bold mb-0">
                             {{ number_format($thisMonthParticipants) }}
                             <span class="{{ $participantsGrowth >= 0 ? 'text-success' : 'text-danger' }} fs-6">
@@ -165,7 +165,8 @@
                                         $statusColor = match ($ev->status_label) {
                                             'Now on' => 'success',
                                             'Upcoming' => 'info',
-                                            'Before applications open' => 'secondary',
+                                            'Before applications open' => 'primary',
+                                            'Ended' => 'secondary',
                                             default => 'light',
                                         };
                                     @endphp
@@ -273,7 +274,7 @@
                                                          font-size:0.72rem;font-weight:bold;color:#495057;">
                                                         {{ strtoupper(substr($p->user->name ?? '?', 0, 1)) }}
                                                     </span>
-                                                    {{ $p->user->name ?? '不明' }}
+                                                    {{ $p->user->name ?? 'Unknown' }}
                                                 </div>
                                             </td>
                                             <td>{{ $p->event->title ?? 'Deleted event' }}</td>
@@ -301,9 +302,9 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h6 class="fw-bold mb-0">Event Statics</h6>
                             <select class="form-select form-select-sm" style="width:auto;font-size:0.78rem;">
-                                <option>Past 30 days</option>
-                                <option>過去7日間</option>
-                                <option>過去90日間</option>
+                                <option>Over the past 30 days</option>
+                                <option>Over the past 7 days</option>
+                                <option>Over the past 90 days</option>
                             </select>
                         </div>
                         <div class="row g-2 mb-3">

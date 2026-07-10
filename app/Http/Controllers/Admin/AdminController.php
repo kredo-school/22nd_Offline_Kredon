@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Spot;
 use App\Models\TouristSpot;
 use App\Models\Hospital;
+use App\Models\Event;
 
 use Carbon\Carbon;
 
@@ -41,11 +42,27 @@ class AdminController extends Controller
         // 増減数（+8のような差分表示）
         $locationsDiff = $totalLocations - $lastWeekLocations;
 
+        // --- Active events（開催中のイベント数） ---
+        $today = today();
+        $activeEventsCount = Event::whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
+            ->count();
+
+        // 1週間前時点で「開催中」だったイベント数（同じ条件を1週間前の日付で判定）
+        $lastWeek = $today->copy()->subWeek();
+        $lastWeekActiveEventsCount = Event::whereDate('start_date', '<=', $lastWeek)
+            ->whereDate('end_date', '>=', $lastWeek)
+            ->count();
+
+        $activeEventsDiff = $activeEventsCount - $lastWeekActiveEventsCount;
+
         return view('admin.dashboard', compact(
             'totalUsers',
             'userGrowthRate',
             'totalLocations',
-            'locationsDiff'
+            'locationsDiff',
+            'activeEventsCount',
+            'activeEventsDiff'
             // 他のカード用データもここに追加していく
         ));
     }

@@ -9,7 +9,7 @@
         <div class="d-flex justify-content-between align-items-start mb-2">
             <div>
                 <h4 class="fw-bold mb-1">Review Management</h4>
-                <p class="text-muted mb-0" style="font-size:0.85rem;">Spot・Eventのレビューを管理・モデレーションします</p>
+                <p class="text-muted mb-0" style="font-size:0.85rem;">You can manage and moderate reviews for Spot.</p>
             </div>
         </div>
 
@@ -18,15 +18,15 @@
             @php
                 $tabs = [
                     [
-                        'label' => 'すべてのレビュー',
+                        'label' => 'All reviews',
                         'count' => '2,104',
                         'key' => 'all',
                         'active' => true,
                         'danger' => false,
                     ],
-                    ['label' => 'スポット', 'count' => '1,456', 'key' => 'spot', 'active' => false, 'danger' => false],
-                    ['label' => 'イベント', 'count' => '648', 'key' => 'event', 'active' => false, 'danger' => false],
-                    ['label' => '要対応', 'count' => '18', 'key' => 'pending', 'active' => false, 'danger' => true],
+                    ['label' => 'Working spots', 'count' => '1,456', 'key' => 'spot', 'active' => false, 'danger' => false],
+                    ['label' => 'Tourism spots', 'count' => '648', 'key' => 'event', 'active' => false, 'danger' => false],
+                    ['label' => 'Needs attention', 'count' => '18', 'key' => 'pending', 'active' => false, 'danger' => true],
                 ];
             @endphp
             @foreach ($tabs as $tab)
@@ -56,10 +56,10 @@
                         <span class="input-group-text bg-light border-0">
                             <i class="fa-solid fa-magnifying-glass fa-xs"></i>
                         </span>
-                        <input type="text" class="form-control bg-light border-0" placeholder="レビュー・ユーザー名・対象名で検索">
+                        <input type="text" class="form-control bg-light border-0" placeholder="Search by Review, Username, or Subject Name">
                     </div>
                     <select class="form-select form-select-sm" style="width:auto;">
-                        <option>評価: すべて</option>
+                        <option>Rating: All</option>
                         <option>★★★★★ (5)</option>
                         <option>★★★★ (4)</option>
                         <option>★★★ (3)</option>
@@ -67,13 +67,12 @@
                         <option>★ (1)</option>
                     </select>
                     <select class="form-select form-select-sm" style="width:auto;">
-                        <option>カテゴリー: すべて</option>
-                        <optgroup label="スポット">
+                        <option>Category: All</option>
+                        <optgroup label="Working spots">
                             <option value="spot_working">　Working</option>
-                            <option value="spot_hospital">　Hospital</option>
                             <option value="spot_tourism">　Tourism</option>
                         </optgroup>
-                        <optgroup label="イベント">
+                        <optgroup label="Tourism spots">
                             <option value="event">　Event</option>
                         </optgroup>
                     </select>
@@ -84,9 +83,9 @@
                         <option>Hidden</option>
                     </select>
                     <select class="form-select form-select-sm" style="width:auto;">
-                        <option>期間: 過去30日間</option>
-                        <option>過去7日間</option>
-                        <option>過去90日間</option>
+                        <option>Over the past 30 days</option>
+                        <option>Over the past 7 days</option>
+                        <option>Over the past 90 days間</option>
                     </select>
                 </div>
 
@@ -186,17 +185,16 @@
                             @foreach ($reviews as $review)
                                 @php
                                     $statusBg = match ($review['status']) {
-                                        '承認済み' => 'success',
-                                        '保留中' => 'warning',
-                                        '非表示' => 'secondary',
+                                        'Approved' => 'success',
+                                        'Pending' => 'warning',
+                                        'Not indicated' => 'secondary',
                                         default => 'secondary',
                                     };
                                     $categoryConfig = match ($review['category']) {
                                         'spot_working' => ['label' => 'Working', 'bg' => 'success'],
-                                        'spot_hospital' => ['label' => 'Hospital', 'bg' => 'success'],
                                         'spot_tourism' => ['label' => 'Tourism', 'bg' => 'success'],
-                                        'event' => ['label' => 'イベント', 'bg' => 'primary'],
-                                        default => ['label' => 'その他', 'bg' => 'secondary'],
+                                        // 'event' => ['label' => 'Tourism spots', 'bg' => 'primary'],
+                                        default => ['label' => 'Others', 'bg' => 'secondary'],
                                     };
                                 @endphp
                                 <tr>
@@ -204,7 +202,7 @@
                                     <td>
                                         <div class="fw-medium mb-1">{{ $review['text'] }}</div>
                                         <div class="text-muted" style="font-size:0.75rem;">
-                                            対象: {{ $review['target'] }}
+                                            Target: {{ $review['target'] }}
                                         </div>
                                     </td>
                                     <td>

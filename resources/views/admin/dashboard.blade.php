@@ -370,9 +370,13 @@
                             <div class="metric-icon-wrap mi-amber"><i class="ti ti-calendar-event" aria-hidden="true"></i>
                             </div>
                             <div class="text-secondary mb-1" style="font-size:11px;">Active events</div>
-                            <div class="metric-value">18</div>
+                            <div class="metric-value">{{ $activeEventsCount }}</div>
                             <div class="d-flex align-items-center gap-1 mt-1">
-                                <span class="chg up"><i class="ti ti-arrow-up"></i>+2</span>
+                                @if ($activeEventsDiff >= 0)
+                                    <span class="chg up"><i class="ti ti-arrow-up"></i>+{{ $activeEventsDiff }}</span>
+                                @else
+                                    <span class="chg down"><i class="ti ti-arrow-down"></i>{{ $activeEventsDiff }}</span>
+                                @endif
                                 <span class="chg-label">vs last week</span>
                             </div>
                         </div>
