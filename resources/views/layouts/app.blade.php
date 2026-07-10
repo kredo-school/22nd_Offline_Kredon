@@ -180,6 +180,15 @@
             .spot-card-horizontal { flex-direction: column; }
             .spot-card-img-area { width: 100%; height: 200px; border-right: none; border-bottom: 1px solid #eee; }
         }
+        .game-card{
+    cursor:pointer;
+    transition:all .25s ease;
+}
+
+.game-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 24px rgba(0,0,0,.2) !important;
+}
     </style>
 </head>
 
@@ -272,7 +281,7 @@
             <a href="#" class="bottom-nav-item {{ request()->routeIs('spot.*') ? 'active' : '' }}" onclick="openSpotModal(event)">
                 <i class="fa-solid fa-map-location-dot"></i><span>Spot</span>
             </a>
-            <a href="#" class="bottom-nav-item {{ request()->routeIs('event.*') ? 'active' : '' }}">
+            <a href="{{ route('event.index') }}" class="bottom-nav-item {{ request()->routeIs('event.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-calendar-days"></i><span>Event</span>
             </a>
             <a href="{{ route('marketplace.index') }}" class="bottom-nav-item {{ request()->routeIs('market.*') ? 'active' : '' }}">
@@ -320,7 +329,7 @@
                                 <a href="{{ route('mypage') }}" class="spot-sub-link">Bookmark</a>
                             </div>
 
-                            <a href="#" class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}">
+                            <a href="{{ route('event.index') }}" class="sidebar-link {{ request()->routeIs('event.*') ? 'active' : '' }}">
                                 <i class="fa-solid fa-calendar-days"></i> EVENT
                             </a>
                             <a href="{{ route('marketplace.index') }}" class="sidebar-link {{ request()->routeIs('market.*') ? 'active' : '' }}">
@@ -345,35 +354,65 @@
                     @endauth
 
                     {{-- Kredon Premium --}}
-                    <hr class="mx-3 my-2 text-muted">
-                    <div class="px-3 mt-4">
-                        <div class="card shadow-sm" style="background-color:rgb(218,238,246);border-radius:12px;">
-                            <div class="card-body p-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fa-solid fa-crown" style="color:gold;"></i>
-                                    <h6 class="card-title fw-bold m-0 ms-1" style="color:darkcyan; font-size: 0.75rem;">KREDON PREMIUM</h6>
-                                </div>
-                                <p class="card-text text-muted mb-3" style="font-size:0.8rem;line-height:1.4;">
-                                    Update to Premium to enjoy exclusive events, advanced filters, and unlimited gameplay!
-                                </p>
-                                <a href="#" class="btn btn-light btn-sm w-100" style="color:darkcyan;">Details</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </aside>
+                   <hr class="mx-3 my-2 text-muted">
 
-            <main class="content-body">
-                @yield('content')
-                @stack('scripts')
-            </main>
+<div class="px-3 mt-4">
+  <h5 class="fw-bold mb-3"
+            style="color:#0b6b7a;">
+              GAME 
+        </h5>
+    <div class="card shadow-sm game-card"
+         style="background:#d9eef7;border-radius:15px;overflow:hidden;">
 
-            @include('layouts.notif-modal')
+        {{-- Details以外全部クリック可能 --}}
+        <a href="{{ route('game.home') }}"
+           class="text-decoration-none text-dark d-block">
+
+          <div class="card-body p-2 text-center">
+
+    <img src="{{ asset('images/game-banner.png') }}"
+         class="rounded"
+         alt="KREMITI Adventure"
+         style="
+            width:95%;
+            height:auto;
+            border-radius:12px;
+         ">
+
+</div>
+
+        </a>
+
+        {{-- Detailsボタン --}}
+        <div class="px-3 pb-3">
+
+            <a href="{{ route('game.home') }}"
+               class="btn btn-light w-100 fw-bold"
+               style="color:darkcyan;">
+
+                Begin
+
+            </a>
+
         </div>
 
         @stack('modals')
     </div>
 
+</div>
+
+</div>
+</aside>
+
+<main class="content-body">
+    @yield('content')
+    @stack('scripts')
+</main>
+
+@include('layouts.notif-modal')
+
+</div>
+</div>
     <script>
         // ── ユーザー通知モーダル：開いたら一括既読化 ──
         const userNotifModalEl = document.getElementById('userNotificationsModal');

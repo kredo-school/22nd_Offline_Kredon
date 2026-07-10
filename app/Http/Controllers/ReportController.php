@@ -34,4 +34,27 @@ class ReportController extends Controller
             'Message reported.'
         );
     }
+    public function reportItem(ItemPost $item)
+{
+    Report::create([
+        'user_id'=>Auth::id(),
+        'reason'=>'Marketplace Item',
+        'target_type'=>'item',
+        'target_id'=>$item->id,
+    ]);
+
+    return back()->with('success','Item reported.');
+}
+
+public function reportMarketComment(MarketComment $comment)
+{
+    Report::create([
+        'user_id'=>Auth::id(),
+        'reason'=>'Marketplace Comment',
+        'target_type'=>'market_comment',
+        'target_id'=>$comment->id,
+    ]);
+
+    return back()->with('success','Comment reported.');
+}
 }

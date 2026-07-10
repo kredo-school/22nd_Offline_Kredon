@@ -23,6 +23,9 @@ html,body{ width:100%; height:100%; margin:0; overflow:hidden; }
 </style>
 
 <div class="battle-screen">
+    <audio id="battleBgm" autoplay loop>
+        <source src="{{ asset('music/battle.mp3') }}" type="audio/mpeg">
+    </audio>
     <img src="{{ asset('images/battle-stage1.png') }}" class="battle-bg">
 
     <div class="player-box">
@@ -108,6 +111,35 @@ html,body{ width:100%; height:100%; margin:0; overflow:hidden; }
     };
 
     // 画面読み込み時に初回実行
-    window.onload = window.loadQuestion;
+  window.onload = function(){
+
+    const bgm = document.getElementById("battleBgm");
+
+    bgm.volume = 0.4;
+
+    bgm.play().catch(()=>{});
+
+    window.loadQuestion();
+
+}
+window.addEventListener("load", function () {
+
+    const bgm = document.getElementById("bgm");
+
+    if (bgm) {
+
+        bgm.pause();
+
+        bgm.src = "{{ asset('audio/battle.mp3') }}";
+
+        bgm.load();
+
+        bgm.volume = 0.3;
+
+        bgm.play().catch(()=>{});
+
+    }
+
+});
 </script>
 @endsection

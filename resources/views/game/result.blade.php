@@ -40,7 +40,7 @@ body{
 
     position:absolute;
 
-    top:3%;
+    top:20%;
     left:50%;
 
     transform:translateX(-50%);
@@ -63,13 +63,13 @@ body{
     position:absolute;
 
     left:50%;
-    bottom:6%;
+    bottom:40%;
 
     transform:translateX(-50%);
 
     padding:18px 40px;
 
-    background:rgba(0,0,0,.8);
+    background:rgba(205, 11, 82, 0.8);
 
     color:white;
 
@@ -125,14 +125,14 @@ document.getElementById('statusText');
 
 if(status === 'win'){
 
-    statusText.innerHTML = 'VICTORY!';
+    statusText.innerHTML = '';
 
     resultImage.src =
     "{{ asset('images/victory.png') }}";
 
 }else{
 
-    statusText.innerHTML = 'DEFEAT...';
+    statusText.innerHTML = 'Better luck next time';
 
     resultImage.src =
     "{{ asset('images/defeat.png') }}";
