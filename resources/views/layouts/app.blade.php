@@ -357,7 +357,10 @@
                    <hr class="mx-3 my-2 text-muted">
 
 <div class="px-3 mt-4">
-
+  <h5 class="fw-bold mb-3"
+            style="color:#0b6b7a;">
+              GAME 
+        </h5>
     <div class="card shadow-sm game-card"
          style="background:#d9eef7;border-radius:15px;overflow:hidden;">
 
