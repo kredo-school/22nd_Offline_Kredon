@@ -52,7 +52,7 @@ class UserSettingsService
             'plan'               => $user->isPremium() ? 'premium' : 'free',
             'two_factor_enabled' => (bool) $user->two_factor_enabled,
             'created_at'         => $user->created_at?->format('Y-m-d') ?? '',
-            'last_login'         => $user->updated_at?->locale('ja')->diffForHumans() ?? '—',
+            'last_login'         => $user->updated_at?->locale('en')->diffForHumans() ?? '—',
             'posts_count'        => (int) $user->posts_count,
             'theme'              => $this->themeLabel($settings),
             'security_label'     => $user->two_factor_enabled ? 'High' : 'Standard',
@@ -69,15 +69,15 @@ class UserSettingsService
         $stored   = $settings->notification_settings ?? self::defaultNotificationSettings();
 
         $types = [
-            ['key' => 'comment', 'label' => 'コメント通知', 'desc' => 'あなたの投稿にコメントがあったときに通知します。', 'icon' => 'fa-regular fa-comment', 'color' => 'blue'],
-            ['key' => 'event', 'label' => 'イベント通知', 'desc' => 'イベントの開催・リマインド・キャンセル情報を通知します。', 'icon' => 'fa-solid fa-calendar-days', 'color' => 'purple'],
-            ['key' => 'market', 'label' => 'マーケット通知', 'desc' => '出品への反応や価格の変更などを通知します。', 'icon' => 'fa-solid fa-store', 'color' => 'orange'],
-            ['key' => 'premium', 'label' => 'プレミアム通知', 'desc' => 'プレミアム特典や限定キャンペーンを通知します。', 'icon' => 'fa-solid fa-crown', 'color' => 'gold'],
+            ['key' => 'comment', 'label' => 'Comment Notifications', 'desc' => 'Notify you when someone comments on your posts.', 'icon' => 'fa-regular fa-comment', 'color' => 'blue'],
+            ['key' => 'event', 'label' => 'Event Notifications', 'desc' => 'Notify you about event schedules, reminders, and cancellations.', 'icon' => 'fa-solid fa-calendar-days', 'color' => 'purple'],
+            ['key' => 'market', 'label' => 'Market Notifications', 'desc' => 'Notify you about listing responses and price changes.', 'icon' => 'fa-solid fa-store', 'color' => 'orange'],
+            ['key' => 'premium', 'label' => 'Premium Notifications', 'desc' => 'Notify you about premium benefits and exclusive campaigns.', 'icon' => 'fa-solid fa-crown', 'color' => 'gold'],
         ];
 
         $channels = [
-            ['key' => 'push', 'label' => 'プッシュ通知', 'desc' => 'ブラウザやアプリにプッシュ通知を送信します。', 'icon' => 'fa-solid fa-bell'],
-            ['key' => 'email', 'label' => 'メール通知', 'desc' => '登録メールアドレスに通知を送信します。', 'icon' => 'fa-regular fa-envelope'],
+            ['key' => 'push', 'label' => 'Push Notifications', 'desc' => 'Send push notifications to your browser or app.', 'icon' => 'fa-solid fa-bell'],
+            ['key' => 'email', 'label' => 'Email Notifications', 'desc' => 'Send notifications to your registered email address.', 'icon' => 'fa-regular fa-envelope'],
         ];
 
         foreach ($types as &$type) {
@@ -95,9 +95,9 @@ class UserSettingsService
             'channels'       => $channels,
             'preview_items'  => $this->recentNotifications($user, 3),
             'status_summary' => [
-                'general' => collect($types)->contains(fn ($t) => $t['enabled']) ? '有効' : '無効',
-                'push'    => ($stored['channel_push'] ?? true) ? 'オン' : 'オフ',
-                'email'   => ($stored['channel_email'] ?? false) ? 'オン' : 'オフ',
+                'general' => collect($types)->contains(fn ($t) => $t['enabled']) ? 'Enabled' : 'Disabled',
+                'push'    => ($stored['channel_push'] ?? true) ? 'On' : 'Off',
+                'email'   => ($stored['channel_email'] ?? false) ? 'On' : 'Off',
             ],
         ];
     }
@@ -112,46 +112,46 @@ class UserSettingsService
         $dmOptions         = self::dmOptions();
 
         $account = [
-            ['type' => 'toggle', 'key' => 'private_account', 'label' => '非公開アカウント', 'desc' => '承認したユーザーのみ、あなたの投稿やプロフィールを閲覧できます。', 'enabled' => (bool) $stored['private_account']],
-            ['type' => 'toggle', 'key' => 'show_online', 'label' => 'オンライン状態を表示', 'desc' => '他のユーザーにオンライン状態を表示します。', 'enabled' => (bool) $stored['show_online']],
-            ['type' => 'toggle', 'key' => 'show_activity', 'label' => 'アクティビティを表示', 'desc' => 'コメントやレビューなどの活動状況を他のユーザーに表示します。', 'enabled' => (bool) $stored['show_activity']],
+            ['type' => 'toggle', 'key' => 'private_account', 'label' => 'Private Account', 'desc' => 'Only approved users can view your posts and profile.', 'enabled' => (bool) $stored['private_account']],
+            ['type' => 'toggle', 'key' => 'show_online', 'label' => 'Show Online Status', 'desc' => 'Display your online status to other users.', 'enabled' => (bool) $stored['show_online']],
+            ['type' => 'toggle', 'key' => 'show_activity', 'label' => 'Show Activity', 'desc' => 'Show your activity such as comments and reviews to other users.', 'enabled' => (bool) $stored['show_activity']],
         ];
 
         $activity = [
-            ['type' => 'select', 'key' => 'post_visibility', 'label' => '投稿の公開範囲', 'desc' => 'マーケット出品・スポットレビューなどの投稿の公開先', 'value' => $stored['post_visibility'], 'options' => $visibilityOptions],
-            ['type' => 'select', 'key' => 'review_visibility', 'label' => 'レビューの公開範囲', 'desc' => '勉強・観光スポットへのレビューの公開先', 'value' => $stored['review_visibility'], 'options' => $visibilityOptions],
-            ['type' => 'toggle', 'key' => 'show_bookmarks', 'label' => '保存リスト・ブックマークを表示', 'desc' => '保存したスポットや投稿をプロフィールに表示します。', 'enabled' => (bool) $stored['show_bookmarks']],
-            ['type' => 'toggle', 'key' => 'show_browsing', 'label' => '閲覧履歴を表示', 'desc' => '閲覧したスポットや病院情報を他のユーザーに表示します。', 'enabled' => (bool) $stored['show_browsing']],
+            ['type' => 'select', 'key' => 'post_visibility', 'label' => 'Post Visibility', 'desc' => 'Who can see your market listings, spot reviews, and other posts', 'value' => $stored['post_visibility'], 'options' => $visibilityOptions],
+            ['type' => 'select', 'key' => 'review_visibility', 'label' => 'Review Visibility', 'desc' => 'Who can see your study and tourist spot reviews', 'value' => $stored['review_visibility'], 'options' => $visibilityOptions],
+            ['type' => 'toggle', 'key' => 'show_bookmarks', 'label' => 'Show Saved Lists & Bookmarks', 'desc' => 'Display saved spots and posts on your profile.', 'enabled' => (bool) $stored['show_bookmarks']],
+            ['type' => 'toggle', 'key' => 'show_browsing', 'label' => 'Show Browsing History', 'desc' => 'Show spots and hospital pages you have viewed to other users.', 'enabled' => (bool) $stored['show_browsing']],
         ];
 
         $location = [
-            ['type' => 'toggle', 'key' => 'disable_location', 'label' => '位置情報の共有を無効にする', 'desc' => '投稿やチェックイン時の位置情報を共有しません。', 'enabled' => (bool) $stored['disable_location']],
-            ['type' => 'toggle', 'key' => 'approximate_location', 'label' => '詳細な位置情報を表示しない', 'desc' => '市区町村レベルのおおよそのエリアのみ表示します（例: Cebu City）。', 'enabled' => (bool) $stored['approximate_location']],
-            ['type' => 'select', 'key' => 'location_visibility', 'label' => '位置情報の閲覧制限', 'desc' => 'スポット投稿に付随する位置情報の公開先', 'value' => $stored['location_visibility'], 'options' => $locationOptions],
+            ['type' => 'toggle', 'key' => 'disable_location', 'label' => 'Disable Location Sharing', 'desc' => 'Do not share location when posting or checking in.', 'enabled' => (bool) $stored['disable_location']],
+            ['type' => 'toggle', 'key' => 'approximate_location', 'label' => 'Hide Precise Location', 'desc' => 'Show only an approximate area at city level (e.g. Cebu City).', 'enabled' => (bool) $stored['approximate_location']],
+            ['type' => 'select', 'key' => 'location_visibility', 'label' => 'Location Visibility', 'desc' => 'Who can see location attached to spot posts', 'value' => $stored['location_visibility'], 'options' => $locationOptions],
         ];
 
         $message = [
-            ['type' => 'select', 'key' => 'dm_setting', 'label' => 'ダイレクトメッセージの受信設定', 'desc' => 'マーケット取引やスポットに関する連絡の受信範囲', 'value' => $stored['dm_setting'], 'options' => $dmOptions],
-            ['type' => 'toggle', 'key' => 'show_in_search', 'label' => '検索結果に表示する', 'desc' => 'ユーザー検索やマーケット出品者検索に表示されます。', 'enabled' => (bool) $stored['show_in_search']],
+            ['type' => 'select', 'key' => 'dm_setting', 'label' => 'Direct Message Settings', 'desc' => 'Who can send you messages about market deals and spots', 'value' => $stored['dm_setting'], 'options' => $dmOptions],
+            ['type' => 'toggle', 'key' => 'show_in_search', 'label' => 'Show in Search Results', 'desc' => 'Appear in user and market seller search results.', 'enabled' => (bool) $stored['show_in_search']],
         ];
 
         return (object) [
-            'protection_level' => $stored['private_account'] ? '高' : '標準',
+            'protection_level' => $stored['private_account'] ? 'High' : 'Standard',
             'account'          => $account,
             'activity'         => $activity,
             'location'         => $location,
             'message'          => $message,
             'preview_summary'  => [
-                ['label' => '投稿の公開範囲', 'value' => $visibilityOptions[$stored['post_visibility']] ?? $stored['post_visibility']],
-                ['label' => '位置情報', 'value' => $stored['approximate_location'] ? '市区町村レベル' : '詳細'],
-                ['label' => 'オンライン状態', 'value' => $stored['show_online'] ? '表示' : '非表示'],
-                ['label' => 'メッセージ', 'value' => $dmOptions[$stored['dm_setting']] ?? $stored['dm_setting']],
+                ['label' => 'Post Visibility', 'value' => $visibilityOptions[$stored['post_visibility']] ?? $stored['post_visibility']],
+                ['label' => 'Location', 'value' => $stored['approximate_location'] ? 'City level' : 'Precise'],
+                ['label' => 'Online Status', 'value' => $stored['show_online'] ? 'Visible' : 'Hidden'],
+                ['label' => 'Messages', 'value' => $dmOptions[$stored['dm_setting']] ?? $stored['dm_setting']],
             ],
             'status_checklist' => [
-                ['label' => '非公開アカウント', 'status' => $stored['private_account'] ? 'ON' : 'OFF'],
-                ['label' => '位置情報の共有', 'status' => $stored['disable_location'] ? '無効' : '有効'],
-                ['label' => 'オンライン状態', 'status' => $stored['show_online'] ? '表示' : '非表示'],
-                ['label' => 'メッセージ制限', 'status' => $stored['dm_setting'] === 'all' ? 'なし' : '制限あり'],
+                ['label' => 'Private Account', 'status' => $stored['private_account'] ? 'ON' : 'OFF'],
+                ['label' => 'Location Sharing', 'status' => $stored['disable_location'] ? 'Disabled' : 'Enabled'],
+                ['label' => 'Online Status', 'status' => $stored['show_online'] ? 'Visible' : 'Hidden'],
+                ['label' => 'Message Restrictions', 'status' => $stored['dm_setting'] === 'all' ? 'None' : 'Restricted'],
             ],
         ];
     }
@@ -159,22 +159,22 @@ class UserSettingsService
     public function privacyGuide(): object
     {
         return (object) [
-            'updated_at' => '2026年6月1日',
+            'updated_at' => 'June 1, 2026',
             'sections'   => [
                 [
-                    'key' => 'market', 'title' => 'マーケット（フリマ）', 'icon' => 'fa-solid fa-store', 'color' => 'orange',
-                    'desc' => '中古品の譲渡時に、連絡先などの個人情報が含まれます。',
-                    'tips' => ['出品時は本名ではなくユーザー名でのやり取りを推奨します。', '譲渡場所はカフェテリアを選びましょう。'],
+                    'key' => 'market', 'title' => 'Market (Flea Market)', 'icon' => 'fa-solid fa-store', 'color' => 'orange',
+                    'desc' => 'Personal information such as contact details may be included when transferring secondhand items.',
+                    'tips' => ['Use your username rather than your real name when listing items.', 'Choose a campus cafeteria as the handoff location.'],
                 ],
                 [
-                    'key' => 'study', 'title' => '勉強スポット', 'icon' => 'fa-solid fa-book', 'color' => 'teal',
-                    'desc' => 'カフェ、勉強場所の情報共有時に位置情報が公開されることがあります。',
-                    'tips' => ['「詳細な位置情報を表示しない」設定で、おおよそのエリアのみ公開できます。'],
+                    'key' => 'study', 'title' => 'Study Spots', 'icon' => 'fa-solid fa-book', 'color' => 'teal',
+                    'desc' => 'Location may be shared when posting about cafes and study spots.',
+                    'tips' => ['Use "Hide Precise Location" to share only an approximate area.'],
                 ],
             ],
             'rights' => [
-                'いつでもプライバシー設定から公開範囲を変更できます。',
-                'プライバシーに関するお問い合わせは kredon.cebu@gmail.com までご連絡ください。',
+                'You can change visibility anytime in Privacy settings.',
+                'For privacy inquiries, contact kredon.cebu@gmail.com.',
             ],
         ];
     }
@@ -195,26 +195,26 @@ class UserSettingsService
             'accent'  => $c->accent ?? 'blue',
         ])->values()->all();
 
-        $colorModeLabels = ['light' => 'ライト', 'dark' => 'ダーク', 'system' => 'システム'];
+        $colorModeLabels = ['light' => 'Light', 'dark' => 'Dark', 'system' => 'System'];
 
         return (object) [
             'color_mode'   => $settings->color_mode,
             'character_id' => $character?->slug ?? 'kuredon',
             'color_modes'  => [
-                ['value' => 'light', 'label' => 'ライト', 'desc' => '明るい背景で読みやすく表示します。', 'icon' => 'fa-regular fa-sun'],
-                ['value' => 'dark', 'label' => 'ダーク', 'desc' => '目に優しい暗色テーマで表示します。', 'icon' => 'fa-regular fa-moon'],
-                ['value' => 'system', 'label' => 'システム', 'desc' => '端末の設定（ライト/ダーク）に合わせます。', 'icon' => 'fa-solid fa-desktop'],
+                ['value' => 'light', 'label' => 'Light', 'desc' => 'Display with a bright background for easy reading.', 'icon' => 'fa-regular fa-sun'],
+                ['value' => 'dark', 'label' => 'Dark', 'desc' => 'Display with a dark theme that is easier on the eyes.', 'icon' => 'fa-regular fa-moon'],
+                ['value' => 'system', 'label' => 'System', 'desc' => 'Follow your device setting (light/dark).', 'icon' => 'fa-solid fa-desktop'],
             ],
             'characters'       => $characterRows,
             'status_summary'   => [
                 'color_mode'   => $colorModeLabels[$settings->color_mode] ?? $settings->color_mode,
                 'character'    => $character?->name ?? '—',
-                'auth_screens' => 'ログイン・新規登録',
+                'auth_screens' => 'Login & Sign Up',
             ],
             'preview' => [
-                'login_title'    => 'KREDON Cebu へログイン',
-                'register_title' => 'ITパーク留学生アカウント作成',
-                'sample_post'    => Str::limit($user->bio ?: 'プロフィールを設定してください', 80),
+                'login_title'    => 'Log in to KREDON Cebu',
+                'register_title' => 'Create an IT Park Student Account',
+                'sample_post'    => Str::limit($user->bio ?: 'Please set up your profile', 80),
                 'sample_user'    => $user->name,
             ],
         ];
@@ -225,20 +225,20 @@ class UserSettingsService
         $settings = $this->ensureSettings($user);
         $stored   = array_merge(self::defaultAppSettings(), $settings->app_settings ?? []);
 
-        $langLabels = ['ja' => '日本語 (デフォルト)', 'en' => 'English', 'tl' => 'Tagalog'];
+        $langLabels = ['ja' => 'Japanese (Default)', 'en' => 'English', 'tl' => 'Tagalog'];
 
         return (object) array_merge($stored, [
             'translate_languages'     => $langLabels,
-            'spot_priority_options'   => ['popular' => '人気順', 'nearby' => '近い順', 'recent' => '新着順'],
-            'map_priority_options'    => ['spot' => 'スポット優先', 'event' => 'イベント優先', 'mixed' => 'バランス'],
+            'spot_priority_options'   => ['popular' => 'Most Popular', 'nearby' => 'Nearest', 'recent' => 'Newest'],
+            'map_priority_options'    => ['spot' => 'Spots First', 'event' => 'Events First', 'mixed' => 'Balanced'],
             'app_version'             => config('app.version', '2.3.1'),
             'recommended_spots'       => [],
             'preview_notifications'   => $this->recentNotifications($user, 2),
             'status_summary'          => [
-                'data_saver'     => ($stored['data_saver'] ?? false) ? 'オン' : 'オフ',
+                'data_saver'     => ($stored['data_saver'] ?? false) ? 'On' : 'Off',
                 'auto_translate' => ($stored['auto_translate'] ?? true)
-                    ? 'オン (' . ($langLabels[$stored['translate_language'] ?? 'ja'] ?? '日本語') . ')'
-                    : 'オフ',
+                    ? 'On (' . ($langLabels[$stored['translate_language'] ?? 'ja'] ?? 'Japanese') . ')'
+                    : 'Off',
             ],
         ]);
     }
@@ -253,7 +253,7 @@ class UserSettingsService
         ]);
         $settings = $this->ensureSettings($user);
 
-        $strengthLabels = ['low' => '低', 'standard' => '標準', 'high' => '高'];
+        $strengthLabels = ['low' => 'Low', 'standard' => 'Standard', 'high' => 'High'];
 
         return (object) [
             'allow_comments'     => (bool) $settings->allow_comments,
@@ -267,7 +267,7 @@ class UserSettingsService
             'ng_word_count'      => (int) $user->ng_words_count,
             'blocked_users'      => $user->blocks->map(fn (UserBlock $block) => [
                 'id'       => $block->id,
-                'name'     => $block->blockedUser?->name ?? '不明なユーザー',
+                'name'     => $block->blockedUser?->name ?? 'Unknown User',
                 'username' => $block->blockedUser?->username ?? '',
             ])->values()->all(),
             'keyword_mutes'      => $user->keywordMutes->map(fn (UserKeywordMute $mute) => [
@@ -280,15 +280,15 @@ class UserSettingsService
             ])->values()->all(),
             'safety_status'      => $this->computeSafetyStatus($settings),
             'preview_post'       => [
-                'text'  => Str::limit($user->bio ?: '自己紹介を設定すると、ここにプレビューが表示されます。', 120),
-                'time'  => 'プレビュー',
+                'text'  => Str::limit($user->bio ?: 'Set a bio to see a preview here.', 120),
+                'time'  => 'Preview',
                 'image' => false,
             ],
             'safety_features'    => [
-                ['label' => 'スパム検出', 'status' => $settings->spam_detection ? '有効' : '無効'],
-                ['label' => 'AIモデレーション', 'status' => $settings->ai_moderation ? '有効' : '無効'],
-                ['label' => 'NGワードフィルター', 'status' => $settings->ng_word_filter ? '有効' : '無効'],
-                ['label' => 'NGワード強度', 'status' => $strengthLabels[$settings->ng_word_strength] ?? '標準'],
+                ['label' => 'Spam Detection', 'status' => $settings->spam_detection ? 'Enabled' : 'Disabled'],
+                ['label' => 'AI Moderation', 'status' => $settings->ai_moderation ? 'Enabled' : 'Disabled'],
+                ['label' => 'NG Word Filter', 'status' => $settings->ng_word_filter ? 'Enabled' : 'Disabled'],
+                ['label' => 'NG Word Strength', 'status' => $strengthLabels[$settings->ng_word_strength] ?? 'Standard'],
             ],
         ];
     }
@@ -436,7 +436,7 @@ class UserSettingsService
             'icon'  => $meta['icon'],
             'color' => $meta['color'],
             'text'  => $notification->title ?: ($notification->body ?? ''),
-            'time'  => $timestamp?->locale('ja')->diffForHumans() ?? '',
+            'time'  => $timestamp?->locale('en')->diffForHumans() ?? '',
         ];
     }
 
@@ -448,36 +448,36 @@ class UserSettingsService
             + ($settings->ng_word_strength === 'high' ? 1 : 0);
 
         return match (true) {
-            $score >= 4 => '高',
-            $score >= 2 => '良好',
-            default     => '標準',
+            $score >= 4 => 'High',
+            $score >= 2 => 'Good',
+            default     => 'Standard',
         };
     }
 
     protected static function visibilityOptions(): array
     {
         return [
-            'public'  => '全体公開（留学生コミュニティ）',
-            'members' => '登録ユーザーのみ',
-            'private' => '非公開',
+            'public'  => 'Public (Student Community)',
+            'members' => 'Registered Users Only',
+            'private' => 'Private',
         ];
     }
 
     protected static function locationOptions(): array
     {
         return [
-            'public'  => '全体公開',
-            'members' => '登録ユーザーのみ',
-            'private' => '非公開',
+            'public'  => 'Public',
+            'members' => 'Registered Users Only',
+            'private' => 'Private',
         ];
     }
 
     protected static function dmOptions(): array
     {
         return [
-            'all'     => 'すべてのユーザー',
-            'members' => '登録ユーザーのみ',
-            'none'    => '受け取らない',
+            'all'     => 'All Users',
+            'members' => 'Registered Users Only',
+            'none'    => 'Do Not Accept',
         ];
     }
 

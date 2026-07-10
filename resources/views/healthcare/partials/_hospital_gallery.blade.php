@@ -15,7 +15,7 @@
                             data-bs-slide-to="{{ $index }}"
                             class="{{ $index === 0 ? 'active' : '' }}"
                             aria-current="{{ $index === 0 ? 'true' : 'false' }}"
-                            aria-label="{{ $image->caption ?? 'Slide ' . ($index + 1) }}">
+                            aria-label="{{ $image->displayCaption() ?? 'Slide ' . ($index + 1) }}">
                     </button>
                 @endforeach
             </div>
@@ -26,10 +26,10 @@
                 <div class="carousel-item hs-gallery__item {{ $index === 0 ? 'active' : '' }}">
                     <img src="{{ $image->display_url }}"
                          class="d-block w-100 hs-gallery__image"
-                         alt="{{ $image->caption ?? $hospital->name }}">
-                    @if($image->caption)
+                         alt="{{ $image->displayCaption() ?? $hospital->name }}">
+                    @if($image->displayCaption())
                         <div class="hs-gallery__caption">
-                            <span class="badge bg-dark bg-opacity-75">{{ $image->caption }}</span>
+                            <span class="badge bg-dark bg-opacity-75">{{ $image->displayCaption() }}</span>
                         </div>
                     @endif
                 </div>

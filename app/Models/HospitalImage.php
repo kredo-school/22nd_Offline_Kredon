@@ -38,6 +38,25 @@ class HospitalImage extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function displayCaption(): ?string
+    {
+        if ($this->caption === null || $this->caption === '') {
+            return null;
+        }
+
+        if (app()->getLocale() !== 'en') {
+            return $this->caption;
+        }
+
+        $map = [
+            '外観' => 'Exterior',
+            '入口' => 'Entrance',
+            '内観' => 'Interior',
+        ];
+
+        return $map[$this->caption] ?? $this->caption;
+    }
+
     protected function displayUrl(): Attribute
     {
         return Attribute::get(function (): string {

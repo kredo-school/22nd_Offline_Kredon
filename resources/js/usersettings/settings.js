@@ -1,6 +1,6 @@
 // _account.blade.php
 
-// ライブプレビュー同期JS
+// Live preview sync
 document.addEventListener('DOMContentLoaded', () => {
 
     const previewName   = document.getElementById('preview-name');
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // _comment.blade.php
 
-//セグメントコントロールの見た目同期。ラジオボタンで切り替える
+// Segment control visual sync via radio buttons
 document.addEventListener('DOMContentLoaded', () => {
 
     document
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-// _display.blade.php — 外観モード・キャラクターのライブプレビュー同期
+// _display.blade.php — live preview sync for appearance mode & character
 document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('display-settings-form');
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// _app.blade.php — アプリ設定のライブプレビュー同期
+// _app.blade.php — live preview sync for app settings
 document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('app-settings-form');
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (statusSaver) {
-            statusSaver.textContent = enabled ? 'オン' : 'オフ';
+            statusSaver.textContent = enabled ? 'On' : 'Off';
         }
     }
 
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const label   = langLabels[lang] ?? lang;
 
         if (statusTranslate) {
-            statusTranslate.textContent = enabled ? `オン (${label.replace(/\s*\(.*\)\s*/, '')})` : 'オフ';
+            statusTranslate.textContent = enabled ? `On (${label.replace(/\s*\(.*\)\s*/, '')})` : 'Off';
         }
     }
 

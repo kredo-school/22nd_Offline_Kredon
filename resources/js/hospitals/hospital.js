@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 })
                 .catch(error => {
-                    console.error('ブックマーク操作に失敗:', error);
+                    console.error('Bookmark request failed:', error);
                 });
         });
     });

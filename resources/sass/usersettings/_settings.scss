@@ -7,7 +7,7 @@
 .st-wrap {
     padding: 16px;
     padding-top: calc(90px + 16px);
-    background: $st-bg;
+    background: #f0f2f5;
     // min-height: 100%;  /* [Step2 変更前] flex 親内で 100% が効かずクリップされる場合あり */
     min-height: 0;
     flex: 1 1 auto;
@@ -174,6 +174,93 @@
     }
 }
 
+// two-factor-setup.blade.php
 
+.st-2fa-setup {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    background: #fff;
+}
+
+.st-2fa-setup__qr {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid $st-border;
+}
+
+.st-2fa-setup__qr-inner {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    svg {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        height: auto;
+    }
+}
+
+.st-2fa-setup__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.st-2fa-setup__secret {
+    padding-bottom: 24px;
+    border-bottom: 1px solid $st-border;
+}
+
+.st-2fa-setup__secret-label {
+    margin: 0 0 8px;
+    font-size: 13px;
+    color: $st-text-sub;
+}
+
+.st-2fa-setup__secret-value {
+    margin: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+    word-break: break-word;
+    color: $st-text;
+}
+
+.st-2fa-setup__form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.st-2fa-setup__code {
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0.2em;
+}
+
+@media (min-width: 768px) {
+    .st-2fa-setup {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .st-2fa-setup__qr {
+        flex: 0 0 240px;
+        padding-bottom: 0;
+        padding-right: 24px;
+        border-bottom: none;
+        border-right: 1px solid $st-border;
+    }
+
+    .st-2fa-setup__panel {
+        flex: 1;
+        min-width: 0;
+    }
+}
 
 

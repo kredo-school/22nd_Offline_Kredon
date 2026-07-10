@@ -53,20 +53,24 @@ Route::get('/tourist_spots/{id}', [TouristSpotController::class, 'show'])->name(
 
 Auth::routes();
 
+// homepage
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
+// hospital
 Route::get('/locale/{locale}', [LocaleController::class, 'switch'])
     ->name('locale.switch')
     ->whereIn('locale', ['ja', 'en']);
 
-Route::get('/healthcare', [HealthcareController::class, 'index'])->name('healthcare.index');
+Route::middleware(\App\Http\Middleware\SetHealthcareLocale::class)->group(function () {
+    Route::get('/healthcare', [HealthcareController::class, 'index'])->name('healthcare.index');
 
-Route::prefix('wizard')->group(function () {
-    Route::get('/', [WizardController::class, 'start'])->name('wizard.start');
-    Route::get('/step/{step}', [WizardController::class, 'show'])->name('wizard.step');
-    Route::post('/step/{step}', [WizardController::class, 'store'])->name('wizard.step.store');
-    Route::get('/result', [WizardController::class, 'result'])->name('wizard.result');
+    Route::prefix('wizard')->group(function () {
+        Route::get('/', [WizardController::class, 'start'])->name('wizard.start');
+        Route::get('/step/{step}', [WizardController::class, 'show'])->name('wizard.step');
+        Route::post('/step/{step}', [WizardController::class, 'store'])->name('wizard.step.store');
+        Route::get('/result', [WizardController::class, 'result'])->name('wizard.result');
+    });
 });
 
 Route::post('/hospitals/{hospitalId}/images', [HospitalImageController::class, 'store'])->name('hospital_images.store');

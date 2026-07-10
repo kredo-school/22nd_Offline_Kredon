@@ -8,10 +8,72 @@ class MedicalOfficeController extends Controller
 {
     public function getMedicalOfficeStatus(): array
     {
+        $office = $this->getOfficeBadge();
+
         return [
-            'office' => $this->getOfficeBadge(),
+            'office' => $office,
             'doctor' => $this->getDoctorStatus(),
+            'is_closed' => $office['badge_class'] !== 'bg-success',
+            'next_doctor_visit' => $this->getNextDoctorVisitLabel(),
         ];
+    }
+
+    /**
+     * @return array<int, array{start: string, end: string, time: string}>
+     */
+    private function doctorVisitSchedule(): array
+    {
+        $timeMwf = __('healthcare.medical_office.doctor_visit_time_mwf');
+        $timeTt = __('healthcare.medical_office.doctor_visit_time_tt');
+
+        return [
+            Carbon::MONDAY => ['start' => '13:00', 'end' => '17:00', 'time' => $timeMwf],
+            Carbon::TUESDAY => ['start' => '10:00', 'end' => '12:00', 'time' => $timeTt],
+            Carbon::WEDNESDAY => ['start' => '13:00', 'end' => '17:00', 'time' => $timeMwf],
+            Carbon::THURSDAY => ['start' => '10:00', 'end' => '12:00', 'time' => $timeTt],
+            Carbon::FRIDAY => ['start' => '13:00', 'end' => '17:00', 'time' => $timeMwf],
+        ];
+    }
+
+    public function getNextDoctorVisitLabel(): string
+    {
+        $now = Carbon::now('Asia/Manila');
+        $schedule = $this->doctorVisitSchedule();
+        $currentTime = $now->format('H:i');
+
+        for ($daysAhead = 0; $daysAhead < 7; $daysAhead++) {
+            $date = $now->copy()->addDays($daysAhead);
+            $day = $date->dayOfWeek;
+
+            if (! isset($schedule[$day])) {
+                continue;
+            }
+
+            $slot = $schedule[$day];
+
+            if ($daysAhead === 0 && $currentTime > $slot['end']) {
+                continue;
+            }
+
+            $time = $slot['time'];
+
+            if ($daysAhead === 0) {
+                return __('healthcare.medical_office.next_visit_today', ['time' => $time]);
+            }
+
+            if ($daysAhead === 1) {
+                return __('healthcare.medical_office.next_visit_tomorrow', ['time' => $time]);
+            }
+
+            $weekday = $date->locale(app()->getLocale())->isoFormat('dddd');
+
+            return __('healthcare.medical_office.next_visit_weekday', [
+                'weekday' => $weekday,
+                'time' => $time,
+            ]);
+        }
+
+        return __('healthcare.medical_office.no_visit_scheduled');
     }
 
     private function getOfficeBadge(): array
@@ -46,6 +108,7 @@ class MedicalOfficeController extends Controller
 
         $day = $now->dayOfWeek;
         $time = $now->format('H:i');
+        $schedule = $this->doctorVisitSchedule();
 
         if ($day === Carbon::SATURDAY || $day === Carbon::SUNDAY) {
             return [
@@ -54,20 +117,17 @@ class MedicalOfficeController extends Controller
             ];
         }
 
-        if (in_array($day, [Carbon::MONDAY, Carbon::WEDNESDAY, Carbon::FRIDAY])) {
-            if ($time >= '13:00' && $time <= '17:00') {
-                return [
-                    'type' => 'success',
-                    'message' => __('healthcare.medical_office.status.japanese_doctor'),
-                ];
-            }
-        }
+        if (isset($schedule[$day])) {
+            $slot = $schedule[$day];
 
-        if (in_array($day, [Carbon::TUESDAY, Carbon::THURSDAY])) {
-            if ($time >= '10:00' && $time <= '12:00') {
+            if ($time >= $slot['start'] && $time <= $slot['end']) {
+                $message = in_array($day, [Carbon::TUESDAY, Carbon::THURSDAY], true)
+                    ? __('healthcare.medical_office.status.kotobia_doctor')
+                    : __('healthcare.medical_office.status.japanese_doctor');
+
                 return [
-                    'type' => 'info',
-                    'message' => __('healthcare.medical_office.status.kotobia_doctor'),
+                    'type' => in_array($day, [Carbon::TUESDAY, Carbon::THURSDAY], true) ? 'info' : 'success',
+                    'message' => $message,
                 ];
             }
         }

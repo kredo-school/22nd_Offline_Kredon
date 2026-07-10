@@ -21,6 +21,9 @@ class HealthcareController extends Controller
 
         $medicalOffice = new MedicalOfficeController();
         $medicalOfficeStatus = $medicalOffice->getMedicalOfficeStatus();
+        $clinic = (object) [
+            'is_closed' => $medicalOfficeStatus['is_closed'],
+        ];
 
         $faqController = new FaqController();
         $faqCategories = $faqController->getFaqData();
@@ -38,6 +41,11 @@ class HealthcareController extends Controller
 
         $wizardStep = null;
         $selectedAnswer = null;
+        $wizardResultItems = [];
+
+        if ($wizardComplete && !$fromResult) {
+            $wizardResultItems = $this->wizard->resolveResultItems($answers);
+        }
 
         if (!$wizardComplete || $fromResult) {
             $step = $this->wizard->resolveDisplayStep($answers);
@@ -53,10 +61,12 @@ class HealthcareController extends Controller
         return view('healthcare.index', compact(
             'hospitals',
             'medicalOfficeStatus',
+            'clinic',
             'faqCategories',
             'wizardStep',
             'wizardComplete',
             'selectedAnswer',
+            'wizardResultItems',
         ));
     }
 }

@@ -396,6 +396,7 @@
 
         </div>
 
+        @stack('modals')
     </div>
 
 </div>

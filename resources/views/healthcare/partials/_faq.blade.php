@@ -1,4 +1,4 @@
-<div class="card hs-faq-card">
+<div class="card hs-faq-card" id="hs-faq-section">
 
     <div class="card-header hs-faq-header">
 
@@ -17,7 +17,7 @@
 
                 <h2 class="accordion-header">
 
-                    <button class="accordion-button collapsed hs-faq-button"
+                    <button class="accordion-button hs-faq-button collapsed"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target="#category{{ $category->id }}"
@@ -43,11 +43,24 @@
 
                             @foreach($category->faqs as $faq)
 
-                                <div class="accordion-item border-0 hs-faq-item">
+                                @php
+                                    $isEmergencyPhraseFaq = $category->slug === 'emergency' && $faq->sort_order === 1;
+                                @endphp
+
+                                <div @class([
+                                    'accordion-item border-0 hs-faq-item',
+                                    'hs-faq-item--emergency-phrases' => $isEmergencyPhraseFaq,
+                                ])
+                                     @if($isEmergencyPhraseFaq)
+                                         id="hs-emergency-phrases"
+                                         data-hs-category-collapse="#category{{ $category->id }}"
+                                         data-hs-faq-collapse="#faq{{ $faq->id }}"
+                                     @endif
+                                >
 
                                     <h2 class="accordion-header">
 
-                                        <button class="accordion-button collapsed hs-faq-question"
+                                        <button class="accordion-button hs-faq-question collapsed"
                                                 type="button"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#faq{{ $faq->id }}"
@@ -66,7 +79,30 @@
 
                                         <div class="accordion-body hs-faq-answer">
 
-                                            {!! nl2br(e($faq->displayAnswer())) !!}
+                                            @if($isEmergencyPhraseFaq)
+                                                <div class="hs-emergency-phrases">
+                                                    @foreach($faq->emergencyPhraseItems() as $item)
+                                                        @if($item['type'] === 'heading')
+                                                            <p class="hs-emergency-phrases__heading">{{ $faq->displayEmergencyHeading($item['text']) }}</p>
+                                                        @elseif(app()->getLocale() === 'en')
+                                                            <div class="hs-emergency-phrase">
+                                                                <p class="hs-emergency-phrase__en fw-semibold text-dark mb-0">
+                                                                    <span class="hs-emergency-phrase__number">{{ $item['number'] }}.</span>{{ $item['en'] }}
+                                                                </p>
+                                                            </div>
+                                                        @else
+                                                            <div class="hs-emergency-phrase">
+                                                                <p class="hs-emergency-phrase__ja">
+                                                                    <span class="hs-emergency-phrase__number">{{ $item['number'] }}.</span>{{ $item['ja'] }}
+                                                                </p>
+                                                                <p class="hs-emergency-phrase__en">{{ $item['en'] }}</p>
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                {!! nl2br(e($faq->displayAnswer())) !!}
+                                            @endif
 
                                         </div>
 
