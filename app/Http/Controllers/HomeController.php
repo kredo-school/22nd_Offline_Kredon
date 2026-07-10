@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
 use App\Models\ItemPost;
 use App\Models\Notification;
 use App\Models\Spot;
@@ -247,41 +246,14 @@ class HomeController extends Controller
 }
 
     private function fetchHeroBanners(): array
-    {
-        $banners = [];
-
-        $events = Event::query()
-            ->orderByDesc('start_date')
-            ->limit(5)
-            ->get();
-
-        foreach ($events as $event) {
-            $banners[] = [
-                'title' => $event->title,
-                'path'  => $event->image
-                    ? 'storage/' . ltrim($event->image, '/')
-                    : 'images/event-banner.jpg',
-                'url'   => route('event.show', $event),
-            ];
-        }
-
-        if (count($banners) < 5) {
-            $featureLinks = [
-                ['title' => 'Working Spots', 'path' => 'images/home_banner/working-place.jpg', 'url' => route('top')],
-                ['title' => 'Market Place', 'path' => 'images/home_banner/market_banner.png.jpeg', 'url' => route('marketplace.index')],
-                ['title' => 'Game', 'path' => 'images/kredon-game-home.png', 'url' => route('game.home')],
-                ['title' => 'Tourist Spots', 'path' => 'images/home_banner/cave.jpeg', 'url' => route('tourist_spots.index')],
-                ['title' => 'Community Reviews', 'path' => 'images/home_banner/community.jpg', 'url' => route('all_reviews.index')],
-            ];
-
-            foreach ($featureLinks as $link) {
-                if (count($banners) >= 5) {
-                    break;
-                }
-                $banners[] = $link;
-            }
-        }
-
-        return $banners;
-    }
+{
+    // 固定のプロモーションバナー(常に表示)
+    return [
+        ['title' => 'Working Spots', 'path' => 'images/home_banner/working-place.jpg', 'url' => route('top')],
+        ['title' => 'Market Place', 'path' => 'images/home_banner/market_banner.png.jpeg', 'url' => route('marketplace.index')],
+        ['title' => 'Game', 'path' => 'images/kredon-game-home.png', 'url' => route('game.home')],
+        ['title' => 'Tourist Spots', 'path' => 'images/home_banner/cave.jpeg', 'url' => route('tourist_spots.index')],
+        ['title' => 'Community Reviews', 'path' => 'images/home_banner/community.jpg', 'url' => route('all_reviews.index')],
+    ];
+}
 }
