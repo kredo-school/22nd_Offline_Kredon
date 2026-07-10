@@ -2,10 +2,10 @@
     <div class="swiper hp-hero-swiper">
         <div class="swiper-wrapper">
             <div class="swiper-slide">
-                <div class="hp-banner-box" style="background-image: url('{{ asset('images/welcome-bg.jpg') }}');">
+                <div class="hp-banner-box" style="background-image: url('{{ asset('images/home_banner/ocean.jpeg') }}');">
                     <div class="hp-banner-content">
                         <h1 class="hp-hero-title">Welcome to Kredon</h1>
-                        <p class="hp-hero-subtitle">セブ島のスポット・マーケット・コミュニティ</p>
+                        <p class="hp-hero-subtitle">Cebu Island: Places, Markets and Communities</p>
                     </div>
                 </div>
             </div>

@@ -17,28 +17,25 @@
 
             <a href="{{ route('home', ['category' => 'market', 'sort' => $isMarket ? 'newest' : $sort]) }}"
                class="hp-sort-pill {{ $category === 'market' ? 'is-active' : '' }}">
-                Market
+               <i class="fa-solid fa-store"></i> Market
             </a>
 
             <a href="{{ route('home', ['category' => 'working', 'sort' => $sort]) }}"
                class="hp-sort-pill {{ $category === 'working' ? 'is-active' : '' }}">
-                Working Spot
+               <i class="fa-solid fa-briefcase me-1"></i>   Working Spot
             </a>
 
             <a href="{{ route('home', ['category' => 'tourist', 'sort' => $sort]) }}"
                class="hp-sort-pill {{ $category === 'tourist' ? 'is-active' : '' }}">
-                Tourist Spot
+               <i class="fa-solid fa-map-pin me-1"></i>Tourist Spot
             </a>
 
         </div>
-
     </div>
 
     {{-- 並び替え --}}
     <div class="hp-filter-bottom">
-
         <div>
-
             <div class="hp-filter-label mb-2">
                 Sort
             </div>
@@ -46,9 +43,9 @@
             <div class="hp-sort-pills">
 
                 @foreach([
-                    'newest'  => '新着',
-                    'ranking' => '人気',
-                    'reviews' => '口コミ',
+                    'newest'  => 'New',
+                    'ranking' => 'Trend',
+                    // 'reviews' => '口コミ',
                 ] as $value => $label)
 
                     @if ($isMarket && $value !== 'newest')
@@ -66,13 +63,10 @@
                     @endif
 
                 @endforeach
-
             </div>
-
         </div>
 
         <div class="hp-view-toggle" role="group" aria-label="表示形式">
-
             <button type="button" class="hp-toggle-btn active" data-hp-view="grid" aria-label="グリッド表示" aria-pressed="true">
                 <i class="fa-solid fa-grip"></i>
             </button>
@@ -80,9 +74,6 @@
             <button type="button" class="hp-toggle-btn" data-hp-view="list" aria-label="リスト表示" aria-pressed="false">
                 <i class="fa-solid fa-list"></i>
             </button>
-
         </div>
-
     </div>
-
 </div>

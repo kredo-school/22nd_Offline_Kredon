@@ -7,7 +7,7 @@
     </a>
 
     <a href="{{ route('marketplace.index') }}" class="hp-menu-btn hp-market">
-        <i class="fa-solid fa-gift"></i>
+       <i class="fa-solid fa-store"></i>
         <span class="hp-menu-title">Market</span>
         <span class="hp-menu-subtitle">Free Exchange</span>
     </a>
@@ -18,10 +18,10 @@
         <span class="hp-menu-subtitle">Play & Ranking</span>
     </a>
 
-    <a href="{{ route('all_reviews.index') }}" class="hp-menu-btn hp-more">
-        <i class="fa-solid fa-comments"></i>
-        <span class="hp-menu-title">Community</span>
-        <span class="hp-menu-subtitle">Reviews & More</span>
+    <a href="{{ route('event.index') }}" class="hp-menu-btn hp-more">
+       <i class="fa-solid fa-calendar-days"></i>
+        <span class="hp-menu-title">Event</span>
+        <span class="hp-menu-subtitle">Sports, Tourist, community</span>
     </a>
 
 </nav>

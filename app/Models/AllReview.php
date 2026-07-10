@@ -13,11 +13,14 @@ class AllReview extends Model
     protected $fillable = [
         'user_id',
         'location_id',
-        // 'category',
         'rating',
         'title',
         'comment',
         'amenities',
+        'customer_vibe',
+        'eye_fatigue_level',
+        'chair_comfort',
+        'desk_stability',
     ];
 
     //★ 追加：DB保存時はJSON、取得時は自動でarrayに変換

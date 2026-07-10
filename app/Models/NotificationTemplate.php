@@ -38,6 +38,11 @@ class NotificationTemplate extends Model
         return $this->hasMany(Notification::class, 'template_id');
     }
 
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(NotifSchedule::class, 'template_id');
+    }
+
     // --- Scopes ---
 
     public function scopeActive($query)

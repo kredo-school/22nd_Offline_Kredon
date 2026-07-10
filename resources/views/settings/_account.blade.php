@@ -1,13 +1,12 @@
 @extends('settings.index')
 
 @section('settings-content')
+    <div class="st-page">
 
-<div class="st-page">
+        {{-- メイン: アカウント設定リスト --}}
+        <div class="st-page__main">
 
-    {{-- メイン: アカウント設定リスト --}}
-    <div class="st-page__main">
-
-        <section class="st-card st-card--account" aria-labelledby="account-heading">
+            <section class="st-card st-card--account" aria-labelledby="account-heading">
 
             <div class="st-card__head">
                 <h2 id="account-heading" class="st-card__heading">Account Settings</h2>
@@ -16,8 +15,8 @@
                 </p>
             </div>
 
-            {{-- 各行 = 1つの設定項目。label/value + action のパターンで統一 --}}
-            <ul class="st-setting-list" role="list">
+                {{-- 各行 = 1つの設定項目。label/value + action のパターンで統一 --}}
+                <ul class="st-setting-list" role="list">
 
                 {{-- プロフィール編集 --}}
                 <li class="st-setting-item st-setting-item--profile">
@@ -180,10 +179,10 @@
                     </button>
                 </li>
 
-            </ul>
-        </section>
+                </ul>
+            </section>
 
-    </div>
+        </div>
 
 
     {{--  右サイドバー: プレビュー & ステータス768px未満では設定リストの下に表示 --}}
@@ -204,32 +203,32 @@
                 <a href="{{ route('settings.display') }}" class="st-btn st-btn--ghost st-btn--xs">Change</a>
             </div>
 
-            {{-- ミニプロフィールカード --}}
-            <div class="st-preview__card">
-                <div class="st-preview__avatar" id="preview-avatar">
-                    @if ($user->avatar)
-                        <img src="{{ $user->avatar }}" alt="{{ $user->name }}">
-                    @else
-                        {{ mb_substr($user->name, 0, 1) }}
-                    @endif
-                </div>
-                @if ($user->plan === 'premium')
-                    <span class="st-preview__premium-tag">PREMIUM</span>
-                @endif
-                <p class="st-preview__name" id="preview-name">{{ $user->name }}</p>
-                <p class="st-preview__handle" id="preview-handle">{{ '@' . $user->username }}</p>
-
-                {{-- 投稿数のみ表示（フォロー機能は未実装のため Followers/Following は除外） --}}
-                <div class="st-preview__stats">
-                    <div class="st-preview__stat">
-                        <span class="st-preview__stat-num">{{ number_format($user->posts_count) }}</span>
-                        <span class="st-preview__stat-label">Posts</span>
+                {{-- ミニプロフィールカード --}}
+                <div class="st-preview__card">
+                    <div class="st-preview__avatar" id="preview-avatar">
+                        @if ($user->avatar)
+                            <img src="{{ $user->avatar }}" alt="{{ $user->name }}">
+                        @else
+                            {{ mb_substr($user->name, 0, 1) }}
+                        @endif
                     </div>
-                </div>
+                    @if ($user->plan === 'premium')
+                        <span class="st-preview__premium-tag">PREMIUM</span>
+                    @endif
+                    <p class="st-preview__name" id="preview-name">{{ $user->name }}</p>
+                    <p class="st-preview__handle" id="preview-handle">{{ '@' . $user->username }}</p>
 
-                <p class="st-preview__bio" id="preview-bio">{{ $user->bio }}</p>
+                    {{-- 投稿数のみ表示（フォロー機能は未実装のため Followers/Following は除外） --}}
+                    <div class="st-preview__stats">
+                        <div class="st-preview__stat">
+                            <span class="st-preview__stat-num">{{ number_format($user->posts_count) }}</span>
+                            <span class="st-preview__stat-label">Posts</span>
+                        </div>
+                    </div>
+
+                    <p class="st-preview__bio" id="preview-bio">{{ $user->bio }}</p>
+                </div>
             </div>
-        </div>
 
         {{--  アカウントステータス  --}}
         <div class="st-widget">
@@ -289,12 +288,12 @@
             </a>
         </div>
 
-    </aside>
+        </aside>
 
-</div>
+    </div>
 
 
-{{-- 編集モーダル群
+    {{-- 編集モーダル群
      <dialog> を使用: アクセシビリティ対応・JSライブラリ不要
      各フォームは @method('PATCH') で RESTful に更新ルートへ送信 --}}
 

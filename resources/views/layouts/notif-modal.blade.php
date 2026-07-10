@@ -18,12 +18,15 @@
                 @forelse ($notifications as $notif)
                     <a href="{{ $notif['url'] ?? '#' }}"
                         class="notif-card {{ $notif['is_read'] ? '' : 'unread' }}">
-                        <span class="notif-pill notif-pill-{{ $notif['category'] }}">
-                            <i class="{{ $categoryIcons[$notif['category']] ?? 'fa-solid fa-circle-info' }}"></i>
-                            {{ $categoryLabels[$notif['category']] ?? ucfirst($notif['category']) }}
-                        </span>
+                        
+                        <div class="d-flex gap-1">
+                            <span class="notif-pill notif-pill-{{ $notif['category'] }}">
+                                <i class="{{ $categoryIcons[$notif['category']] ?? 'fa-solid fa-circle-info' }}"></i>
+                                {{ $categoryLabels[$notif['category']] ?? ucfirst($notif['category']) }}
+                            </span>
 
-                        <div class="notif-card-title">{{ $notif['title'] }}</div>
+                            <div class="notif-card-title">{{ $notif['title'] }}</div>
+                        </div>
                         <div class="notif-card-body">{{ $notif['body'] }}</div>
                         <div class="notif-card-meta">{{ $notif['time'] }}</div>
                     </a>
@@ -45,7 +48,7 @@
         padding: 14px 6px;
         text-decoration: none;
         color: inherit;
-        border-bottom: 1px solid #f1f3f5;
+        border-bottom: 1px solid #cfdae5;
         transition: background 0.15s;
     }
 
@@ -131,7 +134,7 @@
 
     .notif-card-body {
         font-size: 0.85rem;
-        color: #868e96;
+        color: #3d454d;
         margin-top: 2px;
     }
 

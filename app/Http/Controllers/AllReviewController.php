@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 use App\Models\AllReview;
+use App\Models\Review;
+use App\Models\TouristReview;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-
 
 class AllReviewController extends Controller
 {
@@ -21,44 +23,143 @@ class AllReviewController extends Controller
         $this->review = $review;
     }
 
-        
-   // 一覧表示 categoryごとにタブで分ける
+
+    // 一覧表示 categoryごとにタブで分ける
     public function index()
     {
-        // user と images のリレーションを効率よく取得（Eager Loading）
-        $all_reviews = AllReview::with(['user', 'images'])
-            ->latest()
-            ->get();
+        $allReviews = AllReview::with(['user', 'images'])->get()
+            ->map(fn($r) => $this->normalizeAllReview($r));
 
-        $working_reviews = $all_reviews->filter(function ($review) {
-            return Str::contains(
-                $review->title . ' ' . $review->comment,
-                ['Working', 'Work', 'Office', 'Coworking', 'Remote', 'Freelance', 'Productivity', 'Focus', 'Quiet', 'Space', 'Desk']
-            );
-        });
+        $workingReviews = Review::with(['user', 'spot'])->get()
+            ->map(fn($r) => $this->normalizeWorkingReview($r));
 
-        $hospital_reviews = $all_reviews->filter(function ($review) {
-            return Str::contains(
-                $review->title . ' ' . $review->comment,
-                ['Hospital', 'Clinic', 'Medical', 'Doctor', 'Healthcare', 'Nurse', 'Treatment', 'Surgery', 'Pharmacy']
-            );
-        });
+        $touristReviews = TouristReview::with(['user', 'touristSpot'])->get()
+            ->map(fn($r) => $this->normalizeTouristReview($r));
 
-        $tourism_reviews = $all_reviews->filter(function ($review) {
-            return Str::contains(
-                $review->title . ' ' . $review->comment,
-                ['Beach', 'Tourism', 'Spot', 'Tourist', 'Sightseeing', 'Attraction', 'Ocean', 'Mountain', 'Park', 'Museum','Travel','Vacation','Resort','Nature','Adventure','Hiking','Camping','Landmark','Historical','Cultural']
-            );
-        });
+        $merged = $allReviews
+            ->concat($workingReviews)
+            ->concat($touristReviews)
+            ->sortByDesc('created_at')
+            ->values();
 
-        return view('reviews.index', compact(
-            'all_reviews',
-            'working_reviews',
-            'hospital_reviews',
-            'tourism_reviews'
-        ));
+        return view('reviews.index', [
+            'all_reviews'     => $merged,
+            'working_reviews' => $merged->where('category', 'working')->values(),
+            'tourism_reviews' => $merged->where('category', 'tourism')->values(),
+        ]);
     }
 
+    // ① all_reviews（ダミー）
+    private function normalizeAllReview($review)
+    {
+        $avg = $this->calcAverage([
+            $review->customer_vibe,
+            $review->eye_fatigue_level,
+            $review->chair_comfort,
+            $review->desk_stability,
+        ]) ?: $review->rating; // 評価軸が未入力なら旧ratingにフォールバック
+
+        return (object) [
+            'source'      => 'all_review',
+            'id'          => $review->id,
+            'user_id'     => $review->user_id,
+            'user'        => $review->user,
+            'category'    => $this->detectCategory($review->title . ' ' . $review->comment),
+            'title'       => $review->title,
+            'rating'      => $avg,
+
+            'comment'     => $review->comment,
+            'amenities'   => $review->amenities ?? [],
+            'images'      => $review->images,
+            'created_at'  => $review->created_at,
+            'updated_at'  => $review->updated_at,
+            'detail_url'  => null,
+        ];
+    }
+
+    // ② reviews（Working Spot 実データ）
+    private function normalizeWorkingReview($review)
+    {
+        $images = $review->photo_path
+            ? collect([(object) ['image_path' => $review->photo_path]])
+            : collect();
+
+        // ★ スポット自体の設備情報からアイコンを連動
+        $amenities = array_values(array_filter([
+            $review->spot?->has_wifi  ? 'wifi'    : null,
+            $review->spot?->has_power ? 'outlet'  : null,
+        ]));
+
+        $avg = $this->calcAverage([
+            $review->customer_vibe,
+            $review->eye_fatigue_level,
+            $review->chair_comfort,
+            $review->desk_stability,
+        ]) ?: $review->rating;
+
+        return (object) [
+            'source'      => 'working',
+            'id'          => $review->id,
+            'user_id'     => $review->user_id,
+            'user'        => $review->user,
+            'category'    => 'working',
+            'title'       => $review->spot->name ?? 'Working Spot', // ★元投稿（Spot）のタイトル
+            'rating'      => $avg,
+            'comment'     => $review->comment,
+
+            'good_point'  => $review->good_point,
+            'bad_point'   => $review->bad_point,
+            'customer_vibe'     => $review->customer_vibe,
+            'eye_fatigue_level' => $review->eye_fatigue_level,
+            'chair_comfort'     => $review->chair_comfort,
+            'desk_stability'    => $review->desk_stability,
+            'raw_photo_path'    => $review->photo_path,
+
+            'amenities'   => $amenities,
+            'images'      => $images,
+            'created_at'  => $review->created_at,
+            'updated_at'  => $review->updated_at,
+            'detail_url'  => $review->spot ? route('spots.show', $review->spot->id) : null,
+        ];
+    }
+
+    // ③ tourist_reviews（Tourist Spot 実データ）
+    private function normalizeTouristReview($review)
+    {
+        return (object) [
+            'source'      => 'tourism',
+            'id'          => $review->id,
+            'user_id'     => $review->user_id,
+            'user'        => $review->user,
+            'category'    => 'tourism',
+            'title'       => $review->touristSpot->name ?? 'Tourist Spot', // ★元投稿のタイトル
+            'rating'      => (float) $review->rating,
+            'comment'     => $review->comment,
+            'amenities'   => [],
+            'images'      => collect(),
+            'created_at'  => $review->created_at,
+            'updated_at'  => $review->updated_at,
+            'detail_url'  => $review->touristSpot ? route('tourist_spots.show', $review->touristSpot->id) : null,
+        ];
+    }
+
+    // amenities' counted stars
+    private function calcAverage(array $scores): float
+    {
+        $scores = array_filter($scores, fn($v) => $v !== null);
+        if (empty($scores)) {
+            return 0;
+        }
+        return round(array_sum($scores) / count($scores), 1);
+    }
+
+    private function detectCategory(string $text): string
+    {
+        if (Str::contains($text, ['Working', 'Work', 'Office', 'Coworking', 'Remote', 'Freelance', 'Desk'])) {
+            return 'working';
+        }
+        return 'tourism';
+    }
 
     public function create()
     {
@@ -105,15 +206,24 @@ class AllReviewController extends Controller
     public function searchLocations(Request $request)
     {
         $keyword = $request->get('q', '');
+        $type = $request->get('type', 'working'); // 'working' | 'tourism'
 
-        #仮data
-        $dummy = collect([
-            ['id' => 1, 'name' => 'A Co-working Space(Ayala)', 'address' => '12345', 'category' => 'working', 'rating' => 4.5],
-            ['id' => 2, 'name' => 'B Hospital', 'address' => '67890', 'category' => 'hospital', 'rating' => 4.0],
-            ['id' => 3, 'name' => 'C Tourism Spot', 'address' => '54321', 'category' => 'tourism', 'rating' => 4.8],
-        ]);
+        $query = $type === 'tourism'
+            ? \App\Models\TouristSpot::query()
+            : \App\Models\Spot::query();
 
-        $results = $keyword ? $dummy->filter(fn($l) => str_contains(strtolower($l['name']), strtolower($keyword)))->values() : $dummy;
+        $query->where('status', 'published');
+
+        if ($keyword !== '') {
+            $query->where('name', 'LIKE', "%{$keyword}%");
+        }
+
+        $results = $query->limit(20)->get(['id', 'name', 'area'])
+            ->map(fn($s) => [
+                'id'      => $s->id,
+                'name'    => $s->name,
+                'address' => $s->area,
+            ]);
 
         return response()->json($results);
     }
@@ -127,59 +237,51 @@ class AllReviewController extends Controller
 
     // Update
     public function update(Request $request, AllReview $review): RedirectResponse
-{
-    
-    // dd([
-    //     'auth_id' => Auth::id(),
-    //     'auth_check' => Auth::check(),
-    //     'session_id' => session()->getId(),
-    //     'review_user_id' => $review->user_id,
-    // ]);
+    {
+        abort_if(Auth::id() !== $review->user_id, 403);
 
-    abort_if(Auth::id() !== $review->user_id, 403);
+        $request->validate([
+            'title'           => 'required|string|max:255',
+            'comment'         => 'required|string',
+            'rating'          => 'required|integer|min:1|max:5',
+            'amenities'       => 'nullable|array',
+            'amenities.*'     => 'string|in:wifi,outlet,air-conditioner,parking,toilet',
+            'images'          => 'nullable|array|max:5',
+            'images.*'        => 'image|mimes:jpeg,png,jpg|max:2048',
+            'delete_images'   => 'nullable|array',   // ★ 追加
+            'delete_images.*' => 'nullable|string',  // ★ 追加
+        ]);
 
-    $request->validate([
-        'title'           => 'required|string|max:255',
-        'comment'         => 'required|string',
-        'rating'          => 'required|integer|min:1|max:5',
-        'amenities'       => 'nullable|array',
-        'amenities.*'     => 'string|in:wifi,outlet,air-conditioner,parking,toilet',
-        'images'          => 'nullable|array|max:5',
-        'images.*'        => 'image|mimes:jpeg,png,jpg|max:2048',
-        'delete_images'   => 'nullable|array',   // ★ 追加
-        'delete_images.*' => 'nullable|string',  // ★ 追加
-    ]);
+        // ★ 既存画像の削除
+        if ($request->has('delete_images')) {
+            foreach ($request->delete_images as $path) {
+                $image = $review->images()->where('image_path', $path)->first();
 
-    // ★ 既存画像の削除
-    if ($request->has('delete_images')) {
-        foreach ($request->delete_images as $path) {
-            $image = $review->images()->where('image_path', $path)->first();
-         
-            if ($image) {
-                Storage::disk('public')->delete($path);
-                $image->delete();
+                if ($image) {
+                    Storage::disk('public')->delete($path);
+                    $image->delete();
+                }
             }
         }
-    }
 
-    $review->update([
-        'location_id' => $request->location_id ?? $review->location_id,
-        'title'       => $request->title,
-        'comment'     => $request->comment,
-        'rating'      => $request->rating,
-        'amenities'   => $request->amenities ?? [],
-    ]);
+        $review->update([
+            'location_id' => $request->location_id ?? $review->location_id,
+            'title'       => $request->title,
+            'comment'     => $request->comment,
+            'rating'      => $request->rating,
+            'amenities'   => $request->amenities ?? [],
+        ]);
 
-    // 新規画像の追加
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $path = $image->store('review_images', 'public');
-            $review->images()->create(['image_path' => $path]);
+        // 新規画像の追加
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('review_images', 'public');
+                $review->images()->create(['image_path' => $path]);
+            }
         }
-    }
 
-    return redirect()->route('all_reviews.index')->with('success', 'Review updated!');
-}
+        return redirect()->route('all_reviews.index')->with('success', 'Review updated!');
+    }
 
     // Delete
     public function destroy(AllReview $review): RedirectResponse
@@ -196,6 +298,4 @@ class AllReviewController extends Controller
 
         return redirect()->route('all_reviews.index')->with('success', 'Review deleted!');
     }
-
-    
 }

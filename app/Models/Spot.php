@@ -15,7 +15,7 @@ class Spot extends Model
 
     protected $fillable = [
         'name', 'area', 'photo_path', 'hours', 'description',
-        'has_wifi', 'has_power', 'has_food', 'user_id',
+        'has_wifi', 'has_power', 'has_food', 'user_id','status',
     ];
 
     /*

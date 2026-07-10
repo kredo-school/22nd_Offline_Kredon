@@ -112,6 +112,10 @@ class Notification extends Model
             'status' => 'sent',
             'sent_at' => now(),
         ]);
+
+        if ($this->category === 'event' && isset($this->data['event_id'])) {
+            Event::where('id', $this->data['event_id'])->update(['is_published' => true]);
+        }
     }
 
     /**

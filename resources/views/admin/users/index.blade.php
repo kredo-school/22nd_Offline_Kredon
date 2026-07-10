@@ -19,7 +19,7 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-4">
                         <p class="text-muted mb-1" style="font-size:0.8rem;">Total Users</p>
-                        <h3 class="fw-bold mb-0">45,210</h3>
+                        <h3 class="fw-bold mb-0">{{ number_format($totalUsers) }}</h3>
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                     <div class="card-body p-4">
                         <p class="text-muted mb-1" style="font-size:0.8rem;">New Users (Last 7 Days)</p>
                         <h3 class="fw-bold mb-0">
-                            235 <span class="text-success" style="font-size:1rem;">↑</span>
+                            {{ $newUsers7d }} <span class="text-success" style="font-size:1rem;">↑</span>
                         </h3>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-4">
                         <p class="text-muted mb-1" style="font-size:0.8rem;">Banned / Deactivated Users</p>
-                        <h3 class="fw-bold mb-0">78</h3>
+                        <h3 class="fw-bold mb-0">{{ $bannedOrDeactivated }}</h3>
                     </div>
                 </div>
             </div>
@@ -49,18 +49,24 @@
 
                 {{-- ── Filters ── --}}
                 <div class="d-flex flex-wrap gap-2 justify-content-end mb-3">
-                    <select class="form-select form-select-sm" style="width:auto;">
-                        <option>Status</option>
-                        <option>Active</option>
-                        <option>Inactive</option>
-                        <option>Banned</option>
-                    </select>
-                    <select class="form-select form-select-sm" style="width:auto;">
-                        <option>Role</option>
-                        <option>Member</option>
-                        <option>Premium-Member</option>
-                        <option>Admin</option>
-                    </select>
+                    <form method="GET" action="{{ route('admin.users.index') }}"
+                        class="d-flex flex-wrap gap-2 justify-content-end mb-3">
+                        <select name="status" class="form-select form-select-sm" style="width:auto;"
+                            onchange="this.form.submit()">
+                            <option value="">Status</option>
+                            <option value="Active" @selected(request('status') === 'Active')>Active</option>
+                            <option value="Inactive" @selected(request('status') === 'Inactive')>Inactive</option>
+                            <option value="Banned" @selected(request('status') === 'Banned')>Banned</option>
+                        </select>
+                        <select name="role" class="form-select form-select-sm" style="width:auto;"
+                            onchange="this.form.submit()">
+                            <option value="">Role</option>
+                            <option value="Member" @selected(request('role') === 'Member')>Member</option>
+                            <option value="Premium-Member" @selected(request('role') === 'Premium-Member')>Premium-Member</option>
+                            <option value="Admin" @selected(request('role') === 'Admin')>Admin</option>
+                        </select>
+                    </form>
+
                     <div class="input-group input-group-sm" style="width:auto;">
                         <span class="input-group-text bg-white border-end-0">Date Range</span>
                         <input type="text" class="form-control border-start-0" placeholder="Last 70 Days"
@@ -87,178 +93,98 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- ダミーデータ（実際はforeachに差し替え） --}}
-                            @php
-                                $users = [
-                                    [
-                                        'name' => 'User @MikeB',
-                                        'id' => '1203001',
-                                        'email' => 'user.@Mike7@gmail.com',
-                                        'role' => 'Member',
-                                        'joined' => '2023-05-23 17:43 PM',
-                                        'status' => 'Active',
-                                        'login' => 14,
-                                    ],
-                                    [
-                                        'name' => 'User @MikeB',
-                                        'id' => '1203002',
-                                        'email' => 'usermaskre7@gmail.com',
-                                        'role' => 'Premium-Member',
-                                        'joined' => '2023-05-23 11:43 PM',
-                                        'status' => 'Inactive',
-                                        'login' => 5,
-                                    ],
-                                    [
-                                        'name' => 'User @MikeB',
-                                        'id' => '1203003',
-                                        'email' => 'adminirator@gmail.com',
-                                        'role' => 'Admin',
-                                        'joined' => '2023-05-23 13:33 PM',
-                                        'status' => 'Banned',
-                                        'login' => 1,
-                                    ],
-                                    [
-                                        'name' => 'User @User',
-                                        'id' => '1203006',
-                                        'email' => 'usermank1@gmail.com',
-                                        'role' => 'Member',
-                                        'joined' => '2023-07-23 10:33 PM',
-                                        'status' => 'Banned',
-                                        'login' => 7,
-                                    ],
-                                    [
-                                        'name' => 'User @MikeB',
-                                        'id' => '1203107',
-                                        'email' => 'usermarle1@gmail.com',
-                                        'role' => 'Member',
-                                        'joined' => '2023-07-28 11:38 PM',
-                                        'status' => 'Active',
-                                        'login' => 1,
-                                    ],
-                                    [
-                                        'name' => 'User @User',
-                                        'id' => '1203008',
-                                        'email' => 'usermoke1@gmail.com',
-                                        'role' => 'Member',
-                                        'joined' => '2023-07-28 12:34 PM',
-                                        'status' => 'Suspend',
-                                        'login' => 1,
-                                    ],
-                                    [
-                                        'name' => 'User @User',
-                                        'id' => '1203009',
-                                        'email' => 'user.sarahk1@gmail.com',
-                                        'role' => 'Member',
-                                        'joined' => '2023-07-25 14:20 PM',
-                                        'status' => 'Inactive',
-                                        'login' => 0,
-                                    ],
-                                    [
-                                        'name' => 'User @MikeB',
-                                        'id' => '1203001',
-                                        'email' => 'user.markj@gmail.com',
-                                        'role' => 'Admin',
-                                        'joined' => '2023-07-24 12:20 PM',
-                                        'status' => 'Banned',
-                                        'login' => 1,
-                                    ],
-                                ];
-                            @endphp
-
-                            @foreach ($users as $user)
+                            @foreach ($all_users as $user)
                                 <tr>
-                                    {{-- <td><input type="checkbox" class="target-checkbox"></td> --}}
                                     <td>
                                         <div class="d-flex align-items-center gap-2">
                                             <span
                                                 style="display:inline-flex;align-items:center;justify-content:center;
-                                                        width:34px;height:34px;border-radius:50%;background:#dee2e6;
-                                                        font-size:0.75rem;font-weight:bold;color:#495057;">
-                                                {{ strtoupper(substr($user['name'], 0, 1)) }}
+                            width:34px;height:34px;border-radius:50%;background:#dee2e6;
+                            font-size:0.75rem;font-weight:bold;color:#495057;">
+                                                {{ strtoupper(substr($user->name, 0, 1)) }}
                                             </span>
-                                            <span class="fw-medium">{{ $user['name'] }}</span>
+                                            <span class="fw-medium">{{ $user->name }}</span>
                                         </div>
                                     </td>
                                     <td>
-                                        <div>{{ $user['id'] }}</div>
-                                        <div class="text-muted" style="font-size:0.75rem;">{{ $user['email'] }}</div>
+                                        <div>{{ $user->id }}</div>
+                                        <div class="text-muted" style="font-size:0.75rem;">{{ $user->email }}</div>
                                     </td>
 
-                                    {{-- ── 左側のRole列（id を付与してJSから連動可能に） ── --}}
                                     <td>
                                         @php
-                                            $roleColor = match ($user['role']) {
+                                            $roleColor = match ($user->role_name) {
                                                 'Admin' => 'danger',
-                                                'Member' => 'success',
                                                 'Premium-Member' => 'info',
-                                                default => 'primary',
+                                                default => 'primary', // Member
                                             };
                                         @endphp
-                                        <span id="roleBadge_{{ $user['id'] }}"
-                                            class="badge bg-{{ $roleColor }}">{{ $user['role'] }}</span>
+                                        <span id="roleBadge_{{ $user->id }}"
+                                            class="badge bg-{{ $roleColor }}">{{ $user->role_name }}</span>
                                     </td>
 
-                                    <td class="text-nowrap">{{ $user['joined'] }}</td>
+                                    <td class="text-nowrap">{{ $user->created_at?->format('Y-m-d h:i A') }}</td>
 
-                                    {{-- ── 左側のStatus列 ── --}}
                                     <td>
                                         @php
-                                            $statusColor = match ($user['status']) {
+                                            $statusColor = match ($user->status) {
                                                 'Active' => 'success',
                                                 'Inactive' => 'secondary',
-                                                'Suspend' => 'warning',
                                                 'Banned' => 'danger',
                                                 default => 'secondary',
                                             };
                                         @endphp
-                                        <span id="statusBadge_{{ $user['id'] }}"
-                                            class="badge bg-{{ $statusColor }}">{{ $user['status'] }}</span>
+                                        <span id="statusBadge_{{ $user->id }}"
+                                            class="badge bg-{{ $statusColor }}">{{ $user->status }}</span>
                                     </td>
 
                                     <td>
-                                        <div style="font-size:0.78rem;">Recent Post</div>
-                                        <div class="text-muted" style="font-size:0.75rem;">Login Count:
-                                            {{ $user['login'] }}
+                                        <div style="font-size:0.78rem;">
+                                            @if ($user->last_login_at)
+                                                Last login: {{ $user->last_login_at->diffForHumans() }}
+                                            @else
+                                                No login yet
+                                            @endif
+                                        </div>
+                                        <div class="text-muted" style="font-size:0.75rem;">
+                                            Login Count: {{ $user->login_count }}
                                         </div>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1 flex-wrap">
-                                            {{-- <button class="btn btn-outline-secondary btn-sm py-0 px-2">Edit</button> --}}
 
-                                            {{-- ── 右側のRoleドロップダウン ── --}}
+                                            {{-- ── Roleドロップダウン ── --}}
                                             <div class="btn-group">
-                                                <button id="currentRoleBtn_{{ $user['id'] }}" type="button"
-                                                    class="btn 
-                                                                @if ($user['role'] == 'Admin') btn-outline-danger 
-                                                                @elseif($user['role'] == 'Member') btn-outline-success 
-                                                                @elseif($user['role'] == 'Premium-Member') btn-outline-info 
-                                                                @else btn-outline-primary @endif btn-sm py-0 px-2 dropdown-toggle"
-                                                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    {{ $user['role'] }}
+                                                <button id="currentRoleBtn_{{ $user->id }}" type="button"
+                                                    class="btn
+                                                        @if ($user->role_name == 'Admin') btn-outline-danger
+                                                        @elseif($user->role_name == 'Premium-Member') btn-outline-info
+                                                        @else btn-outline-primary @endif btn-sm py-0 px-2 dropdown-toggle"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    {{ $user->role_name }}
                                                 </button>
-
-                                                <ul class="dropdown-menu" id="roleDropdownMenu_{{ $user['id'] }}">
-                                                </ul>
+                                                <ul class="dropdown-menu" id="roleDropdownMenu_{{ $user->id }}"></ul>
                                             </div>
 
-                                            {{-- JavaScriptの連動処理 Role用 --}}
                                             <script>
                                                 (() => {
-                                                    const userId = "{{ $user['id'] }}";
-                                                    const initialRole = "{{ $user['role'] }}";
+                                                    const userId = "{{ $user->id }}";
+                                                    const initialRole = "{{ $user->role_name }}";
 
                                                     const roleConfig = {
                                                         'Admin': {
-                                                            color: 'btn-outline-danger'
+                                                            color: 'btn-outline-danger',
+                                                            value: 1
                                                         },
                                                         'Member': {
-                                                            color: 'btn-outline-primary'
+                                                            color: 'btn-outline-primary',
+                                                            value: 2
                                                         },
                                                         'Premium-Member': {
-                                                            color: 'btn-outline-info'
-                                                        }
+                                                            color: 'btn-outline-info',
+                                                            value: 3
+                                                        },
                                                     };
-
                                                     const badgeConfig = {
                                                         'Admin': {
                                                             color: 'bg-danger'
@@ -268,7 +194,7 @@
                                                         },
                                                         'Premium-Member': {
                                                             color: 'bg-info'
-                                                        }
+                                                        },
                                                     };
 
                                                     const currentBtn = document.getElementById(`currentRoleBtn_${userId}`);
@@ -277,16 +203,11 @@
 
                                                     function updateDropdownMenu(currentRole) {
                                                         dropdownMenu.innerHTML = '';
-
                                                         Object.keys(roleConfig).forEach(role => {
                                                             if (role !== currentRole) {
                                                                 const li = document.createElement('li');
                                                                 li.innerHTML = `<button class="dropdown-item" type="button">${role}</button>`;
-
-                                                                li.querySelector('button').addEventListener('click', function() {
-                                                                    changeRole(role);
-                                                                });
-
+                                                                li.querySelector('button').addEventListener('click', () => changeRole(role));
                                                                 dropdownMenu.appendChild(li);
                                                             }
                                                         });
@@ -295,18 +216,32 @@
                                                     function changeRole(newRole) {
                                                         const oldRole = currentBtn.textContent.trim();
 
-                                                        currentBtn.classList.remove(roleConfig[oldRole].color);
-                                                        currentBtn.classList.add(roleConfig[newRole].color);
-                                                        currentBtn.textContent = newRole;
+                                                        fetch(`/admin/users/${userId}/role`, {
+                                                                method: 'PATCH',
+                                                                headers: {
+                                                                    'Content-Type': 'application/json',
+                                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                                                },
+                                                                body: JSON.stringify({
+                                                                    role: roleConfig[newRole].value
+                                                                }),
+                                                            })
+                                                            .then(res => res.json())
+                                                            .then(data => {
+                                                                if (!data.success) return;
 
-                                                        if (roleBadge) {
-                                                            roleBadge.classList.remove(badgeConfig[oldRole].color);
-                                                            roleBadge.classList.add(badgeConfig[newRole].color);
-                                                            roleBadge.textContent = newRole;
-                                                        }
+                                                                currentBtn.classList.remove(roleConfig[oldRole].color);
+                                                                currentBtn.classList.add(roleConfig[newRole].color);
+                                                                currentBtn.textContent = newRole;
 
-                                                        updateDropdownMenu(newRole);
-                                                        console.log(`User ID ${userId} のロールを ${newRole} に更新しました。`);
+                                                                if (roleBadge) {
+                                                                    roleBadge.classList.remove(badgeConfig[oldRole].color);
+                                                                    roleBadge.classList.add(badgeConfig[newRole].color);
+                                                                    roleBadge.textContent = newRole;
+                                                                }
+                                                                updateDropdownMenu(newRole);
+                                                            })
+                                                            .catch(err => console.error('ロール更新に失敗しました', err));
                                                     }
 
                                                     updateDropdownMenu(initialRole);
@@ -314,27 +249,23 @@
                                                 ();
                                             </script>
 
-                                            {{-- ── 右側のStatusドロップダウン ── --}}
+                                            {{-- ── Statusドロップダウン ── --}}
                                             <div class="btn-group">
-                                                <button id="currentStatusBtn_{{ $user['id'] }}" type="button"
-                                                    class="btn 
-                                                                @if ($user['status'] == 'Active') btn-outline-success 
-                                                                @elseif($user['status'] == 'Inactive') btn-outline-secondary 
-                                                                @elseif($user['status'] == 'Banned') btn-outline-danger 
-                                                                @else btn-outline-warning @endif btn-sm py-0 px-2 dropdown-toggle"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    {{ $user['status'] }}
+                                                <button id="currentStatusBtn_{{ $user->id }}" type="button"
+                                                    class="btn
+                                                                    @if ($user->status == 'Active') btn-outline-success
+                                                                    @elseif($user->status == 'Inactive') btn-outline-secondary
+                                                                    @else btn-outline-danger @endif btn-sm py-0 px-2 dropdown-toggle"
+                                                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                    {{ $user->status }}
                                                 </button>
-
-                                                <ul class="dropdown-menu" id="statusDropdownMenu_{{ $user['id'] }}">
-                                                </ul>
+                                                <ul class="dropdown-menu" id="statusDropdownMenu_{{ $user->id }}"></ul>
                                             </div>
 
-                                            {{-- JavaScriptの連動処理 Status用 --}}
                                             <script>
                                                 (() => {
-                                                    const userId = "{{ $user['id'] }}";
-                                                    const initialStatus = "{{ $user['status'] }}";
+                                                    const userId = "{{ $user->id }}";
+                                                    const initialStatus = "{{ $user->status }}";
 
                                                     const statusConfig = {
                                                         'Active': {
@@ -346,11 +277,7 @@
                                                         'Banned': {
                                                             color: 'btn-outline-danger'
                                                         },
-                                                        'Suspend': {
-                                                            color: 'btn-outline-warning'
-                                                        }
                                                     };
-
                                                     const badgeConfig = {
                                                         'Active': {
                                                             color: 'bg-success'
@@ -361,9 +288,6 @@
                                                         'Banned': {
                                                             color: 'bg-danger'
                                                         },
-                                                        'Suspend': {
-                                                            color: 'bg-warning'
-                                                        }
                                                     };
 
                                                     const currentBtn = document.getElementById(`currentStatusBtn_${userId}`);
@@ -372,16 +296,11 @@
 
                                                     function updateDropdownMenu(currentStatus) {
                                                         dropdownMenu.innerHTML = '';
-
                                                         Object.keys(statusConfig).forEach(status => {
                                                             if (status !== currentStatus) {
                                                                 const li = document.createElement('li');
                                                                 li.innerHTML = `<button class="dropdown-item" type="button">${status}</button>`;
-
-                                                                li.querySelector('button').addEventListener('click', function() {
-                                                                    changeStatus(status);
-                                                                });
-
+                                                                li.querySelector('button').addEventListener('click', () => changeStatus(status));
                                                                 dropdownMenu.appendChild(li);
                                                             }
                                                         });
@@ -390,18 +309,32 @@
                                                     function changeStatus(newStatus) {
                                                         const oldStatus = currentBtn.textContent.trim();
 
-                                                        currentBtn.classList.remove(statusConfig[oldStatus].color);
-                                                        currentBtn.classList.add(statusConfig[newStatus].color);
-                                                        currentBtn.textContent = newStatus;
+                                                        fetch(`/admin/users/${userId}/status`, {
+                                                                method: 'PATCH',
+                                                                headers: {
+                                                                    'Content-Type': 'application/json',
+                                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                                                },
+                                                                body: JSON.stringify({
+                                                                    status: newStatus
+                                                                }),
+                                                            })
+                                                            .then(res => res.json())
+                                                            .then(data => {
+                                                                if (!data.success) return;
 
-                                                        if (statusBadge) {
-                                                            statusBadge.classList.remove(badgeConfig[oldStatus].color);
-                                                            statusBadge.classList.add(badgeConfig[newStatus].color);
-                                                            statusBadge.textContent = newStatus;
-                                                        }
+                                                                currentBtn.classList.remove(statusConfig[oldStatus].color);
+                                                                currentBtn.classList.add(statusConfig[newStatus].color);
+                                                                currentBtn.textContent = newStatus;
 
-                                                        updateDropdownMenu(newStatus);
-                                                        console.log(`User ID ${userId} のステータスを ${newStatus} に更新しました。`);
+                                                                if (statusBadge) {
+                                                                    statusBadge.classList.remove(badgeConfig[oldStatus].color);
+                                                                    statusBadge.classList.add(badgeConfig[newStatus].color);
+                                                                    statusBadge.textContent = newStatus;
+                                                                }
+                                                                updateDropdownMenu(newStatus);
+                                                            })
+                                                            .catch(err => console.error('ステータス更新に失敗しました', err));
                                                     }
 
                                                     updateDropdownMenu(initialStatus);
@@ -413,6 +346,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+
                         </tbody>
                     </table>
 
@@ -436,17 +370,7 @@
 
                 {{-- ── Pagination ── --}}
                 <div class="d-flex justify-content-end mt-3">
-                    <nav>
-                        <ul class="pagination pagination-sm mb-0">
-                            <li class="page-item disabled"><a class="page-link">‹</a></li>
-                            <li class="page-item active"><a class="page-link">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item disabled"><a class="page-link">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">10</a></li>
-                            <li class="page-item"><a class="page-link" href="#">›</a></li>
-                        </ul>
-                    </nav>
+                    {{ $all_users->links('pagination::bootstrap-5') }}
                 </div>
 
             </div>

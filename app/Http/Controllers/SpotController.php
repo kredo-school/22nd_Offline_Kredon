@@ -25,7 +25,7 @@ class SpotController extends Controller
             'photos'           => 'nullable|array|max:10',
             'photos.*'         => 'file|mimes:jpg,jpeg,png,gif,webp,avif|max:10240',
             'customer_vibe'    => 'required|integer|between:1,5',
-            'eye_fatigue_level'=> 'required|integer|between:1,5',
+            'eye_fatigue_level' => 'required|integer|between:1,5',
             'chair_comfort'    => 'required|integer|between:1,5',
             'desk_stability'   => 'required|integer|between:1,5',
             'comment'          => 'nullable|string',
@@ -95,7 +95,7 @@ class SpotController extends Controller
             $spot->reviews()->create([
                 'user_id'          => Auth::id(),
                 'customer_vibe'    => $request->customer_vibe,
-                'eye_fatigue_level'=> $request->eye_fatigue_level,
+                'eye_fatigue_level' => $request->eye_fatigue_level,
                 'chair_comfort'    => $request->chair_comfort,
                 'desk_stability'   => $request->desk_stability,
                 'comment'          => $request->comment,
@@ -152,7 +152,6 @@ class SpotController extends Controller
                 ->with('success', '✨ 新しい学習スポットを登録しました！')
                 ->with('reward_tip_title', $rewardTitle)
                 ->with('reward_tip_text', $rewardText);
-
         } catch (\Throwable $e) {
             DB::rollback();
             // 🌟 修正2：プロ目線の「エラーログ記録」！これがないと本番でバグが追えません
@@ -178,7 +177,7 @@ class SpotController extends Controller
             'description'     => 'nullable|string', // 🌟 修正1：説明文の受け取りを許可する！
             'photos'          => 'nullable|array|max:10',
             'photos.*'        => 'file|mimes:jpg,jpeg,png,gif,webp,avif|max:10240',
-            'delete_photo_ids'=> 'nullable|array',
+            'delete_photo_ids' => 'nullable|array',
             'main_photo_id'   => 'nullable|integer',
         ]);
 
@@ -190,8 +189,10 @@ class SpotController extends Controller
             }
         }
 
-        if ($request->has('main_photo_id') &&
-            (!$request->has('delete_photo_ids') || !in_array($request->main_photo_id, $request->delete_photo_ids))) {
+        if (
+            $request->has('main_photo_id') &&
+            (!$request->has('delete_photo_ids') || !in_array($request->main_photo_id, $request->delete_photo_ids))
+        ) {
 
             $mainPhoto = $spot->photos()->find($request->main_photo_id);
             if ($mainPhoto) {
@@ -226,7 +227,7 @@ class SpotController extends Controller
             'description'   => $request->description, // 👈 これが抜けていた最大の原因です！
             'has_wifi'      => $request->has('has_wifi'),
             'has_power'     => $request->has('has_power'),
-            'last_edited_by'=> Auth::id(),
+            'last_edited_by' => Auth::id(),
         ]);
 
         SpotEditHistory::create([
@@ -271,13 +272,15 @@ class SpotController extends Controller
 
     public function index(Request $request)
     {
-        $query = Spot::query();
+        $query = Spot::query()
+            ->where('status', 'published');
+        // 公開中のスポットのみ表示
 
         if ($request->filled('keyword')) {
             $keyword = $request->keyword;
             $query->where(function ($q) use ($keyword) {
                 $q->where('name', 'LIKE', "%{$keyword}%")
-                  ->orWhere('area', 'LIKE', "%{$keyword}%");
+                    ->orWhere('area', 'LIKE', "%{$keyword}%");
             });
         }
 
@@ -298,7 +301,7 @@ class SpotController extends Controller
         // ✅ 修正3: rating_high を平均評価順に正しく実装
         if ($sort === 'rating_high') {
             $query->withAvg('reviews', 'customer_vibe')
-                  ->orderByDesc('reviews_avg_customer_vibe');
+                ->orderByDesc('reviews_avg_customer_vibe');
         } elseif ($sort === 'bookmark_count') {
             $query->withCount('bookmarks')->orderByDesc('bookmarks_count');
         } else {
@@ -314,11 +317,15 @@ class SpotController extends Controller
     public function show($id)
     {
         $spot = Spot::with(['reviews.user', 'photos', 'editHistories.user'])->findOrFail($id);
+        if ($spot->status !== 'published' && Auth::id() !== $spot->user_id) {
+            abort(404);
+        }
         return view('spot_detail', compact('spot'));
     }
 
     public function useCoupon(Spot $spot)
     {
+        
         $user = auth()->user();
 
         if (!$user) {
@@ -371,4 +378,11 @@ class SpotController extends Controller
 
         return response()->json(['success' => true, 'message' => '並び順を更新しました！']);
     }
+
+    // SpotController.php に追加（任意） マイページに自身の投稿を表示したいとき
+    // public function myPosts()
+    // {
+    //     $spots = Spot::where('user_id', Auth::id())->latest()->get();
+    //     return view('my_spots', compact('spots'));
+    // }
 }

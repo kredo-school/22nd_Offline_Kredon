@@ -17,6 +17,7 @@ class NotificationSubscription extends Model
         'user_id',
         'subscribable_type',
         'subscribable_id',
+        'category',
         'notify_on',
         'is_active',
     ];
@@ -32,6 +33,7 @@ class NotificationSubscription extends Model
         return $this->belongsTo(User::class);
     }
 
+   
     // 対象 (Spot, Market, Item など) への polymorphic relation
     public function subscribable(): MorphTo
     {

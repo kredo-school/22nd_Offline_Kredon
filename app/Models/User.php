@@ -17,6 +17,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes;
 
+    const ROLE_ADMIN = 1;
+    const ROLE_MEMBER = 2;
+    const ROLE_PREMIUM = 3;
+
     protected $fillable = [
         'name',
         'username',
@@ -40,14 +44,40 @@ class User extends Authenticatable
     ];
 
     protected function casts(): array
-    {
-        return [
-            'email_verified_at'    => 'datetime',
-            'password'             => 'hashed',
+{
+    return [
+        'email_verified_at'    => 'datetime',
+        'last_login_at' => 'datetime',
+        'password'             => 'hashed',
             'two_factor_enabled'   => 'boolean',
             'two_factor_secret'    => 'encrypted',
             'posts_count'          => 'integer',
-        ];
+    ];
+}
+
+    public function getRoleNameAttribute(): string
+    {
+        return match ((int) $this->role) {
+            self::ROLE_ADMIN => 'Admin',
+            self::ROLE_PREMIUM => 'Premium-Member',
+            default => 'Member',
+        };
+    }
+
+    // Admin user 管理用
+    public function getStatusAttribute(): string
+    {
+        if ($this->trashed()) {
+            return 'Banned';
+        }
+
+        // このアプリはメール認証機能が無いため、email_verified_atを
+        // 「管理者による手動Inactive化フラグ」として転用する
+        if (! is_null($this->email_verified_at)) {
+            return 'Inactive';
+        }
+
+        return 'Active'; // デフォルトはActive
     }
 
     public function settings(): HasOne
