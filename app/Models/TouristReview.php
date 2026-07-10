@@ -14,4 +14,9 @@ class TouristReview extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+     public function touristSpot()
+    {
+        return $this->belongsTo(TouristSpot::class, 'tourist_spot_id');
+    }
 }

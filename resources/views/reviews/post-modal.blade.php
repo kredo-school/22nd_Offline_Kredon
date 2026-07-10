@@ -13,24 +13,6 @@
         background: #fff;
     }
 
-    .amenity-label.selected {
-        border-color: #13bdbd;
-        background-color: rgba(19, 189, 189, 0.15);
-    }
-
-    .amenity-label.selected i {
-        color: #13bdbd !important;
-    }
-
-    .amenity-label.selected span {
-        color: #13bdbd !important;
-    }
-
-    .amenity-label:hover {
-        border-color: #13bdbd;
-        background-color: rgba(19, 189, 189, 0.1);
-    }
-
     .star-btn {
         font-size: 1.2rem;
         color: #dee2e6;
@@ -40,6 +22,18 @@
 
     .star-btn.star-lit {
         color: #ffc107;
+    }
+
+    .axis-btn.active {
+        background-color: #13bdbd !important;
+        border-color: #13bdbd !important;
+        color: #fff !important;
+    }
+
+    .category-toggle .btn-check:checked+label {
+        background-color: #13bdbd;
+        border-color: #13bdbd;
+        color: #fff;
     }
 </style>
 
@@ -67,14 +61,26 @@
                     </div>
                 @endif
 
-                <form action="{{ route('all_reviews.store') }}" method="post" enctype="multipart/form-data"
-                    id="reviewForm">
+                <form action="" method="post" enctype="multipart/form-data" id="reviewForm">
                     @csrf
 
-                    <input type="hidden" name="location_id" id="selectedLocationId"
-                        value="{{ old('location_id', 0) }}">
-                    <input type="hidden" name="category" id="selectedCategoryId" value="{{ old('category') }}">
-                    <input type="hidden" name="rating" id="ratingInput" value="{{ old('rating') }}">
+                    <input type="hidden" name="location_id" id="selectedLocationId" value="0">
+
+                    {{-- カテゴリー切り替え --}}
+                    <div class="mb-3 category-toggle">
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="review_category" id="cat_working"
+                                value="working" checked>
+                            <label class="btn btn-outline-info" for="cat_working">
+                                <i class="fa-solid fa-briefcase me-1"></i>Working
+                            </label>
+                            <input type="radio" class="btn-check" name="review_category" id="cat_tourism"
+                                value="tourism">
+                            <label class="btn btn-outline-info" for="cat_tourism">
+                                <i class="fa-solid fa-map-pin me-1"></i>Tourism
+                            </label>
+                        </div>
+                    </div>
 
                     {{-- Spot Search --}}
                     <div class="mb-3">
@@ -107,35 +113,60 @@
                         </div>
                     </div>
 
-                    {{-- Title & Rating --}}
-                    <div class="mb-2 d-flex">
-                        <div class="title">
-                            <label for="review_title" class="form-label fw-bold">Title</label>
-                            <input type="text" name="title" id="review_title" class="form-control shadow-sm"
-                                value="{{ old('title') }}" maxlength="255" required>
-                        </div>
-                        <div class="rate ms-4">
-                            <label class="form-label fw-bold">Rate</label>
-                            <div class="d-flex align-items-center gap-2">
-                                <div id="starRating" class="d-flex gap-1">
+                    {{-- Working用フィールド --}}
+                    <div id="workingFields">
+                        @foreach ([['key' => 'customer_vibe', 'label' => '客層', 'icon' => 'fa-users'], ['key' => 'eye_fatigue_level', 'label' => '照明', 'icon' => 'fa-lightbulb'], ['key' => 'chair_comfort', 'label' => 'イス', 'icon' => 'fa-chair'], ['key' => 'desk_stability', 'label' => '机', 'icon' => 'fa-table']] as $axis)
+                            <div class="mb-2">
+                                <label class="form-label fw-bold small mb-1">
+                                    <i class="fa-solid {{ $axis['icon'] }} me-1"></i>{{ $axis['label'] }}
+                                </label>
+
+                                <input type="hidden" name="{{ $axis['key'] }}" id="input_{{ $axis['key'] }}"
+                                    value="">
+                                <div class="d-flex gap-1">
                                     @for ($i = 1; $i <= 5; $i++)
-                                        <i class="fa-regular fa-star star-btn" data-value="{{ $i }}"
-                                            onmouseover="hoverStar({{ $i }})" onmouseout="resetStars()"
-                                            onclick="selectStar({{ $i }})"></i>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary axis-btn"
+                                            data-axis="{{ $axis['key'] }}"
+                                            data-value="{{ $i }}">{{ $i }}</button>
                                     @endfor
                                 </div>
-                                <div class="ms-2">
-                                    <span id="ratingScore" class="fw-bold"
-                                        style="font-size:1.4rem; color:#ffc107;">—</span>
-                                    <span class="text-muted" style="font-size:0.85rem;">/5</span>
-                                    <div id="ratingLabel" class="text-muted" style="font-size:0.8rem;"></div>
-                                </div>
+                            </div>
+                        @endforeach
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label fw-bold small">Good Point</label>
+                                <input type="text" name="good_point" class="form-control form-control-sm"
+                                    maxlength="255">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold small">Bad Point</label>
+                                <input type="text" name="bad_point" class="form-control form-control-sm"
+                                    maxlength="255">
                             </div>
                         </div>
                     </div>
 
-                    {{-- Images --}}
-                    <div class="mb-2">
+                    {{-- Tourism用フィールド --}}
+                    <div id="tourismFields" class="d-none mb-2">
+                        <label class="form-label fw-bold">Rate</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <div id="starRating" class="d-flex gap-1">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fa-regular fa-star star-btn" data-value="{{ $i }}"
+                                        onmouseover="hoverStar({{ $i }})" onmouseout="resetStars()"
+                                        onclick="selectStar({{ $i }})"></i>
+                                @endfor
+                            </div>
+                            <span id="ratingScore" class="fw-bold" style="font-size:1.4rem; color:#ffc107;">—</span>
+                            <span class="text-muted" style="font-size:0.85rem;">/5</span>
+                            <div id="ratingLabel" class="text-muted" style="font-size:0.8rem;"></div>
+                        </div>
+                        <input type="hidden" name="rating" id="ratingInput" value="">
+                    </div>
+
+                    {{-- Images（Working限定） --}}
+                    <div class="mb-2" id="imagesFieldWrapper">
                         <label class="form-label fw-bold">Images (up to 5)</label>
                         <div class="d-flex align-items-start gap-2 flex-wrap">
                             <div id="addImageBtn" onclick="document.getElementById('imageInput').click()"
@@ -149,11 +180,11 @@
                             </div>
                             <div class="d-flex gap-2 flex-wrap align-items-start" id="imagePreviewArea"></div>
                         </div>
-                        <input type="file" class="d-none" id="imageInput" name="images[]" multiple
-                            accept="image/*" onchange="previewImages(this)">
+                        <input type="file" class="d-none" id="imageInput" name="photo" accept="image/*"
+                            onchange="previewImages(this)">
                         <p class="text-muted mb-0 mt-1" style="font-size:0.7rem;">
                             <i class="fa-solid fa-circle-info me-1"></i>
-                            PNG, JPG, JPEG formats are supported. Maximum file size is 2MB per image.
+                            PNG, JPG, JPEG formats are supported. Maximum file size is 2MB.
                         </p>
                     </div>
 
@@ -162,38 +193,6 @@
                         <label for="review_comment" class="form-label fw-bold">Text</label>
                         <textarea name="comment" id="review_comment" class="form-control" rows="3"
                             placeholder="Write your review in detail (less than 1000 letters)" maxlength="1000">{{ old('comment') }}</textarea>
-                    </div>
-
-                    {{-- Amenities --}}
-                    <div class="mb-2">
-                        <label class="form-label fw-bold">Amenities & Services</label>
-                        <div class="d-flex gap-2 flex-wrap">
-                            @php
-                                $amenities = [
-                                    ['value' => 'wifi', 'icon' => 'fa-wifi', 'label' => 'Wi-Fi'],
-                                    ['value' => 'outlet', 'icon' => 'fa-plug', 'label' => 'Power Outlet'],
-                                    [
-                                        'value' => 'air-conditioner',
-                                        'icon' => 'fa-snowflake',
-                                        'label' => 'Air-conditioner',
-                                    ],
-                                    ['value' => 'parking', 'icon' => 'fa-square-parking', 'label' => 'Parking'],
-                                    ['value' => 'toilet', 'icon' => 'fa-restroom', 'label' => 'Toilet'],
-                                ];
-                            @endphp
-
-                            @foreach ($amenities as $a)
-                                {{-- ★ fix②: labelタグでwrapしてJS不要に。checkboxのidとlabelのforを紐付け --}}
-                                <label class="amenity-label" for="amenity_{{ $a['value'] }}">
-                                    <input type="checkbox" id="amenity_{{ $a['value'] }}" name="amenities[]"
-                                        value="{{ $a['value'] }}" class="amenity-check d-none">
-                                    <i class="fa-solid {{ $a['icon'] }} mb-1"
-                                        style="font-size:1.2rem; color:#adb5bd;"></i>
-                                    <span
-                                        style="font-size:0.72rem; color:#2d3033; font-weight:600;">{{ $a['label'] }}</span>
-                                </label>
-                            @endforeach
-                        </div>
                     </div>
 
             </div>{{-- /modal-body --}}
@@ -211,15 +210,15 @@
     </div>
 </div>
 
-{{-- JS --}}
 @push('scripts')
     <script>
         const LABELS = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
         let currentRating = 0;
+        let selectedFiles = [];
 
         document.addEventListener('DOMContentLoaded', function() {
 
-            // ── 星レーティング ──
+            // ── ★ Tourism用スター評価 ──
             const stars = document.querySelectorAll('#starRating .star-btn');
             const scoreEl = document.getElementById('ratingScore');
             const labelEl = document.getElementById('ratingLabel');
@@ -228,7 +227,6 @@
             function paintStars(upTo) {
                 stars.forEach((s, i) => {
                     const lit = i < upTo;
-                    // ★ fix③: star-lit で統一（CSS側も同名）
                     s.classList.toggle('star-lit', lit);
                     s.classList.toggle('fa-solid', lit);
                     s.classList.toggle('fa-regular', !lit);
@@ -245,51 +243,55 @@
                 paintStars(val);
             };
 
-            // ── アメニティ ──
-            // ★ fix②: label > checkbox 構造なのでクリックは自動。
-            //    selected クラスだけ JS で付け外しする。
-            document.querySelectorAll('.amenity-check').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    this.closest('.amenity-label').classList.toggle('selected', this.checked);
+            // ── Working用 4軸ボタン ──
+            document.querySelectorAll('.axis-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const axis = this.dataset.axis;
+                    const value = this.dataset.value;
+                    document.getElementById(`input_${axis}`).value = value;
+                    document.querySelectorAll(`.axis-btn[data-axis="${axis}"]`).forEach(b => {
+                        b.classList.toggle('active', b.dataset.value === value);
+                    });
+                });
+            });
+
+            // ── カテゴリー切り替え ──
+            document.querySelectorAll('input[name="review_category"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    clearSpot();
+                    const isWorking = this.value === 'working';
+                    document.getElementById('workingFields').classList.toggle('d-none', !isWorking);
+                    document.getElementById('tourismFields').classList.toggle('d-none', isWorking);
+                    document.getElementById('imagesFieldWrapper').classList.toggle('d-none', !
+                        isWorking);
                 });
             });
         });
 
-        // ── 画像プレビュー ──
-        let selectedFiles = []; // 追加：選択されたファイルを管理する配列
-
+        // ── 画像プレビュー（Working限定・1枚のみ） ──
         function previewImages(input) {
             const previewArea = document.getElementById('imagePreviewArea');
-            const maxImages = 5;
-            const remaining = maxImages - selectedFiles.length;
+            previewArea.innerHTML = '';
+            selectedFiles = [];
 
-            // 現在表示中の枚数を確認
-            // const currentCount = previewArea.querySelectorAll('div').length;
-            // const remaining = maxImages - currentCount;
+            const file = input.files[0];
+            if (!file) return;
+            selectedFiles.push(file);
 
-            if (remaining <= 0) return; // すでに5枚ある場合は何もしない
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const wrapper = document.createElement('div');
+                wrapper.style.cssText = 'position:relative; width:90px; height:90px; flex-shrink:0;';
 
-            // 追加できる枚数だけ処理
-            Array.from(input.files).slice(0, remaining).forEach(file => {
-                selectedFiles.push(file); // 追加：選択されたファイルを配列に保存
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.cssText =
+                    'width:90px; height:90px; object-fit:cover; border-radius:12px; border:1px solid #dee2e6;';
 
-                const reader = new FileReader();
-
-                reader.onload = (e) => {
-                    const fileIndex = selectedFiles.length - 1; // 追加：現在のファイルのインデックス
-                    const wrapper = document.createElement('div');
-                    wrapper.style.cssText = 'position:relative; width:90px; height:90px; flex-shrink:0;';
-                    wrapper.dataset.fileIndex = fileIndex; // 追加：ファイルインデックスをデータ属性に保存
-
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.cssText =
-                        'width:90px; height:90px; object-fit:cover; border-radius:12px; border:1px solid #dee2e6;';
-
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.innerHTML = '&times;';
-                    btn.style.cssText = `
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.innerHTML = '&times;';
+                btn.style.cssText = `
                 position:absolute; top:-6px; right:-6px;
                 width:20px; height:20px; border-radius:50%;
                 background:#dc3545; color:white; border:none;
@@ -297,51 +299,25 @@
                 display:flex; align-items:center; justify-content:center;
                 cursor:pointer; padding:0;`;
 
-                    // ★ 削除後に5枚未満になったらAddボタンを再表示
-                    btn.onclick = () => {
-                        const idx = parseInt(wrapper.dataset.fileIndex);
-                        selectedFiles.splice(idx, 1);
-                        // インデックスを振り直す
-                        previewArea.querySelectorAll('div[data-file-index]').forEach((el, i) => {
-                            el.dataset.fileIndex = i;
-                        });
-                        wrapper.remove();
-                        if (selectedFiles.length < maxImages) {
-                            document.getElementById('addImageBtn').style.display = 'flex';
-                        }
-                    };
-
-                    wrapper.appendChild(img);
-                    wrapper.appendChild(btn);
-                    previewArea.appendChild(wrapper);
+                btn.onclick = () => {
+                    selectedFiles = [];
+                    document.getElementById('imageInput').value = '';
+                    wrapper.remove();
+                    document.getElementById('addImageBtn').style.display = 'flex';
                 };
-                reader.readAsDataURL(file);
-            });
 
-            if (selectedFiles.length >= maxImages) {
+                wrapper.appendChild(img);
+                wrapper.appendChild(btn);
+                previewArea.appendChild(wrapper);
                 document.getElementById('addImageBtn').style.display = 'none';
-            }
-
-            input.value = '';
+            };
+            reader.readAsDataURL(file);
         }
 
-        // ── フォーム送信時にselectedFilesをinputに反映 ──
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('reviewForm').addEventListener('submit', function(e) {
-                if (selectedFiles.length === 0) return;
-
-                e.preventDefault();
-
-                const dt = new DataTransfer();
-                selectedFiles.forEach(file => dt.items.add(file));
-                document.getElementById('imageInput').files = dt.files;
-                this.submit();
-            });
-        });
-    
-        // SPOT keyword search (dummy implementation)
+        // ── スポット検索（カテゴリー別） ──
         async function searchSpots(keyword) {
-            const res = await fetch(`/reviews/search-locations?q=${encodeURIComponent(keyword)}`);
+            const type = document.querySelector('input[name="review_category"]:checked').value;
+            const res = await fetch(`/reviews/search-locations?q=${encodeURIComponent(keyword)}&type=${type}`);
             const data = await res.json();
             renderDropdown(data);
             document.getElementById('spotDropdown').style.display = 'block';
@@ -352,7 +328,7 @@
             if (dropdown.style.display === 'block') {
                 dropdown.style.display = 'none';
             } else {
-                searchSpots(''); // 全件表示
+                searchSpots('');
             }
         }
 
@@ -367,16 +343,15 @@
              style="cursor:pointer;"
              onmouseover="this.style.backgroundColor='#f0fafa'"
              onmouseout="this.style.backgroundColor='white'"
-             onclick="selectSpot(${item.id}, '${item.name}', '${item.category}')">
+             onclick="selectSpot(${item.id}, '${item.name.replace(/'/g, "\\'")}')">
             <span class="fw-bold">${item.name}</span>
-            <span class="text-muted ms-2">${item.address}</span>
+            <span class="text-muted ms-2">${item.address ?? ''}</span>
         </div>
             `).join('');
         }
 
-        function selectSpot(id, name, category) {
+        function selectSpot(id, name) {
             document.getElementById('selectedLocationId').value = id;
-            document.getElementById('selectedCategoryId').value = category;
             document.getElementById('selectedSpotName').innerText = name;
             document.getElementById('selectedSpotBudge').classList.remove('d-none');
             document.getElementById('spotDropdown').style.display = 'none';
@@ -385,13 +360,11 @@
 
         function clearSpot() {
             document.getElementById('selectedLocationId').value = 0;
-            document.getElementById('selectedCategoryId').value = '';
             document.getElementById('selectedSpotName').innerText = '';
             document.getElementById('selectedSpotBudge').classList.add('d-none');
             document.getElementById('spotSearchInput').value = '';
         }
 
-        // モーダル外クリックでドロップダウンを閉じる
         document.addEventListener('click', function(e) {
             const dropdown = document.getElementById('spotDropdown');
             const input = document.getElementById('spotSearchInput');
@@ -399,58 +372,32 @@
                 dropdown.style.display = 'none';
             }
         });
+
+        // ── 送信直前：送信先URLを組み立て＆画像をinputに反映 ──
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('reviewForm');
+            if (!form) return;
+
+            form.addEventListener('submit', function(e) {
+                const type = document.querySelector('input[name="review_category"]:checked').value;
+                const spotId = document.getElementById('selectedLocationId').value;
+
+                if (!spotId || spotId === '0') {
+                    e.preventDefault();
+                    alert('Select the spot');
+                    return;
+                }
+
+                this.action = type === 'working' ?
+                    `/spots/${spotId}/reviews` :
+                    `/tourist_spots/${spotId}/reviews`;
+
+                if (type === 'working' && selectedFiles.length > 0) {
+                    const dt = new DataTransfer();
+                    dt.items.add(selectedFiles[0]);
+                    document.getElementById('imageInput').files = dt.files;
+                }
+            });
+        });
     </script>
 @endpush
-
-   {{-- // ── スポット検索（location実装時用） ──
-    async function searchSpots(keyword) {
-        const res  = await fetch(`/reviews/search-locations?q=${encodeURIComponent(keyword)}`);
-        const data = await res.json();
-        renderDropdown(data);
-        document.getElementById('spotDropdown').style.display = 'block';
-    }
-
-    function toggleSpotDropdown() {
-        const dropdown = document.getElementById('spotDropdown');
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : '';
-        if (dropdown.style.display === 'block') searchSpots('');
-    }
-
-    function renderDropdown(items) {
-        const list = document.getElementById('spotDropdownList');
-        list.innerHTML = items.length === 0
-            ? '<div class="p-2 text-muted small bg-white border">No results found</div>'
-            : items.map(item => `
-                <div class="p-2 bg-white border border-top-0 small" style="cursor:pointer;"
-                     onmouseover="this.style.backgroundColor='#f0fafa'"
-                     onmouseout="this.style.backgroundColor='white'"
-                     onclick="selectSpot(${item.id},'${item.name}','${item.category}')">
-                    <span class="fw-bold">${item.name}</span>
-                    <span class="text-muted ms-2">${item.address}</span>
-                </div>`).join('');
-    }
-
-    // function selectSpot(id, name, category) {
-    //     document.getElementById('selectedLocationId').value = id;
-    //     document.getElementById('selectedCategoryId').value = category;
-    //     document.getElementById('selectedSpotName').innerText = name;
-    //     document.getElementById('selectedSpotBudge').classList.remove('d-none');
-    //     document.getElementById('spotDropdown').style.display = 'none';
-    //     document.getElementById('spotSearchInput').value = name;
-    // }
-
-    // function clearSpot() {
-    //     document.getElementById('selectedLocationId').value = 0;
-    //     document.getElementById('selectedCategoryId').value = '';
-    //     document.getElementById('selectedSpotName').innerText = '';
-    //     document.getElementById('selectedSpotBudge').classList.add('d-none');
-    //     document.getElementById('spotSearchInput').value = '';
-    // }
-
-    document.addEventListener('click', function (e) {
-        const dropdown = document.getElementById('spotDropdown');
-        const input    = document.getElementById('spotSearchInput');
-        if (dropdown && !dropdown.contains(e.target) && e.target !== input) {
-            dropdown.style.display = 'none';
-        }
-    }); --}}

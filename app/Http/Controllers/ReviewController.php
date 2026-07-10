@@ -35,7 +35,7 @@ class ReviewController extends Controller
             'good_point' => 'nullable|string|max:255',
             'bad_point' => 'nullable|string|max:255',
             'comment' => 'nullable|string',
-            // 'photo' => 'nullable|image|max:2048', // ※写真は後で実装するので一旦コメントアウト
+            'photo' => 'nullable|image|max:2048',
         ]);
 
         $user = Auth::user();
@@ -52,9 +52,12 @@ class ReviewController extends Controller
         $review->bad_point = $request->bad_point;
         $review->comment = $request->comment;
 
+        if ($request->hasFile('photo')) {
+            $review->photo_path = $request->file('photo')->store('reviews', 'public');
+        }
         $review->save();
 
-        return back()->with('success', '✨ レビューを投稿しました！平均点が更新されました！');
+        return back()->with('success', '✨ You have posted a review! The average rating has been updated!');
     }
 
     // 🌟 レビュー編集（更新）処理
@@ -64,7 +67,7 @@ class ReviewController extends Controller
 
         // セキュリティ対策：絶対に本人しか編集できないようにする
         if ($review->user_id !== \Illuminate\Support\Facades\Auth::id()) {
-            abort(403, '権限がありません');
+            abort(403, 'You do not have permission');
         }
 
         // 写真が新しくアップロードされたら保存（それ以外はそのまま）
@@ -84,7 +87,7 @@ class ReviewController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return back()->with('success', 'レビューを更新しました！');
+        return back()->with('success', 'Updated your Review');
     }
 
     // 🌟 レビュー削除処理
@@ -94,11 +97,11 @@ class ReviewController extends Controller
 
         // セキュリティ対策：絶対に本人しか削除できないようにする
         if ($review->user_id !== \Illuminate\Support\Facades\Auth::id()) {
-            abort(403, '権限がありません');
+            abort(403, 'You do not have permission');
         }
 
         $review->delete();
 
-        return back()->with('success', 'レビューを削除しました！');
+        return back()->with('success', 'Deleted your Review');
     }
 }

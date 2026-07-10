@@ -4,87 +4,86 @@
 
 @section('content')
 
-   <style>
-       /* min-heightは　overflowへの許可 */
-    .review-wrapper {
-        display: flex;
-        height: 100%;
-        flex-direction: row;
-        min-height: 0;
-        overflow: hidden;
-    }
+    <style>
+        /* min-heightは　overflowへの許可 */
+        .review-wrapper {
+            display: flex;
+            height: 100%;
+            flex-direction: row;
+            min-height: 0;
+            overflow: hidden;
+        }
 
-    .main-content {
-        flex: 1;
-        overflow-y: auto;
-        min-height: 0;
-        min-width: 0;
-        background-color: #f8f9fa;
-    }
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            min-width: 0;
+            background-color: #f8f9fa;
+        }
 
-    .sidebar-right {
-        height: 100%;
-        width: 280px;
-        flex-shrink: 0;
-        overflow-y: auto;
-        min-height: 0;
-        background-color: #f7f5f0;
-        border-left: 1px solid #e9ecef;
-        padding: 20px;
-    }
+        .sidebar-right {
+            height: 100%;
+            width: 280px;
+            flex-shrink: 0;
+            overflow-y: auto;
+            min-height: 0;
+            background-color: #f7f5f0;
+            border-left: 1px solid #e9ecef;
+            padding: 20px;
+        }
 
-    h5 {
-        margin-top: 0;
-    }
+        h5 {
+            margin-top: 0;
+        }
 
-    #categoryTab .nav-link {
-        border: none;
-        border-bottom: 2px solid transparent;
-        background-color: transparent;
-        font-size: 0.9rem;
-        color: #6c757d;
-        transition: all 0.2s ease;
-    }
+        #categoryTab .nav-link {
+            border: none;
+            border-bottom: 2px solid transparent;
+            background-color: transparent;
+            font-size: 0.9rem;
+            color: #6c757d;
+            transition: all 0.2s ease;
+        }
 
-    #categoryTab .nav-link.active {
-        border-bottom: 2px solid rgb(19, 189, 189);
-        color: rgb(19, 189, 189) !important;
-        background-color: transparent;
-    }
+        #categoryTab .nav-link.active {
+            border-bottom: 2px solid rgb(19, 189, 189);
+            color: rgb(19, 189, 189) !important;
+            background-color: transparent;
+        }
 
-    #categoryTab .nav-link.active i {
-        color: rgb(19, 189, 189) !important;
-    }
+        #categoryTab .nav-link.active i {
+            color: rgb(19, 189, 189) !important;
+        }
 
-    #categoryTab .nav-link:hover {
-        border-bottom: 2px solid rgb(19, 189, 189);
-        color: rgb(19, 189, 189);
-    }
+        #categoryTab .nav-link:hover {
+            border-bottom: 2px solid rgb(19, 189, 189);
+            color: rgb(19, 189, 189);
+        }
 
-    .review-card {
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
+        .review-card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-    .review-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08) !important;
-    }
+        .review-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08) !important;
+        }
 
-    .text-truncate-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
+        .text-truncate-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 
-    .preview-amenities {
-        font-size: 0.9rem;
-        color: #5c9ad0;
-    }
-</style>
+        .preview-amenities {
+            font-size: 0.9rem;
+            color: #5c9ad0;
+        }
+    </style>
 
-    {{-- <div class="container-fluid px-0 review-wrapper"> --}}
     <div class="review-wrapper">
 
         {{-- ────────【中央】Review カラム ──────── --}}
@@ -98,7 +97,7 @@
                 </button>
             </div>
 
-         {{-- 検索フォーム --}}
+            {{-- 検索フォーム --}}
             <div class="card border-0 bg-transparent mb-4">
                 <form class="d-flex w-100" onsubmit="return false;">
                     <div class="input-group shadow-sm" style="border-radius: 30px; max-width: 600px;">
@@ -153,12 +152,7 @@
                         <i class="fa-solid fa-briefcase me-2"></i>【Working Place】
                     </button>
                 </li>
-                {{-- <li class="nav-item" role="presentation">
-                    <button class="nav-link fw-bold px-3 py-2" id="hospital-tab" data-bs-toggle="tab"
-                        data-bs-target="#hospital-contents" type="button" role="tab" aria-selected="false">
-                        <i class="fa-solid fa-hospital me-2"></i>【Hospital】
-                    </button>
-                </li> --}}
+
                 <li class="nav-item" role="presentation">
                     <button class="nav-link fw-bold px-3 py-2" id="tourism-tab" data-bs-toggle="tab"
                         data-bs-target="#tourism-contents" type="button" role="tab" aria-selected="false">
@@ -185,7 +179,7 @@
                 {{-- 2. Working Place タブ --}}
                 <div class="tab-pane fade" id="working-contents" role="tabpanel" aria-labelledby="working-tab">
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-                        @foreach ($working_reviews->filter(fn($r) => \Str::contains($r->title . $r->comment, ['Working', 'Work', 'Office', 'Coworking'])) as $review)
+                        @foreach ($working_reviews as $review)
                             @include('reviews.partials.review-card', [
                                 'review' => $review,
                                 // 'amenityIcons' => $amenityIcons,
@@ -194,22 +188,10 @@
                     </div>
                 </div>
 
-                {{-- 3. Hospital タブ --}}
-                {{-- <div class="tab-pane fade" id="hospital-contents" role="tabpanel" aria-labelledby="hospital-tab">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-                        @foreach ($hospital_reviews->filter(fn($r) => \Str::contains($r->title . $r->comment, ['Hospital', 'Clinic', 'Medical'])) as $review)
-                            @include('reviews.partials.review-card', [
-                                'review' => $review,
-                                // 'amenityIcons' => $amenityIcons,
-                            ])
-                        @endforeach
-                    </div>
-                </div> --}}
-
-                {{-- 4. Tourism タブ --}}
+                {{-- 3. Tourism タブ --}}
                 <div class="tab-pane fade" id="tourism-contents" role="tabpanel" aria-labelledby="tourism-tab">
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-                        @foreach ($tourism_reviews->filter(fn($r) => \Str::contains($r->title . $r->comment, ['Beach', 'Tourism', 'Spot', 'Tourist'])) as $review)
+                        @foreach ($tourism_reviews as $review)
                             @include('reviews.partials.review-card', [
                                 'review' => $review,
                                 // 'amenityIcons' => $amenityIcons,
@@ -248,8 +230,8 @@
                 {{-- amenity icon --}}
                 <div class="d-flex flex-wrap gap-2 mb-3" id="preview-amenities"></div>
 
-                <p id="preview-comment" class="small text-secondary mb-4"
-                    style="white-space: pre-wrap; line-height: 1.6;"></p>
+                <p id="preview-comment" class="small text-secondary mb-4" style="white-space: pre-wrap; line-height: 1.6;">
+                </p>
 
                 {{-- preview carousel    --}}
                 <div id="reviewCarousel" class="carousel slide mb-4 shadow-sm rounded overflow-hidden"
@@ -278,61 +260,76 @@
 
     </div>
 
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> --}}
-
     <script>
         function showPreview(element) {
             document.getElementById('preview-default-message').classList.add('d-none');
             document.getElementById('preview-details-content').classList.remove('d-none');
 
-            const title = element.getAttribute('data-title');
-            const user = element.getAttribute('data-user');
-            const rating = parseInt(element.getAttribute('data-rating'));
-            const date = element.getAttribute('data-date');
-            const comment = element.getAttribute('data-comment');
-            const images = JSON.parse(element.getAttribute('data-images'));
+            const title = element.getAttribute('data-title') || '';
+            const user = element.getAttribute('data-user') || '';
+            const rating = parseFloat(element.getAttribute('data-rating')) || 0;
+            const date = element.getAttribute('data-date') || '';
+            const comment = element.getAttribute('data-comment') || '';
+            const detailUrl = element.getAttribute('data-detail-url') || '#';
+
+            // JSONデータの安全な読み込み
+            let images = [];
+            try {
+                images = JSON.parse(element.getAttribute('data-images')) || [];
+            } catch (e) {
+                images = [];
+            }
+
+            // let amenities = [];
+            // try {
+            //     amenities = JSON.parse(element.getAttribute('data-amenities')) || [];
+            // } catch (e) {
+            //     amenities = [];
+            // }
 
             document.getElementById('preview-title').innerText = title;
             document.getElementById('preview-meta').innerText = `by ${user} - ${date}`;
-            document.getElementById('preview-rating-val').innerText = `${rating}.0/5`;
+            document.getElementById('preview-rating-val').innerText = `${rating.toFixed(1)}/5`;
             document.getElementById('preview-comment').innerText = comment;
+            document.getElementById('preview-detail-btn').href = detailUrl;
 
-            // アメニティアイコン
-            const amenities = JSON.parse(element.getAttribute('data-amenities') || '[]');
-            const amenityIconMap = {
-                'wifi': 'fa-wifi',
-                'outlet': 'fa-plug',
-                'air-conditioner': 'fa-snowflake',
-                'parking': 'fa-square-parking',
-                'toilet': 'fa-restroom',
-            };
-            const amenitiesContainer = document.getElementById('preview-amenities');
-            amenitiesContainer.innerHTML = '';
-            if (amenities.length > 0) {
-                amenities.forEach(amenity => {
-                    const icon = amenityIconMap[amenity];
-                    if (icon) {
-                        amenitiesContainer.innerHTML += `
-                <span class="d-flex align-items-center gap-1 badge rounded-pill text-bg-light border small">
-                    <i class="fa-solid ${icon} text-secondary"></i>
-                    <span class="text-secondary">${amenity}</span>
-                </span>`;
-                    }
-                });
-                amenitiesContainer.classList.remove('d-none');
-            } else {
-                amenitiesContainer.classList.add('d-none');
-            }
+            // アメニティアイコンの処理
+            // const amenityIconMap = {
+            //     'wifi': 'fa-wifi',
+            //     'outlet': 'fa-plug',
+            //     'air-conditioner': 'fa-snowflake',
+            //     'parking': 'fa-square-parking',
+            //     'toilet': 'fa-restroom',
+            // };
+            // const amenitiesContainer = document.getElementById('preview-amenities');
+            // amenitiesContainer.innerHTML = '';
 
+            // if (amenities.length > 0) {
+            //     amenities.forEach(amenity => {
+            //         const icon = amenityIconMap[amenity];
+            //         if (icon) {
+            //             amenitiesContainer.innerHTML += `
+            //     <span class="d-flex align-items-center gap-1 badge rounded-pill text-bg-light border small">
+            //         <i class="fa-solid ${icon} text-secondary"></i>
+            //         <span class="text-secondary">${amenity}</span>
+            //     </span>`;
+            //         }
+            //     });
+            //     amenitiesContainer.classList.remove('d-none');
+            // } else {
+            //     amenitiesContainer.classList.add('d-none');
+            // }
+
+            // ★★★ 星評価のHTMLを正しく反映（修正箇所） ★★★
             let starHtml = '';
             for (let i = 1; i <= 5; i++) {
                 starHtml += `<i class="fa-${i <= rating ? 'solid' : 'regular'} fa-star"></i>`;
             }
             document.getElementById('preview-stars').innerHTML = starHtml;
 
+            // カルセルの処理
             const container = document.getElementById('carousel-items-container');
             container.innerHTML = '';
-
             const indicators = document.getElementById('carousel-indicators');
             indicators.innerHTML = '';
 
@@ -342,24 +339,23 @@
                 images.forEach((imgUrl, index) => {
                     const activeClass = index === 0 ? 'active' : '';
                     container.innerHTML += `
-                    <div class="carousel-item ${activeClass}">
-                        <div class="ratio ratio-16x9">
-                            <img src="${imgUrl}" class="d-block w-100 object-fit-cover" alt="Preview Image">
-                        </div>
-                    </div>`;
+            <div class="carousel-item ${activeClass}">
+                <div class="ratio ratio-16x9">
+                    <img src="${imgUrl}" class="d-block w-100 object-fit-cover" alt="Preview Image">
+                </div>
+            </div>`;
                 });
 
                 if (images.length > 1) {
                     images.forEach((_, index) => {
                         indicators.innerHTML += `
-                        <button type="button" data-bs-target="#reviewCarousel" data-bs-slide-to="${index}"
-                            class="${index === 0 ? 'active' : ''}" aria-label="Slide ${index + 1}"></button>`;
+                <button type="button" data-bs-target="#reviewCarousel" data-bs-slide-to="${index}"
+                    class="${index === 0 ? 'active' : ''}" aria-label="Slide ${index + 1}"></button>`;
                     });
                     indicators.classList.remove('d-none');
                 } else {
                     indicators.classList.add('d-none');
                 }
-
             } else {
                 document.getElementById('reviewCarousel').classList.add('d-none');
                 indicators.classList.add('d-none');
@@ -371,6 +367,9 @@
             document.getElementById('preview-details-content').classList.add('d-none');
         }
     </script>
-    @include('reviews.post-modal')
-    @include('reviews.edit-modal')
+
+    @push('modals')
+        @include('reviews.post-modal')
+        @include('reviews.edit-modal')
+    @endpush
 @endsection

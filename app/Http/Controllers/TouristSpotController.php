@@ -53,7 +53,7 @@ class TouristSpotController extends Controller
             // 営業時間の合体処理
             $hours = null;
             if ($request->hours_type === '24h') {
-                $hours = '24時間営業';
+                $hours = 'Open 24 hours a day';
             } elseif ($request->hours_type === 'unknown') {
                 $hours = '不明';
             } else {
@@ -188,7 +188,7 @@ class TouristSpotController extends Controller
         $tourist_spot->budget = $request->budget;
         $tourist_spot->booking_url = $request->booking_url;
         $tourist_spot->hours = $request->hours;
-        $tourist_spot->description = $request->description; 
+        $tourist_spot->description = $request->description;
 
         $tourist_spot->has_activity = $request->has('has_activity');
         $tourist_spot->has_view     = $request->has('has_view');
@@ -231,10 +231,10 @@ class TouristSpotController extends Controller
                         'photo_path' => $tourist_spot->photo_path
                     ]);
                 }
-                
+
                 // 新しいメイン画像をセット
                 $tourist_spot->photo_path = $newMain->photo_path;
-                
+
                 // メインに昇格した写真はギャラリーから消す（重複防止）
                 $newMain->delete();
             }
@@ -250,7 +250,7 @@ class TouristSpotController extends Controller
             foreach ($request->file('photos') as $uploadPhoto) {
                 $filename = uniqid() . '_' . time() . '.' . $uploadPhoto->getClientOriginalExtension();
                 $path = $uploadPhoto->storeAs('tourist_spots/' . $tourist_spot->id . '/gallery', $filename, 'public');
-                
+
                 // 💡 親切設計：もしメイン画像が空っぽだったら、アップロードした1枚目を自動でメインにする
                 if (empty($tourist_spot->photo_path)) {
                     $tourist_spot->photo_path = $path;
@@ -390,9 +390,7 @@ class TouristSpotController extends Controller
             'comment' => $request->comment,
         ]);
 
-        // ④ 元の詳細ページへ戻る
-        return redirect()->route('tourist_spots.show', $id)
-            ->with('success', '✨ クチコミを投稿しました！');
+        return back()->with('success', 'Posted successfully');
     }
 
     // =========================================================
@@ -417,6 +415,28 @@ class TouristSpotController extends Controller
 
         // ⑤ 元の詳細ページへ戻る
         return redirect()->route('tourist_spots.show', $spotId)
-            ->with('success', '🗑️ クチコミを削除しました！');
+            ->with('success', '🗑️ Deleted the review!');
+    }
+
+
+    public function updateReview(Request $request, $id)
+    {
+        $review = TouristReview::findOrFail($id);
+
+        if ($review->user_id !== Auth::id()) {
+            abort(403, 'You do not have editing permissions.');
+        }
+
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        $review->update([
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return back()->with('success', '✨ Updated our customer review!');
     }
 }

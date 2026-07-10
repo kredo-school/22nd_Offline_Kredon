@@ -413,6 +413,15 @@
                 border-right: none;
                 border-bottom: 1px solid #eee;
             }
+
+        }
+
+        .modal-backdrop {
+            z-index: 1070 !important;
+        }
+
+        .modal {
+            z-index: 1075 !important;
         }
     </style>
 </head>
@@ -479,12 +488,7 @@
                                 <hr class="dropdown-divider">
                             </li>
                         @endif
-                        {{-- <li><a class="dropdown-item fw-bold" href="#" style="color: darkcyan;"><i
-                                                class="fa-solid fa-crown me-2" style="color:gold;"></i>Premium
-                                            Member</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li> --}}
+
                         <li><a class="dropdown-item text-danger" href="#"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i
                                     class="fa-solid fa-arrow-right-from-bracket me-2"></i>Logout</a></li>
@@ -542,12 +546,7 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item fw-bold" href="#" style="color: darkcyan;"><i
-                                            class="fa-solid fa-crown me-2" style="color:gold;"></i>Premium
-                                        Member</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
+
                                 <li><a class="dropdown-item text-danger" href="#"
                                         onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();"><i
                                             class="fa-solid fa-arrow-right-from-bracket me-2"></i>Logout</a></li>
@@ -579,10 +578,10 @@
                 class="bottom-nav-item {{ request()->routeIs('market.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-store"></i><span>Market</span>
             </a>
-            <a href="{{ route('all_reviews.index') }}"
+            {{-- <a href="{{ route('all_reviews.index') }}"
                 class="bottom-nav-item {{ request()->routeIs('review.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-comments"></i><span>Review</span>
-            </a>
+            </a> --}}
         </nav>
 
         {{-- ══════════════════════════════════
@@ -596,14 +595,15 @@
                 Working</a>
             <a href="{{ route('healthcare.index') }}" class="spot-modal-item"><i class="fa-solid fa-hospital"></i>
                 Hospital</a>
-            <a href="{{ route('tourist_spots.index') }}" class="spot-modal-item"><i class="fa-solid fa-camera"></i>
+            <a href="{{ route('tourist_spots.index') }}" class="spot-modal-item"><i class="fa-solid fa-map-pin"></i>
                 Tourism</a>
             <a href="{{ route('mypage') }}" class="spot-modal-item"><i class="fa-regular fa-bookmark"></i>
                 Bookmark</a>
+            <a href="{{ route('all_reviews.index') }}" class="spot-modal-item"><i class="fa-solid fa-comments"></i>
+                Review</a>
         </div>
 
         <div class="main-wrapper">
-
             {{-- ══════════════════════════════════
                     PC用 左サイドバー（md以上）
                 ══════════════════════════════════ --}}
@@ -616,7 +616,6 @@
 
                     <hr class="mx-3 my-2 text-muted">
 
-
                     <div class="command">
                         <a href="#" class="sidebar-link {{ request()->routeIs('spot.*') ? 'active' : '' }}"
                             onclick="toggleSpotPC(event)">
@@ -625,10 +624,16 @@
                                 style="transition:transform 0.2s;"></i>
                         </a>
                         <div id="spotSubmenuPC" style="display:none;">
-                            <a href="{{ route('top') }}" class="spot-sub-link">Working</a>
-                            <a href="{{ route('healthcare.index') }}" class="spot-sub-link">Hospital</a>
-                            <a href="{{ route('tourist_spots.index') }}" class="spot-sub-link">Tourism</a>
-                            <a href="{{ route('mypage') }}" class="spot-sub-link">Bookmark</a>
+                            <a href="{{ route('top') }}" class="spot-sub-link"><i
+                                    class="fa-solid fa-briefcase"></i> Working</a>
+                            <a href="{{ route('healthcare.index') }}" class="spot-sub-link"><i
+                                    class="fa-solid fa-hospital"></i> Hospital</a>
+                            <a href="{{ route('tourist_spots.index') }}" class="spot-sub-link"><i
+                                    class="fa-solid fa-map-pin"></i> Tourism</a>
+                            <a href="{{ route('mypage') }}" class="spot-sub-link"><i
+                                    class="fa-regular fa-bookmark"></i> Bookmark</a>
+                            <a href="{{ route('all_reviews.index') }}" class="spot-sub-link"><i
+                                    class="fa-solid fa-comments"></i> Review</a>
                         </div>
 
                         <a href="{{ route('event.index') }}"
@@ -639,10 +644,10 @@
                             class="sidebar-link {{ request()->routeIs('market.*') ? 'active' : '' }}">
                             <i class="fa-solid fa-store"></i> MARKET
                         </a>
-                        <a href="{{ route('all_reviews.index') }}"
+                        {{-- <a href="{{ route('all_reviews.index') }}"
                             class="sidebar-link {{ request()->routeIs('review.*') ? 'active' : '' }}">
                             <i class="fa-solid fa-comments"></i> REVIEW
-                        </a>
+                        </a> --}}
 
                         <hr class="mx-3 my-2 text-muted">
 
@@ -681,12 +686,12 @@
 
             <main class="content-body">
                 @yield('content')
-                @stack('scripts')
             </main>
         </div>
-
-        @include('layouts.notif-modal')
     </div>
+    @include('layouts.notif-modal')
+    @include('healthcare.partials._loader')
+    @stack('modals')
 
     <script>
         // ── ユーザー通知モーダル：開いたら一括既読化 ──
@@ -751,8 +756,7 @@
             });
         }
     </script>
-
-    @include('healthcare.partials._loader')
+    @stack('scripts')
 </body>
 
 </html>

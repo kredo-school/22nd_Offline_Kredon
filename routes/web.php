@@ -75,13 +75,11 @@ Route::post('/hospitals/{hospitalId}/images', [HospitalImageController::class, '
 Route::middleware('auth')->group(function () {
     Route::post('/hospital-bookmarks/{hospital}', [HospitalBookmarkController::class, 'store'])->name('hospital_bookmarks.store');
     Route::delete('/hospital-bookmarks/{hospital}', [HospitalBookmarkController::class, 'destroy'])->name('hospital_bookmarks.destroy');
-});
-
-#Review
-Route::middleware('auth')->group(function () {
+   
+    #Review
     Route::get('/review', [ReviewController::class, 'index'])->name('reviews.index');
     Route::get('/review/create', [ReviewController::class, 'create'])->name('reviews.create');
-    Route::post('/review/{id}/store', [ReviewController::class, 'store'])->name('reviews.store');
+    // Route::post('/review/{id}/store', [ReviewController::class, 'store'])->name('reviews.store');
     Route::patch('/review/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/review/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
@@ -107,35 +105,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/room/{chat}/send', [ChatController::class, 'send'])->name('chat.send');
     Route::get('/messages', [ChatController::class, 'list'])->name('chat.list');
 
-
-
-
     // メッセージ送信
-    Route::post(
-        '/chat/send',
-        [ChatController::class, 'store']
-    )
-        ->name('chat.store');
+    Route::post('/chat/send',[ChatController::class, 'store'])->name('chat.store');
 
     // チャットルーム表示
-    Route::get(
-        '/chat/room/{chat}',
-        [ChatController::class, 'show']
-    )
-        ->name('chat.show');
+    Route::get('/chat/room/{chat}',[ChatController::class, 'show']  )->name('chat.show');
 
     // チャットルーム送信
-    Route::post(
-        '/chat/room/{chat}/send',
-        [ChatController::class, 'send']
-    )
-        ->name('chat.send');
+    Route::post('/chat/room/{chat}/send', [ChatController::class, 'send'])->name('chat.send');
 
-    Route::get(
-        '/messages',
-        [ChatController::class, 'list']
-    )
-        ->name('chat.list');
+    Route::get('/messages', [ChatController::class, 'list'])->name('chat.list');
 
     #Game
     Route::get('/game', [GameController::class, 'home'])
@@ -154,178 +133,172 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/game/stage/oni', [GameController::class, 'oni'])
         ->name('game.oni');
-    Route::get(
-        '/game/stage1-1',
-        [GameController::class, 'stage11']
-    )
-        ->name('game.stage11');
-    Route::get('/battle', [GameController::class, 'battle'])
-        ->name('game.battle');
+    Route::get('/game/stage1-1',  [GameController::class, 'stage11'])->name('game.stage11');
+    Route::get('/battle', [GameController::class, 'battle'])->name('game.battle');
     // routes/web.php
     Route::get('/game/stage2', function () {
-        return view('game.game2'); // views/game/game2.blade.php を指します
-    })->name('game.stage2');
-    Route::get('/game/stage3', function () {
-        return view('game.game3');
-    })->name('game.stage3');
-    Route::get('/game/boss', function () {
-        return view('game.boss');
-    })->name('game.boss');
-    Route::get('/game/stage2-1', function () {
-        return view('game.stage2-1');
-    })->name('game.stage2-1');
-    Route::get('/game/stage2-2', function () {
-        return view('game.stage2-2');
-    })->name('game.stage2-2');
-    Route::get('/game/stage2-3', function () {
-        return view('game.stage2-3');
-    })->name('game.stage2-3');
-    Route::get('/game/stage2-boss', function () {
-        return view('game.stage2-boss');
-    })->name('game.stage2-boss');
+        return view('game.game2'); // views/game/game2.blade.php を指します    })->name('game.stage2');
+        Route::get('/game/stage3', function () {
+            return view('game.game3');
+        })->name('game.stage3');
+        Route::get('/game/boss', function () {
+            return view('game.boss');
+        })->name('game.boss');
+        Route::get('/game/stage2-1', function () {
+            return view('game.stage2-1');
+        })->name('game.stage2-1');
+        Route::get('/game/stage2-2', function () {
+            return view('game.stage2-2');
+        })->name('game.stage2-2');
+        Route::get('/game/stage2-3', function () {
+            return view('game.stage2-3');
+        })->name('game.stage2-3');
+        Route::get('/game/stage2-boss', function () {
+            return view('game.stage2-boss');
+        })->name('game.stage2-boss');
 
-    #Event
-    Route::post('/event/{event}/comment', [CommentController::class, 'store'])
-        ->name('comment.store')
-        ->middleware('auth');
-    Route::delete('/comment/{comment}', [CommentController::class, 'destroy'])
-        ->name('comment.destroy');
-    Route::post(
-        '/event/{event}/join',
-        [EventParticipantController::class, 'join']
-    )->name('event.join');
+        #Event
+        Route::post('/event/{event}/comment', [CommentController::class, 'store'])
+            ->name('comment.store')
+            ->middleware('auth');
+        Route::delete('/comment/{comment}', [CommentController::class, 'destroy'])
+            ->name('comment.destroy');
+        Route::post(
+            '/event/{event}/join',
+            [EventParticipantController::class, 'join']
+        )->name('event.join');
 
-    Route::delete('/event/{event}/leave', [EventParticipantController::class, 'leave'])->name('event.leave');
-    Route::get(
-        '/event/{event}/participants',
-        [EventController::class, 'participants']
-    )
-        ->name('event.participants');
-    Route::get(
-        '/private-chat/{user}',
-        [ChatController::class, 'private']
-    )
-        ->name('chat.private');
-    Route::get(
-        '/group-chat/{event}',
-        [ChatController::class, 'group']
-    )
-        ->name('chat.group');
-    Route::middleware('auth')->group(function () {
-
+        Route::delete('/event/{event}/leave', [EventParticipantController::class, 'leave'])->name('event.leave');
+        Route::get(
+            '/event/{event}/participants',
+            [EventController::class, 'participants']
+        )
+            ->name('event.participants');
+        Route::get(
+            '/private-chat/{user}',
+            [ChatController::class, 'private']
+        )
+            ->name('chat.private');
         Route::get(
             '/group-chat/{event}',
-            [GroupChatController::class, 'show']
-        )->name('group.chat');
+            [ChatController::class, 'group']
+        )
+            ->name('chat.group');
+        Route::middleware('auth')->group(function () {
+
+            Route::get(
+                '/group-chat/{event}',
+                [GroupChatController::class, 'show']
+            )->name('group.chat');
+
+            Route::post(
+                '/group-chat/{event}/send',
+                [GroupChatController::class, 'send']
+            )->name('group.chat.send');
+            Route::get(
+                '/group-chat/{event}/fetch',
+                [GroupChatController::class, 'fetch']
+            )->name('group.chat.fetch');
+            Route::get(
+                '/group-chat/{event}/members',
+                [GroupChatController::class, 'members']
+            )->name('group.chat.members');
+            Route::get(
+                '/group-chat/{event}/members',
+                [GroupChatController::class, 'members']
+            )->name('group.chat.members');
+        });
+        Route::post(
+            '/report/message/{message}',
+            [ReportController::class, 'reportMessage']
+        )->name('report.message');
 
         Route::post(
-            '/group-chat/{event}/send',
-            [GroupChatController::class, 'send']
-        )->name('group.chat.send');
-        Route::get(
-            '/group-chat/{event}/fetch',
-            [GroupChatController::class, 'fetch']
-        )->name('group.chat.fetch');
-        Route::get(
-            '/group-chat/{event}/members',
-            [GroupChatController::class, 'members']
-        )->name('group.chat.members');
-        Route::get(
-            '/group-chat/{event}/members',
-            [GroupChatController::class, 'members']
-        )->name('group.chat.members');
-    });
-    Route::post(
-        '/report/message/{message}',
-        [ReportController::class, 'reportMessage']
-    )->name('report.message');
+            '/report/group/{message}',
+            [ReportController::class, 'reportGroup']
+        )->name('report.group');
 
-    Route::post(
-        '/report/group/{message}',
-        [ReportController::class, 'reportGroup']
-    )->name('report.group');
+        Route::get('/game/stage3-1', function () {
+            return view('game.stage3-1');
+        })->name('game.stage3-1');
+        Route::get('/game/stage3-2', function () {
+            return view('game.stage3-2');
+        })->name('game.stage3-2');
+        Route::get('/game/stage3-3', function () {
+            return view('game.stage3-3');
+        })->name('game.stage3-3');
+        Route::get('/game/stage3-boss', function () {
+            return view('game.stage3-boss');
+        })->name('game.stage3-boss');
+        Route::get('/game/stageoni', function () {
+            return view('game.stageoni'); // views/game/gameoni.blade.php を指します
+        })->name('game.stageoni');
+        Route::get('/game/result', function () {
+            return view('game.result');
+        })->name('game.result');
+        Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    Route::get('/game/stage3-1', function () {
-        return view('game.stage3-1');
-    })->name('game.stage3-1');
-    Route::get('/game/stage3-2', function () {
-        return view('game.stage3-2');
-    })->name('game.stage3-2');
-    Route::get('/game/stage3-3', function () {
-        return view('game.stage3-3');
-    })->name('game.stage3-3');
-    Route::get('/game/stage3-boss', function () {
-        return view('game.stage3-boss');
-    })->name('game.stage3-boss');
-    Route::get('/game/stageoni', function () {
-        return view('game.stageoni'); // views/game/gameoni.blade.php を指します
-    })->name('game.stageoni');
-    Route::get('/game/result', function () {
-        return view('game.result');
-    })->name('game.result');
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-    /*
+        /*
 |--------------------------------------------------------------------------
 | 🛡️ ログインしている人だけが使える機能
 |--------------------------------------------------------------------------
 */
-    Route::get('/game', [GameController::class, 'home'])->name('game.home');
-    Route::get('/game/select', [GameController::class, 'select'])->name('game.select');
-    Route::get('/game/stage/easy', [GameController::class, 'easy'])->name('game.easy');
-    Route::get('/game/stage/normal', [GameController::class, 'normal'])->name('game.normal');
-    Route::get('/game/stage/hard', [GameController::class, 'hard'])->name('game.hard');
-    Route::get('/game/stage/oni', [GameController::class, 'oni'])->name('game.oni');
-    Route::get('/game/stage1-1', [GameController::class, 'stage11'])->name('game.stage11');
-    Route::get('/battle', [GameController::class, 'battle'])->name('game.battle');
-    Route::get('/game/stage2', fn() => view('game.game2'))->name('game.stage2');
-    Route::get('/game/stage3', fn() => view('game.game3'))->name('game.stage3');
-    Route::get('/game/boss', fn() => view('game.boss'))->name('game.boss');
-    Route::get('/game/stage2-1', fn() => view('game.stage2-1'))->name('game.stage2-1');
-    Route::get('/game/stage2-2', fn() => view('game.stage2-2'))->name('game.stage2-2');
-    Route::get('/game/stage2-3', fn() => view('game.stage2-3'))->name('game.stage2-3');
-    Route::get('/game/stage2-boss', fn() => view('game.stage2-boss'))->name('game.stage2-boss');
-    Route::get('/game/stage3-1', fn() => view('game.stage3-1'))->name('game.stage3-1');
-    Route::get('/game/stage3-2', fn() => view('game.stage3-2'))->name('game.stage3-2');
-    Route::get('/game/stage3-3', fn() => view('game.stage3-3'))->name('game.stage3-3');
-    Route::get('/game/stage3-boss', fn() => view('game.stage3-boss'))->name('game.stage3-boss');
-    Route::get('/game/stageoni', fn() => view('game.stageoni'))->name('game.stageoni');
-    Route::get('/game/result', fn() => view('game.result'))->name('game.result');
+        Route::get('/game', [GameController::class, 'home'])->name('game.home');
+        Route::get('/game/select', [GameController::class, 'select'])->name('game.select');
+        Route::get('/game/stage/easy', [GameController::class, 'easy'])->name('game.easy');
+        Route::get('/game/stage/normal', [GameController::class, 'normal'])->name('game.normal');
+        Route::get('/game/stage/hard', [GameController::class, 'hard'])->name('game.hard');
+        Route::get('/game/stage/oni', [GameController::class, 'oni'])->name('game.oni');
+        Route::get('/game/stage1-1', [GameController::class, 'stage11'])->name('game.stage11');
+        Route::get('/battle', [GameController::class, 'battle'])->name('game.battle');
+        Route::get('/game/stage2', fn() => view('game.game2'))->name('game.stage2');
+        Route::get('/game/stage3', fn() => view('game.game3'))->name('game.stage3');
+        Route::get('/game/boss', fn() => view('game.boss'))->name('game.boss');
+        Route::get('/game/stage2-1', fn() => view('game.stage2-1'))->name('game.stage2-1');
+        Route::get('/game/stage2-2', fn() => view('game.stage2-2'))->name('game.stage2-2');
+        Route::get('/game/stage2-3', fn() => view('game.stage2-3'))->name('game.stage2-3');
+        Route::get('/game/stage2-boss', fn() => view('game.stage2-boss'))->name('game.stage2-boss');
+        Route::get('/game/stage3-1', fn() => view('game.stage3-1'))->name('game.stage3-1');
+        Route::get('/game/stage3-2', fn() => view('game.stage3-2'))->name('game.stage3-2');
+        Route::get('/game/stage3-3', fn() => view('game.stage3-3'))->name('game.stage3-3');
+        Route::get('/game/stage3-boss', fn() => view('game.stage3-boss'))->name('game.stage3-boss');
+        Route::get('/game/stageoni', fn() => view('game.stageoni'))->name('game.stageoni');
+        Route::get('/game/result', fn() => view('game.result'))->name('game.result');
+    });
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
+
+        // working, tourism posts
+        Route::post('/spots', [SpotController::class, 'store'])->name('spots.store');
+        Route::put('/spots/{id}', [SpotController::class, 'update'])->name('spots.update');
+        Route::delete('/spots/{id}', [SpotController::class, 'destroy'])->name('spots.destroy');
+        Route::post('/spots/photos/reorder', [SpotController::class, 'reorderPhotos'])->name('spots.photos.reorder');
+        Route::post('/spots/{id}/5', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
+        Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+        Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+        Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+        Route::post('/spots/{spot}/coupon', [SpotController::class, 'useCoupon'])->name('spots.coupon.use');
+
+        Route::post('/tourist_spots', [TouristSpotController::class, 'store'])->name('tourist_spots.store');
+        Route::put('/tourist_spots/{id}', [TouristSpotController::class, 'update'])->name('tourist_spots.update');
+        Route::delete('/tourist_spots/{id}', [TouristSpotController::class, 'destroy'])->name('tourist_spots.destroy');
+        Route::post('/tourist_spots/{id}/bookmark', [TouristSpotController::class, 'toggleBookmark'])->name('tourist_bookmarks.toggle');
+        Route::post('/tourist_spots/{tourist_spot}/reviews', [TouristSpotController::class, 'storeReview'])->name('tourist_reviews.store');
+        Route::put('/tourist_reviews/{review}', [TouristSpotController::class, 'updateReview'])->name('tourist_reviews.update');
+        Route::delete('/tourist_reviews/{review}', [TouristSpotController::class, 'destroyReview'])->name('tourist_reviews.destroy');
+
+        // ユーザー側の通知受けとり
+        Route::post('/notifications/mark-all-read', [UserNotificationController::class, 'markAllRead'])
+            ->name('notifications.mark-all-read');
+    });
+
+    Route::get('/all_reviews', [AllReviewController::class, 'index'])->name('all_reviews.index');
+    Route::get('/all_reviews/create', [AllReviewController::class, 'create'])->name('all_reviews.create');
+    Route::post('/all_reviews/store', [AllReviewController::class, 'store'])->name('all_reviews.store');
+    Route::patch('/all_reviews/{review}/update', [AllReviewController::class, 'update'])->name('all_reviews.update');
+    Route::delete('/all_reviews/{review}/delete', [AllReviewController::class, 'destroy'])->name('all_reviews.destroy');
 });
-
-Route::middleware('auth')->group(function () {
-    Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
-
-    // working, tourism posts
-    Route::post('/spots', [SpotController::class, 'store'])->name('spots.store');
-    Route::put('/spots/{id}', [SpotController::class, 'update'])->name('spots.update');
-    Route::delete('/spots/{id}', [SpotController::class, 'destroy'])->name('spots.destroy');
-    Route::post('/spots/photos/reorder', [SpotController::class, 'reorderPhotos'])->name('spots.photos.reorder');
-    Route::post('/spots/{id}/5', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
-    Route::post('/spots/{spot}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-    Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
-    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
-    Route::post('/spots/{spot}/coupon', [SpotController::class, 'useCoupon'])->name('spots.coupon.use');
-
-    Route::post('/tourist_spots', [TouristSpotController::class, 'store'])->name('tourist_spots.store');
-    Route::put('/tourist_spots/{id}', [TouristSpotController::class, 'update'])->name('tourist_spots.update');
-    Route::delete('/tourist_spots/{id}', [TouristSpotController::class, 'destroy'])->name('tourist_spots.destroy');
-    Route::post('/tourist_spots/{id}/bookmark', [TouristSpotController::class, 'toggleBookmark'])->name('tourist_bookmarks.toggle');
-    Route::post('/tourist_spots/{tourist_spot}/reviews', [TouristSpotController::class, 'storeReview'])->name('tourist_reviews.store');
-    Route::put('/tourist_reviews/{review}', [TouristSpotController::class, 'updateReview'])->name('tourist_reviews.update');
-    Route::delete('/tourist_reviews/{review}', [TouristSpotController::class, 'destroyReview'])->name('tourist_reviews.destroy');
-
-    // ユーザー側の通知受けとり
-    Route::post('/notifications/mark-all-read', [UserNotificationController::class, 'markAllRead'])
-        ->name('notifications.mark-all-read');
-});
-
-Route::get('/all_reviews', [AllReviewController::class, 'index'])->name('all_reviews.index');
-Route::get('/all_reviews/create', [AllReviewController::class, 'create'])->name('all_reviews.create');
-Route::post('/all_reviews/store', [AllReviewController::class, 'store'])->name('all_reviews.store');
-Route::patch('/all_reviews/{review}/update', [AllReviewController::class, 'update'])->name('all_reviews.update');
-Route::delete('/all_reviews/{review}/delete', [AllReviewController::class, 'destroy'])->name('all_reviews.destroy');
-
 
 Route::middleware('auth')->prefix('admin/hospitals')->name('admin.hospitals.')->group(function () {
     Route::get('/', [AdminHospitalController::class, 'index'])->name('index');
