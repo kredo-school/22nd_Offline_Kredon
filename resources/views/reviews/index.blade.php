@@ -230,8 +230,8 @@
                 {{-- amenity icon --}}
                 <div class="d-flex flex-wrap gap-2 mb-3" id="preview-amenities"></div>
 
-                <p id="preview-comment" class="small text-secondary mb-4" style="white-space: pre-wrap; line-height: 1.6;">
-                </p>
+<p id="preview-comment" class="small text-secondary mb-4"
+    style="white-space: pre-wrap; line-height: 1.6; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">                </p>
 
                 {{-- preview carousel    --}}
                 <div id="reviewCarousel" class="carousel slide mb-4 shadow-sm rounded overflow-hidden"
@@ -252,7 +252,7 @@
                 <div class="d-grid gap-2">
                     <a href="#" id="preview-detail-btn" class="btn text-white fw-bold btn-sm py-2"
                         style="background-color: rgb(19, 189, 189); border:none;">Spot Details</a>
-                    <button class="btn btn-outline-secondary btn-sm py-2">Directions to this location</button>
+                    {{-- <button class="btn btn-outline-secondary btn-sm py-2">Directions to this location</button> --}}
                 </div>
             </div>
         </div>

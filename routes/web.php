@@ -151,22 +151,14 @@ Route::put('/market/{item}', [MarketplaceController::class, 'update'])
     Route::get('/messages', [ChatController::class, 'list'])->name('chat.list');
 
     #Game
-    Route::get('/game', [GameController::class, 'home'])
-        ->name('game.home');
-    Route::get('/game/select', [GameController::class, 'select'])
-        ->name('game.select');
+    Route::get('/game', [GameController::class, 'home'])->name('game.home');
+        Route::get('/game/select', [GameController::class, 'select'])     ->name('game.select');
 
-    Route::get('/game/stage/easy', [GameController::class, 'easy'])
-        ->name('game.easy');
+    Route::get('/game/stage/easy', [GameController::class, 'easy'])      ->name('game.easy');
+    Route::get('/game/stage/normal', [GameController::class, 'normal'])    ->name('game.normal');
+    Route::get('/game/stage/hard', [GameController::class, 'hard'])       ->name('game.hard');
 
-    Route::get('/game/stage/normal', [GameController::class, 'normal'])
-        ->name('game.normal');
-
-    Route::get('/game/stage/hard', [GameController::class, 'hard'])
-        ->name('game.hard');
-
-    Route::get('/game/stage/oni', [GameController::class, 'oni'])
-        ->name('game.oni');
+    Route::get('/game/stage/oni', [GameController::class, 'oni'])->name('game.oni');
     Route::get('/game/stage1-1',  [GameController::class, 'stage11'])->name('game.stage11');
     Route::get('/battle', [GameController::class, 'battle'])->name('game.battle');
     // routes/web.php
