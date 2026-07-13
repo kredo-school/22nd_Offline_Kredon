@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
 use App\Models\Spot;
 use App\Models\TouristSpot;
 use App\Models\Hospital;
+use App\Models\ItemPost;
+use App\Models\Notification;
 use App\Models\Event;
 
 use Carbon\Carbon;
@@ -16,54 +19,76 @@ use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    public function dashboard()
-    {
-        // 総ユーザー数
-        $totalUsers = User::count();
+   public function dashboard()
+{
+    $lastWeek = Carbon::now()->subWeek();
 
-        // 先週時点でのユーザー数（1週間前までに登録されたユーザー数）
-        $lastWeekUsers = User::where('created_at', '<=', Carbon::now()->subWeek())->count();
+    // ── Total Users ──
+    $totalUsers = User::count();
+    $lastWeekUsers = User::where('created_at', '<=', $lastWeek)->count();
+    $userGrowthRate = $lastWeekUsers > 0
+        ? round((($totalUsers - $lastWeekUsers) / $lastWeekUsers) * 100, 1)
+        : 0;
 
-        // 増減率を計算（ゼロ除算対策あり）
-        if ($lastWeekUsers > 0) {
-            $userGrowthRate = round((($totalUsers - $lastWeekUsers) / $lastWeekUsers) * 100, 1);
-        } else {
-            $userGrowthRate = 0;
-        }
+    // ── Total Spots (Working + Tourism + Hospital) ──
+    $totalSpots = Spot::count() + TouristSpot::count() + Hospital::count();
+    $totalSpotsLastWeek = Spot::where('created_at', '<=', $lastWeek)->count()
+        + TouristSpot::where('created_at', '<=', $lastWeek)->count()
+        + Hospital::where('created_at', '<=', $lastWeek)->count();
+    $spotsDiffRate = $totalSpotsLastWeek > 0
+        ? round((($totalSpots - $totalSpotsLastWeek) / $totalSpotsLastWeek) * 100, 1)
+        : 0;
 
-        // Total Locations（Working + Tourism + Hospital の合計）
-        $totalLocations = Spot::count() + TouristSpot::count() + Hospital::count();
+    // 互換用（既存Bladeで $totalLocations / $locationsDiff を使っている箇所がまだあるなら残す）
+    $totalLocations = $totalSpots;
+    $locationsDiff = $totalSpots - $totalSpotsLastWeek;
 
-        // 先週時点での合計（各テーブルで1週間前までに作成された件数を合算）
-        $lastWeekLocations = Spot::where('created_at', '<=', Carbon::now()->subWeek())->count()
-            + TouristSpot::where('created_at', '<=', Carbon::now()->subWeek())->count()
-            + Hospital::where('created_at', '<=', Carbon::now()->subWeek())->count();
+    // ── Active Events ──
+    $today = today();
+    $activeEventsCount = Event::whereDate('start_date', '<=', $today)
+        ->whereDate('end_date', '>=', $today)
+        ->count();
 
-        // 増減数（+8のような差分表示）
-        $locationsDiff = $totalLocations - $lastWeekLocations;
+    $lastWeekDate = $today->copy()->subWeek();
+    $lastWeekActiveEventsCount = Event::whereDate('start_date', '<=', $lastWeekDate)
+        ->whereDate('end_date', '>=', $lastWeekDate)
+        ->count();
 
-        // --- Active events（開催中のイベント数） ---
-        $today = today();
-        $activeEventsCount = Event::whereDate('start_date', '<=', $today)
-            ->whereDate('end_date', '>=', $today)
-            ->count();
+    $activeEventsDiff = $activeEventsCount - $lastWeekActiveEventsCount;
 
-        // 1週間前時点で「開催中」だったイベント数（同じ条件を1週間前の日付で判定）
-        $lastWeek = $today->copy()->subWeek();
-        $lastWeekActiveEventsCount = Event::whereDate('start_date', '<=', $lastWeek)
-            ->whereDate('end_date', '>=', $lastWeek)
-            ->count();
+    // ── Total Markets ──
+    $totalMarkets = ItemPost::count();
+    $totalMarketsLastWeek = ItemPost::where('created_at', '<=', $lastWeek)->count();
+    $marketsDiffRate = $totalMarketsLastWeek > 0
+        ? round((($totalMarkets - $totalMarketsLastWeek) / $totalMarketsLastWeek) * 100, 1)
+        : 0;
 
-        $activeEventsDiff = $activeEventsCount - $lastWeekActiveEventsCount;
+    // ── Total Reviews (3テーブル合算) ──
+    $totalReviews = DB::table('all_reviews')->count()
+        + DB::table('reviews')->count()
+        + DB::table('tourist_reviews')->count();
+    $totalReviewsLastWeek = DB::table('all_reviews')->where('created_at', '<=', $lastWeek)->count()
+        + DB::table('reviews')->where('created_at', '<=', $lastWeek)->count()
+        + DB::table('tourist_reviews')->where('created_at', '<=', $lastWeek)->count();
+    $reviewsDiff = $totalReviews - $totalReviewsLastWeek;
 
-        return view('admin.dashboard', compact(
-            'totalUsers',
-            'userGrowthRate',
-            'totalLocations',
-            'locationsDiff',
-            'activeEventsCount',
-            'activeEventsDiff'
-            // 他のカード用データもここに追加していく
-        ));
-    }
+    // ── Total Notifications ──
+    $totalNotifications = Notification::count();
+    $totalNotificationsLastWeek = Notification::where('created_at', '<=', $lastWeek)->count();
+    $notificationsDiffRate = $totalNotificationsLastWeek > 0
+        ? round((($totalNotifications - $totalNotificationsLastWeek) / $totalNotificationsLastWeek) * 100, 1)
+        : 0;
+
+    return view('admin.dashboard', compact(
+        'totalUsers', 'userGrowthRate',
+        'totalSpots', 'spotsDiffRate',
+        'totalLocations', 'locationsDiff',
+        'activeEventsCount', 'activeEventsDiff',
+        'totalMarkets', 'marketsDiffRate',
+        'totalReviews', 'reviewsDiff',
+        'totalNotifications', 'notificationsDiffRate'
+    ));
+}
+
+    
 }

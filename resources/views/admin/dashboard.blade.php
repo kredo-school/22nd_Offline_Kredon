@@ -355,11 +355,14 @@
 
                     <div class="col">
                         <div class="card h-100 p-3 border" style="border-color:#10B981 !important;">
-                            <div class="metric-icon-wrap mi-green"><i class="ti ti-file-plus" aria-hidden="true"></i></div>
-                            <div class="text-secondary mb-1" style="font-size:11px;">New Markets</div>
-                            <div class="metric-value">2,510</div>
+                            <div class="metric-icon-wrap mi-green"><i class="ti ti-map-pin" aria-hidden="true"></i></div>
+                            <div class="text-secondary mb-1" style="font-size:11px;">Total spots</div>
+                            <div class="metric-value">{{ number_format($totalSpots) }}</div>
                             <div class="d-flex align-items-center gap-1 mt-1">
-                                <span class="chg up"><i class="ti ti-arrow-up"></i>+12%</span>
+                                <span class="chg {{ $spotsDiffRate >= 0 ? 'up' : 'down' }}">
+                                    <i
+                                        class="ti ti-arrow-{{ $spotsDiffRate >= 0 ? 'up' : 'down' }}"></i>{{ $spotsDiffRate >= 0 ? '+' : '' }}{{ $spotsDiffRate }}%
+                                </span>
                                 <span class="chg-label">vs last week</span>
                             </div>
                         </div>
@@ -384,26 +387,13 @@
 
                     <div class="col">
                         <div class="card h-100 p-3 border" style="border-color: #EF4444 !important;">
-                            <div class="metric-icon-wrap mi-red"><i class="ti ti-message-report" aria-hidden="true"></i>
-                            </div>
-                            <div class="text-secondary mb-1" style="font-size:11px;">New comments</div>
-                            <div class="metric-value">12,385</div>
+                            <div class="metric-icon-wrap mi-red"><i class="ti ti-building-store" aria-hidden="true"></i></div>
+                            <div class="text-secondary mb-1" style="font-size:11px;">Total markets</div>
+                            <div class="metric-value">{{ number_format($totalMarkets) }}</div>
                             <div class="d-flex align-items-center gap-1 mt-1">
-                                <span class="chg down"><i class="ti ti-arrow-down"></i>-3%</span>
-                                <span class="chg-label">vs last week</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="card h-100 p-3 border" style="border-color: #bf24ea !important;">
-                            <div class="metric-icon-wrap mi-purple"><i class="ti ti-map-pin" aria-hidden="true"></i></div>
-                            <div class="text-secondary mb-1" style="font-size:11px;">Total locations</div>
-                            <div class="metric-value">{{ number_format($totalLocations) }}</div>
-                            <div class="d-flex align-items-center gap-1 mt-1">
-                                <span class="chg {{ $locationsDiff >= 0 ? 'up' : 'down' }}">
+                                <span class="chg {{ $marketsDiffRate >= 0 ? 'up' : 'down' }}">
                                     <i
-                                        class="ti ti-arrow-{{ $locationsDiff >= 0 ? 'up' : 'down' }}"></i>{{ $locationsDiff >= 0 ? '+' : '' }}{{ $locationsDiff }}
+                                        class="ti ti-arrow-{{ $marketsDiffRate >= 0 ? 'up' : 'down' }}"></i>{{ $marketsDiffRate >= 0 ? '+' : '' }}{{ $marketsDiffRate }}%
                                 </span>
                                 <span class="chg-label">vs last week</span>
                             </div>
@@ -411,12 +401,29 @@
                     </div>
 
                     <div class="col">
-                        <div class="card h-100 p-3 border" style="border-color: #8B5CF6 !important;">
-                            <div class="metric-icon-wrap mi-indigo"><i class="ti ti-crown" aria-hidden="true"></i></div>
-                            <div class="text-secondary mb-1" style="font-size:11px;">Premium members</div>
-                            <div class="metric-value">6,780</div>
+                        <div class="card h-100 p-3 border" style="border-color: #bf24ea !important;">
+                            <div class="metric-icon-wrap mi-purple"><i class="ti ti-messages" aria-hidden="true"></i></div>
+                            <div class="text-secondary mb-1" style="font-size:11px;">Total reviews</div>
+                            <div class="metric-value">{{ number_format($totalReviews) }}</div>
                             <div class="d-flex align-items-center gap-1 mt-1">
-                                <span class="chg up"><i class="ti ti-arrow-up"></i>+21%</span>
+                                <span class="chg {{ $reviewsDiff >= 0 ? 'up' : 'down' }}">
+                                    <i
+                                        class="ti ti-arrow-{{ $reviewsDiff >= 0 ? 'up' : 'down' }}"></i>{{ $reviewsDiff >= 0 ? '+' : '' }}{{ $reviewsDiff }}
+                                </span>
+                                <span class="chg-label">vs last week</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 p-3 border" style="border-color: #8B5CF6 !important;">
+                            <div class="metric-icon-wrap mi-indigo"><i class="ti ti-bell" aria-hidden="true"></i></div>
+                            <div class="text-secondary mb-1" style="font-size:11px;">Total notification</div>
+                            <div class="metric-value">{{ number_format($totalNotifications) }}</div>
+                            <div class="d-flex align-items-center gap-1 mt-1">
+                                <span class="chg {{ $notificationsDiffRate >= 0 ? 'up' : 'down' }}">
+                                    <i
+                                        class="ti ti-arrow-{{ $notificationsDiffRate >= 0 ? 'up' : 'down' }}"></i>{{ $notificationsDiffRate >= 0 ? '+' : '' }}{{ $notificationsDiffRate }}%
+                                </span>
                                 <span class="chg-label">vs last week</span>
                             </div>
                         </div>

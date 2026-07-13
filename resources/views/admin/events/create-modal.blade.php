@@ -37,7 +37,7 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-semibold">表示先</label>
+                            <label class="form-label small fw-semibold">where to display</label>
                             <select name="display_channel" class="form-select" required>
                                 <option value="event_page" {{ old('display_channel', 'event_page') == 'event_page' ? 'selected' : '' }}>
                                     Event list
@@ -50,7 +50,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-semibold">Details</label>
-                        <textarea name="description" class="form-control" rows="3" required>{{ old('description') }}</textarea>
+                        <textarea name="description" class="form-control" rows="2" required>{{ old('description') }}</textarea>
                     </div>
 
                     <div class="mb-3">

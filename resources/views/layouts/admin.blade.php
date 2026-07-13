@@ -900,15 +900,6 @@
                 }
             });
         });
-
-        // function toggleSpotPC(e) {
-        //     e.preventDefault();
-        //     const menu = document.getElementById('spotSubmenuPC');
-        //     const chevron = document.getElementById('spotChevronPC');
-        //     const isOpen = menu.style.display === 'block';
-        //     menu.style.display = isOpen ? 'none' : 'block';
-        //     chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-        // }
     </script>
 
 </body>

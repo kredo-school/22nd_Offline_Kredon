@@ -15,6 +15,7 @@ class AllReview extends Model
         'location_id',
         'rating',
         'title',
+        'status',
         'comment',
         'amenities',
         'customer_vibe',

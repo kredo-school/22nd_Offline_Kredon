@@ -4,6 +4,8 @@ use App\Models\TouristBookmark;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+
+
 #User Controller
 use App\Http\Controllers\NotificationsController as UserNotificationController;
 use App\Http\Controllers\StudyController;
@@ -78,7 +80,7 @@ Route::post('/hospitals/{hospitalId}/images', [HospitalImageController::class, '
 Route::middleware('auth')->group(function () {
     Route::post('/hospital-bookmarks/{hospital}', [HospitalBookmarkController::class, 'store'])->name('hospital_bookmarks.store');
     Route::delete('/hospital-bookmarks/{hospital}', [HospitalBookmarkController::class, 'destroy'])->name('hospital_bookmarks.destroy');
-   
+
     #Review
     Route::get('/review', [ReviewController::class, 'index'])->name('reviews.index');
     Route::get('/review/create', [ReviewController::class, 'create'])->name('reviews.create');
@@ -96,11 +98,11 @@ Route::post('/market/store', [MarketplaceController::class, 'store'])->name('mar
 Route::get('/market/{item}', [MarketplaceController::class, 'show'])->name('marketplace.show');
 
 
-Route::post('/market/{item}/available', [MarketplaceController::class,'available'])
+Route::post('/market/{item}/available', [MarketplaceController::class, 'available'])
     ->name('market.available')
     ->middleware('auth');
 
-Route::post('/market/{item}/sold', [MarketplaceController::class,'sold'])
+Route::post('/market/{item}/sold', [MarketplaceController::class, 'sold'])
     ->name('market.sold')
     ->middleware('auth');
 Route::resource('event', EventController::class);
@@ -116,34 +118,38 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/room/{chat}/send', [ChatController::class, 'send'])->name('chat.send');
     Route::get('/messages', [ChatController::class, 'list'])->name('chat.list');
 
-   
+
     Route::post(
-    '/market/{item}/comment',
-    [MarketCommentController::class, 'store']
-)->name('market.comment.store');
+        '/market/{item}/comment',
+        [MarketCommentController::class, 'store']
+    )->name('market.comment.store');
 
-Route::delete(
-    '/market/comment/{comment}',
-    [MarketCommentController::class, 'destroy']
-)->name('market.comment.destroy');
-Route::post('/report/item/{item}',
-    [ReportController::class,'reportItem'])
-    ->name('report.market.item');
+    Route::delete(
+        '/market/comment/{comment}',
+        [MarketCommentController::class, 'destroy']
+    )->name('market.comment.destroy');
+    Route::post(
+        '/report/item/{item}',
+        [ReportController::class, 'reportItem']
+    )
+        ->name('report.market.item');
 
-Route::post('/report/comment/{comment}',
-    [ReportController::class,'reportMarketComment'])
-    ->name('report.market.comment');
+    Route::post(
+        '/report/comment/{comment}',
+        [ReportController::class, 'reportMarketComment']
+    )
+        ->name('report.market.comment');
     Route::get('/market/{item}/edit', [MarketplaceController::class, 'edit'])
-    ->name('marketplace.edit');
+        ->name('marketplace.edit');
 
-Route::put('/market/{item}', [MarketplaceController::class, 'update'])
-    ->name('marketplace.update');
+    Route::put('/market/{item}', [MarketplaceController::class, 'update'])
+        ->name('marketplace.update');
 
     // メッセージ送信
-    Route::post('/chat/send',[ChatController::class, 'store'])->name('chat.store');
+    Route::post('/chat/send', [ChatController::class, 'store'])->name('chat.store');
 
     // チャットルーム表示
-    Route::get('/chat/room/{chat}',[ChatController::class, 'show']  )->name('chat.show');
+    Route::get('/chat/room/{chat}', [ChatController::class, 'show'])->name('chat.show');
 
     // チャットルーム送信
     Route::post('/chat/room/{chat}/send', [ChatController::class, 'send'])->name('chat.send');
@@ -152,11 +158,11 @@ Route::put('/market/{item}', [MarketplaceController::class, 'update'])
 
     #Game
     Route::get('/game', [GameController::class, 'home'])->name('game.home');
-        Route::get('/game/select', [GameController::class, 'select'])     ->name('game.select');
+    Route::get('/game/select', [GameController::class, 'select'])->name('game.select');
 
-    Route::get('/game/stage/easy', [GameController::class, 'easy'])      ->name('game.easy');
-    Route::get('/game/stage/normal', [GameController::class, 'normal'])    ->name('game.normal');
-    Route::get('/game/stage/hard', [GameController::class, 'hard'])       ->name('game.hard');
+    Route::get('/game/stage/easy', [GameController::class, 'easy'])->name('game.easy');
+    Route::get('/game/stage/normal', [GameController::class, 'normal'])->name('game.normal');
+    Route::get('/game/stage/hard', [GameController::class, 'hard'])->name('game.hard');
 
     Route::get('/game/stage/oni', [GameController::class, 'oni'])->name('game.oni');
     Route::get('/game/stage1-1',  [GameController::class, 'stage11'])->name('game.stage11');
@@ -239,26 +245,32 @@ Route::put('/market/{item}', [MarketplaceController::class, 'update'])
             [ReportController::class, 'reportMessage']
         )->name('report.message');
 
-Route::post(
-'/report/group/{message}',
-[ReportController::class,'reportGroup']
-)->name('report.group');
-Route::post('/market/{item}/interested', [InterestedController::class, 'toggle'])
-    ->name('market.interested')
-    ->middleware('auth');
-Route::get('/game/stage3-1', function () {
-    return view('game.stage3-1');
-})->name('game.stage3-1');
-Route::get('/game/stage3-2', function () { return view('game.stage3-2'); })->name('game.stage3-2');
-Route::get('/game/stage3-3', function () { return view('game.stage3-3'); })->name('game.stage3-3');
-Route::get('/game/stage3-boss', function () { return view('game.stage3-boss'); })->name('game.stage3-boss');
-Route::get('/game/stageoni', function () {
-    return view('game.stageoni'); // views/game/gameoni.blade.php を指します
-})->name('game.stageoni');
-Route::get('/game/result', function () {
-    return view('game.result');
-})->name('game.result');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+        Route::post(
+            '/report/group/{message}',
+            [ReportController::class, 'reportGroup']
+        )->name('report.group');
+        Route::post('/market/{item}/interested', [InterestedController::class, 'toggle'])
+            ->name('market.interested')
+            ->middleware('auth');
+        Route::get('/game/stage3-1', function () {
+            return view('game.stage3-1');
+        })->name('game.stage3-1');
+        Route::get('/game/stage3-2', function () {
+            return view('game.stage3-2');
+        })->name('game.stage3-2');
+        Route::get('/game/stage3-3', function () {
+            return view('game.stage3-3');
+        })->name('game.stage3-3');
+        Route::get('/game/stage3-boss', function () {
+            return view('game.stage3-boss');
+        })->name('game.stage3-boss');
+        Route::get('/game/stageoni', function () {
+            return view('game.stageoni'); // views/game/gameoni.blade.php を指します
+        })->name('game.stageoni');
+        Route::get('/game/result', function () {
+            return view('game.result');
+        })->name('game.result');
+        Route::get('/home', [HomeController::class, 'index'])->name('home');
 
         /*
 |--------------------------------------------------------------------------
@@ -342,9 +354,11 @@ Route::group(['middleware' => 'auth'], function () {
 
         #Event
         Route::get('events', [EventsController::class, 'index'])->name('events.index');
-        Route::post('/events', [\App\Http\Controllers\Admin\EventsController::class, 'store'])->name('events.store');
+        Route::post('events', [\App\Http\Controllers\Admin\EventsController::class, 'store'])->name('events.store');
 
-        Route::get('reviews', [ReviewsController::class, 'index'])->name('reviews.index');
+        #Review
+        Route::get('reviews', [\App\Http\Controllers\Admin\ReviewsController::class, 'index'])->name('reviews.index');
+        Route::patch('reviews/{source}/{id}/status', [\App\Http\Controllers\Admin\ReviewsController::class, 'updateStatus'])->name('reviews.status');        #market
         Route::get('markets', [MarketsController::class, 'index'])->name('markets.index');
         Route::get('markets/show/{id}', [MarketsController::class, 'show'])->name('markets.show');
         Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis.index');

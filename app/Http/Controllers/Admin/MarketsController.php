@@ -3,71 +3,152 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ItemPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class MarketsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $items = [
-            ['id'=>1,'name'=>'MacBook 充電器','category'=>'家電','condition'=>'ほぼ未使用','user'=>'Maria Santos','handle'=>'@maria_cebu','status'=>'出品中','comments'=>3,'icon'=>'fa-laptop'],
-            ['id'=>2,'name'=>'Tシャツ S/M サイズ','category'=>'衣類','condition'=>'2枚セット','user'=>'John Dela Cruz','handle'=>'@john_cebu','status'=>'出品中','comments'=>1,'icon'=>'fa-shirt'],
-            ['id'=>3,'name'=>'日焼け止め・虫除けセット','category'=>'消耗品','condition'=>'残り半分','user'=>'Sarah Kim','handle'=>'@sarah_kim','status'=>'譲渡済み','comments'=>0,'icon'=>'fa-pump-soap'],
-            ['id'=>4,'name'=>'変換プラグ（EU型）','category'=>'家電','condition'=>'写真不鮮明','user'=>'David Lee','handle'=>'@david_t','status'=>'要確認','comments'=>2,'icon'=>'fa-plug'],
-            ['id'=>5,'name'=>'ガイドブック セブ島','category'=>'その他','condition'=>'書き込みなし','user'=>'Lisa Wong','handle'=>'@lisa_w','status'=>'出品中','comments'=>0,'icon'=>'fa-book'],
-            ['id'=>6,'name'=>'折りたたみ傘','category'=>'その他','condition'=>'1回使用','user'=>'Mike Tan','handle'=>'@mike_t','status'=>'出品中','comments'=>1,'icon'=>'fa-umbrella'],
+        $query = ItemPost::with(['user'])
+            ->withCount('comments');
+
+        if ($request->filled('category') && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('market_status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$search}%"));
+            });
+        }
+
+        if ($request->get('sort') === 'comments') {
+            $query->orderByDesc('comments_count');
+        } else {
+            $query->latest();
+        }
+
+        $paginatedItems = $query->paginate(12)->withQueryString();
+
+        $items = $paginatedItems->getCollection()
+            ->map(fn(ItemPost $item) => $this->normalizeItem($item));
+
+        // コメント管理タブ用
+        $paginatedComments = \App\Models\MarketComment::with(['user', 'item'])
+            ->latest()
+            ->paginate(20, ['*'], 'comments_page');
+
+        $comments = $paginatedComments->getCollection()
+            ->map(fn($comment) => $this->normalizeComment($comment));
+
+        $metrics = [
+            'total'   => ItemPost::count(),
+            'flagged' => 0, // TODO: 通報テーブル実装後に接続
+            'active'  => ItemPost::where('market_status', 'available')->count(),
+            'sold'    => ItemPost::where('market_status', 'sold')->count(),
         ];
 
-        $comments = [
-            ['text'=>'まだ出品中ですか？来週受け取れます！','item_name'=>'MacBook 充電器','item_id'=>1,'user'=>'John Dela Cruz','handle'=>'@john_cebu','date'=>'2025-05-23 18:30','status'=>'承認済み'],
-            ['text'=>'サイズはSとMどちらが残ってますか？','item_name'=>'Tシャツ S/M サイズ','item_id'=>2,'user'=>'Sarah Kim','handle'=>'@sarah_kim','date'=>'2025-05-23 15:10','status'=>'承認済み'],
-            ['text'=>'これ本当に機能しますか？怪しいです。','item_name'=>'変換プラグ（EU型）','item_id'=>4,'user'=>'Anonymous','handle'=>'@anonymous','date'=>'2025-05-22 12:45','status'=>'保留中'],
-            ['text'=>'http://spam-link.com 安く買えます！','item_name'=>'変換プラグ（EU型）','item_id'=>4,'user'=>'System','handle'=>'@system','date'=>'2025-05-21 09:00','status'=>'スパム'],
-            ['text'=>'折り畳み方を教えてもらえますか？','item_name'=>'折りたたみ傘','item_id'=>6,'user'=>'Lisa Wong','handle'=>'@lisa_w','date'=>'2025-05-20 14:20','status'=>'承認済み'],
-        ];
-
-        return view('admin.markets.index', compact('items', 'comments'));
+        return view('admin.markets.index', [
+            'items'             => $items,
+            'comments'          => $comments,
+            'metrics'           => $metrics,
+            'paginatedItems'    => $paginatedItems,
+            'paginatedComments' => $paginatedComments,
+        ]);
     }
 
-    public function show($id)
-    {
-        // ダミーデータ（実際はDB: MarketItem::with('comments', 'user')->findOrFail($id)）
-        $item = [
-            'id'          => $id,
-            'name'        => 'MacBook 充電器',
-            'category'    => '家電',
-            'condition'   => 'ほぼ未使用・動作確認済み',
-            'status'      => '出品中',
-            'posted_at'   => '2025-05-20 14:30',
-            'location'    => 'IT Park周辺（要相談）',
-            'user'        => 'Maria Santos',
-            'handle'      => '@maria_cebu',
-            'description' => 'Apple純正のMacBook用充電器です。先月購入しましたが、帰国前に荷物を減らしたいため出品します。動作確認済みで問題なく使えます。次の滞在者の方にぜひ使っていただきたいです。受け渡しはIT Park周辺で対応可能です。',
-            'comments'    => [
-                [
-                    'user'   => 'John Dela Cruz',
-                    'handle' => '@john_cebu',
-                    'text'   => 'まだ出品中ですか？来週受け取れます！',
-                    'date'   => '2025-05-23 18:30',
-                    'status' => '承認済み',
-                ],
-                [
-                    'user'   => 'Sarah Kim',
-                    'handle' => '@sarah_kim',
-                    'text'   => 'どのMacBookモデルに対応していますか？',
-                    'date'   => '2025-05-22 11:15',
-                    'status' => '承認済み',
-                ],
-                [
-                    'user'   => 'Anonymous',
-                    'handle' => '@anonymous',
-                    'text'   => '偽物では？写真が不鮮明すぎます。',
-                    'date'   => '2025-05-21 09:00',
-                    'status' => '保留中',
-                ],
-            ],
-        ];
+public function show(ItemPost $item)
+{
+    $item->load(['images', 'user', 'comments.user']);
 
-        return view('admin.markets.show', compact('item'));
+    return view('admin.markets.show', [
+        'item' => $this->normalizeItemDetail($item),
+    ]);
+}
+
+    private function normalizeItem(ItemPost $item): array
+    {
+        return [
+            'id'         => $item->id,
+            'name'       => $item->title,
+            'meta'       => $item->category . ' · ' . Str::limit($item->description, 30),
+            'category'   => $item->category,
+            'status'     => $this->mapStatus($item->market_status),
+            'reports'    => 0,
+            'views'      => 0,
+            'icon'       => $this->mapIcon($item->category),
+            'flagged'    => false,
+            'user'       => $item->user->name ?? 'Unknown user',
+            'comments'   => $item->comments_count ?? 0,
+            'created_at' => $item->created_at?->format('Y-m-d H:i') ?? '-',
+        ];
+    }
+
+    private function normalizeItemDetail(ItemPost $item): array
+{
+    return [
+        'id'          => $item->id,
+        'name'        => $item->title,
+        'category'    => $item->category,
+        'condition'   => $item->status,
+        'status'      => $this->mapStatus($item->market_status),
+        'posted_at'   => $item->created_at?->format('Y-m-d H:i') ?? '-',
+        'location'    => $item->location_name,
+        'user'        => $item->user->name ?? 'Unknown',
+        'handle'      => '@' . ($item->user->username ?? 'unknown'),
+        'description' => $item->description,
+        'images'      => $item->images->map(fn ($img) => asset('storage/' . $img->path))->toArray(),
+        'comments'    => $item->comments->map(fn ($c) => [
+            'user'   => $c->user->name ?? 'Unknown',
+            'handle' => '@' . ($c->user->username ?? 'unknown'),
+            'text'   => $c->comment,
+            'date'   => $c->created_at?->format('Y-m-d H:i') ?? '-',
+            'status' => 'Approved',
+        ])->toArray(),
+    ];
+}
+
+    
+    private function normalizeComment($comment): array
+    {
+        return [
+            'text'      => $comment->comment,
+            'item_name' => $comment->item->title ?? 'Deleted item',
+            'item_id'   => $comment->item_post_id,
+            'user'      => $comment->user->name ?? 'Unknown',
+            'handle'    => '@' . ($comment->user->username ?? 'unknown'),
+            'date'      => $comment->created_at->format('Y-m-d H:i'),
+            'status'    => 'Approved',
+        ];
+    }
+
+    private function mapStatus(?string $marketStatus): string
+    {
+        return match ($marketStatus) {
+            'available' => 'Active',
+            'sold'      => 'Sold',
+            default     => 'Unknown',
+        };
+    }
+
+    private function mapIcon(?string $category): string
+    {
+        return match ($category) {
+            'Clothes'          => 'fa-shirt',
+            'Skincare'         => 'fa-pump-soap',
+            'Household Items'  => 'fa-house',
+            'Stationery'       => 'fa-pen',
+            'Medicine'         => 'fa-pills',
+            'Fashion', 'ファッション' => 'fa-shirt', // 既存の古いデータ対応
+            default            => 'fa-box',
+        };
     }
 }
