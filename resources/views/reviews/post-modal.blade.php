@@ -115,23 +115,25 @@
 
                     {{-- Working用フィールド --}}
                     <div id="workingFields">
-                        @foreach ([['key' => 'customer_vibe', 'label' => '客層', 'icon' => 'fa-users'], ['key' => 'eye_fatigue_level', 'label' => '照明', 'icon' => 'fa-lightbulb'], ['key' => 'chair_comfort', 'label' => 'イス', 'icon' => 'fa-chair'], ['key' => 'desk_stability', 'label' => '机', 'icon' => 'fa-table']] as $axis)
-                            <div class="mb-2">
-                                <label class="form-label fw-bold small mb-1">
-                                    <i class="fa-solid {{ $axis['icon'] }} me-1"></i>{{ $axis['label'] }}
-                                </label>
+                        <div class="row g-2 mb-2">
+                            @foreach ([['key' => 'customer_vibe', 'label' => '客層', 'icon' => 'fa-users'], ['key' => 'eye_fatigue_level', 'label' => '照明', 'icon' => 'fa-lightbulb'], ['key' => 'chair_comfort', 'label' => 'イス', 'icon' => 'fa-chair'], ['key' => 'desk_stability', 'label' => '机', 'icon' => 'fa-table']] as $axis)
+                                <div class="col-6">
+                                    <label class="form-label fw-bold small mb-1">
+                                        <i class="fa-solid {{ $axis['icon'] }} me-1"></i>{{ $axis['label'] }}
+                                    </label>
 
-                                <input type="hidden" name="{{ $axis['key'] }}" id="input_{{ $axis['key'] }}"
-                                    value="">
-                                <div class="d-flex gap-1">
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        <button type="button" class="btn btn-sm btn-outline-secondary axis-btn"
-                                            data-axis="{{ $axis['key'] }}"
-                                            data-value="{{ $i }}">{{ $i }}</button>
-                                    @endfor
+                                    <input type="hidden" name="{{ $axis['key'] }}" id="input_{{ $axis['key'] }}"
+                                        value="">
+                                    <div class="d-flex gap-1">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <button type="button" class="btn btn-sm btn-outline-secondary axis-btn"
+                                                data-axis="{{ $axis['key'] }}"
+                                                data-value="{{ $i }}">{{ $i }}</button>
+                                        @endfor
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
 
                         <div class="row g-2 mb-2">
                             <div class="col-6">

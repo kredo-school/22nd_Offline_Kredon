@@ -33,12 +33,12 @@
         <i class="fa-solid fa-star"></i>Reviews
     </a>
 
-    <a href="{{ route('admin.analysis.index') }}" class="admin-nav-link">
-        <i class="fa-solid fa-chart-line"></i> Analysis
-    </a>
-
+    
     <a href="{{ route('admin.notifications.index') }}" class="admin-nav-link">
         <i class="fa-solid fa-bell"></i> Notification
+    </a>
+    <a href="{{ route('admin.analysis.index') }}" class="admin-nav-link">
+        <i class="fa-solid fa-chart-line"></i> Analysis
     </a>
 </div>
 
