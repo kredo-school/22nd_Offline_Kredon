@@ -35,37 +35,56 @@ body{
 $music = 'Quest_on_Cebu_Sand.mp3';
 
 // Battle
-// Battle
-if(request()->routeIs('game.battle')){
+if(request()->routeIs(
+    'game.battle',
+    'game.stage11',
+    'game.stage2',
+    'game.stage2-1',
+    'game.stage2-2',
+    'game.stage2-3',
+    'game.stage3',
+    'game.stage3-1',
+    'game.stage3-2',
+    'game.stage3-3',
+    'game.stageoni'
+)){
 
-    // 10分の1でレア曲
     if(rand(1,10)==1){
-
-        $music = 'kure.mp3';
-
+        $music='kure.mp3';
     }else{
-
-        $music = 'battle.mp3';
-
+        $music='battle.mp3';
     }
 
 }
 
 // Boss
-elseif(request()->routeIs('game.boss')){
-    $music = 'boss.mp3';
+elseif(request()->routeIs(
+    'game.boss',
+    'game.stage2-boss',
+    'game.stage3-boss'
+)){
+
+    $music='boss.mp3';
+
 }
 
-// Result
-elseif(request()->routeIs('game.result')){
-    $music = 'result.mp3';
+// Home・Select・Result
+elseif(request()->routeIs(
+    'game.home',
+    'game.select',
+    'game.result',
+    'game.select-normal'
+)){
+
+    $music='Quest_on_Cebu_Sand.mp3';
+
 }
 
-// その他のゲーム画面は20%の確率で特別BGM
+// その他
 else{
 
     if(rand(1,7)==1){
-        $music = 'kuremiti.mp3';
+        $music='kuremiti.mp3';
     }
 
 }

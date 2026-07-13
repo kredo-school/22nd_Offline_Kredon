@@ -25,6 +25,7 @@ use App\Http\Controllers\TouristSpotController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\TouristReviewController;
 use App\Http\Controllers\MarketCommentController;
+use App\Http\Controllers\InterestedController;
 
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\WizardController;
@@ -33,7 +34,6 @@ use App\Http\Controllers\HospitalBookmarkController;
 use App\Http\Controllers\HospitalImageController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\InterestedController;
 #Admin Controller
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
@@ -168,8 +168,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/game/stage1-1',  [GameController::class, 'stage11'])->name('game.stage11');
     Route::get('/battle', [GameController::class, 'battle'])->name('game.battle');
     // routes/web.php
-    Route::get('/game/stage2', function () {
-        return view('game.game2'); // views/game/game2.blade.php を指します    })->name('game.stage2');
+   Route::get('/game/stage2', function () {
+    return view('game.game2');
+})->name('game.stage2');
         Route::get('/game/stage3', function () {
             return view('game.game3');
         })->name('game.stage3');
@@ -199,6 +200,9 @@ Route::middleware('auth')->group(function () {
             '/event/{event}/join',
             [EventParticipantController::class, 'join']
         )->name('event.join');
+        Route::post('/market/{item}/interested',
+    [InterestedController::class,'toggle'])
+    ->name('market.interested');
 
         Route::delete('/event/{event}/leave', [EventParticipantController::class, 'leave'])->name('event.leave');
         Route::get(
@@ -245,32 +249,24 @@ Route::middleware('auth')->group(function () {
             [ReportController::class, 'reportMessage']
         )->name('report.message');
 
-        Route::post(
-            '/report/group/{message}',
-            [ReportController::class, 'reportGroup']
-        )->name('report.group');
-        Route::post('/market/{item}/interested', [InterestedController::class, 'toggle'])
-            ->name('market.interested')
-            ->middleware('auth');
-        Route::get('/game/stage3-1', function () {
-            return view('game.stage3-1');
-        })->name('game.stage3-1');
-        Route::get('/game/stage3-2', function () {
-            return view('game.stage3-2');
-        })->name('game.stage3-2');
-        Route::get('/game/stage3-3', function () {
-            return view('game.stage3-3');
-        })->name('game.stage3-3');
-        Route::get('/game/stage3-boss', function () {
-            return view('game.stage3-boss');
-        })->name('game.stage3-boss');
-        Route::get('/game/stageoni', function () {
-            return view('game.stageoni'); // views/game/gameoni.blade.php を指します
-        })->name('game.stageoni');
-        Route::get('/game/result', function () {
-            return view('game.result');
-        })->name('game.result');
-        Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::post(
+'/report/group/{message}',
+[ReportController::class,'reportGroup']
+)->name('report.group');
+
+Route::get('/game/stage3-1', function () {
+    return view('game.stage3-1');
+})->name('game.stage3-1');
+Route::get('/game/stage3-2', function () { return view('game.stage3-2'); })->name('game.stage3-2');
+Route::get('/game/stage3-3', function () { return view('game.stage3-3'); })->name('game.stage3-3');
+Route::get('/game/stage3-boss', function () { return view('game.stage3-boss'); })->name('game.stage3-boss');
+Route::get('/game/stageoni', function () {
+    return view('game.stageoni'); // views/game/gameoni.blade.php を指します
+})->name('game.stageoni');
+Route::get('/game/result', function () {
+    return view('game.result');
+})->name('game.result');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
         /*
 |--------------------------------------------------------------------------
@@ -332,7 +328,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/all_reviews/store', [AllReviewController::class, 'store'])->name('all_reviews.store');
     Route::patch('/all_reviews/{review}/update', [AllReviewController::class, 'update'])->name('all_reviews.update');
     Route::delete('/all_reviews/{review}/delete', [AllReviewController::class, 'destroy'])->name('all_reviews.destroy');
-});
+
 
 Route::middleware('auth')->prefix('admin/hospitals')->name('admin.hospitals.')->group(function () {
     Route::get('/', [AdminHospitalController::class, 'index'])->name('index');

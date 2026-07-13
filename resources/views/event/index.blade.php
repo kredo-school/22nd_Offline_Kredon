@@ -55,15 +55,12 @@
                                         @php
                                             $statusColor = match ($event->status_label) {
                                                 'Now on' => 'success',
-                                                'Upcoming' => 'info',
+                                            
                                                 'Before applications open' => 'secondary',
                                                 default => 'light',
                                             };
                                         @endphp
-                                        <span class="badge bg-{{ $statusColor }} position-absolute"
-                                            style="top:6px; right:6px; font-size:0.65rem; border: 2px solid black;">
-                                            {{ $event->status_label }}
-                                        </span>
+                                       
                                     </div>
 
                                     <div class="card-body p-2">
