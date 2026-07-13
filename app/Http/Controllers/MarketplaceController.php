@@ -40,8 +40,9 @@ class MarketplaceController extends Controller
             'description' => 'required|string',
             'category' => 'required|string',
             'status' => 'required|string',
-            'images.*' => 'nullable|image|max:2048',
-        ]);
+           'image1' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
+'image2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',   
+     ]);
 
         $item = ItemPost::create([
         'user_id' => Auth::id(), // ★ここを追加

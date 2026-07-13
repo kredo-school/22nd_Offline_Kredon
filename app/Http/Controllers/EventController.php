@@ -39,8 +39,8 @@ class EventController extends Controller
             'location' => 'nullable|max:255',
             'start_date' => 'required|date',
 
-            'image1' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'image2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+          'image1' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
+'image2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
         if ($request->hasFile('image1')) {
