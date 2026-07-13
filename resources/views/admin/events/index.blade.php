@@ -17,9 +17,7 @@
                     <button class="btn btn-outline-secondary btn-sm px-3">Limited-time event</button>
                     <button class="btn btn-outline-secondary btn-sm px-3">Regular events</button>
                 </div> --}}
-                <button class="btn btn-outline-secondary btn-sm">
-                    <i class="fa-regular fa-calendar"></i>
-                </button>
+                
                 <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal"
                     data-bs-target="#createEventModal">
                     <i class="fa-solid fa-plus me-1"></i>Create Event

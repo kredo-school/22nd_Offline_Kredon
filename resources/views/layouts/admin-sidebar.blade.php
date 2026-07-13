@@ -21,6 +21,9 @@
         <i class="fa-solid fa-location-dot"></i> Spots
     </a>
 
+    <a href="{{ route('admin.reviews.index') }}" class="admin-nav-link">
+        <i class="fa-solid fa-star"></i>Reviews
+    </a>
     <a href="{{ route('admin.events.index') }}" class="admin-nav-link">
         <i class="fa-solid fa-calendar-days"></i> Events
     </a>
@@ -28,11 +31,6 @@
     <a href="{{ route('admin.markets.index') }}" class="admin-nav-link">
         <i class="fa-solid fa-shop"></i> Markets
     </a>
-
-    <a href="{{ route('admin.reviews.index') }}" class="admin-nav-link">
-        <i class="fa-solid fa-star"></i>Reviews
-    </a>
-
     
     <a href="{{ route('admin.notifications.index') }}" class="admin-nav-link">
         <i class="fa-solid fa-bell"></i> Notification
