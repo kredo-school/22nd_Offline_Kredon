@@ -41,13 +41,76 @@ class MarketsController extends Controller
         $items = $paginatedItems->getCollection()
             ->map(fn(ItemPost $item) => $this->normalizeItem($item));
 
-        // コメント管理タブ用
-        $paginatedComments = \App\Models\MarketComment::with(['user', 'item'])
-            ->latest()
-            ->paginate(20, ['*'], 'comments_page');
+        // Admin/MarketController.php (near where $paginatedItems is built)
 
-        $comments = $paginatedComments->getCollection()
-            ->map(fn($comment) => $this->normalizeComment($comment));
+        $dummyComments = collect([
+            [
+                'id'        => 1,
+                'text'      => 'How much for this? Is it still available?',
+                'item_name' => 'T-shirt',
+                'item_id'   => 1,
+                'handle'    => '@juan_delacruz',
+                'date'      => '2026-07-13 10:24',
+                'status'    => 'Approved',
+            ],
+            [
+                'id'        => 2,
+                'text'      => 'Can I pick it up in person? Where are you located?',
+                'item_name' => 'T shirts',
+                'item_id'   => 3,
+                'handle'    => '@maria_santos',
+                'date'      => '2026-07-13 09:02',
+                'status'    => 'Pending',
+            ],
+            [
+                'id'        => 3,
+                'text'      => 'This account is a scam, ignore it!! Click here -> bit.ly/xxxxx',
+                'item_name' => 'p p p',
+                'item_id'   => 2,
+                'handle'    => '@spam_bot99',
+                'date'      => '2026-07-12 22:47',
+                'status'    => 'Spam',
+            ],
+            [
+                'id'        => 4,
+                'text'      => 'Is it still in good condition? Could you share a few more photos?',
+                'item_name' => 'T-shirt',
+                'item_id'   => 1,
+                'handle'    => '@carlo_reyes',
+                'date'      => '2026-07-12 18:15',
+                'status'    => 'Approved',
+            ],
+            [
+                'id'        => 5,
+                'text'      => 'Can you hold it for me? I can come by this weekend.',
+                'item_name' => 'Household Items',
+                'item_id'   => 2,
+                'handle'    => '@aimi_dela',
+                'date'      => '2026-07-12 15:30',
+                'status'    => 'Pending',
+            ],
+        ]);
+
+        $page = request('comment_page', 1);
+        $perPage = 10;
+
+        $paginatedComments = new \Illuminate\Pagination\LengthAwarePaginator(
+            $dummyComments->forPage($page, $perPage)->values(),
+            $dummyComments->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'pageName' => 'comment_page']
+        );
+
+        $comments = $paginatedComments->items();
+
+        // コメント管理タブ用(本物のDB取得用)
+        // $paginatedComments = \App\Models\MarketComment::with(['user', 'item'])
+        //     ->latest()
+        //     ->paginate(20, ['*'], 'comments_page');
+
+        // $comments = $paginatedComments->getCollection()
+        //     ->map(fn($comment) => $this->normalizeComment($comment));
 
         $metrics = [
             'total'   => ItemPost::count(),
@@ -65,14 +128,14 @@ class MarketsController extends Controller
         ]);
     }
 
-public function show(ItemPost $item)
-{
-    $item->load(['images', 'user', 'comments.user']);
+    public function show(ItemPost $item)
+    {
+        $item->load(['images', 'user', 'comments.user']);
 
-    return view('admin.markets.show', [
-        'item' => $this->normalizeItemDetail($item),
-    ]);
-}
+        return view('admin.markets.show', [
+            'item' => $this->normalizeItemDetail($item),
+        ]);
+    }
 
     private function normalizeItem(ItemPost $item): array
     {
@@ -93,30 +156,30 @@ public function show(ItemPost $item)
     }
 
     private function normalizeItemDetail(ItemPost $item): array
-{
-    return [
-        'id'          => $item->id,
-        'name'        => $item->title,
-        'category'    => $item->category,
-        'condition'   => $item->status,
-        'status'      => $this->mapStatus($item->market_status),
-        'posted_at'   => $item->created_at?->format('Y-m-d H:i') ?? '-',
-        'location'    => $item->location_name,
-        'user'        => $item->user->name ?? 'Unknown',
-        'handle'      => '@' . ($item->user->username ?? 'unknown'),
-        'description' => $item->description,
-        'images'      => $item->images->map(fn ($img) => asset('storage/' . $img->path))->toArray(),
-        'comments'    => $item->comments->map(fn ($c) => [
-            'user'   => $c->user->name ?? 'Unknown',
-            'handle' => '@' . ($c->user->username ?? 'unknown'),
-            'text'   => $c->comment,
-            'date'   => $c->created_at?->format('Y-m-d H:i') ?? '-',
-            'status' => 'Approved',
-        ])->toArray(),
-    ];
-}
+    {
+        return [
+            'id'          => $item->id,
+            'name'        => $item->title,
+            'category'    => $item->category,
+            'condition'   => $item->status,
+            'status'      => $this->mapStatus($item->market_status),
+            'posted_at'   => $item->created_at?->format('Y-m-d H:i') ?? '-',
+            'location'    => $item->location_name,
+            'user'        => $item->user->name ?? 'Unknown',
+            'handle'      => '@' . ($item->user->username ?? 'unknown'),
+            'description' => $item->description,
+            'images'      => $item->images->map(fn($img) => asset('storage/' . $img->path))->toArray(),
+            'comments'    => $item->comments->map(fn($c) => [
+                'user'   => $c->user->name ?? 'Unknown',
+                'handle' => '@' . ($c->user->username ?? 'unknown'),
+                'text'   => $c->comment,
+                'date'   => $c->created_at?->format('Y-m-d H:i') ?? '-',
+                'status' => 'Approved',
+            ])->toArray(),
+        ];
+    }
 
-    
+
     private function normalizeComment($comment): array
     {
         return [

@@ -60,6 +60,19 @@ class EventsController extends Controller
             ->take(4)
             ->get();
 
+        // --- 期間限定イベント一覧（全件・モーダル用） ---
+        $allEvents = Event::withCount('participants')
+            ->where('organizer_type', 'company')
+            ->orderByRaw("
+                CASE
+                    WHEN CURDATE() BETWEEN start_date AND end_date THEN 0
+                    WHEN start_date > CURDATE() THEN 1
+                    ELSE 2
+                END
+            ")
+            ->orderBy('start_date')
+            ->get();
+
 
         // --- 参加者一覧（最新5件） ---
         $recentParticipants = EventParticipant::with(['user:id,name', 'event:id,title'])
@@ -119,6 +132,7 @@ class EventsController extends Controller
             'thisMonthParticipants',
             'participantsGrowth',
             'limitedEvents',
+            'allEvents',
             'recentParticipants',
             'weeks',
             'calendarLabel',

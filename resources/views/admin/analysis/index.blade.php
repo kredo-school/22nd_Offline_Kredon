@@ -3,7 +3,6 @@
 @section('title', 'Analysis')
 
 @section('content')
-    {{-- 💡 修正ポイント1: height: 100% と overflow-y: auto を削除し、コンテンツに応じて自然にスクロールさせます --}}
     <div class="p-4">
 
         {{-- ── Header ── --}}
@@ -68,20 +67,20 @@
                                 </div>
                             </div>
 
-                            {{-- Free→Premium Funnel --}}
+                            {{-- User Activity Funnel --}}
                             <div class="col-12 col-sm-6">
                                 <div class="border rounded p-2 h-100">
-                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">Free→Premium Funnel</div>
+                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">User Activity Funnel</div>
                                     <div id="funnelChart" style="font-size:0.72rem;">
                                         @php
                                             $funnel = [
-                                                ['label' => 'Free Registrations', 'pct' => 45, 'color' => '#4a90d9'],
-                                                ['label' => 'Active Users', 'pct' => 35, 'color' => '#5cb85c'],
-                                                ['label' => 'Engaged Users', 'pct' => 15, 'color' => '#f0ad4e'],
-                                                ['label' => 'Premium Subscriptions', 'pct' => 5, 'color' => '#e8516a'],
-                                                ['label' => 'Conversion', 'pct' => 5, 'color' => '#c0392b'],
+                                                ['label' => 'Registered Users', 'pct' => 100, 'color' => '#4a90d9'],
+                                                ['label' => 'Logged in Users', 'pct' => 78, 'color' => '#5cb85c'],
+                                                ['label' => 'Active Users', 'pct' => 52, 'color' => '#f0ad4e'],
+                                                ['label' => 'Posted Spots', 'pct' => 24, 'color' => '#e8516a'],
+                                                ['label' => 'Joined Events', 'pct' => 11, 'color' => '#c0392b'],
                                             ];
-                                            $maxPct = 45;
+                                            $maxPct = 100;
                                         @endphp
                                         @foreach ($funnel as $f)
                                             @php $barW = round(($f['pct'] / $maxPct) * 100); @endphp
@@ -100,54 +99,90 @@
                                 </div>
                             </div>
 
-                            {{-- Time-to-Churn --}}
+                            {{-- Notification Open Rate --}}
                             <div class="col-12 col-sm-6">
                                 <div class="border rounded p-2 h-100">
-                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">Time-to-Churn (Registration →
-                                        Ban/Delete)</div>
-                                    @if ($timeToChurn)
-                                        <div class="d-flex gap-4">
-                                            <div>
-                                                <div style="font-size:0.68rem;color:#6c757d;">Average</div>
-                                                <div class="fw-bold" style="font-size:1.3rem;">{{ $timeToChurn['avg'] }}
-                                                    <span style="font-size:0.7rem;font-weight:normal;">days</span>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size:0.68rem;color:#6c757d;">Median</div>
-                                                <div class="fw-bold" style="font-size:1.3rem;">{{ $timeToChurn['median'] }}
-                                                    <span style="font-size:0.7rem;font-weight:normal;">days</span>
-                                                </div>
+                                    <div class="fw-semibold mb-2" style="font-size:0.78rem;">Notification Open Rate</div>
+                                    @php
+                                        $notifOpenRate = [
+                                            'rate' => 64,
+                                            'sent' => 1240,
+                                            'opened' => 794,
+                                        ];
+                                    @endphp
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="position:relative;width:100px;height:100px;flex-shrink:0;">
+                                            <canvas id="notifOpenRateChart"></canvas>
+                                            <div
+                                                style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+                                                <div class="fw-bold" style="font-size:1.1rem;line-height:1;">
+                                                    {{ $notifOpenRate['rate'] }}%</div>
+                                                <div class="text-muted" style="font-size:0.6rem;">Open Rate</div>
                                             </div>
                                         </div>
-                                        <div class="text-muted mt-1" style="font-size:0.65rem;">Based on
-                                            {{ $timeToChurn['sample_size'] }} churned users</div>
-                                    @else
-                                        <div class="text-muted" style="font-size:0.75rem;">No churned users yet</div>
-                                    @endif
+                                        <div style="font-size:0.7rem;">
+                                            <div class="mb-1"><span style="color:#4a90d9;">■</span> Opened
+                                                [{{ number_format($notifOpenRate['opened']) }}]</div>
+                                            <div><span style="color:#e0e0e0;">■</span> Unopened
+                                                [{{ number_format($notifOpenRate['sent'] - $notifOpenRate['opened']) }}]
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-muted mt-1" style="font-size:0.65rem;">Based on
+                                        {{ number_format($notifOpenRate['sent']) }} notifications sent</div>
                                 </div>
                             </div>
 
                             {{-- Role Comparison --}}
                             <div class="col-12 col-sm-6">
-                                <div class="border rounded p-2 h-100">
+                                <div class="border rounded p-2 h-100" style="overflow-x: auto;">
                                     <div class="fw-semibold mb-2" style="font-size:0.78rem;">Role Comparison</div>
+                                    @php
+                                        $roleActivityComparison = [
+                                            'Admin' => [
+                                                'top_active' => 4,
+                                                'avg_posts' => 12.3,
+                                                'avg_reviews' => 8.1,
+                                                'avg_events' => 3.4,
+                                            ],
+                                            'Moderator' => [
+                                                'top_active' => 9,
+                                                'avg_posts' => 9.7,
+                                                'avg_reviews' => 6.5,
+                                                'avg_events' => 2.8,
+                                            ],
+                                            'Regular User' => [
+                                                'top_active' => 156,
+                                                'avg_posts' => 3.2,
+                                                'avg_reviews' => 2.4,
+                                                'avg_events' => 1.1,
+                                            ],
+                                            'Premium User' => [
+                                                'top_active' => 42,
+                                                'avg_posts' => 5.6,
+                                                'avg_reviews' => 4.9,
+                                                'avg_events' => 2.2,
+                                            ],
+                                        ];
+                                    @endphp
                                     <table class="table table-sm mb-0" style="font-size:0.7rem;">
                                         <thead>
                                             <tr class="text-muted">
                                                 <th class="py-0">Role</th>
-                                                <th class="py-0 text-center">Users</th>
-                                                <th class="py-0 text-center">Avg. Logins</th>
-                                                <th class="py-0 text-center">Dormancy Rate</th>
+                                                <th class="py-0 text-center">Top Active Users</th>
+                                                <th class="py-0 text-center">Avg. Posts</th>
+                                                <th class="py-0 text-center">Avg. Reviews</th>
+                                                <th class="py-0 text-center">Avg. Event Participation</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($roleComparison as $label => $stats)
+                                            @foreach ($roleActivityComparison as $label => $stats)
                                                 <tr>
                                                     <td class="py-1">{{ $label }}</td>
-                                                    <td class="py-1 text-center">{{ $stats['total'] }}</td>
-                                                    <td class="py-1 text-center">{{ $stats['avg_login_count'] }}</td>
-                                                    <td class="py-1 text-center">{{ $stats['dormancy_rate'] }}%</td>
+                                                    <td class="py-1 text-center">{{ $stats['top_active'] }}</td>
+                                                    <td class="py-1 text-center">{{ $stats['avg_posts'] }}</td>
+                                                    <td class="py-1 text-center">{{ $stats['avg_reviews'] }}</td>
+                                                    <td class="py-1 text-center">{{ $stats['avg_events'] }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -524,6 +559,29 @@
                                 }
                             }
                         },
+                    },
+                },
+            });
+
+            // ── Notification Open Rate (doughnut) ──
+            new Chart(document.getElementById('notifOpenRateChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Opened', 'Unopened'],
+                    datasets: [{
+                        data: [{{ $notifOpenRate['opened'] }},
+                            {{ $notifOpenRate['sent'] - $notifOpenRate['opened'] }}
+                        ],
+                        backgroundColor: ['#4a90d9', '#e0e0e0'],
+                        borderWidth: 1,
+                    }],
+                },
+                options: {
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
                     },
                 },
             });

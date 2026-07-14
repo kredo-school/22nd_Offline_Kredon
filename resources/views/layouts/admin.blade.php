@@ -824,6 +824,8 @@
             </div>
         </div>
 
+        @stack('modals')
+
     </div>
 
     <script>
