@@ -17,7 +17,7 @@
                     <button class="btn btn-outline-secondary btn-sm px-3">Limited-time event</button>
                     <button class="btn btn-outline-secondary btn-sm px-3">Regular events</button>
                 </div> --}}
-                
+
                 <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal"
                     data-bs-target="#createEventModal">
                     <i class="fa-solid fa-plus me-1"></i>Create Event
@@ -133,7 +133,8 @@
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h6 class="fw-bold mb-0">Limited-time event</h6>
-                            <a href="#" class="text-decoration-none" style="font-size:0.78rem;color:darkcyan;">View
+                            <a href="#" class="text-decoration-none" data-bs-toggle="modal"
+                                data-bs-target="#allEventsModal" style="font-size:0.78rem;color:darkcyan;">View
                                 all</a>
                         </div>
                         <div class="d-flex flex-column gap-3">
@@ -179,6 +180,65 @@
                     </div>
                 </div>
             </div>
+
+            {{-- ── All Events Modal (new) ── --}}
+            @push('modals')
+                <div class="modal fade" id="allEventsModal" tabindex="-1" aria-labelledby="allEventsModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title fw-bold" id="allEventsModalLabel">All Events</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="d-flex flex-column gap-3">
+                                    @forelse ($allEvents as $ev)
+                                        <div class="d-flex gap-2 align-items-start">
+                                            <div class="rounded flex-shrink-0" style="width:60px;height:48px;">
+                                                @if ($ev->image1)
+                                                    <img src="{{ Storage::url($ev->image1) }}" class="rounded w-100 h-100"
+                                                        style="object-fit:cover;">
+                                                @else
+                                                    <div class="bg-secondary w-100 h-100 rounded"></div>
+                                                @endif
+                                            </div>
+                                            <div class="flex-grow-1" style="font-size:0.78rem;">
+                                                <div class="fw-semibold">{{ $ev->title }}</div>
+                                                <div class="text-muted">
+                                                    <i class="fa-regular fa-calendar fa-xs me-1"></i>
+                                                    {{ $ev->start_date->format('Y-m-d') }} 〜
+                                                    {{ $ev->end_date->format('Y-m-d') }}
+                                                </div>
+                                                <div class="text-muted"><i
+                                                        class="fa-solid fa-location-dot fa-xs me-1"></i>{{ $ev->location }}
+                                                </div>
+                                                <div class="text-muted">Participants：{{ $ev->participants_count }} per</div>
+                                            </div>
+                                            @php
+                                                $statusColor = match ($ev->status_label) {
+                                                    'Now on' => 'success',
+                                                    'Upcoming' => 'info',
+                                                    'Before applications open' => 'primary',
+                                                    'Ended' => 'secondary',
+                                                    default => 'light',
+                                                };
+                                            @endphp
+                                            <span class="badge bg-{{ $statusColor }} flex-shrink-0"
+                                                style="font-size:0.68rem;">
+                                                {{ $ev->status_label }}
+                                            </span>
+                                        </div>
+                                    @empty
+                                        <p class="text-muted mb-0" style="font-size:0.82rem;">No Event yet.</p>
+                                    @endforelse
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endpush
 
             {{-- レギュラーイベント（今回スコープ外・ダミーのまま） --}}
             <div class="col-12 col-lg-4">
