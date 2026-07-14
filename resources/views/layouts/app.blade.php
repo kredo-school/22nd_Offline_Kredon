@@ -600,10 +600,10 @@
             <p class="spot-modal-title">SPOT</p>
             <a href="{{ route('top') }}" class="spot-modal-item"><i class="fa-solid fa-briefcase"></i>
                 Working</a>
-            <a href="{{ route('healthcare.index') }}" class="spot-modal-item"><i class="fa-solid fa-hospital"></i>
-                Hospital</a>
             <a href="{{ route('tourist_spots.index') }}" class="spot-modal-item"><i class="fa-solid fa-map-pin"></i>
                 Tourism</a>
+            <a href="{{ route('healthcare.index') }}" class="spot-modal-item"><i class="fa-solid fa-hospital"></i>
+                Hospital</a>
             <a href="{{ route('mypage') }}" class="spot-modal-item"><i class="fa-regular fa-bookmark"></i>
                 Bookmark</a>
             <a href="{{ route('all_reviews.index') }}" class="spot-modal-item"><i class="fa-solid fa-comments"></i>
@@ -633,10 +633,10 @@
                         <div id="spotSubmenuPC" style="display:none;">
                             <a href="{{ route('top') }}" class="spot-sub-link"><i
                                     class="fa-solid fa-briefcase"></i> Working</a>
-                            <a href="{{ route('healthcare.index') }}" class="spot-sub-link"><i
-                                    class="fa-solid fa-hospital"></i> Hospital</a>
                             <a href="{{ route('tourist_spots.index') }}" class="spot-sub-link"><i
                                     class="fa-solid fa-map-pin"></i> Tourism</a>
+                            <a href="{{ route('healthcare.index') }}" class="spot-sub-link"><i
+                                    class="fa-solid fa-hospital"></i> Hospital</a>
                             <a href="{{ route('mypage') }}" class="spot-sub-link"><i
                                     class="fa-regular fa-bookmark"></i> Bookmark</a>
                             <a href="{{ route('all_reviews.index') }}" class="spot-sub-link"><i
